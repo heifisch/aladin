@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Initialisierung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sSQL1 as String,sSQL2 as String
+Dim vSQLArray as Variant
+Global const sDataSource=&quot;ALADIN&quot;
+
+Sub Formular_init()
+	init_Form_Warenbestand()
+	init_Form_Steuerung()
+	init_List_Hauptgruppenauswahl()
+	init_List_Gruppenauswahl()
+	init_List_Leistungsauswahl()
+	init_List_Inventurwert()
+End Sub
+
+Sub init_Form_Warenbestand()
+	sSQL1=&quot;select * from &quot;&amp; sLeistungsstamm &amp;_
+		&quot; where Warenbestand &gt; 0 and Warenbestand is not NULL order by Leistungsgruppe ASC , LeistungsID ASC&quot;
+	oForm_Warenbestand.DataSourceName=sDataSource
+	oForm_Warenbestand.NavigationBarMode=0
+	oForm_Warenbestand.CommandType=2
+	oForm_Warenbestand.Command=sSQL1
+	oForm_Warenbestand.Cycle=1
+	oForm_Warenbestand.AllowInserts=false
+End Sub
+
+Sub init_Form_Steuerung()
+	sSQL1=&quot;select * from Steuerung where ClientID=&quot;&amp; iClientID
+	oForm_Steuerung.DataSourceName=sDataSource
+	oForm_Steuerung.NavigationBarMode=0
+	oForm_Steuerung.CommandType=2
+	oForm_Steuerung.Command=sSQL1
+	oForm_Steuerung.Cycle=1
+	oForm_Steuerung.AllowInserts=false
+End Sub
+
+Sub init_List_Hauptgruppenauswahl()
+	vSQLArray=Array(&quot;select Hauptgruppenname,HauptgruppenID from &quot;&amp; sHauptgruppen &amp;&quot; order by HauptgruppenID ASC&quot;)
+	oList_Hauptgruppenauswahl.ListSourceType=4
+	oList_Hauptgruppenauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Gruppenauswahl()
+	vSQLArray=Array(&quot;select distinct t1.Gruppenname,t1.GruppenID&quot;&amp;_
+		&quot; from &quot;&amp; sLeistungsgruppen &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where (((t1.HauptgruppenID=t2.HauptgruppenID and LENGTH(t2.HauptgruppenID) &gt; 0)&quot;&amp;_
+		&quot; or (t1.HauptgruppenID like &apos;%&apos; and LENGTH(t2.HauptgruppenID) IS NULL))&quot;&amp;_
+		&quot; or t1.GruppenID=t2.GruppenID)&quot;&amp;_
+		&quot; order by t1.GruppenID ASC&quot;)
+	oList_Gruppenauswahl.ListSourceType=4
+	oList_Gruppenauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Leistungsauswahl()
+	vSQLArray=Array(&quot;select t1.Leistungsbezeichnung,t1.LeistungsID&quot;&amp;_
+		&quot; from &quot;&amp; sLeistungsstamm &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where (((t1.Leistungsgruppe=t2.GruppenID and LENGTH(t2.GruppenID) &gt; 0)&quot;&amp;_
+		&quot; or (t1.Leistungsgruppe like &apos;%&apos; and LENGTH(t2.GruppenID) IS NULL))&quot;&amp;_
+		&quot; and ((concat(t1.LeistungsID,&apos; &apos;,t1.Leistungsbezeichnung,&apos; &apos;,t1.Leistungsbeschreibung) like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+		&quot; and LENGTH(t2.Suchstring) &gt; 0)&quot;&amp;_
+		&quot; or (concat(t1.LeistungsID,&apos; &apos;,t1.Leistungsbezeichnung,&apos; &apos;,t1.Leistungsbeschreibung) like &apos;%&apos;&quot;&amp;_
+		&quot; and LENGTH(t2.Suchstring) IS NULL))&quot;&amp;_
+		&quot; or t1.LeistungsID=t2.LeistungsID)&quot;&amp;_
+		&quot; order by LeistungsID ASC&quot;)
+	oList_Leistungsauswahl.ListSourceType=4
+	oList_Leistungsauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Inventurwert()
+	vSQLArray=Array(&quot;select sum(t1.Warenbestand*t1.Einkaufspreis),sum(t1.Warenbestand*t1.Einkaufspreis)&quot;&amp;_
+		&quot; from &quot;&amp; sLeistungsstamm &amp;&quot; as t1&quot;&amp;_
+		&quot; where t1.Warenbestand &gt; 0 and t1.Warenbestand is not NULL&quot;)
+	oList_Inventurwert.ListSourceType=4
+	oList_Inventurwert.ListSource=vSQLArray
+End Sub
+</script:module>

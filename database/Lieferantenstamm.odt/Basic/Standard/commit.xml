@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="commit" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option Explicit
+
+Sub store_KontaktID_old
+	SetDocUserProperty(&quot;oKontaktID_old&quot;, lKontaktID)
+End Sub
+
+Sub SET_KontaktID_new
+	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+	Dim vStatus AS Variant
+	oField_KontaktID.commit()
+	if lKontaktID &lt;&gt; 0 AND lKontaktID &lt;&gt; lKontaktID_old then
+		vStatus=MsgBox(&quot;Wollen Sie wirklich die LieferantenID ändern?&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
+				 &quot;ACHTUNG!!!&quot;&amp; Chr$(10) &amp;_
+				 &quot;In bestehenden Dokumenten wird die LieferantenID NICHT mit geändert!!&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			if lKontaktID_old &lt;&gt; 0 then
+				if lKontaktID_old &lt;&gt; lKontaktID then
+					if fAnzahlDatensaetzeKontakte = 0 then
+						sSQL1=&quot;UPDATE &quot;&amp; sLieferanten &amp;&quot; SET KontaktID=&quot;&amp; lKontaktID &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID_old
+						SQL_execute(sSQL1)
+						sSQL2=&quot;UPDATE Steuerung SET KontaktID=&quot;&amp; lKontaktID &amp;&quot; WHERE ClientID=&quot;&amp; iClientID
+						SQL_execute(sSQL2)
+						sSQL3=&quot;UPDATE &quot;&amp; sAnsprechpartner_Lieferanten &amp;&quot; SET KontaktID=&quot;&amp; lKontaktID &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID_old
+						SQL_execute(sSQL3)
+					else
+						MsgBox(&quot;Die KontaktID ist schon vergeben! Wählen sie bitte eine neue ID!&quot;,16,sTitle_lokal)
+					End if
+					oForm_Steuerung.reload()
+				End if
+			End if
+		elseif vStatus=7 then
+			oForm_Steuerung.reload()
+		End if
+	End if
+End Sub
+
+</script:module>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Rechtschreibtest" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub RechtschreibTest()
+	if lDocumentID &gt; 0 then
+		Dim sSQL1 as String,iCount as Long,iCount_MAX as Long,iCountPos as Integer,iPosOld as Integer
+		Dim oRecord1 as Object
+		
+		oField_Bemerkung.commit()
+		oField_Document_Name.commit()
+		oForm_Document.updateRow()
+
+		sSQL1=&quot;SELECT t1.Document_Name,t1.Leistungsempfaenger,t1.Lieferbemerkung,t1.Bemerkung,t1.Document_Typ,t3.Projekt_Name&quot;
+		if iDocTypID &lt; 7 then
+			sSQL1=sSQL1 &amp; &quot;,t1.13bText&quot;
+		End if
+
+		sSQL1=sSQL1 &amp; &quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t1 &quot;&amp;_
+			&quot; Left Join &quot;&amp; sProjekte &amp;&quot; as t3 &quot;&amp;_
+			&quot; ON t3.ProjektID=t1.ProjektID AND t3.ProjektID &gt; 0,&quot;&amp;_
+			&quot; Steuerung as t2 &quot;&amp;_
+			&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; AND t1.DocumentID=t2.DocumentID&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			if fbSpellCheck(oRecord1.getString(1),&quot;Dokument Name&quot;) = False then exit sub
+			if fbSpellCheck(oRecord1.getString(2),&quot;Leistungsempfänger&quot;) = False then exit sub
+			if fbSpellCheck(oRecord1.getString(3),&quot;Lieferbemerkung&quot;) = False then exit sub
+			if fbSpellCheck(oRecord1.getString(4),&quot;Schluss-Bemerkung&quot;) = False then exit sub
+			if fbSpellCheck(oRecord1.getString(5),&quot;Dokument Typ&quot;) = False then exit sub
+			if fbSpellCheck(oRecord1.getString(6),&quot;Projekt Name&quot;) = False then exit sub
+			if iDocTypID &lt; 7 then
+				if fbSpellCheck(oRecord1.getString(7),&quot;§13b Text&quot;) = False then exit sub
+			End if
+		Wend
+
+		iCount_MAX=fAnzahl_Datensaetze(sArbeitstabelle,lDocumentID)
+		if iCount_MAX &gt; 0 then 
+			sSQL1=&quot;SELECT distinct Pos,Leistungsbezeichnung,Leistungsbeschreibung&quot;&amp;_
+				&quot; FROM &quot;&amp; sArbeitstabelle &amp;&quot; ORDER BY Pos ASC&quot;
+			if iCount_MAX = 1 then 
+				oRecord1=oResult(sSQL1)
+				While oRecord1.next()
+					if fbSpellCheck(oRecord1.getString(2),&quot;Leistungsbezeichnung Position &quot;&amp; oRecord1.getInt(1)) = False then exit sub
+					if fbSpellCheck(oRecord1.getString(3),&quot;Leistungsbeschreibung Position &quot;&amp; oRecord1.getInt(1)) = False then exit sub
+				Wend
+			elseif iCount_MAX &gt; 1 then 
+				For iCount = 1 to iCount_MAX
+					oRecord1=oResult_Scroll(sSQL1)
+					oRecord1.absolute(iCount)
+					if fbSpellCheck(oRecord1.getString(2),&quot;Leistungsbezeichnung Position &quot;&amp; oRecord1.getInt(1)) = False then exit sub
+					if fbSpellCheck(oRecord1.getString(3),&quot;Leistungsbeschreibung Position &quot;&amp; oRecord1.getInt(1)) = False then exit sub
+				Next iCount
+			End if
+		End if
+
+		iCount_MAX=fAnzahl_Datensaetze(sZwischensummen,lDocumentID)
+		if iCount_MAX &gt; 0 then 
+			sSQL1=&quot;SELECT Pos,ZwiSuName FROM &quot;&amp; sZwischensummen &amp;_
+				&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;_
+				&quot; ORDER BY Pos ASC&quot;
+			if iCount_MAX=1 then 
+				oRecord1=oResult(sSQL1)
+				While oRecord1.next()
+					if fbSpellCheck(oRecord1.getString(2),&quot;Zwischensummen Position &quot;&amp; oRecord1.getInt(1)) = False then exit sub
+				Wend
+			elseif iCount_MAX &gt; 1 then 
+				For iCount = 1 to iCount_MAX
+					oRecord1=oResult_Scroll(sSQL1)
+					oRecord1.absolute(iCount)
+					if fbSpellCheck(oRecord1.getString(2),&quot;Zwischensummen Position &quot;&amp; oRecord1.getInt(1)) = False then exit sub
+				Next iCount
+			End if
+		End If
+
+		iCount_MAX=fAnzahl_Datensaetze(sBemerkungen,lDocumentID)
+		if iCount_MAX &gt; 0 then 
+			sSQL1=&quot;SELECT Pos,Bemerkung FROM &quot;&amp; sBemerkungen &amp;_
+				&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;_
+				&quot; ORDER BY Pos ASC,ZwiBemID ASC&quot;
+			if iCount_MAX = 1 then 
+				oRecord1=oResult(sSQL1)
+				While oRecord1.next()
+					if fbSpellCheck(oRecord1.getString(2),&quot;Zwischenbemerkung Position &quot;&amp; oRecord1.getInt(1)) = False then exit sub
+				Wend
+			elseif iCount_MAX &gt; 1 then 
+				For iCount = 1 to iCount_MAX
+					oRecord1=oResult_Scroll(sSQL1)
+					oRecord1.absolute(iCount)
+					if oRecord1.getInt(1) = iPosOld then
+						iCountPos=iCountPos+1
+					else
+						iCountPos=0
+					End if
+					if iCountPos=0 then
+						if fbSpellCheck(oRecord1.getString(2),&quot;Zwischenbemerkung Position &quot;&amp; oRecord1.getInt(1)) = False then exit sub
+					else
+						if fbSpellCheck(oRecord1.getString(2),&quot;Zwischenbemerkung Position &quot;&amp; oRecord1.getInt(1) &amp;&quot;.&quot;&amp; iCountPos) = False then exit sub
+					End if
+					iPosOld=oRecord1.getInt(1)
+				Next iCount
+			End if
+		End if
+	End If
+End Sub
+
+
+
+</script:module>

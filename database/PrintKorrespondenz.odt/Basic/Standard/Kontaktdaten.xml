@@ -1,0 +1,500 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Kontaktdaten" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub KontaktDaten()
+	Dim oTables as Object
+	Dim oRecord_Kontakt as Object
+	Dim sNummern as String
+	Dim sAnrede as String,sBody as String,sGruszformel as String,iOption_Signum as integer
+	Dim sAnschrift as String,sLeerzeilen as String,sLeistungsprofil as String,sAbsender as String
+	Dim sName1 as String,sName2 as String,sName3 as String,sName4 as String,sNameKurz as String
+	Dim sLand as String,sPLZ as String,sPlatzhalter as String
+	Dim sOrt as String,sStrasse as String,sHausnummer as String,sTelefon as String,sKontakt as String
+	Dim sFunktelefon as String,sFax as String,sEMail as String,sUrl as String,sKontakt_Bez as String
+	Dim sBank as String,sBIC as String,sIBAN as String,sGeschaeftsfuehrer as String,sGeschaeftsfuehrer_Bez as String
+	DIM sBankverbindung as String,sBankverbindung_Bez as String,sFirmendaten as String,iOptionInhaber as Integer
+	Dim sAmtsgericht as String,sHRB as String,sUmsatzsteuernummer as String,sUmsatzsteuerID as String
+	Dim sLeist_Pro_1 as String,sLeist_Pro_2 as String,sLeist_Pro_3 as String,sLeist_Pro_4 as String
+	Dim sLeist_Pro_5 as String,sLeist_Pro_6 as String,sLeist_Pro_7 as String,sLeist_Pro_8 as String
+	Dim sGrafik_URL as String,sSignum_URL as String,sLogo_URL as String
+	Dim oGraphic as Object,oGraphic1 as Object,vCursor as Variant
+	Dim sAnschrift_Eigen_1 as String,sAnschrift_Eigen_2 as String,sAnschrift_Eigen_3 as String
+	Dim oStyleFamilies as Object,oPageStyles as Object,oPageStyle_1 as Object,oPageStyle_2 as Object
+	Dim oBookmark As Object,oBookmarkAnchor as Object,oRangeCursor as Object
+	Dim oSelections as Object,oSize as Object,vGraphics as Variant,iPrint_Logo as Integer
+	Dim oTable_Logo1 as Object,oTable_Logo2 as Object,oTable_Signum as Object,iCount as integer
+	Dim lGrafikHeight as Long,lGrafikWidth as Long,lSignumHeight as Long,lSignumWidth as Long
+	Dim lLogoHeight as Long,lLogoWidth as Long
+	Dim sSQL1 as String,iCountSerienbrief as Integer
+	Dim oCursor as Object,oCursorKopf1 as Object,oCursorKopf2 as Object,oBookmarks as Object,oAnschors as Object
+	Dim vRows_Signum as Variant,vStatus as Variant
+	Dim Dummy()
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	
+	iCountSerienbrief=1
+	sSQL1=&quot;select distinct &quot;&amp;_
+		&quot;t1.DocumentID,t1.Document_TypID,t1.Print_Typ,t1.Document_Name,t1.Nummern,t1.Anrede,&quot;&amp;_
+		&quot;t1.Body,t1.Anschrift,t1.Gruszformel,t1.Absender,t1.Option_Signum,t1.Signum_URL,t1.Leerzeilen,t1.Print_Logo,&quot;&amp;_
+		&quot;t2.Name1,t2.Name2,t2.Name3,t2.Name4,t2.NameKurz,t2.Land,t2.PLZ,t2.Ort,t2.Strasse,t2.Hausnummer,t2.Telefon,t2.Funktelefon,t2.Fax,t2.EMail,&quot;&amp;_
+		&quot;t2.Url,t2.Bank,t2.BIC,t2.IBAN,t2.Geschaeftsfuehrer,t2.OptionInhaber,t2.Amtsgericht,t2.HRB,t2.Umsatzsteuernummer,t2.UmsatzsteuerID,&quot;&amp;_
+		&quot;t2.Leist_Pro_1,t2.Leist_Pro_2,t2.Leist_Pro_3,t2.Leist_Pro_4,t2.Leist_Pro_5,t2.Leist_Pro_6,t2.Leist_Pro_7,t2.Leist_Pro_8,&quot;&amp;_
+		&quot;t3.Grafik_URL,t1.Signum_URL,t3.Logo_URL,t3.GrafikHeight,t3.GrafikWidth,t1.SignumHeight,t1.SignumWidth,t3.LogoHeight,t3.LogoWidth,&quot;&amp;_
+		&quot;t1.UserID,t1.EMail,t1.Fax,t1.Betreff,t1.KontaktTyp,t1.Serienbrief &quot;&amp;_
+		&quot;from &quot;&amp; sDrucker_TEMP(iUserID_lokal) &amp;&quot; as t1,Einstellungen as t2,Users as t3&quot;&amp;_
+		&quot; where t2.EinstellungsID = t1.EinstellungsID&quot;&amp;_
+		&quot; AND t3.UserID = t1.UserID&quot;
+
+	Do While fAnzahlSerienbriefe &gt;= iCountSerienbrief
+		oRecord_Kontakt=oResult_Scroll(sSQL1)
+		oRecord_Kontakt.absolute(iCountSerienbrief)
+		SetDocUserProperty(&quot;oDocumentID&quot;,oRecord_Kontakt.getString(1))
+		SetDocUserProperty(&quot;oDocumentID_mit_Praefix&quot;, &quot;S&quot;&amp; UCase(Left(oRecord_Kontakt.getString(60),2))&amp; oRecord_Kontakt.getString(1))
+		SetDocUserProperty(&quot;oDocument_TypID&quot;,oRecord_Kontakt.getInt(2))
+		SetDocUserProperty(&quot;oPrint_Typ&quot;,oRecord_Kontakt.getInt(3))
+		SetDocUserProperty(&quot;oDocument_Name&quot;, oRecord_Kontakt.getString(4))
+		sNummern=oRecord_Kontakt.getString(5)
+		sAnrede=oRecord_Kontakt.getString(6)
+		sBody=oRecord_Kontakt.getString(7)
+		sAnschrift=oRecord_Kontakt.getString(8)
+		sGruszformel=oRecord_Kontakt.getString(9)
+		sAbsender=oRecord_Kontakt.getString(10)
+		iOption_Signum=oRecord_Kontakt.getInt(11)
+		sSignum_URL=oRecord_Kontakt.getString(12)
+		sLeerzeilen=oRecord_Kontakt.getString(13)
+		iPrint_Logo=oRecord_Kontakt.getInt(14)
+		sName1=oRecord_Kontakt.getString(15)
+		sName2=oRecord_Kontakt.getString(16)
+		sName3=oRecord_Kontakt.getString(17)
+		sName4=oRecord_Kontakt.getString(18)
+		sNameKurz=oRecord_Kontakt.getString(19)
+		sLand=oRecord_Kontakt.getString(20)
+		sPLZ=oRecord_Kontakt.getString(21)
+		sOrt=oRecord_Kontakt.getString(22)
+		sStrasse=oRecord_Kontakt.getString(23)
+		sHausnummer=oRecord_Kontakt.getString(24)
+		sTelefon=oRecord_Kontakt.getString(25)
+		sFunktelefon=oRecord_Kontakt.getString(26)
+		sFax=oRecord_Kontakt.getString(27)
+		sEMail=oRecord_Kontakt.getString(28)
+		SetDocUserProperty(&quot;oEMail&quot;, oRecord_Kontakt.getString(28))
+		sUrl=oRecord_Kontakt.getString(29)
+		sBank=oRecord_Kontakt.getString(30)
+		sBIC=oRecord_Kontakt.getString(31)
+		sIBAN=oRecord_Kontakt.getString(32)
+		sGeschaeftsfuehrer=oRecord_Kontakt.getString(33)
+		iOptionInhaber=oRecord_Kontakt.getLong(34)
+		sAmtsgericht=oRecord_Kontakt.getString(35)
+		sHRB=oRecord_Kontakt.getString(36)
+		sUmsatzsteuernummer=oRecord_Kontakt.getString(37)
+		sUmsatzsteuerID=oRecord_Kontakt.getString(38)
+		sLeist_Pro_1=oRecord_Kontakt.getString(39)
+		sLeist_Pro_2=oRecord_Kontakt.getString(40)
+		sLeist_Pro_3=oRecord_Kontakt.getString(41)
+		sLeist_Pro_4=oRecord_Kontakt.getString(42)
+		sLeist_Pro_5=oRecord_Kontakt.getString(43)
+		sLeist_Pro_6=oRecord_Kontakt.getString(44)
+		sLeist_Pro_7=oRecord_Kontakt.getString(45)
+		sLeist_Pro_8=oRecord_Kontakt.getString(46)
+		sGrafik_URL=oRecord_Kontakt.getString(47)
+		sSignum_URL=oRecord_Kontakt.getString(48)
+		sLogo_URL=oRecord_Kontakt.getString(49)
+		lGrafikHeight=oRecord_Kontakt.getLong(50)
+		lGrafikWidth=oRecord_Kontakt.getLong(51)
+		lSignumHeight=oRecord_Kontakt.getLong(52)
+		lSignumWidth=oRecord_Kontakt.getLong(53)
+		lLogoHeight=oRecord_Kontakt.getLong(54)
+		lLogoWidth=oRecord_Kontakt.getLong(55)
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, oRecord_Kontakt.getLong(56))
+		SetDocUserProperty(&quot;oEMail_Empfaenger&quot;, oRecord_Kontakt.getString(57))
+		SetDocUserProperty(&quot;oFax_Empfaenger&quot;, oRecord_Kontakt.getString(58))
+		SetDocUserProperty(&quot;oBetreff&quot;, oRecord_Kontakt.getString(59))
+		SetDocUserProperty(&quot;oSerienbrief&quot;, oRecord_Kontakt.getInt(61))
+	
+		oStyleFamilies= oDoc.getStyleFamilies()
+		oPageStyles = oStyleFamilies.getByName(&quot;PageStyles&quot;)
+		oPageStyle_1 = oPageStyles.getByName(&quot;Erste Seite&quot;)
+		oPageStyle_2 = oPageStyles.getByName(&quot;Standard&quot;)
+		oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+		oTables = oDoc.getTextTables
+	
+		Dim oFrame as Object
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Druck: &quot;&amp; sDocument_Name)
+	
+		if iPrint_Typ = 1 AND fsInTrim(sFax_Empfaenger) &lt;&gt; &quot;&quot; AND LCase(sFaxTyp) &lt;&gt; &quot;fritzfax&quot; AND LCase(sFaxTyp) &lt;&gt; &quot;yajhfc&quot; then
+&apos;			if sFaxNumberPraefix &lt;&gt; &quot;&quot; AND Len(fsLeerzeichenEntfernen(sFax_Empfaenger)) &gt; CInt(iFaxLenInternNumber) then
+			if Len(fsLeerzeichenEntfernen(sFax_Empfaenger)) &gt; CInt(iFaxLenInternNumber) then
+				Feld_fuellen(&quot;FaxNr&quot;,&quot;@@#&quot; &amp; fsLeerzeichenEntfernen(sFaxNumberPraefix &amp; fsPlusErsetzen(sFax_Empfaenger)) &amp; &quot;@@&quot;)
+			else
+				Feld_fuellen(&quot;FaxNr&quot;,&quot;@@#&quot; &amp; fsLeerzeichenEntfernen(sFax_Empfaenger) &amp; &quot;@@&quot;)
+			End if
+		else
+&apos;			if sFaxNumberPraefix &lt;&gt; &quot;&quot; AND Len(fsLeerzeichenEntfernen(sFax_Empfaenger)) &gt; CInt(iFaxLenInternNumber) then
+			if Len(fsLeerzeichenEntfernen(sFax_Empfaenger)) &gt; CInt(iFaxLenInternNumber) then
+				sFaxNummer=fsLeerzeichenEntfernen(sFaxNumberPraefix &amp; fsPlusErsetzen(sFax_Empfaenger))
+			else
+				sFaxNummer=fsLeerzeichenEntfernen(sFax_Empfaenger)
+			End if
+			Feld_loeschen(&quot;FaxNr&quot;)
+		End if	
+	
+		if iCountSerienbrief=1 then
+	
+			if iPrint_Typ = 0 AND iPrint_Logo = 0 then
+				oPageStyle_1.TopMargin = 3200
+				oPageStyle_2.TopMargin = 3200
+				oPageStyle_1.LeftMargin = 2000
+				oPageStyle_2.LeftMargin = 2000
+			
+				oTables.getByName(&quot;Logo1&quot;).getRows().removeByIndex(0,1)
+				oTables.getByName(&quot;Logo2&quot;).getRows().removeByIndex(0,1)
+			else
+				oPageStyle_1.TopMargin = 640
+				oPageStyle_2.TopMargin = 640
+			
+				oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+				oGraphic.GraphicURL=convertToUrl(sLogo_URL)
+			&apos;	oGraphic.AnchorType=1
+				oGraphic.Height=lLogoHeight
+				oGraphic.Width=lLogoWidth
+				oTable_Logo1 = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+				oTable_Logo1 = oTables.getByName(&quot;Logo1&quot;).getCellByName(&quot;A1&quot;)
+				oTable_Logo1.insertTextContent(oTable_Logo1, oGraphic, false)
+			
+				if Len(TRIM(sGrafik_URL)) &gt; 0 then
+					oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+					oGraphic.GraphicURL=convertToUrl(sGrafik_URL)
+					oGraphic.AnchorType=1
+					oGraphic.VertOrient=5
+					oGraphic.Height=lGrafikHeight
+					oGraphic.Width=lGrafikWidth
+					oTable_Logo1 = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+					oTable_Logo1 = oTables.getByName(&quot;Logo1&quot;).getCellByName(&quot;A1&quot;)
+					oCursorKopf1 = oTable_Logo1.createTextCursor()
+					oCursorKopf1.gotoEnd(False)
+					oTable_Logo1.insertTextContent(oCursorKopf1, oGraphic, False)
+				End if
+				
+				oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+				oGraphic.GraphicURL=convertToUrl(sLogo_URL)
+			&apos;	oGraphic.AnchorType=1
+				oGraphic.Height=lLogoHeight
+				oGraphic.Width=lLogoWidth
+				oTable_Logo2 = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+				oTable_Logo2 = oTables.getByName(&quot;Logo2&quot;).getCellByName(&quot;A1&quot;)
+				oTable_Logo2.insertTextContent(oTable_Logo2, oGraphic, false)
+			
+				if Len(TRIM(sGrafik_URL)) &gt; 0 then
+					oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+					oGraphic.GraphicURL=convertToUrl(sGrafik_URL)
+					oGraphic.AnchorType=1
+					oGraphic.VertOrient=5
+					oGraphic.Height=lGrafikHeight
+					oGraphic.Width=lGrafikWidth
+					oTable_Logo2 = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+					oTable_Logo2 = oTables.getByName(&quot;Logo2&quot;).getCellByName(&quot;A1&quot;)
+					oCursorKopf2 = oTable_Logo2.createTextCursor()
+					oCursorKopf2.gotoEnd(False)
+					oTable_Logo2.insertTextContent(oCursorKopf2, oGraphic, False)
+				End if
+			End if
+			
+			if iOption_Signum = 1 then
+				oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+				oGraphic.GraphicURL=convertToUrl(sSignum_URL)
+				oGraphic.AnchorType=1
+				oGraphic.VertOrient=5
+				oGraphic.Height=lSignumHeight
+				oGraphic.Width=lSignumWidth
+				oTable_Signum = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+				oTable_Signum = oTables.getByName(&quot;Signum&quot;).getCellByName(&quot;A1&quot;)
+				oTable_Signum.insertTextContent(oTable_Signum, oGraphic, false)
+			else
+				if Len(Trim(sGruszformel)) = 0 AND Len(Trim(sAbsender)) = 0 then
+					oTable_Signum = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+					oTable_Signum = oTables.getByName(&quot;Signum&quot;)
+					vRows_Signum = oTable_Signum.getRows()
+					vRows_Signum.removeByIndex(0,1)	
+				End if
+			End if
+			
+			sAnschrift_Eigen_1 = sStrasse &amp; &quot; &quot; &amp; sHausnummer &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sPLZ &amp; &quot; &quot; &amp; sOrt
+			sAnschrift_Eigen_2 =  sNameKurz &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sStrasse &amp; &quot; &quot; &amp; sHausnummer &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sPLZ &amp; &quot; &quot; &amp; sOrt
+			if iPrint_Typ = 0  AND iPrint_Logo = 0 then
+				sAnschrift_Eigen_3 =  sName1 &amp; Chr(10) &amp; sName2 &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sStrasse &amp; &quot; &quot; &amp; sHausnummer &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sPLZ &amp; &quot; &quot; &amp; sOrt
+			else 
+				sAnschrift_Eigen_3 = sStrasse &amp; &quot; &quot; &amp; sHausnummer &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sPLZ &amp; &quot; &quot; &amp; sOrt
+			End if
+			
+			
+			if sLeist_Pro_1 &lt;&gt; &quot;&quot; then
+				sLeistungsprofil = Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_1 &amp; Chr(10)
+			else
+				sPlatzhalter = Chr(10)
+			End if
+			if sLeist_Pro_2 &lt;&gt; &quot;&quot; then
+				sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_2 &amp; Chr(10)
+			else
+				sPlatzhalter = sPlatzhalter &amp; Chr(10)
+			End if
+			if sLeist_Pro_3 &lt;&gt; &quot;&quot; then
+				sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_3 &amp; Chr(10)
+			else
+				sPlatzhalter = sPlatzhalter &amp; Chr(10)
+			End if
+			if sLeist_Pro_4 &lt;&gt; &quot;&quot; then
+				sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_4 &amp; Chr(10)
+			else
+				sPlatzhalter = sPlatzhalter &amp; Chr(10)
+			End if
+			if sLeist_Pro_5 &lt;&gt; &quot;&quot; then
+				sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_5 &amp; Chr(10)
+			else
+				sPlatzhalter = sPlatzhalter &amp; Chr(10)
+			End if
+			if sLeist_Pro_6 &lt;&gt; &quot;&quot; then
+				sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_6 &amp; Chr(10)
+			else
+				sPlatzhalter = sPlatzhalter &amp; Chr(10)
+			End if
+			if sLeist_Pro_7 &lt;&gt; &quot;&quot; then
+				sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_7 &amp; Chr(10)
+			else
+				sPlatzhalter = sPlatzhalter &amp; Chr(10)
+			End if
+			if sLeist_Pro_8 &lt;&gt; &quot;&quot; then
+				sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_8 &amp; Chr(10)
+			else
+				sPlatzhalter = sPlatzhalter &amp; Chr(10)
+			End if
+			sLeistungsprofil = sLeistungsprofil &amp; sPlatzhalter
+			
+			if sLeerzeilen = &quot;&quot; then
+				sLeerzeilen = &quot; &quot;
+			End if
+			
+			if sTelefon &lt;&gt; &quot;&quot; then
+				sKontakt_Bez = &quot;Telefon:&quot;
+				sKontakt = sTelefon
+			End if
+			if sFax &lt;&gt; &quot;&quot; then
+				if sKontakt_Bez &lt;&gt; &quot;&quot; then
+					sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;Fax:&quot;
+					sKontakt = sKontakt &amp; Chr(10) &amp; sFax 
+				else
+					sKontakt_Bez = &quot;Fax:&quot;
+					sKontakt = sFax
+				end if
+			End if
+			if sFunktelefon &lt;&gt; &quot;&quot; then
+				if sKontakt_Bez &lt;&gt; &quot;&quot; then
+					sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;Mobil:&quot;
+					sKontakt = sKontakt &amp; Chr(10) &amp; sFunktelefon 
+				else
+					sKontakt_Bez = &quot;Mobil:&quot;
+					sKontakt = sFunktelefon
+				end if
+			End if
+			if sUrl &lt;&gt; &quot;&quot; then
+				if sKontakt_Bez &lt;&gt; &quot;&quot; then
+					sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;Url:&quot;
+					sKontakt = sKontakt &amp; Chr(10) &amp; sUrl 
+				else
+					sKontakt_Bez = &quot;Url:&quot;
+					sKontakt = sUrl
+				end if
+			End if
+			if sEMail &lt;&gt; &quot;&quot; then
+				if sKontakt_Bez &lt;&gt; &quot;&quot; then
+					sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;e-Mail:&quot;
+					sKontakt = sKontakt &amp; Chr(10) &amp; sEMail 
+				else
+					sKontakt_Bez = &quot;e-Mail:&quot;
+					sKontakt = sEMail
+				end if
+			End if
+			
+			if sBank &lt;&gt; &quot;&quot; then
+				sBankverbindung_Bez = &quot;Bankverbindung:&quot; &amp; Chr(10)
+				sBankverbindung = sBank &amp; Chr(10) &amp; &quot;IBAN: &quot; &amp; sIBAN &amp; Chr(10) &amp; &quot;BIC: &quot; &amp; sBIC
+			else
+				sBankverbindung_Bez = &quot;&quot;
+				sBankverbindung = &quot;&quot;
+			End if
+			
+			if sGeschaeftsfuehrer &lt;&gt; &quot;&quot; then
+				if iOptionInhaber = 0 then
+					sGeschaeftsfuehrer_Bez = &quot;Geschäftsführer:&quot; &amp; Chr(10)
+				elseif iOptionInhaber = 1 then
+					sGeschaeftsfuehrer_Bez = &quot;Inhaber:&quot; &amp; Chr(10)
+				End if
+				sFirmendaten = sGeschaeftsfuehrer
+				if sUmsatzsteuerID = &quot;&quot; or sUmsatzsteuernummer = &quot;&quot; then
+					sFirmendaten = sFirmendaten &amp; Chr(10)
+				End if
+			else
+				sGeschaeftsfuehrer_Bez = &quot;&quot;
+				sFirmendaten = &quot;&quot;
+			End if
+			if sAmtsgericht &lt;&gt; &quot;&quot; then
+				if sFirmendaten &lt;&gt; &quot;&quot; then
+					sFirmendaten = sFirmendaten &amp; Chr(10) &amp; sAmtsgericht &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sHRB
+				else
+					sFirmendaten = sAmtsgericht &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sHRB
+				end if
+			End if
+			if sUmsatzsteuerID &lt;&gt; &quot;&quot; then
+				if sFirmendaten &lt;&gt; &quot;&quot; then
+					sFirmendaten = sFirmendaten &amp; Chr(10) &amp; &quot;UmsatzsteuerID: &quot; &amp; sUmsatzsteuerID 
+				else
+					sFirmendaten = &quot;UmsatzsteuerID: &quot; &amp; sUmsatzsteuerID 
+				end if
+			End if
+			if sUmsatzsteuernummer &lt;&gt; &quot;&quot; then
+				if sFirmendaten &lt;&gt; &quot;&quot; then
+					sFirmendaten = sFirmendaten &amp; Chr(10) &amp; &quot;Umsatzsteuernummer: &quot; &amp; sUmsatzsteuernummer
+				else
+					sFirmendaten = &quot;Umsatzsteuernummer: &quot; &amp; sUmsatzsteuernummer
+				end if
+			else
+				sFirmendaten = sFirmendaten &amp; Chr(10)
+			End if
+			
+			oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+			oTables = oDoc.getTextTables
+			
+			if sName1 &lt;&gt; &quot;&quot; then
+				Feld_fuellen(&quot;Name1&quot;,sName1)
+			else
+				Feld_loeschen(&quot;Name1&quot;)
+			End if
+			if sName2 &lt;&gt; &quot;&quot; then
+				Feld_fuellen(&quot;Name2&quot;,sName2)
+			else
+				Feld_loeschen(&quot;Name2&quot;)
+			End if
+			if sName3 &lt;&gt; &quot;&quot; then
+				Feld_fuellen(&quot;Name3&quot;,sName3)
+			else
+				Feld_loeschen(&quot;Name3&quot;)
+			End if
+			if sName4 &lt;&gt; &quot;&quot; then
+				Feld_fuellen(&quot;Name4&quot;,sName4)
+			else
+				Feld_loeschen(&quot;Name4&quot;)
+			End if
+			
+			Feld_fuellen(&quot;Anschrift_Eigen_1&quot;,sAnschrift_Eigen_1)
+			if iPrint_Typ &gt; 0 then
+				loesche_Falzmarken()
+				Feld_loeschen(&quot;unzustellbar&quot;)
+				Feld_loeschen(&quot;Anschrift_Eigen_2&quot;)
+			else
+				Feld_fuellen(&quot;Anschrift_Eigen_2&quot;,sAnschrift_Eigen_2)
+			end if
+			
+			Feld_fuellen(&quot;Anschrift_Eigen_3&quot;,sAnschrift_Eigen_3)
+			Feld_fuellen(&quot;Leerzeilen&quot;,sLeerzeilen)
+			Feld_fuellen(&quot;Document_Name&quot;,sDocument_Name)
+			if Len(Trim(sAnrede)) = 0 then
+				Feld_loeschen(&quot;Anrede&quot;)
+			else
+				Feld_fuellen(&quot;Anrede&quot;,sAnrede)
+			end if
+			Feld_fuellen(&quot;Body&quot;,sBody)
+			if Len(Trim(sGruszformel)) = 0 then
+				Feld_loeschen(&quot;Gruszformel&quot;)
+			else
+				Feld_fuellen(&quot;Gruszformel&quot;,sGruszformel)
+			end if
+			if Len(Trim(sAbsender)) = 0 then
+				Feld_loeschen(&quot;Absender&quot;)
+			else
+				Feld_fuellen(&quot;Absender&quot;,sAbsender)
+			end if
+			Feld_fuellen(&quot;Nummern&quot;,sNummern)
+			Feld_fuellen(&quot;Leistungsprofil&quot;,sLeistungsprofil)
+			
+			Feld_fuellen(&quot;Kontakt_Bez&quot;,sKontakt_Bez)
+			Feld_fuellen(&quot;Kontakt&quot;,sKontakt)
+			Feld_fuellen(&quot;Bankverbindung_Bez&quot;,sBankverbindung_Bez)
+			Feld_fuellen(&quot;Bankverbindung&quot;,sBankverbindung)
+			Feld_fuellen(&quot;Geschaeftsfuehrer_Bez&quot;,sGeschaeftsfuehrer_Bez)
+			Feld_fuellen(&quot;Firmendaten&quot;,sFirmendaten)
+		End If
+	
+		Feld_fuellen(&quot;Anschrift&quot;,sAnschrift)
+		oDoc.getTextFields().refresh()
+	
+		if iSerienbrief=1 then
+			if iPrint_Typ = 0 then
+				if iCountSerienbrief=1 then
+					vStatus = MsgBox(&quot;Soll der Serienbriefdruck erfolgen?&quot;,36,sTitle_lokal)
+					if vStatus = 7 then
+						exit sub
+					end if
+				end if
+				oDoc.print(Dummy())
+				wait 1000
+			elseif iPrint_Typ = 1 then
+				if iCountSerienbrief=1 then
+					vStatus = MsgBox(&quot;Soll der Faxversand gemäß dem Serienbriefverteiler erfolgen?&quot;,36,sTitle_lokal)
+					if vStatus = 7 then
+						exit sub
+					end if
+					if LCase(sFaxTyp) &lt;&gt; &quot;yajhfc&quot; then
+						Dim printprops(3) as New com.sun.star.beans.PropertyValue
+						printprops(0).Name = &quot;Name&quot;
+						printprops(0).Value=sFaxPrinter
+						printprops(1).Name = &quot;PaperFormat&quot;
+						printprops(1).Value = com.sun.star.view.PaperFormat.A4
+						printprops(2).Name = &quot;PaperOrientation&quot;
+						printprops(2).Value = com.sun.star.view.PaperOrientation.PORTRAIT
+						oDoc.setPrinter(printprops())
+					end if		
+				end if
+				if LCase(sFaxTyp) &lt;&gt; &quot;yajhfc&quot; then
+					oDoc.print(Dummy())
+				else
+					SendFaxYajHFC()
+				End if
+				wait 2000
+				sFaxNummer=&quot;&quot;
+			elseif iPrint_Typ = 2 then
+				if iCountSerienbrief=1 then
+					vStatus = MsgBox(&quot;Soll die Erzeugung der Serien-Mail erfolgen?&quot;,36,sTitle_lokal)
+					if vStatus = 7 then
+						exit sub
+					end if
+				end if
+				
+				Dim sUrlAttatchement as String,oPfad as Object
+				Dim sMailSubject AS String,sMailBody AS String
+				
+				oPfad = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+			
+				sUrlAttatchement=ConvertToURL(oPfad.temp)&amp;&quot;/&quot;&amp; sDocumentID_mit_Praefix &amp;&quot;_&quot;&amp; iCountSerienbrief &amp;&quot;.pdf&quot;
+				oDoc.storeToURL(sUrlAttatchement,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+				
+				sMailSubject=fsInTrim(fsReplace(fsReplace(fsReplace(fsReplace(sDocument_Name,Chr(34),&quot; &quot;),Chr(10),&quot; - &quot;),Chr(13),&quot; - &quot;),&quot;,&quot;,&quot; &quot;))
+			
+				sMailBody=&quot;Sehr geehrte Damen und Herren, &quot; &amp; Chr(10) &amp; Chr(10) &amp; &quot;im Anhang finden Sie unsere Dokument.&quot;
+				
+			 	SendMail(sEMail_Empfaenger,sEMail,sMailSubject,sMailBody,sUrlAttatchement)
+				
+			End if
+		End if
+		iCountSerienbrief=iCountSerienbrief+1
+	Loop
+
+End Sub
+
+
+</script:module>

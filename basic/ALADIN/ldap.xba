@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="ldap" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option explicit
+
+Sub ldap_UPDATE()
+	Dim sSQL as String
+	Dim sSQL1 as String
+	
+	if iLDAP = 1 then
+		sSQL=&quot;delete from ldap_data_temp&quot;
+		SQL_execute(sSQL)
+		sSQL=&quot;delete from ldap_data&quot;
+		SQL_execute(sSQL)
+		sSQL=&quot;delete from ldap_entries&quot;
+		SQL_execute(sSQL)
+
+		SQL_Reset_AutoIncrement(&quot;ldap_data_temp&quot;)
+		SQL_Reset_AutoIncrement(&quot;ldap_data&quot;)
+		SQL_Reset_AutoIncrement(&quot;ldap_entries&quot;)
+	
+		sSQL=&quot;insert into ldap_data_temp &quot;&amp;_
+			&quot;(Gruppe,Anrede,Name,Name1,Titel,Vorname,Land,PLZ,Ort,Strasse,Hausnummer,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bemerkungen) &quot;&amp;_
+			&quot;select &apos;Kunden&apos;,TRIM(Anrede),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Name1,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;&apos;&apos;,TRIM(Titel),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Vorname,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(Land),TRIM(PLZ),TRIM(Ort),TRIM(Strasse),TRIM(Hausnummer),&quot;&amp;_
+			&quot;TRIM(Telefon),TRIM(Funktelefon),TRIM(Fax),TRIM(EMail),TRIM(Url),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Bemerkungen,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)) &quot;&amp;_
+			&quot;from Kunden &quot;&amp;_
+			&quot;UNION &quot;&amp;_
+			&quot;select &apos;Lieferanten&apos;,TRIM(Anrede),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Name1,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;&apos;&apos;,TRIM(Titel),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Vorname,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(Land),TRIM(PLZ),TRIM(Ort),TRIM(Strasse),TRIM(Hausnummer),&quot;&amp;_
+			&quot;TRIM(Telefon),TRIM(Funktelefon),TRIM(Fax),TRIM(EMail),TRIM(Url),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Bemerkungen,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)) &quot;&amp;_
+			&quot;from Lieferanten &quot;&amp;_
+			&quot;UNION &quot;&amp;_
+			&quot;select &apos;Kontakte&apos;,TRIM(Anrede),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Name1,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;&apos;&apos;,TRIM(Titel),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Vorname,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(Land),TRIM(PLZ),TRIM(Ort),TRIM(Strasse),TRIM(Hausnummer),&quot;&amp;_
+			&quot;TRIM(Telefon),TRIM(Funktelefon),TRIM(Fax),TRIM(EMail),TRIM(Url),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(Bemerkungen,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)) &quot;&amp;_
+			&quot;from Kontakte &quot;&amp;_
+			&quot;UNION &quot;&amp;_
+			&quot;select &apos;Ansprechpartner Kunden&apos;,TRIM(t2.Anrede),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t2.Name,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t1.Name1,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(t2.Titel),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t2.Vorname,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(t1.Land),TRIM(t1.PLZ),TRIM(t1.Ort),TRIM(t1.Strasse),TRIM(t1.Hausnummer),&quot;&amp;_
+			&quot;TRIM(t2.Telefon),TRIM(t2.Funktelefon),TRIM(t2.Fax),TRIM(t2.EMail),TRIM(t1.Url),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t1.Bemerkungen,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)) &quot;&amp;_
+			&quot;from Kunden as t1,Ansprechpartner_Kunden as t2 &quot;&amp;_
+			&quot;WHERE t1.KontaktID=t2.KontaktID &quot;&amp;_
+			&quot;UNION &quot;&amp;_
+			&quot;select &apos;Ansprechpartner Lieferanten&apos;,TRIM(t2.Anrede),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t2.Name,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t1.Name1,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(t2.Titel),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t2.Vorname,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(t1.Land),TRIM(t1.PLZ),TRIM(t1.Ort),TRIM(t1.Strasse),TRIM(t1.Hausnummer),&quot;&amp;_
+			&quot;TRIM(t2.Telefon),TRIM(t2.Funktelefon),TRIM(t2.Fax),TRIM(t2.EMail),TRIM(t1.Url),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t1.Bemerkungen,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)) &quot;&amp;_
+			&quot;from Lieferanten as t1,Ansprechpartner_Lieferanten as t2 &quot;&amp;_
+			&quot;WHERE t1.KontaktID=t2.KontaktID &quot;&amp;_
+			&quot;UNION &quot;&amp;_
+			&quot;select &apos;Ansprechpartner Kontakte&apos;,TRIM(t2.Anrede),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t2.Name,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t1.Name1,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(t2.Titel),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t2.Vorname,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)),&quot;&amp;_
+			&quot;TRIM(t1.Land),TRIM(t1.PLZ),TRIM(t1.Ort),TRIM(t1.Strasse),TRIM(t1.Hausnummer),&quot;&amp;_
+			&quot;TRIM(t2.Telefon),TRIM(t2.Funktelefon),TRIM(t2.Fax),TRIM(t2.EMail),TRIM(t1.Url),&quot;&amp;_
+			&quot;TRIM(REPLACE(REPLACE(REPLACE(REPLACE(REPLACE(t1.Bemerkungen,&apos;,&apos;,&apos;-&apos;),&apos;  &apos;,&apos; &apos;),&apos;+&apos;,&apos;&amp;&apos;),&apos;&quot;&amp; Chr(34) &amp;&quot;&apos;,&apos;&apos;),&apos;;&apos;,&apos;&apos;)) &quot;&amp;_
+			&quot;from Kontakte as t1,Ansprechpartner_Kontakte as t2 &quot;&amp;_
+			&quot;WHERE t1.KontaktID=t2.KontaktID &quot;
+		SQL_execute(sSQL)
+
+		sSQL=&quot;insert into ldap_data &quot;&amp;_
+			&quot;(Gruppe,Anrede,Name,Name1,Titel,Vorname,Land,PLZ,Ort,Strasse,Hausnummer,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bemerkungen) &quot;&amp;_
+			&quot;select Gruppe,Anrede,Name,Name1,Titel,Vorname,Land,PLZ,Ort,Strasse,Hausnummer,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bemerkungen &quot;&amp;_
+			&quot;from ldap_data_temp &quot;&amp;_
+			&quot;group by Name,Name1,Titel,Vorname,Land,PLZ,Ort,Strasse,Hausnummer,Telefon,Funktelefon,Fax,EMail,Url &quot;&amp;_
+			&quot;order by id&quot;
+		SQL_execute(sSQL)
+
+		sSQL=&quot;delete from ldap_data_temp&quot;
+		SQL_execute(sSQL)
+	
+		sSQL=&quot;insert into ldap_entries (dn,oc_map_id,parent,keyval) &quot;&amp;_
+			&quot;SELECT &apos;dc=aladin&apos;,3,0,1 &quot;&amp;_
+			&quot;UNION &quot;&amp;_
+			&quot;SELECT CONCAT(&apos;cn=&apos;,TRIM(CONCAT(TRIM(Vorname),&apos; &apos;,TRIM(Name))),&apos; (&apos;,id,&apos;)&apos;,&apos;,dc=aladin&apos;),1,1,id &quot;&amp;_
+			&quot; FROM ldap_data WHERE TRIM(Name1)=&apos;&apos;&quot;&amp;_
+			&quot;UNION &quot;&amp;_
+			&quot;SELECT CONCAT(&apos;cn=&apos;,TRIM(Name1),&apos; - &apos;,TRIM(CONCAT(TRIM(Vorname),&apos; &apos;,TRIM(Name))),&apos; (&apos;,id,&apos;)&apos;,&apos;,dc=aladin&apos;),1,1,id &quot;&amp;_
+			&quot; FROM ldap_data WHERE TRIM(Name1)&lt;&gt;&apos;&apos;&quot;
+		SQL_execute(sSQL)
+	end if
+end Sub
+
+
+</script:module>

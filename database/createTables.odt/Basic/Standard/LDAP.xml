@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="LDAP" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub create_ldap_Struktur()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN_Global&quot;)
+	Use_Aladin()
+	drop_LDAP()
+	create_ldap_data_temp()	
+	create_ldap_data()	
+	create_ldap_entries()	
+	create_ldap_attr_mapping()
+	create_ldap_entry_objclasses()
+	create_ldap_org()
+	create_ldap_oc_mappings()
+End Sub
+
+Sub drop_LDAP()
+	Use_Aladin()
+	sSQL=&quot;drop view if exists ldap_data&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;drop table if exists ldap_data&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;drop table if exists ldap_data_table&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;drop view if exists ldap_entries&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;drop table if exists ldap_entries&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;drop table if exists ldap_org&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;drop table if exists ldap_attr_mappings&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;drop table if exists ldap_entry_objclasses&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;drop table if exists ldap_oc_mappings&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub create_ldap_attr_mapping()
+	sSQL=&quot;create table ldap_attr_mappings &quot;&amp;_
+		&quot;(id integer unsigned not null primary key auto_increment,&quot;&amp;_
+		&quot;oc_map_id integer unsigned not null references ldap_oc_mappings(id),&quot;&amp;_
+		&quot;name varchar(255) not null,&quot;&amp;_
+		&quot;sel_expr varchar(255) not null,&quot;&amp;_
+		&quot;sel_expr_u varchar(255),&quot;&amp;_
+		&quot;from_tbls varchar(255) not null,&quot;&amp;_
+		&quot;join_where varchar(255),&quot;&amp;_
+		&quot;ADD_proc varchar(255),&quot;&amp;_
+		&quot;delete_proc varchar(255),&quot;&amp;_
+		&quot;param_order tinyint not null,&quot;&amp;_
+		&quot;expect_return tinyint not null)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (1,1,&apos;cn&apos;,&apos;CONCAT(TRIM(ldap_data.Name1),ELT(FIELD(MOD(1,LENGTH(TRIM(ldap_data.Name1))),1)+1,\&apos;\&apos;,\&apos; - \&apos;),&quot;&amp;_
+		&quot;TRIM(CONCAT(TRIM(ldap_data.Vorname),\&apos; \&apos;,TRIM(ldap_data.Name))))&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (3,1,&apos;givenName&apos;,&apos;TRIM(ldap_data.Vorname)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (4,1,&apos;sn&apos;,&apos;TRIM(ldap_data.Name)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (5,1,&apos;mail&apos;,&apos;TRIM(ldap_data.EMail)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (6,1,&apos;facsimileTelephoneNumber&apos;,&apos;TRIM(ldap_data.Fax)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (7,1,&apos;mobile&apos;,&apos;TRIM(ldap_data.Funktelefon)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (8,1,&apos;postalCode&apos;,&apos;TRIM(ldap_data.PLZ)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (9,1,&apos;mozillaHomeStreet&apos;,&apos;TRIM(CONCAT(TRIM(ldap_data.Strasse),\&apos; \&apos;,TRIM(ldap_data.Hausnummer)))&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (10,1,&apos;l&apos;,&apos;TRIM(ldap_data.Ort)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (11,1,&apos;displayName&apos;,&apos;TRIM(concat(TRIM(ldap_data.Vorname),\&apos; \&apos;,TRIM(ldap_data.Name)))&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (12,1,&apos;title&apos;,&apos;TRIM(ldap_data.Titel)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (13,1,&apos;mozillaHomeCountryName&apos;,&apos;TRIM(ldap_data.Land)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (14,1,&apos;mozillaHomePostalCode&apos;,&apos;TRIM(ldap_data.PLZ)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (15,1,&apos;postalADDress&apos;,&apos;TRIM(CONCAT(TRIM(ldap_data.Strasse),\&apos; \&apos;,TRIM(ldap_data.Hausnummer)))&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (16,1,&apos;mozillaHomeLocalityName&apos;,&apos;TRIM(ldap_data.Ort)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (17,1,&apos;ou&apos;,&apos;TRIM(ldap_data.Gruppe)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (18,1,&apos;streetADDress&apos;,&apos;TRIM(CONCAT(TRIM(ldap_data.Strasse),\&apos; \&apos;,TRIM(ldap_data.Hausnummer)))&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (19,1,&apos;telephoneNumber&apos;,&apos;TRIM(ldap_data.Telefon)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (20,1,&apos;mozillaWorkUrl&apos;,&apos;TRIM(ldap_data.Url)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (21,1,&apos;mozillaHomeUrl&apos;,&apos;TRIM(ldap_data.Url)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (22,1,&apos;description&apos;,&apos;TRIM(ldap_data.Bemerkungen)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_attr_mappings &quot;&amp;_
+		&quot;(id,oc_map_id,name,sel_expr,from_tbls,join_where,ADD_proc,delete_proc,param_order,expect_return)&quot;&amp;_
+		&quot;values (23,1,&apos;mozillaNickname&apos;,&apos;TRIM(ldap_data.Bemerkungen)&apos;,&apos;ldap_data&apos;,NULL,NULL,NULL,3,0)&quot;
+	SQL_execute_mysql(sSQL)
+
+End Sub
+
+Sub create_ldap_org()
+	sSQL=&quot;create table ldap_org &quot;&amp;_
+		&quot;(id integer not null primary key auto_increment,&quot;&amp;_
+		&quot;name varchar(100))&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_org (id,name) &quot;&amp;_
+		&quot;values (1,&apos;ALADIN&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+	
+Sub create_ldap_entry_objclasses()
+	sSQL=&quot;create table ldap_entry_objclasses &quot;&amp;_
+		&quot;(entry_id integer not null references ldap_entries(id),&quot;&amp;_
+		&quot;oc_name varchar(64))&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_entry_objclasses (entry_id,oc_name) &quot;&amp;_
+		&quot;values (1,&apos;dcObject&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_entry_objclasses (entry_id,oc_name) &quot;&amp;_
+		&quot;values (2,&apos;top&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_entry_objclasses (entry_id,oc_name) &quot;&amp;_
+		&quot;values (4,&apos;pkiUser&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_entry_objclasses (entry_id,oc_name) &quot;&amp;_
+		&quot;values (7,&apos;extensibleObject&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_entry_objclasses (entry_id,oc_name) &quot;&amp;_
+		&quot;values (8,&apos;mozillaAbPersonAlpha&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub create_ldap_oc_mappings()
+	sSQL=&quot;create table ldap_oc_mappings &quot;&amp;_
+		&quot;(id integer unsigned not null primary key auto_increment,&quot;&amp;_
+		&quot;name varchar(64) not null,&quot;&amp;_
+		&quot;keytbl varchar(64) not null,&quot;&amp;_
+		&quot;keycol varchar(64) not null,&quot;&amp;_
+		&quot;create_proc varchar(255),&quot;&amp;_
+		&quot;delete_proc varchar(255),&quot;&amp;_
+		&quot;expect_return tinyint not null)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_oc_mappings &quot;&amp;_
+		&quot;(id,name,keytbl,keycol,create_proc,delete_proc,expect_return)&quot;&amp;_
+		&quot;values (1,&apos;inetOrgPerson&apos;,&apos;ldap_data&apos;,&apos;id&apos;,NULL,NULL,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_oc_mappings &quot;&amp;_
+		&quot;(id,name,keytbl,keycol,create_proc,delete_proc,expect_return)&quot;&amp;_
+		&quot;values (2,&apos;mozillaAbPersonAlpha&apos;,&apos;ldap_data&apos;,&apos;id&apos;,NULL,NULL,0)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into ldap_oc_mappings &quot;&amp;_
+		&quot;(id,name,keytbl,keycol,create_proc,delete_proc,expect_return)&quot;&amp;_
+		&quot;values (3,&apos;organization&apos;,&apos;ldap_org&apos;,&apos;id&apos;,NULL,NULL,0)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub create_ldap_data()
+	sSQL=&quot;create table ldap_data &quot;&amp;_
+		&quot;(id bigint(20) not null primary key auto_increment,&quot;&amp;_
+		&quot;Gruppe varchar(50) not null,&quot;&amp;_
+		&quot;Anrede varchar(20) not null,&quot;&amp;_
+		&quot;Name varchar(100) not null,&quot;&amp;_
+		&quot;Name1 varchar(100) not null,&quot;&amp;_
+		&quot;Titel varchar(20) not null,&quot;&amp;_
+		&quot;Vorname varchar(50) not null,&quot;&amp;_
+		&quot;Land varchar(20) not null,&quot;&amp;_
+		&quot;PLZ varchar(10) not null,&quot;&amp;_
+		&quot;Ort varchar(50) not null,&quot;&amp;_
+		&quot;Strasse varchar(50) not null,&quot;&amp;_
+		&quot;Hausnummer varchar(10) not null,&quot;&amp;_
+		&quot;Telefon varchar(50) not null,&quot;&amp;_
+		&quot;Funktelefon varchar(50) not null,&quot;&amp;_
+		&quot;Fax varchar(50) not null,&quot;&amp;_
+		&quot;EMail varchar(50) not null,&quot;&amp;_
+		&quot;Url varchar(50) not null,&quot;&amp;_
+		&quot;Bemerkungen varchar(2000) not null)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub create_ldap_data_temp()
+	Use_Aladin()
+	sSQL=&quot;create table ldap_data_temp &quot;&amp;_
+		&quot;(id bigint(20) not null primary key auto_increment,&quot;&amp;_
+		&quot;Gruppe varchar(50) not null,&quot;&amp;_
+		&quot;Anrede varchar(20) not null,&quot;&amp;_
+		&quot;Name varchar(100) not null,&quot;&amp;_
+		&quot;Name1 varchar(100) not null,&quot;&amp;_
+		&quot;Titel varchar(20) not null,&quot;&amp;_
+		&quot;Vorname varchar(50) not null,&quot;&amp;_
+		&quot;Land varchar(20) not null,&quot;&amp;_
+		&quot;PLZ varchar(10) not null,&quot;&amp;_
+		&quot;Ort varchar(50) not null,&quot;&amp;_
+		&quot;Strasse varchar(50) not null,&quot;&amp;_
+		&quot;Hausnummer varchar(10) not null,&quot;&amp;_
+		&quot;Telefon varchar(50) not null,&quot;&amp;_
+		&quot;Funktelefon varchar(50) not null,&quot;&amp;_
+		&quot;Fax varchar(50) not null,&quot;&amp;_
+		&quot;EMail varchar(50) not null,&quot;&amp;_
+		&quot;Url varchar(50) not null,&quot;&amp;_
+		&quot;Bemerkungen varchar(2000) not null)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub create_ldap_entries()
+	sSQL=&quot;create table ldap_entries &quot;&amp;_
+		&quot;(id integer unsigned not null primary key auto_increment,&quot;&amp;_
+        &quot;dn varchar(255) not null,&quot;&amp;_
+        &quot;oc_map_id integer unsigned not null references ldap_oc_mappings(id),&quot;&amp;_
+        &quot;parent int NOT NULL,&quot;&amp;_
+        &quot;keyval int NOT NULL)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+</script:module>

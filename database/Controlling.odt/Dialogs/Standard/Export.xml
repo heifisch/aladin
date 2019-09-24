@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="3" dlg:id="Export" dlg:left="48" dlg:top="54" dlg:width="185" dlg:height="220" dlg:closeable="true" dlg:moveable="true" dlg:title="neues Dokument erstellen:">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="1" dlg:look="simple" dlg:font-name="Arial" dlg:font-stylename="Cursiva" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="2" dlg:font-name="Arial" dlg:font-stylename="Fett" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0x99ccff"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="102" dlg:top="198" dlg:width="51" dlg:height="14" dlg:value="OK" dlg:button-type="ok"/>
+  <dlg:button dlg:style-id="0" dlg:id="neuer Task" dlg:tab-index="0" dlg:left="27" dlg:top="198" dlg:width="47" dlg:height="14" dlg:value="Abbrechen" dlg:button-type="cancel"/>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAngebote1" dlg:tab-index="8" dlg:left="7" dlg:top="124" dlg:width="82" dlg:height="10" dlg:value="Angebote (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAuftrag1" dlg:tab-index="12" dlg:left="7" dlg:top="134" dlg:width="82" dlg:height="10" dlg:value="Auftragsbestätigungen (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionLieferscheine1" dlg:tab-index="9" dlg:left="7" dlg:top="144" dlg:width="82" dlg:height="10" dlg:value="Lieferscheine (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionRechnungen1" dlg:tab-index="10" dlg:left="7" dlg:top="165" dlg:width="82" dlg:height="10" dlg:value="Rechnungen (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAngebote2" dlg:tab-index="2" dlg:left="93" dlg:top="124" dlg:width="83" dlg:height="10" dlg:value="Angebote (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAuftrag2" dlg:tab-index="6" dlg:left="93" dlg:top="134" dlg:width="83" dlg:height="10" dlg:value="Auftragsbestätigungen (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionLieferscheine2" dlg:tab-index="3" dlg:left="93" dlg:top="144" dlg:width="83" dlg:height="10" dlg:value="Lieferscheine (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAufmasze2" dlg:tab-index="7" dlg:left="93" dlg:top="154" dlg:width="83" dlg:height="10" dlg:value="Aufmaße (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionRechnungen2" dlg:tab-index="4" dlg:left="93" dlg:top="165" dlg:width="83" dlg:height="10" dlg:value="Rechnungen (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionGutschriften2" dlg:tab-index="5" dlg:left="93" dlg:top="175" dlg:width="83" dlg:height="10" dlg:value="Gutschriften (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAufmasze1" dlg:tab-index="13" dlg:left="7" dlg:top="154" dlg:width="82" dlg:height="10" dlg:value="Aufmaße (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionGutschriften1" dlg:tab-index="11" dlg:left="7" dlg:top="175" dlg:width="82" dlg:height="10" dlg:value="Gutschriften (1)"/>
+  </dlg:radiogroup>
+  <dlg:text dlg:style-id="2" dlg:id="Label_Hinweis" dlg:tab-index="14" dlg:left="7" dlg:top="7" dlg:width="168" dlg:height="38" dlg:value="Das Dokument kann nur in ein Formular exportiert werden, welches zur Zeit nicht geöffnet ist! Sollte die Auswahl des gewünschten Formulars nicht möglich sein schließen Sie bitte erst das entsprechende Formular." dlg:multiline="true"/>
+  <dlg:titledbox dlg:style-id="0" dlg:id="FrameControl1" dlg:tab-index="15" dlg:left="4" dlg:top="114" dlg:width="175" dlg:height="77">
+   <dlg:title dlg:value="Formular"/>
+  </dlg:titledbox>
+  <dlg:titledbox dlg:style-id="0" dlg:id="FrameControl2" dlg:tab-index="16" dlg:left="4" dlg:top="50" dlg:width="175" dlg:height="38">
+   <dlg:title dlg:value="Gliederung"/>
+  </dlg:titledbox>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionZusammenfassung" dlg:tab-index="19" dlg:left="5" dlg:top="92" dlg:width="70" dlg:height="10" dlg:help-text="Gleiche Leistungen zusammenfassen." dlg:value="Zusammenfassung">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:Standard.Export.DialogExportSchreibSchutz?language=Basic&amp;location=document" script:language="Script"/>
+   </dlg:radio>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionDatum" dlg:tab-index="17" dlg:left="95" dlg:top="60" dlg:width="35" dlg:height="10" dlg:help-text="Gliederung nach Datum." dlg:value="Datum">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:Standard.Export.DialogExportSchreibSchutz?language=Basic&amp;location=document" script:language="Script"/>
+   </dlg:radio>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionLokation" dlg:tab-index="18" dlg:left="7" dlg:top="60" dlg:width="41" dlg:height="10" dlg:help-text="Gliederung nach Lokation." dlg:value="Lokation" dlg:checked="true">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:Standard.Export.DialogExportSchreibSchutz?language=Basic&amp;location=document" script:language="Script"/>
+   </dlg:radio>
+  </dlg:radiogroup>
+  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="22" dlg:left="2" dlg:top="104" dlg:width="179" dlg:height="6"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBoxDatum" dlg:tab-index="20" dlg:left="17" dlg:top="74" dlg:width="70" dlg:height="10" dlg:help-text="Datum mit in Leistungsbezeichnung übernehmen." dlg:value="und nach Datum" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBoxLokation" dlg:tab-index="21" dlg:disabled="true" dlg:left="103" dlg:top="74" dlg:width="67" dlg:height="10" dlg:help-text="Lokation mit in Leistungsbezeichnung übernehmen." dlg:value="und nach Lokation" dlg:checked="false"/>
+  <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="23" dlg:left="88" dlg:top="56" dlg:width="5" dlg:height="30" dlg:align="vertical"/>
+ </dlg:bulletinboard>
+</dlg:window>

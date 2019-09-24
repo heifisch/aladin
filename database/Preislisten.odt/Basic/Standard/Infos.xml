@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Infos" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Kontaktdaten_anzeigen
+	Dim sAnrede as String,sTitel as String,sVorname as String,sName1 as String
+	Dim sName2 as String,sName3 as String,sName4 as String
+	Dim sLand as String,sPLZ as String,sOrt as String
+	Dim sStrasse as String,sHausnummer as String,sMindestangaben as String,sTelefon as String
+	Dim sFunktelefon as String,sFax as String,sEMail as String,sUrl as String
+	Dim sReferenzID as String,sOrdner as String
+	
+	Dim sBemerkung as String
+	Dim oRecord1 as Object
+	Dim sSQL1 as String,sSQL2 as String
+	Dim sKontaktdaten as String
+	
+	if lKontaktID &lt;&gt; 0 then
+	sSQL1=&quot;select distinct Anrede,Titel,Vorname,Name1,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,&quot;&amp;_
+		&quot;Hausnummer,Mindestangaben,Telefon,Funktelefon,Fax,EMail,Url,ReferenzID,Bemerkungen,Ordner&quot;&amp;_
+		&quot; from &quot;&amp; sKunden &amp;&quot; where KontaktID=&quot;&amp; lKontaktID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sAnrede=oRecord1.getString(1)
+			sTitel=oRecord1.getString(2)
+			sVorname=oRecord1.getString(3)
+			sName1=oRecord1.getString(4)
+			sName2=oRecord1.getString(5)
+			sName3=oRecord1.getString(6)
+			sName4=oRecord1.getString(7)
+			sLand=oRecord1.getString(8)
+			sPLZ=oRecord1.getString(9)
+			sOrt=oRecord1.getString(10)
+			sStrasse=oRecord1.getString(11)
+			sHausnummer=oRecord1.getString(12)
+			sMindestangaben=oRecord1.getString(13)
+			sTelefon=oRecord1.getString(14)
+			sFunktelefon=oRecord1.getString(15)
+			sFax=oRecord1.getString(16)
+			sEMail=oRecord1.getString(17)
+			sUrl=oRecord1.getString(18)
+			sReferenzID=oRecord1.getString(19)
+			sBemerkung=oRecord1.getString(20)
+			sOrdner=oRecord1.getString(21)
+		Wend
+		sKontaktdaten=&quot;    Kontaktnummer:&quot;&amp; Chr$(9) &amp; lKontaktID &amp; Chr$(13)&amp; Chr$(13)
+		if sReferenzID &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp;&quot;   Referenznummer:&quot;&amp; Chr$(9) &amp; sReferenzID &amp; Chr$(13)&amp; Chr$(13)
+		End if
+		if sAnrede &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sAnrede &amp; Chr$(13)
+		End if
+		sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)
+		if sTitel &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sTitel &amp; &quot; &quot;
+		End if
+		if sVorname &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sVorname &amp; &quot; &quot;
+		End if
+		if sName1 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sName1 &amp; Chr$(13)
+		End if
+		if sName2 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sName2 &amp; Chr$(13)
+		End if
+		if sName3 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sName3 &amp; Chr$(13)
+		End if
+		if sName4 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sName4 &amp; Chr$(13)
+		End if
+		if sPLZ &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sPLZ &amp; &quot; &quot;
+		End if
+		if sOrt &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sOrt &amp; Chr$(13)
+		End if
+		if sLand &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sLand &amp; Chr$(13)
+		End if
+		if sStrasse &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sStrasse &amp;&quot; &quot;&amp; sHausnummer &amp;Chr$(13)&amp;Chr$(13)
+		End if
+		if sMindestangaben &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sMindestangaben &amp; Chr$(13)&amp;Chr$(13)
+		End if
+		if sTelefon &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp;  &quot;Telefon:&quot;&amp;Chr$(9)&amp; sTelefon &amp;Chr$(13)
+		End if
+		if sFax &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;      Fax:&quot;&amp;Chr$(9)&amp; sFax &amp;Chr$(13)
+		End if
+		if sFunktelefon &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;   Mobil:&quot;&amp;Chr$(9)&amp; sFunktelefon &amp;Chr$(13)
+		End if
+		if sEMail &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;   Email:&quot;&amp;Chr$(9)&amp; sEMail &amp;Chr$(13)
+		End if
+		if sUrl &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;       Url:&quot;&amp;Chr$(9)&amp; sUrl &amp;Chr$(13)&amp;Chr$(13)
+		End if
+		if sBemerkung &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;Bemerkungen:&quot; &amp;Chr$(13)&amp; sBemerkung &amp;Chr$(13)&amp;Chr$(13)
+		End if
+		if sOrdner &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;Ordner:&quot;&amp;Chr$(9)&amp; sOrdner &amp;Chr$(13)&amp;Chr$(13)
+		End if
+
+		MsgBox(sKontaktdaten,64,sTitle_lokal &amp;&quot; Kundendaten&quot;)
+	End if
+End Sub
+
+
+</script:module>

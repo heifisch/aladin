@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Initialisierung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim vSQLArray as Variant
+Dim sSQL1 as String
+
+Sub Start_einst()
+	oTextField_Betriebsart.Label=&quot;Initialisierung läuft&quot;
+	oTextField_Kontaktvorauswahl.Label=&quot;Filter (Kunden): &quot;
+	oTextField_Kontaktdaten.Label=&quot;Kunde: &quot;
+	oTextField_Document_Name_List.Label=&quot;Dokumente: &quot;
+	oTextField_Document_Name.Label=&quot;Dokumentname&quot;
+	oTextField_DocumentID.Label=&quot;Dokumentnummer: &quot;
+	oTextField_Erstellungsdatum.Label=&quot;Erstellungsdatum: &quot;
+	set_ClientID(1)
+	set_Tabellen(1)
+	Formular_init_first()
+	Formular_init()
+End Sub
+
+Sub Formular_init()
+	if sKorrespondenz &lt;&gt; sKorrespondenz_old then
+		oForm_Document.Command=&quot;select *  from &quot;&amp; sKorrespondenz &amp;&quot; where DocumentID=:c&quot;
+	End if
+	
+	oForm_Steuerung.Command=&quot;select * from Steuerung where ClientID=&quot;&amp; iClientID
+	
+	if sKontakte &lt;&gt; sKontakte_old then
+		oForm_Kontaktdaten.Command=&quot;select * from &quot;&amp; sKontakte &amp;&quot; where KontaktID=:a&quot;
+	End if
+	
+	if sKontakte &lt;&gt; sKontakte_old then
+		oList_Kontaktauswahl.ListSource=Array(&quot;select distinct concat(t1.Name1,&apos;, &apos;,t1.Vorname,&apos; &apos;,t1.Name2,&apos;  --&gt;  &apos;,t1.Ort) as Name,&quot;&amp;_
+			&quot;t1.KontaktID from &quot;&amp; sKontakte &amp;&quot; as t1 order by t1.Name1 ASC&quot;)
+	End if
+	
+	oList_Ansprechpartner.ListSource=Array(&quot;select distinct concat(t1.Name,&apos;, &apos;,t1.Vorname) as Name,t1.AnsprechpartnerID&quot;&amp;_
+		&quot; FROM &quot;&amp; sAnsprechpartner &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sKorrespondenz &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.KontaktID=t3.KontaktID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where t3.DocumentID=t2.DocumentID&quot;&amp;_
+		&quot; order by t1.Name ASC&quot;)
+	
+	oList_Kontaktvorauswahl.ListSource=Array(&quot;select distinct&quot;&amp;_
+		&quot; concat(t1.Name1,&apos; &apos;,t1.Vorname,&apos; &apos;,t1.Name2,&apos;  --&gt;  &apos;,t1.Ort) as Name,t2.KontaktID&quot;&amp;_
+		&quot; FROM (&quot;&amp; sKontakte &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sKorrespondenz &amp;&quot; as t2&quot;&amp;_
+		&quot; ON t1.KontaktID=t2.KontaktID)&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where (((year(t2.Erstellungsdatum)=t3.Jahr and t3.Jahr IS NOT NULL)&quot;&amp;_
+		&quot; or (t2.KontaktID like &apos;%&apos; and t3.Jahr IS NULL))&quot;&amp;_
+		&quot; or t1.KontaktID=t3.KontaktID)&quot;&amp;_
+		&quot; order by t1.Name1&quot;)
+
+	oList_Projektvorauswahl.ListSource=Array(&quot;select distinct t1.Projekt_Name,t1.ProjektID &quot;&amp;_
+		&quot;from &quot;&amp; sProjekte &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sKorrespondenz &amp;&quot; as t2&quot;&amp;_
+		&quot; ON t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((year(t2.Erstellungsdatum)=t3.Jahr and LENGTH(t3.Jahr) &gt; 0)&quot;&amp;_
+		&quot; or (t2.ProjektID like &apos;%&apos; and (LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0)))&quot;&amp;_
+		&quot; and ((t2.KontaktID=t3.KontaktID  and LENGTH(t3.KontaktID) &gt; 0)&quot;&amp;_
+		&quot; or (t2.ProjektID like &apos;%&apos; and (LENGTH(t3.KontaktID) IS NULL OR LENGTH(t3.KontaktID)=0)))&quot;&amp;_
+		&quot; or t1.ProjektID=t3.ProjektID)&quot;&amp;_
+		&quot; order by t1.Projekt_Name ASC&quot;)
+
+	 oList_Absendervorauswahl.ListSource=Array(&quot;select distinct t1.Absender,t1.Absender&quot;&amp;_
+		&quot; from &quot;&amp; sKorrespondenz &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where (((year(t1.Erstellungsdatum)=t2.Jahr and LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot; or (t1.Absender like &apos;%&apos; and (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+		&quot; and ((t1.KontaktID=t2.KontaktID  and LENGTH(t2.KontaktID) &gt; 0)&quot;&amp;_
+		&quot; or (t1.Absender like &apos;%&apos; and (LENGTH(t2.KontaktID) IS NULL OR LENGTH(t2.KontaktID)=0)))&quot;&amp;_
+		&quot; and ((t1.ProjektID=t2.ProjektID and LENGTH(t2.ProjektID) &gt; 0)&quot;&amp;_
+		&quot; or (t1.Absender like &apos;%&apos; and (LENGTH(t2.ProjektID) IS NULL OR LENGTH(t2.ProjektID)=0)))&quot;&amp;_
+		&quot; or t1.Absender=t2.Absender)&quot;&amp;_
+		&quot; order by t1.Absender DESC&quot;)
+
+	 oList_Documentauswahl.ListSource=Array(&quot;select distinct t1.Document_Name,t1.DocumentID&quot;&amp;_
+		&quot; from &quot;&amp; sKorrespondenz &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where (((year(t1.Erstellungsdatum)=t2.Jahr and LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot; or (t1.DocumentID like &apos;%&apos; and (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+		&quot; and ((t1.KontaktID=t2.KontaktID  and LENGTH(t2.KontaktID) &gt; 0)&quot;&amp;_
+		&quot; or (t1.DocumentID like &apos;%&apos; and (LENGTH(t2.KontaktID) IS NULL OR LENGTH(t2.KontaktID)=0)))&quot;&amp;_
+		&quot; and ((t1.ProjektID=t2.ProjektID and LENGTH(t2.ProjektID) &gt; 0)&quot;&amp;_
+		&quot; or (t1.DocumentID like &apos;%&apos; and (LENGTH(t2.ProjektID) IS NULL OR LENGTH(t2.ProjektID)=0)))&quot;&amp;_
+		&quot; and ((t1.Absender=t2.Absender and LENGTH(t2.Absender) &gt; 0)&quot;&amp;_
+		&quot; or (t1.DocumentID like &apos;%&apos; and (LENGTH(t2.Absender) IS NULL OR LENGTH(t2.Absender)=0)))&quot;&amp;_
+		&quot; and (((t1.Document_Name like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;) or t1.Body like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+		&quot; or t1.DocumentID like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;))&quot;&amp;_
+		&quot; and LENGTH(t2.Suchstring) &gt; 0)&quot;&amp;_
+		&quot; or (t1.DocumentID like &apos;%&apos; and (LENGTH(t2.Suchstring) IS NULL OR LENGTH(t2.Suchstring)=0)))&quot;&amp;_
+		&quot; and ((t1.Option_Serienbrief=t2.Option_Serienbrief and t2.Option_Serienbrief&lt;2)&quot;&amp;_
+		&quot; or (t1.DocumentID like &apos;%&apos; and t2.Option_Serienbrief=2))&quot;&amp;_
+		&quot; or t1.DocumentID=t2.DocumentID)&quot;&amp;_
+		&quot; order by t1.DocumentID DESC&quot;)
+			
+	oList_Projektauswahl.ListSource=Array(&quot;select distinct Projekt_Name,ProjektID from &quot;&amp; sProjekte &amp;&quot; order by Projekt_Name ASC&quot;)
+
+	oList_Serienbrief_Verteilerlisten.ListSource=Array(&quot;select Listenname,ListenID from &quot;&amp; sSerienbrief_Listen &amp;&quot; where KontaktTyp=&apos;&quot;&amp; sKontakte &amp;&quot;&apos; order by Listenname ASC&quot;)
+
+	if sKorrespondenz &lt;&gt; sKorrespondenz_old then
+		oList_Jahrauswahl.ListSource=Array(&quot;select distinct year(Erstellungsdatum),year(Erstellungsdatum) as Jahr from &quot;&amp; sKorrespondenz &amp;_
+									 &quot; order by Jahr DESC&quot;)
+		init_Form_Serienbrief()
+	end if
+End Sub
+
+Sub Formular_init_first()
+	init_Form_Document()
+	init_Form_Kontaktdaten()
+	init_Form_Steuerung()
+	init_List_Jahresauswahl()
+	init_List_Kontaktauswahl()
+	init_List_Ansprechpartner()
+	init_List_Kontaktvorauswahl()
+	init_List_Documentauswahl()
+	init_List_Serienbrief_Verteilerlisten()
+	init_List_Projektauswahl()
+	init_List_Projektvorauswahl()
+	init_List_Absendervorauswahl()
+	init_List_Leerzeilen()
+End Sub
+
+Sub init_Form_Document()
+	oForm_Document.DataSourceName=sDataSource
+	oForm_Document.NavigationBarMode=0
+	oForm_Document.CommandType=2
+	oForm_Document.Cycle=1
+	oForm_Document.AllowInserts=false
+	oForm_Document.AllowDeletes=false
+End Sub
+
+Sub init_Form_Steuerung()
+	oForm_Steuerung.DataSourceName=sDataSource
+	oForm_Steuerung.NavigationBarMode=0
+	oForm_Steuerung.CommandType=2
+	oForm_Steuerung.Cycle=1
+	oForm_Steuerung.AllowInserts=false
+	oForm_Steuerung.AllowDeletes=false
+End Sub
+
+Sub init_Form_Kontaktdaten()
+	oForm_Kontaktdaten.DataSourceName=sDataSource
+	oForm_Kontaktdaten.NavigationBarMode=0
+	oForm_Kontaktdaten.CommandType=2
+	oForm_Kontaktdaten.Cycle=1
+	oForm_Kontaktdaten.AllowInserts=false
+	oForm_Kontaktdaten.AllowDeletes=false
+End Sub
+
+Sub init_Form_Serienbrief()
+	Dim sSuchString as String
+	sSuchString=&quot;&quot;
+	sSQL1=&quot;select Suchstring_2 from Steuerung where ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSuchString=oRecord1.getString(1)
+	Wend
+	sSQL2=&quot;select * from Serienbrief_Kontakte&quot;&amp;_
+		&quot; where ClientID=&quot;&amp; iClientID &amp;_
+		&quot; and (Bemerkungen like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name1 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name2 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name3 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name4 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Vorname like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Serienbrief=1)&quot;&amp;_
+		&quot; order by Serienbrief DESC, Name1 ASC&quot;
+	oForm_Serienbrief.DataSourceName=sDataSource
+	oForm_Serienbrief.NavigationBarMode=0
+	oForm_Serienbrief.CommandType=2
+	oForm_Serienbrief.Command=sSQL2
+	oForm_Serienbrief.Cycle=1
+	oForm_Serienbrief.AllowInserts=false
+	oForm_Serienbrief.AllowDeletes=false
+End Sub
+
+
+Sub init_List_Projektauswahl()
+	oList_Projektauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Serienbrief_Verteilerlisten()
+	oList_Serienbrief_Verteilerlisten.ListSourceType=4
+End Sub
+
+Sub init_List_Kontaktauswahl()
+	oList_Kontaktauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Ansprechpartner()
+	oList_Ansprechpartner.ListSourceType=4
+End Sub
+
+Sub init_List_Leerzeilen()
+	vSQLArray=Array(&quot;select AnzahlID,Inhalt from Leerzeilen&quot;)
+	oList_Leerzeilen.ListSourceType=4
+	oList_Leerzeilen.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Jahresauswahl()
+	oList_Jahrauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Kontaktvorauswahl()
+	oList_Kontaktvorauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Documentauswahl()
+	oList_Documentauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Projektvorauswahl()
+	oList_Projektvorauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Absendervorauswahl()
+	oList_Absendervorauswahl.ListSourceType=4
+End Sub
+
+</script:module>

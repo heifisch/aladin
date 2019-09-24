@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Initialisierung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Formular_init()
+	init_Form_Einstellungen()
+	init_Form_Users()
+	init_Form_Steuerung()
+	init_Form_DocumentTyp()
+End Sub
+
+Sub init_Form_Einstellungen()
+	sSQL1=&quot;select * from Einstellungen where EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+	oForm_Einstellungen.DataSourceName=sDataSource
+	oForm_Einstellungen.NavigationBarMode=0
+	oForm_Einstellungen.CommandType=2
+	oForm_Einstellungen.Command=sSQL1
+	oForm_Einstellungen.Cycle=1
+	oForm_Einstellungen.AllowInserts=false
+End Sub
+
+Sub init_Form_Users()
+	sSQL1=&quot;select * from Users where UserID=&quot;&amp; iUserID_lokal
+	oForm_Users.DataSourceName=sDataSource
+	oForm_Users.NavigationBarMode=0
+	oForm_Users.CommandType=2
+	oForm_Users.Command=sSQL1
+	oForm_Users.Cycle=1
+	oForm_Users.AllowInserts=false
+End Sub
+
+Sub init_Form_Steuerung()
+	sSQL1=&quot;select * from Steuerung &quot;&amp;_
+		&quot; where ClientID &lt;= &quot;&amp; (iUserID_lokal*40) &amp;_
+		&quot; and ClientID &gt; &quot;&amp; (iUserID_lokal*40)-40 &amp;_
+		&quot; order by ClientID ASC&quot;
+	oForm_Steuerung.DataSourceName=sDataSource
+	oForm_Steuerung.NavigationBarMode=0
+	oForm_Steuerung.CommandType=2
+	oForm_Steuerung.Command=sSQL1
+	oForm_Steuerung.Cycle=1
+	oForm_Steuerung.AllowInserts=true
+End Sub
+
+Sub init_Form_DocumentTyp()
+	sSQL1=&quot;select * from Document_Typ where Document_TypID=:a&quot;
+	oForm_DocumentTyp.DataSourceName=sDataSource
+	oForm_DocumentTyp.NavigationBarMode=0
+	oForm_DocumentTyp.CommandType=2
+	oForm_DocumentTyp.Command=sSQL1
+	oForm_DocumentTyp.Cycle=1
+	oForm_DocumentTyp.AllowInserts=true
+End Sub
+</script:module>

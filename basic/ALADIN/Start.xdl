@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="3" dlg:id="Start" dlg:left="50" dlg:top="50" dlg:width="180" dlg:height="270" dlg:closeable="true" dlg:moveable="true" dlg:title="neue Aufgabe">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:font-name="Standard" dlg:font-stylename="Fett" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="1" dlg:font-name="Arial" dlg:font-height="10" dlg:font-stylename="Cursiva" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="2" dlg:look="simple" dlg:font-name="Arial" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0x99ccff"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:button dlg:style-id="0" dlg:id="Button_Abrechen" dlg:tab-index="1" dlg:left="22" dlg:top="251" dlg:width="64" dlg:height="14" dlg:value="Abbrechen" dlg:button-type="cancel"/>
+  <dlg:button dlg:style-id="0" dlg:id="Button_OK" dlg:tab-index="0" dlg:left="97" dlg:top="251" dlg:width="58" dlg:height="14" dlg:default="true" dlg:value="OK" dlg:button-type="ok"/>
+  <dlg:titledbox dlg:style-id="1" dlg:id="FrameControl1" dlg:tab-index="20" dlg:left="19" dlg:top="190" dlg:width="139" dlg:height="54">
+   <dlg:title dlg:value="OP Buchhaltung"/>
+  </dlg:titledbox>
+  <dlg:titledbox dlg:style-id="1" dlg:id="FrameControl2" dlg:tab-index="21" dlg:left="19" dlg:top="29" dlg:width="139" dlg:height="116">
+   <dlg:title dlg:value="Stammdaten"/>
+  </dlg:titledbox>
+  <dlg:titledbox dlg:style-id="1" dlg:id="FrameStatistik" dlg:tab-index="22" dlg:left="19" dlg:top="148" dlg:width="139" dlg:height="36">
+   <dlg:title dlg:value="Statistik"/>
+  </dlg:titledbox>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionProjekt" dlg:tab-index="2" dlg:left="40" dlg:top="5" dlg:width="120" dlg:height="10" dlg:page="1" dlg:value="Angebote, Rechnungen, Bestellungen..." dlg:checked="true"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionDokument" dlg:tab-index="3" dlg:left="40" dlg:top="15" dlg:width="120" dlg:height="10" dlg:page="1" dlg:value="Schriftwechsel"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionProjekte" dlg:tab-index="4" dlg:left="40" dlg:top="40" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Projektverwaltung"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionKundenstamm" dlg:tab-index="5" dlg:left="40" dlg:top="50" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Kundenstamm"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionLieferantenstamm" dlg:tab-index="6" dlg:left="40" dlg:top="60" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Lieferantenstamm"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionKontaktestamm" dlg:tab-index="7" dlg:left="40" dlg:top="70" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Kontaktestamm"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionPersonalstamm" dlg:tab-index="8" dlg:left="40" dlg:top="80" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Personalstamm"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionLeistungsstamm" dlg:tab-index="9" dlg:left="40" dlg:top="90" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Leistungsstamm"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionLeistungsgruppen" dlg:tab-index="10" dlg:left="40" dlg:top="100" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Leistungsgruppen"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionImport" dlg:tab-index="11" dlg:left="40" dlg:top="110" dlg:width="110" dlg:height="10" dlg:page="1" dlg:help-text="Import von GEAB .d81 Daten." dlg:value="Import Leistungsdaten"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionPreislisten" dlg:tab-index="12" dlg:left="40" dlg:top="120" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Preislisten"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionEinstellungen" dlg:tab-index="13" dlg:left="40" dlg:top="130" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Einstellungen"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionControlling" dlg:tab-index="14" dlg:left="40" dlg:top="160" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Controlling"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionInventur" dlg:tab-index="15" dlg:left="40" dlg:top="170" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Inventur"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionOPEingang" dlg:tab-index="16" dlg:left="40" dlg:top="201" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="OP Eingangsrechnungen"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionOPAusgang" dlg:tab-index="17" dlg:left="40" dlg:top="210" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="OP Ausgangsrechnungen"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionZahlZiel" dlg:tab-index="18" dlg:left="40" dlg:top="220" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Zahlungsziele"/>
+   <dlg:radio dlg:style-id="2" dlg:id="OptionKassenbuch" dlg:tab-index="19" dlg:left="40" dlg:top="230" dlg:width="110" dlg:height="10" dlg:page="1" dlg:value="Kassenbuch"/>
+  </dlg:radiogroup>
+ </dlg:bulletinboard>
+</dlg:window>

@@ -1,0 +1,310 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Drucken" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+Dim oDialogPrint AS Object, oDialogPrintModel as Object
+
+Sub DruckSchreibschutz()
+	Dim oOption_Print as Object,oOption_Fax as Object,oOption_Mail as Object,oBox_LogoDrucken as Object
+	Dim sSQL2 as String,oRecord2 as Object
+	
+	oOption_Print = oDialogPrintModel.getByName(&quot;Button_Druck&quot;)
+	oOption_Fax = oDialogPrintModel.getByName(&quot;Button_Fax&quot;)
+	oOption_Mail = oDialogPrintModel.getByName(&quot;Button_Mail&quot;)
+	oBox_LogoDrucken = oDialogPrintModel.getByName(&quot;CheckBox_Logo_drucken&quot;)
+
+	if oOption_Fax.State=1 or oOption_Mail.State=1 then
+		oBox_LogoDrucken.Enabled=0
+	elseif oOption_Print.State=1 then
+		oBox_LogoDrucken.Enabled=1
+		if ifPrintLogoDefault(iUserID_lokal) = 0 then
+			oBox_LogoDrucken.State = 0
+		elseif ifPrintLogoDefault(iUserID_lokal) = 1 then
+			oBox_LogoDrucken.State = 1
+		End if
+	End If	
+End Sub
+
+Sub Druck_vorbereiten()
+	Dim vStatus as Variant
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String
+	Dim oRecord1 as Object,oRecord2 as Object
+	Dim oOption_Print as Object,oOption_Fax as Object,oOption_Mail as Object,oBox_LogoDrucken as Object
+	Dim ifFax as integer,ifPrint as integer,ifMail as integer
+	Dim ifLogoDrucken as Integer,iDocument_TypID as Integer,lProjektID as Long
+	
+	Dim iPrint_Typ as Integer,sAnschrift as String
+	Dim sAnrede_Kontakt as String,sTitel as String,sVorname as String,sName1 as String
+	Dim sName2 as String,sName3 as String,sName4 as String
+	Dim sLand as String,sLand_Eigen as String,sPLZ as String,sOrt as String
+	Dim sStrasse as String,sHausnummer as String,sTelefon as String
+	Dim sFunktelefon as String,sFax as String,sEMail as String,sUrl as String
+	Dim sReferenzID as String,sOrdner as String
+	Dim sAnrede_Ansprechpartner as String,sTitel_Ansprechpartner as String
+	Dim sVorname_Ansprechpartner as String,sName_Ansprechpartner as String
+	Dim sFunktelefon_Ansprechpartner as String,sFax_Ansprechpartner as String
+	Dim sEMail_Ansprechpartner as String,sTelefon_Ansprechpartner as String
+	Dim sAbteilung_Ansprechpartner as String,sProjektName as String,sDocumentName as String
+	
+	Dim sReferenz as String,sDocument_Name as String,sBody as String
+	Dim sAnrede as String
+	Dim iOptionSerienbrief as Integer,iOptionSignum as Integer
+	Dim sSignumURL as String,sGruszformel as String,sAbsender as String
+	Dim sLeerzeilen as String
+	Dim sIfKontaktID as String,sIfReferenzID as String
+	
+	Dim sNummern as String
+	Dim sErstellungsdatum as String
+
+	if lDocumentID &gt; 0 then
+		Drucktabelle_leeren(iUserID_lokal)
+		sSQL1=&quot;select Option_Serienbrief from &quot;&amp; sKorrespondenz &amp;&quot; where DocumentID=&quot;&amp; lDocumentID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iOptionSerienbrief=oRecord1.getInt(1)
+		Wend
+		if iOptionSerienbrief=1 then
+			Serienbriefe_drucken()
+		else
+			if lKontaktID &gt; 0 then
+	
+			GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+			oDialogPrint = LoadDialog_Korrespondenz(&quot;Standard&quot;, &quot;Drucken&quot;)
+			oDialogPrintModel = oDialogPrint.Model
+			oOption_Print = oDialogPrintModel.getByName(&quot;Button_Druck&quot;)
+			oOption_Fax = oDialogPrintModel.getByName(&quot;Button_Fax&quot;)
+			oOption_Mail = oDialogPrintModel.getByName(&quot;Button_Mail&quot;)
+			oBox_LogoDrucken = oDialogPrintModel.getByName(&quot;CheckBox_Logo_drucken&quot;)
+			
+			oDialogPrint.Title=sTitle_lokal &amp; &quot; - Dokument drucken&quot;
+		
+			sSQL2=&quot;select t1.Anrede,t1.Name1,t1.Titel,t1.Vorname,t1.Name2,t1.Name3,t1.Name4,t1.Land,&quot;&amp;_
+				&quot;t1.PLZ,t1.Ort,t1.Strasse,t1.Hausnummer,t1.Fax,t1.EMail,&quot;&amp;_
+				&quot;t2.Abteilung,t2.Anrede,t2.Titel,t2.Vorname,t2.Name,t2.Fax,t2.EMail,&quot;&amp;_
+				&quot;t3.Document_TypID,t3.Referenz,t3.Erstellungsdatum,t3.Document_Name,t3.KontaktID,&quot;&amp;_
+				&quot;t3.Body,t3.Anrede,t3.Option_Serienbrief,t3.Option_Signum,&quot;&amp;_
+				&quot;t3.Signum_URL,t3.Gruszformel,t3.Absender,t3.Leerzeilen,t1.KontaktID,t1.ReferenzID,t4.Land,&quot;&amp;_
+				&quot;t3.ProjektID,t5.Projekt_Name,t3.Document_Name &quot;&amp;_
+				&quot; from &quot;&amp; sKorrespondenz &amp;&quot; as t3 &quot;&amp;_
+				&quot; LEFT JOIN &quot;&amp; sAnsprechpartner &amp;&quot; as t2 &quot;&amp;_
+				&quot; ON t2.AnsprechpartnerID=t3.AnsprechpartnerID&quot;&amp;_
+				&quot; LEFT JOIN &quot;&amp; sProjekte &amp;&quot; as t5&quot;&amp;_
+				&quot; ON t5.ProjektID=t3.ProjektID,&quot;&amp; sKontakte &amp;&quot; as t1,&quot;&amp;_
+				&quot; Einstellungen as t4&quot;&amp;_
+				&quot; where t3.DocumentID=&quot;&amp; lDocumentID &amp;_
+				&quot; and t1.KontaktID=t3.KontaktID&quot;&amp;_
+				&quot; and t4.EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+
+			oRecord1=oResult(sSQL2)
+			While oRecord1.next()
+				sAnrede_Kontakt=oRecord1.getString(1)
+				sName1=oRecord1.getString(2)
+				sTitel=oRecord1.getString(3)
+				sVorname=oRecord1.getString(4)
+				sName2=oRecord1.getString(5)
+				sName3=oRecord1.getString(6)
+				sName4=oRecord1.getString(7)
+				sLand=oRecord1.getString(8)
+				sPLZ=oRecord1.getString(9)
+				sOrt=oRecord1.getString(10)
+				sStrasse=oRecord1.getString(11)
+				sHausnummer=oRecord1.getString(12)
+				sFax=oRecord1.getString(13)
+				sEMail=oRecord1.getString(14)
+				sAbteilung_Ansprechpartner=oRecord1.getString(15)
+				sAnrede_Ansprechpartner=oRecord1.getString(16)
+				sTitel_Ansprechpartner=oRecord1.getString(17)
+				sVorname_Ansprechpartner=oRecord1.getString(18)
+				sName_Ansprechpartner=oRecord1.getString(19)
+				sFax_Ansprechpartner=oRecord1.getString(20)
+				sEMail_Ansprechpartner=oRecord1.getString(21)
+				iDocument_TypID=oRecord1.getInt(22)
+				sReferenz=oRecord1.getString(23)
+				sErstellungsdatum=oRecord1.getString(24)
+				sDocument_Name=oRecord1.getString(25)
+				sKontaktID=oRecord1.getString(26)
+				sAnsprechpartnerID=oRecord1.getString(27)
+				sBody=oRecord1.getString(28)
+				sAnrede=oRecord1.getString(29)
+				iOptionSignum=oRecord1.getInt(30)
+				sSignumURL=oRecord1.getString(31)
+				sGruszformel=oRecord1.getString(32)
+				sAbsender=oRecord1.getString(33)
+				sLeerzeilen=oRecord1.getString(34)
+				sIfKontaktID=oRecord1.getString(35)
+				sIfReferenzID=oRecord1.getString(36)
+				sLand_Eigen=oRecord1.getString(37)
+				lProjektID=oRecord1.getLong(38)
+				sProjektName=oRecord1.getString(39)
+				sDocumentName=oRecord1.getString(40)
+			Wend
+	
+				if ifPrintLogoDefault(iUserID_lokal) = 0 then
+					oBox_LogoDrucken.State=0
+				elseif ifPrintLogoDefault(iUserID_lokal) = 1 then
+					oBox_LogoDrucken.State=1
+				End if	
+	
+				vStatus = oDialogPrint.Execute()
+				if vStatus = 0 then
+					exit sub
+				end if
+				ifPrint = oOption_Print.State
+				ifFax = oOption_Fax.State
+				ifMail = oOption_Mail.State
+				
+				if ifPrint = 1 then
+					iPrint_Typ=0
+					ifLogoDrucken=oBox_LogoDrucken.State
+				elseif ifFax = 1 then
+					iPrint_Typ=1
+					ifLogoDrucken=0
+				elseif ifMail = 1 then
+					iPrint_Typ=2
+					ifLogoDrucken=0
+				end if
+			
+				if sFax_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sFax = sFax_Ansprechpartner
+				End if
+				if sEMail_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sEMail = sEMail_Ansprechpartner
+				End if
+				
+	&apos;			if sName2 = &quot;&quot; and sName3 = &quot;&quot; and sName4 = &quot;&quot; then
+	&apos;				sAnschrift = &quot;\n&quot;
+	&apos;			End if
+	&apos;			if sAnrede_Kontakt &lt;&gt; &quot;&quot; then
+	&apos;				sAnschrift = sAnschrift + sAnrede_Kontakt + &quot;\n&quot;
+	&apos;			End if
+				if sTitel &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sTitel + &quot; &quot;
+				End if
+				if sVorname &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + fsConvertString(sVorname) + &quot; &quot;
+				End if
+				if sName1 &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + fsConvertString(sName1) + &quot;\n&quot;
+				End if
+				if sName2 &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + fsConvertString(sName2) + &quot;\n&quot;
+				End if
+				if sName3 &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + fsConvertString(sName3) + &quot;\n&quot;
+				End if
+				if sName4 &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + fsConvertString(sName4) + &quot;\n&quot;
+				End if
+				if sAbteilung_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sAbteilung_Ansprechpartner + &quot;\n&quot;
+				End if
+				if sAnrede_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sAnrede_Ansprechpartner + &quot; &quot;
+				End if
+				if sTitel_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sTitel_Ansprechpartner + &quot; &quot;
+				End if
+				if sVorname_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sVorname_Ansprechpartner + &quot; &quot;
+				End if
+				if sName_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sName_Ansprechpartner + &quot;\n&quot;
+				End if
+				if TRIM(sStrasse) &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sStrasse + &quot; &quot;
+				End if
+				if TRIM(sHausnummer) &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sHausnummer + &quot;\n&quot;
+				else
+					sAnschrift = sAnschrift + &quot;\n&quot;
+				End if
+				if sPLZ &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sPLZ + &quot; &quot;
+				End if
+				if sOrt &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sOrt
+				End if
+				if sLand &lt;&gt; &quot;&quot; and UCASE(sLand) &lt;&gt; UCASE(sLand_Eigen) then
+					sAnschrift = sAnschrift + &quot;\n&quot; + UCASE(sLand)
+				End if
+				if iPrint_Typ = 0 then						&apos;drucken
+					sAnschrift = sAnschrift
+				elseif iPrint_Typ = 1 then					&apos;faxen
+					if sFax = &quot;&quot; then
+						sAnschrift = sAnschrift
+					else
+						sAnschrift = sAnschrift &amp; &quot;\n\nan Fax: &quot; &amp; sFax
+					End if
+				elseif iPrint_Typ = 2 then					&apos;mailen
+					if sEMail = &quot;&quot; then
+						sAnschrift = sAnschrift
+					else
+						sAnschrift = sAnschrift &amp; &quot;\n\nan E-Mail: &quot; &amp; sEMail
+					End if
+				End if
+			
+	&apos;			sNummern = &quot;&apos;\n&apos;&quot;
+	&apos;			sNummern = &quot;&apos;\n,&apos;&quot;
+				sNummern =  sNummern + &quot;&apos;\tDatum:\t&quot;&amp; fConvDatum(sErstellungsdatum) &amp;&quot;\n\t&apos;,&quot;&amp;_
+				&quot;t2.DocumentID,&apos;\t&apos;,&apos;S&quot;&amp; UCase(Left(sKontakte,2)) &amp;&quot; &apos;,t1.DocumentID&quot;
+					
+				if InStr(sKontakte,&quot;Kunden&quot;) &gt; 0 or InStr(sKontakte,&quot;Kontakte&quot;) &gt; 0 then
+					if sIfKontaktID = &quot;&quot; then
+						sNummern =  sNummern
+					else	
+						sNummern =  sNummern + &quot;,&apos;\n\t&apos;,t2.KontaktID,&apos;\t&apos;,t3.KontaktID&quot;
+					End if
+					if sIfReferenzID = &quot;&quot; then
+						sNummern =  sNummern
+					else
+						sNummern =  sNummern + &quot;,&apos;\n\t&apos;,t2.ReferenzID,&apos;\t&apos;,t3.ReferenzID&quot;
+					End if
+				elseif InStr(sKontakte,&quot;Lieferanten&quot;) &gt; 0 then
+					if sIfReferenzID = &quot;&quot; then
+						sNummern =  sNummern
+					else
+						sNummern =  sNummern + &quot;,&apos;\n\t&apos;,t2.KontaktID,&apos;\t&apos;,t3.ReferenzID&quot;
+					End if
+				End if
+				
+				if sReferenz &lt;&gt; &quot;&quot; then
+					sNummern =  sNummern + &quot;,&apos;\n\tIhr Zeichen:\t&quot;&amp; sReferenz &amp;&quot;&apos;&quot;
+				End if
+	
+				if lProjektID &gt; 0 and fsConvertString(sDocumentName) &lt;&gt; fsConvertString(sProjektName) then
+					sDocumentName=&quot;concat(&apos;&quot;&amp; sProjektName &amp;&quot;&apos;,&apos; \n&apos;,t1.Document_Name)&quot;
+				else
+					sDocumentName=&quot;t1.Document_Name&quot;
+				end if
+				
+				sSQL3=&quot;insert into &quot;&amp; sDrucker_TEMP(iUserID_lokal) &amp;_
+					&quot;(DocumentID,KontaktID,KontaktTyp,KorrespondenzTyp,EinstellungsID,UserID,Print_Typ,Document_Name,Betreff,Nummern,EMail,Fax,&quot;&amp;_
+					&quot;Anrede,Body,Anschrift,Gruszformel,Absender,Option_Signum,Signum_URL,SignumHeight,SignumWidth,Leerzeilen,Print_Logo,Serienbrief)&quot;&amp;_
+					&quot;select distinct &quot;&amp;_
+					&quot;t1.DocumentID,t3.KontaktID,&apos;&quot;&amp; sKontakte &amp;&quot;&apos;,&apos;&quot;&amp; sKorrespondenz &amp;&quot;&apos;,&apos;&quot;&amp; iEinstellungsID_lokal &amp;&quot;&apos;,&apos;&quot;&amp; iUserID_lokal &amp;&quot;&apos;,concat(&quot;&amp; iPrint_Typ &amp;&quot;),&quot;&amp;_
+					 sDocumentName &amp;&quot;,t1.Document_Name,concat(&quot;&amp; sNummern &amp;&quot;),&apos;&quot;&amp; sEMail &amp;&quot;&apos;,&apos;&quot;&amp; sFax &amp;&quot;&apos;,&quot;&amp;_
+					&quot;t1.Anrede,t1.Body,concat(&apos;&quot;&amp; sAnschrift &amp;&quot;&apos;),t1.Gruszformel,t1.Absender,t1.Option_Signum,&quot;&amp;_
+					&quot;t1.Signum_URL,t1.SignumHeight,t1.SignumWidth,t1.Leerzeilen,concat(&apos;&quot;&amp; ifLogoDrucken &amp;&quot;&apos;),0 &quot;&amp;_
+					&quot;from &quot;&amp; sKorrespondenz &amp;&quot; as t1,Document_Typ as t2,&quot;&amp; sKontakte &amp;&quot; as t3 &quot;&amp;_
+					&quot;where t1.DocumentID=&quot;&amp; lDocumentID &amp;&quot; &quot;&amp;_
+					&quot;and t2.Document_TypID=t1.Document_TypID &quot;&amp;_
+					&quot;and t3.KontaktID=t1.KontaktID&quot;
+				SQL_execute(sSQL3)
+				
+				SetUserID(iUserID_lokal)
+				KorrespondenzPrint()
+			else
+				MsgBox(&quot;Sie haben noch keinen &quot;&amp; sKontakte &amp;&quot; ausgewählt!&quot;,48,sTitle_lokal)
+			End if
+		End if
+	else
+		MsgBox(&quot;Sie haben noch kein Dokument ausgewählt und geladen!&quot;,16,sTitle_lokal)
+	End if
+End sub
+
+
+</script:module>

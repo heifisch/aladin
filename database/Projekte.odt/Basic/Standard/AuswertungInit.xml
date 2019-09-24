@@ -1,0 +1,717 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="AuswertungInit" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub init_Auswertung()
+	init_oListAngNetto()
+	init_oListAngMateinsatz()
+	init_oListAngLieferung()
+	init_oListAngSollZeit()
+	init_oListAngSollLeistung()
+	init_oListAuftrNetto()
+	init_oListAuftrMateinsatz()
+	init_oListAuftrLieferung()
+	init_oListAuftrSollZeit()
+	init_oListAuftrSollLeistung()
+	init_oListGeleistetNetto()
+	init_oListGeleistetMateinsatz()
+	init_oListGeleistetLieferung()
+	init_oListGeleistetSollZeit()
+	init_oListGeleistetSollLeistung()
+	init_oListGeleistetIstZeit()
+	init_oListGeleistetIstLeistung()
+	init_oListGeleistetIstNetto()
+	init_oListRechnungNetto()
+	init_oListRechnungMateinsatz()
+	init_oListRechnungLieferung()
+	init_oListRechnungSollZeit()
+	init_oListRechnungSollLeistung()
+	init_oListStandardNetto()
+	init_oListStandardMateinsatz()
+	init_oListStandardLieferung()
+	init_oListStandardSollZeit()
+	init_oListStandardSollLeistung()
+	init_oListStandardIstZeit()
+	init_oListStandardIstLeistung()
+	init_oListStandardIstNetto()
+	init_oListNachtragNetto()
+	init_oListNachtragMateinsatz()
+	init_oListNachtragLieferung()
+	init_oListNachtragSollZeit()
+	init_oListNachtragSollLeistung()
+	init_oListNachtragIstZeit()
+	init_oListNachtragIstLeistung()
+	init_oListNachtragIstNetto()
+	init_oListNebenLeistNetto()
+	init_oListNebenLeistMateinsatz()
+	init_oListNebenLeistLieferung()
+	init_oListNebenLeistSollZeit()
+	init_oListNebenLeistSollLeistung()
+End Sub
+
+Sub init_oListAngNetto()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Summe_nach_Korrektur),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Summe_nach_Korrektur),2)&quot;&amp;_
+		&quot; from &quot;&amp; sAngebote1 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;)
+	oListAngNetto.ListSourceType=4
+	oListAngNetto.ListSource=vSQLArray
+End Sub
+
+Sub init_oListAngMateinsatz()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Menge),2)&quot;&amp;_
+		&quot; from &quot;&amp; sAngebote2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sAngebote1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;)
+	oListAngMateinsatz.ListSourceType=4
+	oListAngMateinsatz.ListSource=vSQLArray
+End Sub
+
+Sub init_oListAngLieferung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2)&quot;&amp;_
+		&quot; from &quot;&amp; sAngebote2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sAngebote1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;)
+	oListAngLieferung.ListSourceType=4
+	oListAngLieferung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListAngSollZeit()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit*t1.Menge/60),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit*t1.Menge/60),2)&quot;&amp;_
+		&quot; from &quot;&amp; sAngebote2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sAngebote1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;)
+	oListAngSollZeit.ListSourceType=4
+	oListAngSollZeit.ListSource=vSQLArray
+End Sub
+
+Sub init_oListAngSollLeistung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2)&quot;&amp;_
+		&quot; from &quot;&amp; sAngebote2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sAngebote1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;)
+	oListAngSollLeistung.ListSourceType=4
+	oListAngSollLeistung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListAuftrNetto()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Summe_nach_Korrektur),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Summe_nach_Korrektur),2)&quot;&amp;_
+		&quot; from &quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;)
+	oListAuftrNetto.ListSourceType=4
+	oListAuftrNetto.ListSource=vSQLArray
+End Sub
+
+Sub init_oListAuftrMateinsatz()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Menge),2)&quot;&amp;_
+		&quot; from &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;)
+	oListAuftrMateinsatz.ListSourceType=4
+	oListAuftrMateinsatz.ListSource=vSQLArray
+End Sub
+
+Sub init_oListAuftrLieferung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2)&quot;&amp;_
+		&quot; from &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;)
+	oListAuftrLieferung.ListSourceType=4
+	oListAuftrLieferung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListAuftrSollZeit()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit*t1.Menge/60),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit*t1.Menge/60),2)&quot;&amp;_
+		&quot; from &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;)
+	oListAuftrSollZeit.ListSourceType=4
+	oListAuftrSollZeit.ListSource=vSQLArray
+End Sub
+
+Sub init_oListAuftrSollLeistung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;)
+	oListAuftrSollLeistung.ListSourceType=4
+	oListAuftrSollLeistung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListGeleistetNetto()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;)
+	oListGeleistetNetto.ListSourceType=4
+	oListGeleistetNetto.ListSource=vSQLArray
+End Sub
+
+Sub init_oListGeleistetMateinsatz()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;)
+	oListGeleistetMateinsatz.ListSourceType=4
+	oListGeleistetMateinsatz.ListSource=vSQLArray
+End Sub
+
+Sub init_oListGeleistetLieferung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;)
+	oListGeleistetLieferung.ListSourceType=4
+	oListGeleistetLieferung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListGeleistetSollZeit()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit/60*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit/60*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;)
+	oListGeleistetSollZeit.ListSourceType=4
+	oListGeleistetSollZeit.ListSource=vSQLArray
+End Sub
+
+Sub init_oListGeleistetSollLeistung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;)
+	oListGeleistetSollLeistung.ListSourceType=4
+	oListGeleistetSollLeistung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListGeleistetIstZeit()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.IstZeit),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.IstZeit),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;)
+	oListGeleistetIstZeit.ListSourceType=4
+	oListGeleistetIstZeit.ListSource=vSQLArray
+End Sub
+
+Sub init_oListGeleistetIstLeistung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;)
+	oListGeleistetIstLeistung.ListSourceType=4
+	oListGeleistetIstLeistung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListGeleistetIstNetto()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)&quot;&amp;_
+		&quot;+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)&quot;&amp;_
+		&quot;+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;)
+	oListGeleistetIstNetto.ListSourceType=4
+	oListGeleistetIstNetto.ListSource=vSQLArray
+End Sub
+
+Sub init_oListRechnungNetto()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Summe_nach_Korrektur),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Summe_nach_Korrektur),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.AZ=(SELECT MIN(t1.AZ) &quot;&amp;_
+			&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t1.ProjektID=t2.ProjektID)&quot;)
+	oListRechnungNetto.ListSourceType=4
+	oListRechnungNetto.ListSource=vSQLArray
+End Sub
+
+Sub init_oListRechnungMateinsatz()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sRechnungen1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;&amp;_
+		&quot; AND t3.AZ=(SELECT MIN(t1.AZ) &quot;&amp;_
+			&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t1.ProjektID=t2.ProjektID)&quot;)
+	oListRechnungMateinsatz.ListSourceType=4
+	oListRechnungMateinsatz.ListSource=vSQLArray
+End Sub
+
+Sub init_oListRechnungLieferung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sRechnungen1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;&amp;_
+		&quot; AND t3.AZ=(SELECT MIN(t1.AZ) &quot;&amp;_
+			&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t1.ProjektID=t2.ProjektID)&quot;)
+	oListRechnungLieferung.ListSourceType=4
+	oListRechnungLieferung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListRechnungSollZeit()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit*t1.Menge/60),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit*t1.Menge/60),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sRechnungen1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;&amp;_
+		&quot; AND t3.AZ=(SELECT MIN(t1.AZ) &quot;&amp;_
+			&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t1.ProjektID=t2.ProjektID)&quot;)
+	oListRechnungSollZeit.ListSourceType=4
+	oListRechnungSollZeit.ListSource=vSQLArray
+End Sub
+
+Sub init_oListRechnungSollLeistung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen2 &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sRechnungen1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t2.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.Pos_TypID=1&quot;&amp;_
+		&quot; AND t3.AZ=(SELECT MIN(t1.AZ) &quot;&amp;_
+			&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t1.ProjektID=t2.ProjektID)&quot;)
+	oListRechnungSollLeistung.ListSourceType=4
+	oListRechnungSollLeistung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListStandardNetto()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=1&quot;)
+	oListStandardNetto.ListSourceType=4
+	oListStandardNetto.ListSource=vSQLArray
+End Sub
+
+Sub init_oListStandardMateinsatz()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=1&quot;)
+	oListStandardMateinsatz.ListSourceType=4
+	oListStandardMateinsatz.ListSource=vSQLArray
+End Sub
+
+Sub init_oListStandardLieferung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=1&quot;)
+	oListStandardLieferung.ListSourceType=4
+	oListStandardLieferung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListStandardSollZeit()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit/60*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit/60*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=1&quot;)
+	oListStandardSollZeit.ListSourceType=4
+	oListStandardSollZeit.ListSource=vSQLArray
+End Sub
+
+Sub init_oListStandardSollLeistung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=1&quot;)
+	oListStandardSollLeistung.ListSourceType=4
+	oListStandardSollLeistung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListStandardIstZeit()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.IstZeit),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.IstZeit),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=1&quot;)
+	oListStandardIstZeit.ListSourceType=4
+	oListStandardIstZeit.ListSource=vSQLArray
+End Sub
+
+Sub init_oListStandardIstLeistung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=1&quot;)
+	oListStandardIstLeistung.ListSourceType=4
+	oListStandardIstLeistung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListStandardIstNetto()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)&quot;&amp;_
+		&quot;+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)&quot;&amp;_
+		&quot;+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=1&quot;)
+	oListStandardIstNetto.ListSourceType=4
+	oListStandardIstNetto.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNachtragNetto()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=3&quot;)
+	oListNachtragNetto.ListSourceType=4
+	oListNachtragNetto.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNachtragMateinsatz()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=3&quot;)
+	oListNachtragMateinsatz.ListSourceType=4
+	oListNachtragMateinsatz.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNachtragLieferung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=3&quot;)
+	oListNachtragLieferung.ListSourceType=4
+	oListNachtragLieferung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNachtragSollZeit()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit/60*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit/60*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=3&quot;)
+	oListNachtragSollZeit.ListSourceType=4
+	oListNachtragSollZeit.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNachtragSollLeistung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=3&quot;)
+	oListNachtragSollLeistung.ListSourceType=4
+	oListNachtragSollLeistung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNachtragIstZeit()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.IstZeit),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.IstZeit),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=3&quot;)
+	oListNachtragIstZeit.ListSourceType=4
+	oListNachtragIstZeit.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNachtragIstLeistung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=3&quot;)
+	oListNachtragIstLeistung.ListSourceType=4
+	oListNachtragIstLeistung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNachtragIstNetto()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)&quot;&amp;_
+		&quot;+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)&quot;&amp;_
+		&quot;+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=3&quot;)
+	oListNachtragIstNetto.ListSourceType=4
+	oListNachtragIstNetto.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNebenLeistNetto()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=2&quot;)
+	oListNebenLeistNetto.ListSourceType=4
+	oListNebenLeistNetto.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNebenLeistMateinsatz()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Menge),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=2&quot;)
+	oListNebenLeistMateinsatz.ListSourceType=4
+	oListNebenLeistMateinsatz.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNebenLeistLieferung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=2&quot;)
+	oListNebenLeistLieferung.ListSourceType=4
+	oListNebenLeistLieferung.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNebenLeistSollZeit()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit*t1.Menge/60),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit*t1.Menge/60),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=2&quot;)
+	oListNebenLeistSollZeit.ListSourceType=4
+	oListNebenLeistSollZeit.ListSource=vSQLArray
+End Sub
+
+Sub init_oListNebenLeistSollLeistung()
+Dim vSQLArray as Variant
+	vSQLArray=Array(&quot;SELECT ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2),&quot;&amp;_
+		&quot;ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; AND t1.ProjektID!=0)&quot;&amp;_
+		&quot; AND t1.LeistungsTyp=2&quot;)
+	oListNebenLeistSollLeistung.ListSourceType=4
+	oListNebenLeistSollLeistung.ListSource=vSQLArray
+End Sub
+
+</script:module>

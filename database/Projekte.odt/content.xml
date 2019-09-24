@@ -1,0 +1,1309 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:officeooo="http://openoffice.org/2009/office" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2">
+  <office:scripts>
+    <office:event-listeners>
+      <script:event-listener script:language="ooo:script" script:event-name="dom:load" xlink:href="vnd.sun.star.script:Standard.Routinen.Start_Projekte?language=Basic&amp;location=document" xlink:type="simple"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:prepare-unload" xlink:href="vnd.sun.star.script:Standard.Routinen.Maske_schliessen?language=Basic&amp;location=document" xlink:type="simple"/>
+    </office:event-listeners>
+  </office:scripts>
+  <office:font-face-decls>
+    <style:font-face style:name="Arial1" svg:font-family="Arial, Helvetica"/>
+    <style:font-face style:name="Arial2" svg:font-family="Arial" style:font-adornments="Standard" style:font-family-generic="swiss"/>
+    <style:font-face style:name="Helvetica" svg:font-family="Helvetica" style:font-adornments="Bold" style:font-family-generic="swiss"/>
+    <style:font-face style:name="Bitstream Vera Sans" svg:font-family="'Bitstream Vera Sans'" style:font-pitch="variable"/>
+    <style:font-face style:name="Lucidasans" svg:font-family="Lucidasans" style:font-pitch="variable"/>
+    <style:font-face style:name="Times New Roman" svg:font-family="'Times New Roman'" style:font-family-generic="roman" style:font-pitch="variable"/>
+    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-adornments="Standard" style:font-family-generic="swiss" style:font-pitch="variable"/>
+  </office:font-face-decls>
+  <office:automatic-styles>
+    <style:style style:name="P1" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="center"/>
+    </style:style>
+    <style:style style:name="P2" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="start"/>
+      <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial" fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P3" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="start"/>
+      <style:text-properties fo:color="#333333" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial" fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P4" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="center"/>
+      <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial" fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P5" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="center"/>
+      <style:text-properties fo:color="#ffffff" style:font-name="Arial2" fo:font-size="14pt" fo:font-style="normal" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P6" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="center"/>
+      <style:text-properties fo:color="#ffffff" style:font-name="Arial2" fo:font-size="16pt" fo:font-style="normal" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P7" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="start"/>
+      <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial2" fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P8" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="end"/>
+      <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial" fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P9" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="center"/>
+      <style:text-properties fo:color="#ffffff" style:font-name="Helvetica" fo:font-size="12pt" fo:font-style="normal" fo:font-weight="bold"/>
+    </style:style>
+    <style:style style:name="P10" style:family="paragraph">
+      <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" fo:font-style="normal" style:text-underline-style="none"/>
+    </style:style>
+    <style:style style:name="P11" style:family="paragraph">
+      <style:text-properties fo:color="#4c4c4c" style:font-name="Arial2" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P12" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="start"/>
+      <style:text-properties fo:color="#4c4c4c" style:font-name="Arial2" fo:font-size="10pt"/>
+    </style:style>
+    <style:style style:name="P13" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="start"/>
+      <style:text-properties style:font-name="Arial2" fo:font-size="10pt" fo:font-style="normal" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P14" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="center"/>
+      <style:text-properties style:font-name="Arial2"/>
+    </style:style>
+    <style:style style:name="P15" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="end"/>
+    </style:style>
+    <style:style style:name="P16" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="start"/>
+      <style:text-properties style:font-name="Arial2" fo:font-size="8pt" fo:font-style="normal" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P17" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="start"/>
+    </style:style>
+    <style:style style:name="gr1" style:family="graphic">
+      <style:graphic-properties style:protect="position size" style:run-through="foreground" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page" draw:wrap-influence-on-position="once-concurrent" style:flow-with-text="false"/>
+    </style:style>
+    <style:style style:name="gr2" style:family="graphic">
+      <style:graphic-properties svg:stroke-width="0.049cm" draw:marker-start-width="0.15cm" draw:marker-end-width="0.15cm" draw:textarea-horizontal-align="center" draw:textarea-vertical-align="middle" fo:padding-top="0.025cm" fo:padding-bottom="0.025cm" fo:padding-left="0.025cm" fo:padding-right="0.025cm" style:protect="position size" style:run-through="foreground"/>
+    </style:style>
+    <style:style style:name="gr3" style:family="graphic">
+      <style:graphic-properties style:protect="position size" style:run-through="foreground"/>
+    </style:style>
+    <style:style style:name="gr4" style:family="graphic">
+      <style:graphic-properties fo:background-color="#ffffff" fo:border="solid #000000"/>
+    </style:style>
+    <style:style style:name="gr5" style:family="graphic">
+      <style:graphic-properties fo:background-color="#99ccff" fo:border="solid #000000"/>
+    </style:style>
+    <style:style style:name="gr6" style:family="graphic">
+      <style:graphic-properties fo:background-color="#00b8ff" style:protect="position size"/>
+    </style:style>
+    <style:style style:name="gr7" style:family="graphic">
+      <style:graphic-properties fo:border="solid #000000"/>
+    </style:style>
+    <style:style style:name="gr8" style:family="graphic">
+      <style:graphic-properties fo:background-color="#c0c0c0" fo:border="solid #000000"/>
+    </style:style>
+    <style:style style:name="gr9" style:family="graphic" style:data-style-name="C10107">
+      <style:graphic-properties fo:border="solid #000000"/>
+    </style:style>
+    <style:style style:name="gr10" style:family="graphic">
+      <style:graphic-properties fo:border="solid #000000" style:protect="position size"/>
+    </style:style>
+    <style:style style:name="gr11" style:family="graphic">
+      <style:graphic-properties draw:textarea-vertical-align="middle"/>
+    </style:style>
+    <style:style style:name="gr12" style:family="graphic">
+      <style:graphic-properties fo:background-color="#e6e6e6" fo:border="solid #000000" style:protect="position size"/>
+    </style:style>
+    <style:style style:name="gr13" style:family="graphic">
+      <style:graphic-properties fo:background-color="#ffff99" fo:border="solid #000000" style:protect="position size"/>
+    </style:style>
+    <number:date-style style:name="C10107" number:language="de" number:country="DE">
+      <number:day/>
+      <number:text>-</number:text>
+      <number:month/>
+      <number:text>-</number:text>
+      <number:year/>
+    </number:date-style>
+    <style:style style:name="ctrl1" style:family="paragraph" style:data-style-name="C10107"/>
+  </office:automatic-styles>
+  <office:body>
+    <office:text>
+      <office:forms form:automatic-focus="false" form:apply-design-mode="true">
+        <form:form form:name="Form_Steuerung" form:command="SELECT * from Steuerung where ClientID=23" form:datasource="ALADIN" form:allow-inserts="false" form:apply-filter="true" form:navigation-mode="none" form:tab-cycle="current" form:control-implementation="ooo:com.sun.star.form.component.Form" office:target-frame="">
+          <form:properties>
+            <form:property form:property-name="PropertyChangeNotificationEnabled" office:value-type="boolean" office:boolean-value="true"/>
+            <form:property form:property-name="TargetURL" office:value-type="string" office:string-value=""/>
+            <form:property form:property-name="URL" office:value-type="string" office:string-value=""/>
+          </form:properties>
+          <form:form form:name="Form_Projekt" form:command="SELECT * from Projekte where ProjektID=:c" form:datasource="ALADIN" form:allow-deletes="false" form:allow-inserts="false" form:apply-filter="true" form:navigation-mode="none" form:tab-cycle="current" form:control-implementation="ooo:com.sun.star.form.component.Form" office:target-frame="" form:master-fields="&quot;ProjektID&quot;" form:detail-fields="&quot;c&quot;">
+            <form:properties>
+              <form:property form:property-name="PropertyChangeNotificationEnabled" office:value-type="boolean" office:boolean-value="true"/>
+              <form:property form:property-name="TargetURL" office:value-type="string" office:string-value=""/>
+              <form:property form:property-name="URL" office:value-type="string" office:string-value=""/>
+            </form:properties>
+            <form:fixed-text form:name="Label_Kundenname" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control1" form:id="control1" form:label="Kundenname" form:for="control11">
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusIn" script:macro-name="Standard.Routinen.Lieferanten_refresh"/>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusOut" script:macro-name="Standard.Routinen.Form_Lieferantendaten_reload"/>
+              </office:event-listeners>
+            </form:fixed-text>
+            <form:fixed-text form:name="Label_ProjektID" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control2" form:id="control2" form:label="ProjektID" form:for="control12"/>
+            <form:fixed-text form:name="Label_Betrag_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control3" form:id="control3" form:label="Betrag ohne MwSt">
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusOut" script:macro-name="Standard.Routinen.Betrag_berechnen"/>
+              </office:event-listeners>
+            </form:fixed-text>
+            <form:fixed-text form:name="Label_Projektname" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control4" form:id="control4" form:label="Projektname" form:for="control15"/>
+            <form:button form:name="Button_neues_Projekt" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control5" form:id="control5" form:label="neues Projekt" form:tab-stop="false" form:tab-index="1" office:target-frame="" form:delay-for-repeat="P0D" form:image-position="center">
+              <form:properties>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+                <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+              </form:properties>
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.neues_Projekt?language=Basic&amp;location=document" xlink:type="simple"/>
+              </office:event-listeners>
+            </form:button>
+            <form:fixed-text form:name="Label_Betrag_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control6" form:id="control6" form:label="Betrag mit MwSt">
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusOut" script:macro-name="Standard.Routinen.Betrag_mit_MwSt_setzen"/>
+              </office:event-listeners>
+            </form:fixed-text>
+            <form:fixed-text form:name="Label_Status" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control7" form:id="control7" form:label="Status" form:for="control17">
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:change" script:macro-name="Standard.Routinen.Status_setzen"/>
+              </office:event-listeners>
+            </form:fixed-text>
+            <form:fixed-text form:name="Label_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control8" form:id="control8" form:label="MwSt"/>
+            <form:fixed-text form:name="Label_Bauende" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control9" form:id="control9" form:label="Bauende" form:for="control21"/>
+            <form:formatted-text form:name="Field_Betrag_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control10" form:id="control10" form:tab-index="6" form:data-field="Summe_ohne_MwSt" form:input-required="false" form:validation="true" form:min-value="-1000000000" form:max-value="1000000000">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="CurrencySymbol" office:value-type="string" office:string-value=" €"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CurrencyField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="ShowThousandsSeparator" office:value-type="boolean" office:boolean-value="true"/>
+              </form:properties>
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusOut" xlink:href="vnd.sun.star.script:Standard.Routinen.Betrag_berechnen?language=Basic&amp;location=document" xlink:type="simple"/>
+              </office:event-listeners>
+            </form:formatted-text>
+            <form:listbox form:name="List_Kunden" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control11" form:id="control11" form:dropdown="true" form:tab-stop="true" form:size="50" form:tab-index="2" form:data-field="KontaktID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT distinct concat(t1.Name1,', ',t1.Vorname,' ',t1.Name2,'  --&gt;  ',t1.Ort) as Name,t1.KontaktID from Kunden as t1 order by t1.Name1 ASC">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+                <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+              </form:properties>
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn" xlink:href="vnd.sun.star.script:Standard.Routinen.Kunden_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
+                <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusOut" xlink:href="vnd.sun.star.script:Standard.Routinen.Form_Kundendaten_reload?language=Basic&amp;location=document" xlink:type="simple"/>
+              </office:event-listeners>
+            </form:listbox>
+            <form:formatted-text form:name="Field_ProjektID" form:control-implementation="ooo:com.sun.star.form.component.NumericField" xml:id="control12" form:id="control12" form:tab-stop="false" form:tab-index="10" form:data-field="ProjektID" form:input-required="false" form:validation="true" form:min-value="0" form:max-value="99999999999">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DecimalAccuracy" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.NumericField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              </form:properties>
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn" xlink:href="vnd.sun.star.script:Standard.commit.store_ProjektID_old?language=Basic&amp;location=document" xlink:type="simple"/>
+                <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusOut" xlink:href="vnd.sun.star.script:Standard.commit.set_ProjektID_new?language=Basic&amp;location=document" xlink:type="simple"/>
+              </office:event-listeners>
+            </form:formatted-text>
+            <form:fixed-text form:name="Label_MwSt-Satz" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control13" form:id="control13" form:label="MwSt-Satz">
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusOut" script:macro-name="Standard.Routinen.Betrag_berechnen_MwSt_update"/>
+              </office:event-listeners>
+            </form:fixed-text>
+            <form:button form:name="Button_Daten_uebernehmen" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control14" form:id="control14" form:label="übernehmen" form:tab-stop="true" form:tab-index="8" office:target-frame="" form:delay-for-repeat="P0D" form:image-position="center">
+              <form:properties>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+                <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+              </form:properties>
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.Daten_uebernehmen?language=Basic&amp;location=document" xlink:type="simple"/>
+              </office:event-listeners>
+            </form:button>
+            <form:text form:name="Field_ProjektName" form:control-implementation="ooo:com.sun.star.form.component.TextField" xml:id="control15" form:id="control15" form:tab-stop="false" form:tab-index="11" form:max-length="255" form:data-field="Projekt_Name" form:input-required="false" form:convert-empty-to-null="true">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              </form:properties>
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusOut" xlink:href="vnd.sun.star.script:Standard.Routinen.Rechtschreibung?language=Basic&amp;location=document" xlink:type="simple"/>
+              </office:event-listeners>
+            </form:text>
+            <form:formatted-text form:name="Field_Betrag_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control16" form:id="control16" form:tab-stop="false" form:tab-index="15" form:data-field="Summe_mit_MwSt" form:input-required="false" form:validation="true" form:min-value="-1000000000" form:max-value="1000000000">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="CurrencySymbol" office:value-type="string" office:string-value=" €"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CurrencyField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="ShowThousandsSeparator" office:value-type="boolean" office:boolean-value="true"/>
+              </form:properties>
+            </form:formatted-text>
+            <form:combobox form:name="List_Status" form:control-implementation="ooo:com.sun.star.form.component.ComboBox" xml:id="control17" form:id="control17" form:dropdown="true" form:tab-stop="true" form:size="10" form:tab-index="9" form:max-length="50" form:data-field="Status" form:input-required="false" form:list-source-type="sql" form:list-source="select distinct Status from Projekte order by Status ASC" form:auto-complete="true">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ComboBox"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+              </form:properties>
+            </form:combobox>
+            <form:fixed-text form:name="Label_Baubeginn" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control18" form:id="control18" form:label="Baubeginn" form:for="control31">
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusOut" script:macro-name="Standard.Routinen.Datum_setzen"/>
+              </office:event-listeners>
+            </form:fixed-text>
+            <form:formatted-text form:name="Field_MwSt" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control19" form:id="control19" form:printable="false" form:tab-stop="false" form:tab-index="14" form:data-field="MwSt" form:input-required="false" form:validation="true" form:min-value="-1000000000" form:max-value="1000000000">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="CurrencySymbol" office:value-type="string" office:string-value=" €"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CurrencyField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="ShowThousandsSeparator" office:value-type="boolean" office:boolean-value="true"/>
+              </form:properties>
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusOut" xlink:href="vnd.sun.star.script:Standard.Routinen.Betrag_berechnen_MwSt_update?language=Basic&amp;location=document" xlink:type="simple"/>
+              </office:event-listeners>
+            </form:formatted-text>
+            <form:formatted-text form:name="Field_KontaktID" form:control-implementation="ooo:com.sun.star.form.component.NumericField" xml:id="control20" form:id="control20" form:readonly="true" form:tab-stop="false" form:tab-index="16" form:data-field="KontaktID" form:input-required="false" form:validation="true" form:min-value="-1000000000" form:max-value="1000000000">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DecimalAccuracy" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.NumericField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              </form:properties>
+            </form:formatted-text>
+            <form:date form:name="Field_Bauende" form:control-implementation="ooo:com.sun.star.form.component.DateField" xml:id="control21" form:id="control21" form:min-value="1800-01-01" form:tab-stop="false" form:tab-index="12" form:data-field="Bauende" form:input-required="false">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DateShowCentury" office:value-type="boolean" office:boolean-value="true"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.DateField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              </form:properties>
+            </form:date>
+            <form:fixed-text form:name="Label_Bemerkung" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control22" form:id="control22" form:label="Bemerkung" form:for="control36"/>
+            <form:formatted-text form:name="Field_MwSt_Satz" form:control-implementation="ooo:com.sun.star.form.component.NumericField" xml:id="control23" form:id="control23" form:tab-stop="false" form:tab-index="13" form:data-field="MwSt_Satz" form:input-required="false" form:validation="true" form:min-value="0" form:max-value="100">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.NumericField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              </form:properties>
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusOut" xlink:href="vnd.sun.star.script:Standard.Routinen.Betrag_berechnen_MwSt_Satz_update?language=Basic&amp;location=document" xlink:type="simple"/>
+              </office:event-listeners>
+            </form:formatted-text>
+            <form:fixed-text form:name="Label_Abrechnung_nach" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control24" form:id="control24" form:label="Abrechnung nach:" form:for="control37">
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusIn" script:macro-name="Standard.Routinen.Lieferanten_refresh"/>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusOut" script:macro-name="Standard.Routinen.Form_Lieferantendaten_reload"/>
+              </office:event-listeners>
+            </form:fixed-text>
+            <form:fixed-text form:name="Beschriftungsfeld 6" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control25" form:id="control25" form:label="Erstellungsdatum" form:for="control40">
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusOut" script:macro-name="Standard.Routinen.Datum_setzen"/>
+              </office:event-listeners>
+            </form:fixed-text>
+            <form:fixed-text form:name="LabelNebenLeistungen" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control26" form:id="control26" form:label="Nebenleistungen"/>
+            <form:fixed-text form:name="Beschriftungsfeld 1" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control27" form:id="control27" form:label="Materialeinsatz [€]"/>
+            <form:fixed-text form:name="LabelNachtrag" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control28" form:id="control28" form:label="Soll   -   Nachtrag   -    Ist"/>
+            <form:fixed-text form:name="Beschriftungsfeld 4" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control29" form:id="control29" form:label="Leistung [€]"/>
+            <form:fixed-text form:name="LabelStandard" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control30" form:id="control30" form:label="Soll   -   Standard   -    Ist"/>
+            <form:date form:name="Field_Baubeginn" form:control-implementation="ooo:com.sun.star.form.component.DateField" xml:id="control31" form:id="control31" form:min-value="1800-01-01" form:tab-index="5" form:data-field="Baubeginn" form:input-required="false">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DateShowCentury" office:value-type="boolean" office:boolean-value="true"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.DateField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              </form:properties>
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusOut" xlink:href="vnd.sun.star.script:Standard.Routinen.Datum_setzen?language=Basic&amp;location=document" xlink:type="simple"/>
+              </office:event-listeners>
+            </form:date>
+            <form:fixed-text form:name="LabelNettoSumme" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control32" form:id="control32" form:label="Netto-Summe [€]"/>
+            <form:fixed-text form:name="Label_KundenID" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control33" form:id="control33" form:label="KundenID" form:for="control20"/>
+            <form:fixed-text form:name="Beschriftungsfeld 3" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control34" form:id="control34" form:label="Zeit [Std]"/>
+            <form:fixed-text form:name="LabelSollLeistung" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control35" form:id="control35" form:label="Leistung [€]"/>
+            <form:textarea form:name="Field_Bemerkung" form:control-implementation="ooo:com.sun.star.form.component.TextField" xml:id="control36" form:id="control36" form:tab-stop="false" form:tab-index="7" form:max-length="255" form:data-field="Bemerkung" form:input-required="false" form:convert-empty-to-null="true">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
+                <form:property form:property-name="MultiLine" office:value-type="boolean" office:boolean-value="true"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="VScroll" office:value-type="boolean" office:boolean-value="true"/>
+              </form:properties>
+            </form:textarea>
+            <form:listbox form:name="List_Abrechnung_nach" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control37" form:id="control37" form:dropdown="true" form:tab-stop="true" form:size="10" form:tab-index="3" form:data-field="Abrechnung_nach" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select '',0 union&#10;select 'Einheitspreisen',1 union&#10;select 'Aufwand',2 union&#10;select 'Pauschalvertrag',3">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+                <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+              </form:properties>
+            </form:listbox>
+            <form:fixed-text form:name="LabelSollzeit" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control38" form:id="control38" form:label="Zeit [Std]"/>
+            <form:fixed-text form:name="Beschriftungsfeld 2" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control39" form:id="control39" form:label="Lieferung [€]"/>
+            <form:date form:name="Field_Erstellungsdatum" form:control-implementation="ooo:com.sun.star.form.component.DateField" xml:id="control40" form:id="control40" form:min-value="1800-01-01" form:tab-index="4" form:data-field="Erstellungsdatum" form:input-required="false">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DateShowCentury" office:value-type="boolean" office:boolean-value="true"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.DateField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              </form:properties>
+            </form:date>
+            <form:fixed-text form:name="LabelLieferung" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control41" form:id="control41" form:label="Lieferung [€]"/>
+            <form:fixed-text form:name="Label_Stundensatz" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control42" form:id="control42" form:label="Stundensatz">
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusOut" script:macro-name="Standard.Routinen.Betrag_berechnen"/>
+              </office:event-listeners>
+            </form:fixed-text>
+            <form:fixed-text form:name="Label_Materialaufschlagsatz" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control43" form:id="control43" form:label="Materialaufschlagsatz">
+              <office:event-listeners>
+                <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusOut" script:macro-name="Standard.Routinen.Betrag_berechnen"/>
+              </office:event-listeners>
+            </form:fixed-text>
+            <form:fixed-text form:name="LabelMaterialeinsatz" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control44" form:id="control44" form:label="Materialeinsatz [€]"/>
+            <form:formatted-text form:name="Field_Stundensatz" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control45" form:id="control45" form:tab-index="6" form:data-field="Stundenverrechnungssatz" form:input-required="false" form:validation="true" form:min-value="-1000000000" form:max-value="1000000000">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="CurrencySymbol" office:value-type="string" office:string-value=" €"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CurrencyField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="ShowThousandsSeparator" office:value-type="boolean" office:boolean-value="true"/>
+              </form:properties>
+            </form:formatted-text>
+            <form:formatted-text form:name="Field_Materialaufschlagsatz" form:control-implementation="ooo:com.sun.star.form.component.NumericField" xml:id="control46" form:id="control46" form:tab-index="6" form:data-field="Materialaufschlagsatz" form:input-required="false" form:validation="true" form:min-value="-1000000000" form:max-value="1000000000">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="com.sun.star.form.control.NumericField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="ShowThousandsSeparator" office:value-type="boolean" office:boolean-value="true"/>
+              </form:properties>
+            </form:formatted-text>
+            <form:fixed-text form:name="LabelRechnung" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control47" form:id="control47" form:label="Rechnungen"/>
+            <form:fixed-text form:name="Beschriftungsfeld 5" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control48" form:id="control48" form:label="Netto-Summe [€]"/>
+            <form:fixed-text form:name="LabelAngebote" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control49" form:id="control49" form:label="Angebote"/>
+            <form:fixed-text form:name="LabelGeleistet" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control50" form:id="control50" form:label="Soll   -   Geleistet   -    Ist"/>
+            <form:fixed-text form:name="LabelAufträge" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control51" form:id="control51" form:label="Aufträge"/>
+          </form:form>
+          <form:text form:name="Field_Suchstring" form:control-implementation="ooo:com.sun.star.form.component.TextField" xml:id="control52" form:id="control52" form:tab-stop="false" form:tab-index="4" form:max-length="255" form:data-field="Suchstring" form:input-required="false" form:convert-empty-to-null="true">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
+              <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Hier können Zeichenfolgen eingegeben werden. Bei mehreren Zeichenfolgen &quot;%&quot; als Trennzeichen benutzen und Reihenfolge beachten."/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.Routinen.Filter_Suchstring_setzen?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:text>
+          <form:form form:name="Form_Dokumente" form:command="SELECT * from Angebote1 where ProjektID=:c" form:datasource="ALADIN" form:allow-deletes="false" form:allow-inserts="false" form:allow-updates="false" form:apply-filter="true" form:navigation-mode="none" form:tab-cycle="current" form:control-implementation="ooo:com.sun.star.form.component.Form" office:target-frame="" form:master-fields="&quot;ProjektID&quot;" form:detail-fields="&quot;c&quot;">
+            <form:properties>
+              <form:property form:property-name="PropertyChangeNotificationEnabled" office:value-type="boolean" office:boolean-value="true"/>
+              <form:property form:property-name="TargetURL" office:value-type="string" office:string-value=""/>
+              <form:property form:property-name="URL" office:value-type="string" office:string-value=""/>
+            </form:properties>
+            <form:grid form:name="TableControl" form:control-implementation="ooo:com.sun.star.form.component.GridControl" xml:id="control53" form:id="control53">
+              <form:properties>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="com.sun.star.form.control.GridControl"/>
+              </form:properties>
+              <form:column form:name="DokumentID" form:control-implementation="ooo:TextField" form:label="DokumentID">
+                <form:text xml:id="control54" form:id="control54" form:readonly="true" form:max-length="11" form:data-field="DocumentID" form:input-required="false" form:convert-empty-to-null="true">
+                  <form:properties>
+                    <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
+                    <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="Width" office:value-type="float" office:value="230"/>
+                  </form:properties>
+                </form:text>
+              </form:column>
+              <form:column form:name="Datum" form:control-implementation="ooo:DateField" form:label="Datum" form:text-style-name="ctrl1">
+                <form:date xml:id="control55" form:id="control55" form:min-value="1800-01-01" form:data-field="Erstellungsdatum" form:input-required="false">
+                  <form:properties>
+                    <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="com.sun.star.form.control.DateField"/>
+                    <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="Width" office:value-type="float" office:value="177"/>
+                  </form:properties>
+                </form:date>
+              </form:column>
+              <form:column form:name="Dokument_Name" form:control-implementation="ooo:TextField" form:label="Dokument Name">
+                <form:text xml:id="control56" form:id="control56" form:readonly="true" form:data-field="Document_Name" form:input-required="false" form:convert-empty-to-null="true">
+                  <form:properties>
+                    <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
+                    <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="Width" office:value-type="float" office:value="1185"/>
+                  </form:properties>
+                </form:text>
+              </form:column>
+              <form:column form:name="NettoBetrag" form:control-implementation="ooo:TextField" form:label="Netto">
+                <form:text xml:id="control57" form:id="control57" form:data-field="Summe_nach_Korrektur" form:input-required="false" form:convert-empty-to-null="true">
+                  <form:properties>
+                    <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
+                    <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="Width" office:value-type="float" office:value="188"/>
+                  </form:properties>
+                </form:text>
+              </form:column>
+            </form:grid>
+          </form:form>
+          <form:button form:name="Button_reset" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control58" form:id="control58" form:label="X" form:tab-stop="false" form:tab-index="7" office:target-frame="" form:delay-for-repeat="P0D" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+              <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+              <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Filter zurücksetzen"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.Filter_reset?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:button>
+          <form:fixed-text form:name="Label_Filter_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control59" form:id="control59" form:label="Filter (Jahr)"/>
+          <form:button form:name="Button_Kundendaten_anzeigen" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control60" form:id="control60" form:label="i" form:printable="false" form:tab-stop="false" form:tab-index="6" office:target-frame="" form:delay-for-repeat="P0D" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+              <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+              <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Informationen zum Kunden anzeigen."/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.Kundendaten_anzeigen?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:button>
+          <form:radio form:name="OptionGutschriften" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control61" form:id="control61" form:label="Gutschriften" form:visual-effect="flat" form:value="6" form:data-field="Option_1" form:input-required="false" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.RadioButton"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="SecondaryRefValue" office:value-type="string" office:string-value=""/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:itemstatechange" xlink:href="vnd.sun.star.script:Standard.Routinen.set_Tabelle_Dokumente?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:radio>
+          <form:fixed-text form:name="Label_Projektname" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control62" form:id="control62" form:label="Projektname" form:for="control68"/>
+          <form:fixed-text form:name="Label_Filter_Kunde" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control63" form:id="control63" form:label="Filter (Kunde)" form:for="control65"/>
+          <form:fixed-text form:name="Label_Filter_Status" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control64" form:id="control64" form:label="Filter (Status)"/>
+          <form:listbox form:name="List_Filter_Kunde" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control65" form:id="control65" form:dropdown="true" form:tab-stop="false" form:size="50" form:tab-index="3" form:data-field="KundenID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT distinct concat(t3.Name1,', ',t3.Vorname,' ',t3.Name2,'  --&gt;  ',t3.Ort),t1.KontaktID from Projekte as t1 INNER JOIN Kunden as t3 ON t3.KontaktID=t1.KontaktID INNER JOIN Steuerung as t2 ON t2.ClientID=23 where (((YEAR(t1.Erstellungsdatum)=t2.Jahr and LENGTH(t2.Jahr) &gt; 0) or (YEAR(t1.Erstellungsdatum) like '%' and LENGTH(t2.Jahr) IS NULL)) and ((t1.Status=t2.Status and LENGTH(t2.Status) &gt; 0) or (t1.Status like '%' and LENGTH(t2.Status) IS NULL)) or t1.KontaktID=t2.KundenID) order by t3.Name1 ASC">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.Routinen.Filter_Kunde_setzen?language=Basic&amp;location=document" xlink:type="simple"/>
+              <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn" xlink:href="vnd.sun.star.script:Standard.Routinen.List_Filter_Kunde_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:listbox>
+          <form:listbox form:name="List_Filter_Status" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control66" form:id="control66" form:dropdown="true" form:tab-stop="false" form:tab-index="2" form:data-field="Status" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT distinct t1.Status,t1.Status from Projekte as t1 INNER JOIN Steuerung as t2 ON (t2.ClientID=23) where ((((YEAR(t1.Erstellungsdatum)=t2.Jahr and LENGTH(t2.Jahr) &gt; 0) or (YEAR(t1.Erstellungsdatum) like '%' and LENGTH(t2.Jahr) IS NULL))) or t1.Status=t2.Status)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.Routinen.Filter_Status_setzen?language=Basic&amp;location=document" xlink:type="simple"/>
+              <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn" xlink:href="vnd.sun.star.script:Standard.Routinen.List_Filter_Status_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:listbox>
+          <form:fixed-text form:name="Label_Filter_Suchstring" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control67" form:id="control67" form:label="Filter (Suchstring)" form:for="control52">
+            <form:properties>
+              <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Hier können Zeichenfolgen eingegeben werden. Bei mehreren Zeichenfolgen &quot;%&quot; als Trennzeichen benutzen und Reihenfolge beachten."/>
+            </form:properties>
+          </form:fixed-text>
+          <form:listbox form:name="List_Projektauswahl" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control68" form:id="control68" form:dropdown="true" form:tab-stop="false" form:size="50" form:tab-index="5" form:data-field="ProjektID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT distinct t1.Projekt_Name as Name,t1.ProjektID from Projekte as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 where ((((YEAR(t1.Erstellungsdatum)=t2.Jahr and LENGTH(t2.Jahr) &gt; 0) or (YEAR(t1.Erstellungsdatum) like '%' and LENGTH(t2.Jahr) IS NULL)) and ((t1.Status=t2.Status and LENGTH(t2.Status) &gt; 0) or (t1.Status like '%' and LENGTH(t2.Status) IS NULL)) and ((t1.Projekt_Name like concat('%',t2.Suchstring,'%') and LENGTH(t2.Suchstring) &gt; 0) or (t1.Projekt_Name like '%' and LENGTH(t2.Suchstring) IS NULL)) and ((t1.KontaktID=t2.KundenID and LENGTH(t2.KundenID) &gt; 0) or (t1.KontaktID like '%' and LENGTH(t2.KundenID) IS NULL))) or t1.ProjektID=t2.ProjektID) and t1.ProjektID &gt; 0 order by t1.Projekt_Name ASC">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.Routinen.Projekt_uebernehmen?language=Basic&amp;location=document" xlink:type="simple"/>
+              <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn" xlink:href="vnd.sun.star.script:Standard.Routinen.List_Projektauswahl_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:listbox>
+          <form:radio form:name="OptionRechnungen" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control69" form:id="control69" form:label="Rechnungen" form:visual-effect="flat" form:value="5" form:data-field="Option_1" form:input-required="false" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.RadioButton"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="SecondaryRefValue" office:value-type="string" office:string-value=""/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:itemstatechange" xlink:href="vnd.sun.star.script:Standard.Routinen.set_Tabelle_Dokumente?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:radio>
+          <form:listbox form:name="List_Filter_Jahr" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control70" form:id="control70" form:dropdown="true" form:tab-stop="false" form:size="10" form:tab-index="1" form:data-field="Jahr" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT distinct year(Erstellungsdatum) as Jahr,year(Erstellungsdatum) from Projekte order by Jahr DESC">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.Routinen.Filter_Jahr_setzen?language=Basic&amp;location=document" xlink:type="simple"/>
+              <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn" xlink:href="vnd.sun.star.script:Standard.Routinen.List_Filter_Jahr_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:listbox>
+          <form:frame form:name="GroupBox" form:control-implementation="ooo:com.sun.star.form.component.GroupBox" xml:id="control71" form:id="control71" form:label="Dokumente" form:for="control61,control69,control73,control77,control79,control82"/>
+          <form:fixed-text form:name="Beschriftungsfeld 2" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control72" form:id="control72"/>
+          <form:radio form:name="OptionAngebote" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control73" form:id="control73" form:label="Angebote" form:visual-effect="flat" form:value="1" form:data-field="Option_1" form:input-required="false" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.RadioButton"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="SecondaryRefValue" office:value-type="string" office:string-value=""/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:itemstatechange" xlink:href="vnd.sun.star.script:Standard.Routinen.set_Tabelle_Dokumente?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:radio>
+          <form:fixed-text form:name="LabelLeer" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control74" form:id="control74"/>
+          <form:listbox form:name="ListAuftrMateinsatz" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control75" form:id="control75" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),ROUND(SUM(t1.Einkaufspreis*t1.Menge),2) from Auftragsbestaetigungen2 as t1 INNER JOIN Auftragsbestaetigungen1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListNebenLeistSollLeistung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control76" form:id="control76" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2),ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=2">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:radio form:name="OptionAufmaße" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control77" form:id="control77" form:label="Aufmaße" form:visual-effect="flat" form:value="4" form:data-field="Option_1" form:input-required="false" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.RadioButton"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="SecondaryRefValue" office:value-type="string" office:string-value=""/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:itemstatechange" xlink:href="vnd.sun.star.script:Standard.Routinen.set_Tabelle_Dokumente?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:radio>
+          <form:listbox form:name="ListNebenLeistSollZeit" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control78" form:id="control78" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit*t1.Menge/60),2),ROUND(SUM(t1.Bauzeit*t1.Menge/60),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=2">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:radio form:name="OptionAuftragsbestätigungen" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control79" form:id="control79" form:label="Auftragsbestätigungen" form:visual-effect="flat" form:value="2" form:data-field="Option_1" form:input-required="false" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.RadioButton"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="SecondaryRefValue" office:value-type="string" office:string-value=""/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:itemstatechange" xlink:href="vnd.sun.star.script:Standard.Routinen.set_Tabelle_Dokumente?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:radio>
+          <form:listbox form:name="ListNebenLeistLieferung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control80" form:id="control80" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2),ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=2">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListAuftrNetto" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control81" form:id="control81" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Summe_nach_Korrektur),2),ROUND(SUM(t1.Summe_nach_Korrektur),2) from Auftragsbestaetigungen1 as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 where (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:radio form:name="OptionLieferscheine" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control82" form:id="control82" form:label="Lieferscheine" form:visual-effect="flat" form:value="3" form:data-field="Option_1" form:input-required="false" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.RadioButton"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="SecondaryRefValue" office:value-type="string" office:string-value=""/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:itemstatechange" xlink:href="vnd.sun.star.script:Standard.Routinen.set_Tabelle_Dokumente?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:radio>
+          <form:listbox form:name="ListNebenLeistMateinsatz" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control83" form:id="control83" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),ROUND(SUM(t1.Einkaufspreis*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=2">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListAngNetto" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control84" form:id="control84" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Summe_nach_Korrektur),2),ROUND(SUM(t1.Summe_nach_Korrektur),2) from Angebote1 as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListAngSollLeistung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control85" form:id="control85" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2),ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2) from Angebote2 as t1 INNER JOIN Angebote1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListNebenLeistNetto" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control86" form:id="control86" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2),ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=2">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListAngMateinsatz" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control87" form:id="control87" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),ROUND(SUM(t1.Einkaufspreis*t1.Menge),2) from Angebote2 as t1 INNER JOIN Angebote1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 where (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListAngLieferung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control88" form:id="control88" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2),ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2) from Angebote2 as t1 INNER JOIN Angebote1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:fixed-text form:name="Beschriftungsfeld 5" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control89" form:id="control89"/>
+          <form:listbox form:name="ListAngSollZeit" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control90" form:id="control90" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit*t1.Menge/60),2),ROUND(SUM(t1.Bauzeit*t1.Menge/60),2) from Angebote2 as t1 INNER JOIN Angebote1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListAuftrLieferung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control91" form:id="control91" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2),ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2) from Auftragsbestaetigungen2 as t1 INNER JOIN Auftragsbestaetigungen1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:fixed-text form:name="Beschriftungsfeld 4" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control92" form:id="control92"/>
+          <form:listbox form:name="ListAuftrSollZeit" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control93" form:id="control93" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit*t1.Menge/60),2),ROUND(SUM(t1.Bauzeit*t1.Menge/60),2) from Auftragsbestaetigungen2 as t1 INNER JOIN Auftragsbestaetigungen1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListStandardIstZeit" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control94" form:id="control94" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.IstZeit),2),ROUND(SUM(t1.IstZeit),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListAuftrSollLeistung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control95" form:id="control95" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2),ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2) FROM Auftragsbestaetigungen2 as t1 INNER JOIN Auftragsbestaetigungen1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListStandardIstNetto" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control96" form:id="control96" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListGeleistetNetto" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control97" form:id="control97" form:size="1" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2),ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListStandardIstLeistung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control98" form:id="control98" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2),ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListGeleistetMateinsatz" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control99" form:id="control99" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),ROUND(SUM(t1.Einkaufspreis*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListStandardSollLeistung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control100" form:id="control100" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2),ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListGeleistetLieferung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control101" form:id="control101" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListStandardSollZeit" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control102" form:id="control102" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit/60*t1.Menge),2),ROUND(SUM(t1.Bauzeit/60*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListGeleistetSollZeit" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control103" form:id="control103" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit/60*t1.Menge),2),ROUND(SUM(t1.Bauzeit/60*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListStandardLieferung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control104" form:id="control104" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListGeleistetSollLeistung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control105" form:id="control105" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2),ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListStandardMateinsatz" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control106" form:id="control106" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),ROUND(SUM(t1.Einkaufspreis*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListGeleistetIstLeistung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control107" form:id="control107" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2),ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListStandardNetto" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control108" form:id="control108" form:size="1" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2),ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=1">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListRechnungNetto" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control109" form:id="control109" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Summe_nach_Korrektur),2),ROUND(SUM(t1.Summe_nach_Korrektur),2) FROM Rechnungen1 as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.AZ=(SELECT MIN(t1.AZ)  FROM Rechnungen1 as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE t1.ProjektID=t2.ProjektID)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListNachtragIstZeit" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control110" form:id="control110" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.IstZeit),2),ROUND(SUM(t1.IstZeit),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=3">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListRechnungMateinsatz" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control111" form:id="control111" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),ROUND(SUM(t1.Einkaufspreis*t1.Menge),2) FROM Rechnungen2 as t1 INNER JOIN Rechnungen1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1 AND t3.AZ=(SELECT MIN(t1.AZ)  FROM Rechnungen1 as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE t1.ProjektID=t2.ProjektID)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListNachtragIstNetto" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control112" form:id="control112" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=3">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListRechnungLieferung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control113" form:id="control113" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2),ROUND(SUM(t1.Einkaufspreis*t1.Menge*t1.Materialaufschlagsatz),2) FROM Rechnungen2 as t1 INNER JOIN Rechnungen1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1 AND t3.AZ=(SELECT MIN(t1.AZ)  FROM Rechnungen1 as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE t1.ProjektID=t2.ProjektID)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListNachtragIstLeistung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control114" form:id="control114" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2),ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=3">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListRechnungSollZeit" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control115" form:id="control115" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit*t1.Menge/60),2),ROUND(SUM(t1.Bauzeit*t1.Menge/60),2) FROM Rechnungen2 as t1 INNER JOIN Rechnungen1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1 AND t3.AZ=(SELECT MIN(t1.AZ)  FROM Rechnungen1 as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE t1.ProjektID=t2.ProjektID)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListNachtragSollLeistung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control116" form:id="control116" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2),ROUND(SUM(t1.Bauzeit*t1.Minutenverrechnungssatz*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=3">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListRechnungSollLeistung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control117" form:id="control117" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2),ROUND(SUM(t1.Bauzeit*t1.Menge*t1.Minutenverrechnungssatz),2) FROM Rechnungen2 as t1 INNER JOIN Rechnungen1 as t3 ON t1.DocumentID=t3.DocumentID INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t3.ProjektID=t2.ProjektID AND t2.ProjektID!=0) AND t1.Pos_TypID=1 AND t3.AZ=(SELECT MIN(t1.AZ)  FROM Rechnungen1 as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE t1.ProjektID=t2.ProjektID)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListNachtragSollZeit" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control118" form:id="control118" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Bauzeit/60*t1.Menge),2),ROUND(SUM(t1.Bauzeit/60*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=3">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:fixed-text form:name="Beschriftungsfeld 1" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control119" form:id="control119"/>
+          <form:listbox form:name="ListNachtragLieferung" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control120" form:id="control120" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),ROUND(SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=3">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListGeleistetIstNetto" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control121" form:id="control121" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2),ROUND(SUM(t1.IstZeit*60*t1.Minutenverrechnungssatz)+SUM(t1.Einkaufspreis*t1.Materialaufschlagsatz*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListNachtragMateinsatz" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control122" form:id="control122" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.Einkaufspreis*t1.Menge),2),ROUND(SUM(t1.Einkaufspreis*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=3">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListGeleistetIstZeit" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control123" form:id="control123" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(t1.IstZeit),2),ROUND(SUM(t1.IstZeit),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0)">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:listbox form:name="ListNachtragNetto" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control124" form:id="control124" form:size="1" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="SELECT ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2),ROUND(SUM(((t1.Einkaufspreis*t1.Materialaufschlagsatz)+(t1.Bauzeit*t1.Minutenverrechnungssatz))*t1.Menge),2) FROM Controlling as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=23 WHERE (t1.ProjektID=t2.ProjektID AND t1.ProjektID!=0) AND t1.LeistungsTyp=3">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="ReadOnly" office:value-type="boolean" office:boolean-value="true"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+          </form:listbox>
+          <form:fixed-text form:name="Beschriftungsfeld 3" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control125" form:id="control125"/>
+        </form:form>
+      </office:forms>
+      <text:sequence-decls>
+        <text:sequence-decl text:display-outline-level="0" text:name="Illustration"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Table"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Text"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Drawing"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Figure"/>
+      </text:sequence-decls>
+      <text:user-field-decls>
+        <text:user-field-decl office:value-type="string" office:string-value="AngebotsID" text:name="DB_FieldName_0"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_0"/>
+        <text:user-field-decl office:value-type="string" office:string-value="10" text:name="DB_FieldLen_0"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Angebotsname" text:name="DB_FieldName_1"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_1"/>
+        <text:user-field-decl office:value-type="string" office:string-value="250" text:name="DB_FieldLen_1"/>
+        <text:user-field-decl office:value-type="string" office:string-value="KundenID" text:name="DB_FieldName_2"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_2"/>
+        <text:user-field-decl office:value-type="string" office:string-value="50" text:name="DB_FieldLen_2"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Angebotsdatum" text:name="DB_FieldName_3"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_3"/>
+        <text:user-field-decl office:value-type="string" office:string-value="12" text:name="DB_FieldLen_3"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Minutenverrechnungssatz" text:name="DB_FieldName_4"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_4"/>
+        <text:user-field-decl office:value-type="string" office:string-value="6" text:name="DB_FieldLen_4"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Materialaufschlagsatz" text:name="DB_FieldName_5"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_5"/>
+        <text:user-field-decl office:value-type="string" office:string-value="100" text:name="DB_FieldLen_5"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Angebotssumme" text:name="DB_FieldName_6"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_6"/>
+        <text:user-field-decl office:value-type="string" office:string-value="9" text:name="DB_FieldLen_6"/>
+        <text:user-field-decl office:value-type="string" office:string-value="MwSt_Satz" text:name="DB_FieldName_7"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_7"/>
+        <text:user-field-decl office:value-type="string" office:string-value="10" text:name="DB_FieldLen_7"/>
+        <text:user-field-decl office:value-type="string" office:string-value="MwSt" text:name="DB_FieldName_8"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_8"/>
+        <text:user-field-decl office:value-type="string" office:string-value="10" text:name="DB_FieldLen_8"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Angebotssumme_mit_MwSt" text:name="DB_FieldName_9"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_9"/>
+        <text:user-field-decl office:value-type="string" office:string-value="10" text:name="DB_FieldLen_9"/>
+        <text:user-field-decl office:value-type="string" office:string-value="gueltig_bis" text:name="DB_FieldName_10"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_10"/>
+        <text:user-field-decl office:value-type="string" office:string-value="10" text:name="DB_FieldLen_10"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Status" text:name="DB_FieldName_11"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_11"/>
+        <text:user-field-decl office:value-type="string" office:string-value="0" text:name="DB_FieldLen_11"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="Form_Version"/>
+        <text:user-field-decl office:value-type="string" office:string-value="2" text:name="DB_FormType"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_DataNumber"/>
+        <text:user-field-decl office:value-type="string" office:string-value="0" text:name="DB_FieldPos"/>
+        <text:user-field-decl office:value-type="string" office:string-value="12" text:name="DB_FieldCount"/>
+        <text:user-field-decl office:value-type="string" office:string-value="ALADIN" text:name="DB_Name"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Angebote1" text:name="DB_Table"/>
+        <text:user-field-decl office:value-type="string" office:string-value="" text:name="DB_Query_Name"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FormInit"/>
+        <text:user-field-decl office:value-type="string" office:string-value="" text:name="DB_ReadOnlyField"/>
+        <text:user-field-decl office:value-type="string" office:string-value="111111111111" text:name="DB_InputUsed"/>
+      </text:user-field-decls>
+      <draw:g text:anchor-type="page" text:anchor-page-number="1" draw:z-index="0" draw:style-name="gr1">
+        <draw:line draw:style-name="gr2" draw:text-style-name="P1" svg:x1="0.499cm" svg:y1="2.831cm" svg:x2="19.732cm" svg:y2="2.831cm">
+          <text:p/>
+        </draw:line>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr4" draw:text-style-name="P2" svg:width="6.337cm" svg:height="0.5cm" svg:x="6.353cm" svg:y="1cm" draw:control="control65"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="6.337cm" svg:height="0.5cm" svg:x="6.353cm" svg:y="0.499cm" draw:control="control63"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr4" draw:text-style-name="P4" svg:width="3.25cm" svg:height="0.5cm" svg:x="2.854cm" svg:y="1cm" draw:control="control66"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.25cm" svg:height="0.5cm" svg:x="2.854cm" svg:y="0.499cm" draw:control="control64"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr4" draw:text-style-name="P2" svg:width="15.301cm" svg:height="0.5cm" svg:x="0.61cm" svg:y="2.141cm" draw:control="control68"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="15.301cm" svg:height="0.5cm" svg:x="0.61cm" svg:y="1.64cm" draw:control="control62"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr4" draw:text-style-name="P4" svg:width="2.11cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="1.002cm" draw:control="control70"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="2.11cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="0.501cm" draw:control="control59"/>
+        </draw:g>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P5" svg:width="3.701cm" svg:height="1.001cm" svg:x="16.049cm" svg:y="1.64cm" draw:control="control5"/>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P6" svg:width="1.001cm" svg:height="1.001cm" svg:x="18.734cm" svg:y="0.499cm" draw:control="control58"/>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="5.599cm" svg:height="0.502cm" svg:x="12.906cm" svg:y="0.499cm" draw:control="control67"/>
+          <draw:control draw:style-name="gr7" draw:text-style-name="P7" svg:width="5.601cm" svg:height="0.5cm" svg:x="12.904cm" svg:y="1cm" draw:control="control52"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr7" draw:text-style-name="P8" svg:width="3.701cm" svg:height="0.5cm" svg:x="0.552cm" svg:y="6.905cm" draw:control="control10"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.502cm" svg:x="0.552cm" svg:y="6.405cm" draw:control="control3"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr4" draw:text-style-name="P7" svg:width="15.308cm" svg:height="0.5cm" svg:x="4.464cm" svg:y="4.713cm" draw:control="control15"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="15.308cm" svg:height="0.5cm" svg:x="4.464cm" svg:y="4.214cm" draw:control="control4"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr8" draw:text-style-name="P8" svg:width="3.701cm" svg:height="0.5cm" svg:x="12.201cm" svg:y="6.911cm" draw:control="control16"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.502cm" svg:x="12.201cm" svg:y="6.41cm" draw:control="control6"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr4" draw:text-style-name="P4" svg:width="3.701cm" svg:height="0.5cm" svg:x="12.201cm" svg:y="5.822cm" draw:control="control17"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.5cm" svg:x="12.201cm" svg:y="5.32cm" draw:control="control7"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr7" draw:text-style-name="P8" svg:width="3.701cm" svg:height="0.5cm" svg:x="8.334cm" svg:y="6.905cm" draw:control="control19"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.502cm" svg:x="8.334cm" svg:y="6.405cm" draw:control="control8"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr9" draw:text-style-name="P4" svg:width="3.701cm" svg:height="0.5cm" svg:x="8.334cm" svg:y="5.824cm" draw:control="control21"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.502cm" svg:x="8.334cm" svg:y="5.323cm" draw:control="control9"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr7" draw:text-style-name="P2" svg:width="11.48cm" svg:height="0.5cm" svg:x="0.55cm" svg:y="3.581cm" draw:control="control11"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="11.48cm" svg:height="0.502cm" svg:x="0.55cm" svg:y="3.08cm" draw:control="control1"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr7" draw:text-style-name="P8" svg:width="3.701cm" svg:height="0.5cm" svg:x="4.424cm" svg:y="6.905cm" draw:control="control23"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.502cm" svg:x="4.424cm" svg:y="6.405cm" draw:control="control13"/>
+        </draw:g>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P5" svg:width="3.701cm" svg:height="1.001cm" svg:x="16.049cm" svg:y="3.08cm" draw:control="control14"/>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr7" draw:text-style-name="P4" svg:width="3.701cm" svg:height="0.5cm" svg:x="0.55cm" svg:y="4.72cm" draw:control="control12"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.5cm" svg:x="0.55cm" svg:y="4.219cm" draw:control="control2"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr9" draw:text-style-name="P4" svg:width="3.701cm" svg:height="0.5cm" svg:x="4.424cm" svg:y="5.824cm" draw:control="control31"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.502cm" svg:x="4.424cm" svg:y="5.323cm" draw:control="control18"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="2.5cm" svg:height="0.502cm" svg:x="12.201cm" svg:y="3.08cm" draw:control="control33"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P4" svg:width="2.5cm" svg:height="0.5cm" svg:x="12.201cm" svg:y="3.581cm" draw:control="control20"/>
+        </draw:g>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P9" svg:width="1.001cm" svg:height="1.001cm" svg:x="14.88cm" svg:y="3.08cm" draw:control="control60"/>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr4" draw:text-style-name="P7" svg:width="19.229cm" svg:height="1.519cm" svg:x="0.589cm" svg:y="9.299cm" draw:control="control36"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="19.229cm" svg:height="0.5cm" svg:x="0.589cm" svg:y="8.8cm" draw:control="control22"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr7" draw:text-style-name="P4" svg:width="3.701cm" svg:height="0.5cm" svg:x="16.079cm" svg:y="5.821cm" draw:control="control37"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.5cm" svg:x="16.079cm" svg:y="5.32cm" draw:control="control24"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr9" draw:text-style-name="P4" svg:width="3.701cm" svg:height="0.498cm" svg:x="0.552cm" svg:y="5.826cm" draw:control="control40"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.503cm" svg:x="0.552cm" svg:y="5.323cm" draw:control="control25"/>
+        </draw:g>
+        <draw:control draw:style-name="gr10" draw:text-style-name="P10" svg:width="19.22cm" svg:height="3.994cm" svg:x="0.6cm" svg:y="12.793cm" draw:control="control53"/>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:text-style-name="P11" svg:width="19.22cm" svg:height="1.498cm" svg:x="0.605cm" svg:y="11.045cm" draw:control="control71"/>
+          <draw:control draw:style-name="gr11" draw:text-style-name="P12" svg:width="2.246cm" svg:height="0.5cm" svg:x="0.854cm" svg:y="11.627cm" draw:control="control73"/>
+          <draw:control draw:style-name="gr11" draw:text-style-name="P12" svg:width="4.493cm" svg:height="0.5cm" svg:x="3.351cm" svg:y="11.627cm" draw:control="control79"/>
+          <draw:control draw:style-name="gr11" draw:text-style-name="P12" svg:width="2.998cm" svg:height="0.5cm" svg:x="8.093cm" svg:y="11.627cm" draw:control="control82"/>
+          <draw:control draw:style-name="gr11" draw:text-style-name="P12" svg:width="2.498cm" svg:height="0.5cm" svg:x="11.338cm" svg:y="11.627cm" draw:control="control77"/>
+          <draw:control draw:style-name="gr11" draw:text-style-name="P12" svg:width="2.747cm" svg:height="0.5cm" svg:x="13.834cm" svg:y="11.627cm" draw:control="control69"/>
+          <draw:control draw:style-name="gr11" draw:text-style-name="P12" svg:width="2.659cm" svg:height="0.5cm" svg:x="16.831cm" svg:y="11.627cm" draw:control="control61"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr7" draw:text-style-name="P8" svg:width="3.701cm" svg:height="0.5cm" svg:x="0.55cm" svg:y="8.001cm" draw:control="control45"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.502cm" svg:x="0.55cm" svg:y="7.5cm" draw:control="control42"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr7" draw:text-style-name="P8" svg:width="3.701cm" svg:height="0.5cm" svg:x="4.42cm" svg:y="8.001cm" draw:control="control46"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="3.701cm" svg:height="0.502cm" svg:x="4.42cm" svg:y="7.5cm" draw:control="control43"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr10" draw:text-style-name="P13" svg:width="3.5cm" svg:height="0.498cm" svg:x="0.6cm" svg:y="18.35cm" draw:control="control27"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P13" svg:width="3.5cm" svg:height="0.498cm" svg:x="0.6cm" svg:y="18.851cm" draw:control="control39"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P13" svg:width="3.5cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="19.35cm" draw:control="control34"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P13" svg:width="3.5cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="19.851cm" draw:control="control29"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P13" svg:width="3.5cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="17.85cm" draw:control="control48"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P14" svg:width="3.151cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="17.349cm" draw:control="control49"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P14" svg:width="3.151cm" svg:height="0.5cm" svg:x="7.249cm" svg:y="17.349cm" draw:control="control51"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P14" svg:width="6.301cm" svg:height="0.5cm" svg:x="10.4cm" svg:y="17.349cm" draw:control="control50"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P14" svg:width="3.151cm" svg:height="0.5cm" svg:x="16.7cm" svg:y="17.349cm" draw:control="control47"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="17.85cm" draw:control="control84"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="18.35cm" draw:control="control87"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="18.851cm" draw:control="control88"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="19.35cm" draw:control="control90"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="19.851cm" draw:control="control85"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="7.249cm" svg:y="17.85cm" draw:control="control81"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="7.255cm" svg:y="18.351cm" draw:control="control75"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.502cm" svg:x="7.249cm" svg:y="18.851cm" draw:control="control91"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="7.249cm" svg:y="19.35cm" draw:control="control93"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="7.249cm" svg:y="19.851cm" draw:control="control95"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="10.4cm" svg:y="17.85cm" draw:control="control97"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="10.4cm" svg:y="18.35cm" draw:control="control99"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="10.4cm" svg:y="18.851cm" draw:control="control101"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="10.4cm" svg:y="19.35cm" draw:control="control103"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.498cm" svg:x="10.4cm" svg:y="19.851cm" draw:control="control105"/>
+          <draw:control draw:style-name="gr13" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.498cm" svg:x="13.55cm" svg:y="19.851cm" draw:control="control107"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="16.7cm" svg:y="17.85cm" draw:control="control109"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="16.7cm" svg:y="18.35cm" draw:control="control111"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.498cm" svg:x="16.7cm" svg:y="18.851cm" draw:control="control113"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="16.7cm" svg:y="19.35cm" draw:control="control115"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="16.7cm" svg:y="19.851cm" draw:control="control117"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P16" svg:width="3.5cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="17.349cm" draw:control="control119"/>
+          <draw:control draw:style-name="gr13" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="13.55cm" svg:y="17.85cm" draw:control="control121"/>
+          <draw:control draw:style-name="gr13" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="13.55cm" svg:y="19.35cm" draw:control="control123"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P13" svg:width="3.5cm" svg:height="0.496cm" svg:x="0.6cm" svg:y="21.849cm" draw:control="control44"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P13" svg:width="3.5cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="22.35cm" draw:control="control41"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P13" svg:width="3.5cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="22.849cm" draw:control="control38"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P13" svg:width="3.5cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="23.35cm" draw:control="control35"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P13" svg:width="3.5cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="21.35cm" draw:control="control32"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P16" svg:width="3.5cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="20.849cm" draw:control="control125"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="10.4cm" svg:y="21.35cm" draw:control="control124"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="10.4cm" svg:y="21.849cm" draw:control="control122"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="10.4cm" svg:y="22.35cm" draw:control="control120"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="10.4cm" svg:y="22.849cm" draw:control="control118"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="10.41cm" svg:y="23.35cm" draw:control="control116"/>
+          <draw:control draw:style-name="gr13" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="13.55cm" svg:y="23.35cm" draw:control="control114"/>
+          <draw:control draw:style-name="gr13" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="13.55cm" svg:y="21.35cm" draw:control="control112"/>
+          <draw:control draw:style-name="gr13" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="13.55cm" svg:y="22.849cm" draw:control="control110"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="21.35cm" draw:control="control108"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="21.849cm" draw:control="control106"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="22.35cm" draw:control="control104"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="22.849cm" draw:control="control102"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="23.35cm" draw:control="control100"/>
+          <draw:control draw:style-name="gr13" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="7.249cm" svg:y="23.35cm" draw:control="control98"/>
+          <draw:control draw:style-name="gr13" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="7.249cm" svg:y="21.35cm" draw:control="control96"/>
+          <draw:control draw:style-name="gr13" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="7.249cm" svg:y="22.849cm" draw:control="control94"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P17" svg:width="3.151cm" svg:height="1.001cm" svg:x="13.55cm" svg:y="21.849cm" draw:control="control92"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P17" svg:width="3.151cm" svg:height="1.001cm" svg:x="7.249cm" svg:y="21.849cm" draw:control="control89"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P14" svg:width="6.301cm" svg:height="0.5cm" svg:x="4.099cm" svg:y="20.849cm" draw:control="control30"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P14" svg:width="6.305cm" svg:height="0.5cm" svg:x="10.4cm" svg:y="20.849cm" draw:control="control28"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P14" svg:width="3.151cm" svg:height="0.5cm" svg:x="16.7cm" svg:y="20.849cm" draw:control="control26"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="16.7cm" svg:y="21.35cm" draw:control="control86"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="16.7cm" svg:y="21.849cm" draw:control="control83"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.502cm" svg:x="16.7cm" svg:y="22.35cm" draw:control="control80"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="16.7cm" svg:y="22.849cm" draw:control="control78"/>
+          <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="3.151cm" svg:height="0.5cm" svg:x="16.7cm" svg:y="23.35cm" draw:control="control76"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P16" svg:width="19.25cm" svg:height="0.5cm" svg:x="0.6cm" svg:y="20.35cm" draw:control="control74"/>
+          <draw:control draw:style-name="gr10" draw:text-style-name="P17" svg:width="3.151cm" svg:height="1.001cm" svg:x="13.55cm" svg:y="18.35cm" draw:control="control72"/>
+        </draw:g>
+      </draw:g>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+    </office:text>
+  </office:body>
+</office:document-content>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub createRepord()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	sFaxNummer=&quot;&quot;
+	StatusBar(True)
+	ToolBar(True)
+	FormSizePrint()
+	
+	SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;PrintArbeitsblatt&quot;))
+	SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+	SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+
+	Kontaktdaten.KontaktDaten()
+	Drucktabelle_leeren(iUserID_lokal)
+End Sub
+
+Function fAnzahlSerienbriefe as integer
+	Dim oRecord1 as Object
+	Dim sSQL2 as String
+	sSQL2=&quot;select count(*) from &quot;&amp; sDrucker_TEMP(iUserID_lokal)
+	oRecord1=oResult(sSQL2)
+	While oRecord1.next()
+		fAnzahlSerienbriefe=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function oDoc as Object
+	oDoc = thisComponent 
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+Sub Document_ruecksetzen()
+	Feld_fuellen(&quot;Document_Name&quot;,&quot;Document_Name&quot;)
+	Feld_fuellen(&quot;Anrede&quot;,&quot;Anrede&quot;)
+	Feld_fuellen(&quot;Body&quot;,&quot;Body&quot;)
+	Feld_fuellen(&quot;Nummern&quot;,&quot;Nummern&quot;)
+	oDoc.getTextFields().refresh()
+End Sub
+
+Function FieldContent(sField as string) as String
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
+	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName) 
+	FieldContent = vFieldMaster.Content       
+End Function
+
+Sub Feld_fuellen(sField as string,sInhalt as string )
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
+	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName)
+	vFieldMaster.Content = sInhalt        
+End Sub
+ 
+Sub Feld_loeschen(sField as string)
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	Dim bFound as boolean
+	vField = oDoc.createInstance(&quot;com.sun.star.text.TextField.User&quot;) 
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField
+	bFound = oDoc.getTextFieldMasters.hasbyname(sFieldName)
+	if bFound Then 
+		vFieldMaster =  oDoc.getTextFieldMasters.getByName(sFieldName) 
+		vFieldMaster.Content = &quot;&quot;    
+		vFieldMaster.dispose() 
+	End If 
+End Sub 
+
+Function iEinstellungsID_lokal as Integer
+	iEinstellungsID_lokal=GetDocUserProperty(&quot;oEinstellungsID_lokal&quot;)
+End Function
+
+Function iUserID_lokal as Integer
+	iUserID_lokal=GetDocUserProperty(&quot;oUserID_lokal&quot;)
+End Function
+
+Function sTitle_lokal as String
+	 sTitle_lokal=GetDocUserProperty(&quot;oTitle_lokal&quot;)
+End Function
+
+</script:module>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Mandant" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option explicit
+
+Global iSetUserID as Integer
+Global isResetSteuerung_2 as Integer
+
+Function fMandant_waehlen as Integer
+	Dim vStatus as Variant
+	Dim oOptionMandant1 as Object,oOptionMandant2 as Object,oOptionMandant3 as Object
+	Dim oDialogMandant as Object,oDialogMandantModel as Object
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogMandant = LoadDialog(&quot;ALADIN&quot;, &quot;Mandant&quot;)
+	oDialogMandantModel = oDialogMandant.Model
+	oOptionMandant1 = oDialogMandantModel.getByName(&quot;Option_Mandant1&quot;)
+	oOptionMandant2 = oDialogMandantModel.getByName(&quot;Option_Mandant2&quot;)
+	oOptionMandant3 = oDialogMandantModel.getByName(&quot;Option_Mandant3&quot;)
+	oOptionMandant1.Label=sMandant1
+	oOptionMandant2.Label=sMandant2
+	oOptionMandant3.Label=sMandant3
+	
+	vStatus = oDialogMandant.Execute()
+	if oOptionMandant1.State=1 then
+		fMandant_waehlen=1
+	elseif oOptionMandant2.State=1 then
+		fMandant_waehlen=2
+	elseif oOptionMandant3.State=1 then
+		fMandant_waehlen=3
+	end if
+End Function
+
+</script:module>

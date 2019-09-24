@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc as Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_Steuerung as Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oForm_Document as Object
+	oForm_Document=oForm_Steuerung.getByName(&quot;Form_Document&quot;)
+End Function
+
+Function oForm_Kontaktdaten as Object
+	oForm_Kontaktdaten=oForm_Document.getByName(&quot;Form_Kontaktdaten&quot;)
+End Function
+
+Function oForm_Serienbrief as Object
+	oForm_Serienbrief=oForm_Steuerung.getByName(&quot;Form_Serienbrief&quot;)
+End Function
+
+Function oField_DocumentID as Object
+	oField_DocumentID=oForm_Document.getByName(&quot;Field_DocumentID&quot;)
+End Function
+
+Function oField_Referenz as Object
+	oField_Referenz=oForm_Document.getByName(&quot;Field_Referenz&quot;)
+End Function
+
+Function oField_Document_Name as Object
+	oField_Document_Name=oForm_Document.getByName(&quot;Field_Document_Name&quot;)
+End Function
+
+Function oField_Erstellungsdatum as Object
+	oField_Erstellungsdatum=oForm_Document.getByName(&quot;Field_Erstellungsdatum&quot;)
+End Function
+
+Function oField_Anrede as Object
+	oField_Anrede=oForm_Document.getByName(&quot;Field_Anrede&quot;)
+End Function
+
+Function oField_Body as Object
+	oField_Body=oForm_Document.getByName(&quot;Field_Body&quot;)
+End Function
+
+Function oField_Gruszformel as Object
+	oField_Gruszformel=oForm_Document.getByName(&quot;Field_Gruszformel&quot;)
+End Function
+
+Function oField_ProjektID as Object
+	oField_ProjektID=oForm_Document.getByName(&quot;Field_ProjektID&quot;)
+End Function
+
+Function oField_Absender as Object
+	oField_Absender=oForm_Document.getByName(&quot;Field_Absender&quot;)
+End Function
+
+Function oField_Signum_URL as Object
+	oField_Signum_URL=oForm_Document.getByName(&quot;Field_Signum_URL&quot;)
+End Function
+
+Function oField_Signum_Hoehe as Object
+	oField_Signum_Hoehe=oForm_Document.getByName(&quot;Field_Signum_Hoehe&quot;)
+End Function
+
+Function oField_Signum_Breite as Object
+	oField_Signum_Breite=oForm_Document.getByName(&quot;Field_Signum_Breite&quot;)
+End Function
+
+Function oOption_Serienbrief as Object
+	oOption_Serienbrief=oForm_Document.getByName(&quot;Option_Serienbrief&quot;)
+End Function
+
+Function iOption_Serienbrief as integer
+	iOption_Serienbrief=oOption_Serienbrief.BoundField.short
+End Function
+
+Function oOption_Signum as Object
+	oOption_Signum=oForm_Document.getByName(&quot;Option_Signum&quot;)
+End Function
+
+Function oField_Suchstring as Object
+	oField_Suchstring=oForm_Steuerung.getByName(&quot;Field_Suchstring&quot;)
+End Function
+
+Function oField_Suchstring2 as Object
+	oField_Suchstring2=oForm_Steuerung.getByName(&quot;Field_Suchstring_2&quot;)
+End Function
+
+Function oField_Ordner as Object  
+	oField_Ordner=oForm_Kontaktdaten.getByName(&quot;Field_Ordner&quot;)
+End Function
+
+Function oList_Leerzeilen as Object
+	oList_Leerzeilen=oForm_Document.getByName(&quot;List_Leerzeilen&quot;)
+End Function
+
+Function oList_Projektauswahl as Object
+	oList_Projektauswahl=oForm_Document.getByName(&quot;List_Projektauswahl&quot;)
+End Function
+
+Function oList_Kontaktauswahl as Object
+	oList_Kontaktauswahl=oForm_Document.getByName(&quot;List_Kontaktauswahl&quot;)
+End Function
+
+Function oList_Ansprechpartner as Object
+	oList_Ansprechpartner=oForm_Document.getByName(&quot;List_Ansprechpartner&quot;)
+End Function
+
+Function oList_Kontaktvorauswahl as Object
+	oList_Kontaktvorauswahl=oForm_Steuerung.getByName(&quot;List_Kontaktvorauswahl&quot;)
+End Function
+
+Function oList_Documentauswahl as Object
+	oList_Documentauswahl=oForm_Steuerung.getByName(&quot;List_Documentauswahl&quot;)
+End Function
+
+Function oList_Serienbrief_Verteilerlisten as Object
+	oList_Serienbrief_Verteilerlisten=oForm_Steuerung.getByName(&quot;List_Serienbrief_Verteilerlisten&quot;)
+End Function
+
+Function oList_Jahrauswahl as Object
+	oList_Jahrauswahl=oForm_Steuerung.getByName(&quot;List_Geschaeftsjahr&quot;)
+End Function
+
+Function oList_Projektvorauswahl as Object
+	oList_Projektvorauswahl=oForm_Steuerung.getByName(&quot;List_Projektvorauswahl&quot;)
+End Function
+
+Function oList_Absendervorauswahl as Object
+	oList_Absendervorauswahl=oForm_Steuerung.getByName(&quot;List_Absendervorauswahl&quot;)
+End Function
+
+Function oTextField_Document_Name_List()
+	oTextField_Document_Name_List=oForm_Steuerung.getByName(&quot;Label_Document_Name&quot;)
+End Function
+
+Function oTextField_Document_Name()
+	oTextField_Document_Name=oForm_Document.getByName(&quot;Label_Document_Name&quot;)
+End Function
+
+Function oTextField_DocumentID()
+	oTextField_DocumentID=oForm_Document.getByName(&quot;Label_DocumentID&quot;)
+End Function
+
+Function oTextField_Erstellungsdatum()
+	oTextField_Erstellungsdatum=oForm_Document.getByName(&quot;Label_Erstellungsdatum&quot;)
+End Function
+
+Function oTextField_Betriebsart()
+	oTextField_Betriebsart=oForm_Steuerung.getByName(&quot;Label_Betriebsart&quot;)
+End Function
+
+Function oTextField_Kontaktvorauswahl()
+	oTextField_Kontaktvorauswahl=oForm_Steuerung.getByName(&quot;Label_Kontaktname&quot;)
+End Function
+
+Function oTextField_Kontaktdaten()
+	oTextField_Kontaktdaten=oForm_Document.getByName(&quot;Label_Kontaktdaten&quot;)
+End Function
+
+Function lDocumentID as long
+	lDocumentID=CLng(oField_DocumentID.Value)
+End Function
+
+Function lDocumentID_Auswahl as long
+	lDocumentID_Auswahl=oList_Documentauswahl.BoundField.long
+End Function
+
+Function oFileControl_Signum as Object
+	oFileControl_Signum=oForm_Document.getByName(&quot;FileControl_Signum&quot;)
+End Function
+
+Function sFileControl_Signum as String
+	sFileControl_Signum=oFileControl_Signum.Text
+End Function
+
+Function oButton_Projekt_ruecksetzen as Object
+	oButton_Projekt_ruecksetzen=oForm_Document.getByName(&quot;Button_Projekt_ruecksetzen&quot;)
+End Function
+
+Function oButton_Ansprechpartner_ruecksetzen as Object
+	oButton_Ansprechpartner_ruecksetzen=oForm_Document.getByName(&quot;Button_Ansprechpartner_ruecksetzen&quot;)
+End Function
+
+Function oButton_SerienBriefVerteiler_anzeigen as Object
+	oButton_SerienBriefVerteiler_anzeigen=oForm_Document.getByName(&quot;Button_Serienbriefverteiler_anzeigen&quot;)
+End Function
+
+Function oButton_DokumentName_bearbeiten as Object
+	oButton_DokumentName_bearbeiten=oForm_Document.getByName(&quot;Button_DokumentName_bearbeiten&quot;)
+End Function
+
+Function oOption_Schreibschutz as Object
+	oOption_Schreibschutz=oForm_Document.getByName(&quot;Option_Schreibschutz&quot;)
+End Function
+
+Function iOption_Schreibschutz as integer
+	iOption_Schreibschutz=oOption_Schreibschutz.BoundField.short
+End Function
+
+</script:module>

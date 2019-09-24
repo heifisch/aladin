@@ -1,0 +1,1033 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+Dim oRecord1 as Object,oRecord2 as Object
+Dim sKontaktID as String,sMinutenverrechnungssatz as String,sAnsprechpartnerID as String
+Dim sMaterialaufschlagsatz as String,sSumme_ohne_MwSt as String,sNummern as String
+Dim sMwSt as String,sSumme_mit_MwSt as String,sRabatt_Satz as String,sSkonto_Satz as String
+Dim sRabatt as String,sSkonto as String,sSumme_nach_Rabatt as String,sKorrektur_Satz as String
+Dim sKorrektur as String,sSumme_nach_Korrektur as String,sKorrektur_Anlass as String,sSumme_nach_Skonto as String
+Dim sLV_Pos_alt as String,sLV_Pos_neu as String,sLeerzeilen as String
+Dim sLeistungsgruppe as String,sBauzeit as String,sEinkaufspreis as String,sListenpreis as String
+Dim sLeistungsID_old as String
+Dim sLieferant_1 as String,sLieferant_2 as String,sLieferant_3 as String
+Dim cRabatt_Satz as currency,cSkonto_Satz as currency,cMwSt_Satz as currency
+Dim cStundenverrechnungssatz as currency
+Dim cMinutenverechnungssatz as currency,cMaterialaufschlagsatz as currency
+Dim iCount as integer,iCount_MAX as integer,iGesperrt as integer
+Dim sMwSt_Satz as String
+Dim sLeistungsID as string,sDocument_Name as String,sBestellnummer as String
+Dim sLeistungsbezeichnung as string,sLeistungsbeschreibung as String,sEinheit as String
+Dim sWert as String,sFaktor as String
+Dim sMenge as String,iMenge_eingeben as Integer
+Dim iEinfuegen_abfragen as Integer
+Dim iPos as integer,iPos_alt as integer,iRowNumber as Integer
+Dim iPos_TypID as integer
+Dim sBezeichnung as String,sBemerkung as String
+Dim iAnzData as integer,iMaxData as integer
+Dim iMaxPos as integer,iMaxPos_1 as integer,iPos_neu as integer
+Dim iReset as integer
+Dim vStatus as Variant
+Dim iSkonto_Tage as integer,iFaellig_Tage as integer
+Dim sFormular as String,sNutzer as String,sMessage as String
+
+
+Sub Standard_Bemerkung()
+	if Msg_Schreibschutz=1 then
+ 		exit Sub
+ 	else
+		SQL_cp_Bemerkung()
+&apos;		oForm_Document.refreshRow()
+		oForm_Document.reload()
+	End if
+End Sub
+
+Sub Tabellendaten_neu_einlesen()
+	if Msg_Schreibschutz=1 then
+ 		exit Sub
+ 	else
+		SQL_Arbeitstabelle_leeren()
+		SQL_Reset_AutoIncrement(sArbeitstabelle)
+		SQL_Arbeitstabelle_fuellen()
+		oForm_Tabellendaten.reload()
+	End if
+End Sub
+
+Sub AZ_anhaengen()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &gt; 0 then
+			if lProjektID &gt; 0 then
+				if iDocTypID = 5 then
+					sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+						&quot;(DocumentID,LeistungsID,Leistungsbezeichnung,Menge,&quot;&amp;_
+						&quot;Bauzeit,Einkaufspreis,Minutenverrechnungssatz,Materialaufschlagsatz,Lieferung,Leistung,EP,GP,Pos_TypID) &quot;&amp;_
+						&quot;SELECT &quot;&amp; lDocumentID &amp;&quot;,0,concat(t1.Document_Name,&apos; RE &apos;,t1.DocumentID,&apos; vom &apos;,DATE_FORMAT(t1.Erstellungsdatum,&apos;%d.%m.%Y&apos;)),1,&quot;&amp;_
+						&quot;0,t1.Zahlbetrag_ohne_MwSt,0,1,t1.MwSt_Satz,t1.Zahlbetrag_MwSt,t1.Zahlbetrag_ohne_MwSt,t1.Zahlbetrag_mit_MwSt,4 &quot;&amp;_
+						&quot;FROM &quot;&amp; sTabelle1 &amp;&quot; as t1 &quot;&amp;_
+						&quot;WHERE t1.DocumentID!=&quot;&amp; lDocumentID &amp;&quot; AND t1.ProjektID=&quot;&amp; lProjektID &amp;&quot; AND t1.AZ=1 &quot;&amp;_
+						&quot;ORDER BY t1.DocumentID ASC&quot;
+					SQL_execute(sSQL2)
+					oForm_Tabellendaten.reload()
+					wait 1
+					oForm_Tabellendaten.last
+				End if
+			else
+				MsgBox(&quot;Sie haben noch kein Projekt ausgewählt!&quot;,16,sTitle_lokal)
+			End if
+		else
+			MsgBox(&quot;Sie haben noch keinen &quot;&amp; sKontakte &amp;&quot; ausgewählt!&quot;,16,sTitle_lokal)
+		End if
+	else
+		MsgBox(&quot;Sie haben noch keine Document ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub Blanko_Datensatz()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &gt; 0 then
+			SetDocUserProperty(&quot;oPos_neu&quot;, fPos_neu)
+			iPos_neu=fPos_neu
+			iRowNumber=oForm_Tabellendaten.getRow()
+			iMaxPos=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+			iMaxPos_1=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+		nochmal:
+			sLeistungsbezeichnung=InputBox(&quot;Geben Sie bitte eine neue Leistungsbezeichnung ein!&quot;&amp;_
+			 Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal &amp; &quot; Blanko&quot;)
+			if sLeistungsbezeichnung = &quot;&quot; then
+				vStatus=MsgBox(&quot;Sie haben noch keine Leistungsbezeichnung eingegeben!&quot;,37,sTitle_lokal)
+				if vStatus=4 then
+					goto nochmal
+				elseif vStatus=2 then
+					exit sub
+				End if
+			End if
+				if iPos_neu &lt; iMaxPos then
+					iEinfuegen_abfragen=fEinfuegen_abfragen(0)
+					if iEinfuegen_abfragen=1 then
+						vStatus=MsgBox(&quot;Wollen Sie die aktuelle Leistung vor Position &quot;&amp; iPos_neu &amp;&quot; einfügen?&quot;,35,sTitle_lokal)
+						if vStatus = 6 then
+							sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Pos=Pos+1 WHERE Pos+0 &gt;= &quot;&amp; iPos_neu &amp;&quot; ORDER BY Pos DESC&quot;
+							SQL_execute(sSQL1)
+						elseif vStatus = 7 then
+							iPos_neu=iMaxPos+1
+						elseif vStatus = 2 then
+							Exit Sub
+						End if
+					else
+						sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Pos=Pos+1 WHERE Pos+0 &gt;= &quot;&amp; iPos_neu &amp;&quot; ORDER BY Pos DESC&quot;
+						SQL_execute(sSQL1)
+					End if
+					sSQL3=&quot;SELECT LV_Pos FROM &quot;&amp; sArbeitstabelle &amp;_
+							&quot; WHERE Pos = &apos;&quot;&amp; iPos_neu - 1 &amp;&quot;&apos;&quot;
+				else
+					sSQL3=&quot;SELECT LV_Pos FROM &quot;&amp; sArbeitstabelle &amp;_
+							&quot; WHERE Pos = &apos;&quot;&amp; iPos_neu &amp;&quot;&apos;&quot;
+					iPos_neu=iMaxPos+1
+				End if
+				oRecord1=oResult(sSQL3)
+				While oRecord1.next()
+					sLV_Pos_alt= oRecord1.getString(1)
+				Wend
+				if sLV_Pos_alt &lt;&gt; &quot;&quot; AND sLV_Pos_alt &lt;&gt; &quot;0&quot; then
+					sLV_Pos_neu = fLV_Pos(sLV_Pos_alt)
+				else
+					sLV_Pos_neu = &quot;&quot;
+				End if
+				iMenge_eingeben=fMenge_eingeben(0)			
+				if iMenge_eingeben=1 then
+					sWert=InputBox(&quot;Bitte geben Sie einen Wert für die Menge ein!&quot;)
+					sMenge=fZahlMitKomma(sWert)
+				else
+					sMenge=0
+				End if
+
+			sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+				&quot;(Pos,LV_Pos,DocumentID,LeistungsID,Leistungsbezeichnung,Menge,&quot;&amp;_
+				&quot;Bauzeit,Einkaufspreis,Minutenverrechnungssatz,Materialaufschlagsatz)&quot;&amp;_
+				&quot; VALUES (&apos;&quot;&amp; iPos_neu &amp;&quot;&apos;,&apos;&quot;&amp; sLV_Pos_neu &amp;&quot;&apos;,&apos;&quot;&amp; lDocumentID &amp;_
+				&quot;&apos;,&apos;0&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sMenge &amp;&quot;&apos;,&apos;0&apos;,&apos;0&apos;,&apos;&quot;&amp;_
+				Left(cMVS+&quot;0.0055&quot;,Len(cMVS)-2) &amp;&quot;&apos;,&apos;&quot;&amp;_
+				Left(cMAS+&quot;0.0055&quot;,Len(cMAS)-2) &amp;&quot;&apos;)&quot;
+			SQL_execute(sSQL2)
+			oForm_Tabellendaten.reload()
+			oForm_Tabellendaten.last()
+			if iPos_neu &lt; iMaxPos_1 then
+				oForm_Tabellendaten.first()
+				SQL_Update_Pos_Zwischensumme_Pos_einfuegen()
+				SQL_Update_Pos_Zwischenbemerkung_Pos_einfuegen()
+				oForm_Bemerkungen.reload()
+				oForm_Zwischensummen.reload()
+				oForm_Tabellendaten.absolute(iRowNumber+1)
+			End if
+		else
+			MsgBox(&quot;Sie haben noch keinen &quot;&amp; sKontakte &amp;&quot; ausgewählt!&quot;,16,sTitle_lokal)
+		End if
+	else
+		MsgBox(&quot;Sie haben noch keine Document ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub Zischensumme()
+	if lDocumentID &lt;&gt; 0then
+		if fVorhanden(sZwischensummen)&gt;0 then
+			MsgBox(&quot;Nach Position &quot;&amp; fPos_neu &amp;&quot; gibt es schon eine Zwischensumme!&quot;,48,sTitle_lokal)
+			Exit Sub
+		else
+			sBezeichnung=InputBox(&quot;Wenn Sie nach Position &quot;&amp; fPos_neu &amp;_
+				&quot; eine Zwichensumme einfügen möchten, dann geben Sie hier bitte eine Bezeichnung für diese ein!&quot;,sTitle_lokal)
+			if sBezeichnung = &quot;&quot; then
+				MsgBox(&quot;Sie haben keine Bezeichnung eingegeben!&quot;,48,sTitle_lokal)
+				exit Sub
+			else
+				SQL_Zwischensumme_einfuegen(fsConvertApostroph(sBezeichnung))
+			End if
+			oForm_Zwischensummen.reload()
+		End if
+	else
+		MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+Sub Bemerkung()
+	if lDocumentID &lt;&gt; 0 then
+		if fVorhanden(sBemerkungen)&gt;0 then
+			sSQL1=&quot;SELECT Bemerkung FROM &quot;&amp; sBemerkungen &amp;&quot; WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; fPos_neu
+			oRecord1=oResult(sSQL1)
+			While oRecord1.next()
+				sBemerkung=oRecord1.getString(1)
+			Wend
+			vStatus=MsgBox(&quot;Vor Position &quot;&amp; fPos_neu &amp;_
+				&quot; gibt es schon folgende Bemerkung!&quot;+Chr$(13)+Chr$(13)+ sBemerkung +Chr$(13)+Chr$(13)+_
+				&quot;Möchten Sie Diese überschreiben?&quot;,547,sTitle_lokal)
+			if vStatus=2 then
+				exit Sub
+			elseif vStatus=6 then
+				sBemerkung=InputBox(&quot;Bitte geben Sie eine neue Zwischenbemerkung für Position &quot;&amp; fPos_neu &amp;&quot; ein!&quot;&amp;_
+					 Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal)
+				if sBemerkung = &quot;&quot; then
+					MsgBox(&quot;Sie haben keine Bemerkung eingegeben!&quot;,16,sTitle_lokal)
+					exit Sub
+				else
+					SQL_Zwischenbemerkung_aendern(fsConvertApostroph(sBemerkung))
+					oForm_Bemerkungen.reload()
+				End if
+			elseif vStatus=7 then
+				sBemerkung=InputBox(&quot;Bitte geben Sie eine neue Zwischenbemerkung für Position &quot;&amp; fPos_neu &amp;&quot; ein!&quot;&amp;_
+					Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal)
+				if sBemerkung = &quot;&quot; then
+					MsgBox(&quot;Sie haben keine Bemerkung eingegeben!&quot;,16,sTitle_lokal)
+					exit Sub
+				else
+					SQL_Zwischenbemerkung_einfuegen(fsConvertApostroph(sBemerkung))
+					oForm_Bemerkungen.reload()
+				End if
+			End if	
+		else
+			sBemerkung=InputBox(&quot;Bitte geben Sie die Zwischenbemerkung für Position &quot;&amp; fPos_neu &amp;&quot; ein!&quot;&amp;_
+				 Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal)
+			if sBemerkung = &quot;&quot; then
+				MsgBox(&quot;Sie haben keine Bemerkung eingegeben!&quot;,16,sTitle_lokal)
+				exit Sub
+			else
+				SQL_Zwischenbemerkung_einfuegen(fsConvertApostroph(sBemerkung))
+				oForm_Bemerkungen.reload()
+			End if		
+		End if
+	else
+		MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub AusgefuehrtAm()
+	Dim sLieferdatum as String
+	if lDocumentID &lt;&gt; 0 then
+		if fVorhanden(sBemerkungen)&gt;0 then
+			sSQL1=&quot;SELECT Bemerkung FROM &quot;&amp; sBemerkungen &amp;&quot; WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; fPos_neu
+			oRecord1=oResult(sSQL1)
+			While oRecord1.next()
+				sBemerkung=oRecord1.getString(1)
+			Wend
+			vStatus=MsgBox(&quot;Vor Position &quot;&amp; fPos_neu &amp;_
+				&quot; gibt es schon folgende Bemerkung!&quot;+Chr$(13)+Chr$(13)+ sBemerkung +Chr$(13)+Chr$(13)+_
+				&quot;Möchten Sie Diese überschreiben?&quot;,547,sTitle_lokal)
+			if vStatus=2 then
+				exit Sub
+			elseif vStatus=6 then
+				sBemerkung=InputBox(&quot;Bitte geben Sie ein Liefer- bzw. Leistungsdatum für Position &quot;&amp; fPos_neu &amp;&quot; ein!&quot;,sTitle_lokal)
+				if sBemerkung = &quot;&quot; then
+					MsgBox(&quot;Sie haben kein Datum eingegeben!&quot;,16,sTitle_lokal)
+					exit Sub
+				else
+					if Len(sBemerkung) &gt; 10 then
+						sLieferdatum=&quot;Liefer- bzw. Leistungszeitraum: &quot;
+					else
+						sLieferdatum=&quot;Liefer- bzw. Leistungsdatum: &quot;
+					end if
+					SQL_Zwischenbemerkung_aendern(sLieferdatum &amp; fsConvertApostroph(sBemerkung))
+					oForm_Bemerkungen.reload()
+				End if
+			elseif vStatus=7 then
+				sBemerkung=InputBox(&quot;Bitte geben Sie ein Liefer- bzw. Leistungsdatum für Position &quot;&amp; fPos_neu &amp;&quot; ein!&quot;,sTitle_lokal)
+				if sBemerkung = &quot;&quot; then
+					MsgBox(&quot;Sie haben kein Datum eingegeben!&quot;,16,sTitle_lokal)
+					exit Sub
+				else
+					if Len(sBemerkung) &gt; 10 then
+						sLieferdatum=&quot;Liefer- bzw. Leistungszeitraum: &quot;
+					else
+						sLieferdatum=&quot;Liefer- bzw. Leistungsdatum: &quot;
+					end if
+					SQL_Zwischenbemerkung_einfuegen(sLieferdatum &amp; fsConvertApostroph(sBemerkung))
+					oForm_Bemerkungen.reload()
+				End if
+			End if	
+		else
+			sBemerkung=InputBox(&quot;Bitte geben Sie ein Liefer- bzw. Leistungsdatum für Position &quot;&amp; fPos_neu &amp;&quot; ein!&quot;,sTitle_lokal)
+			if sBemerkung = &quot;&quot; then
+				MsgBox(&quot;Sie haben kein Datum eingegeben!&quot;,16,sTitle_lokal)
+				exit Sub
+			else
+				if Len(sBemerkung) &gt; 10 then
+					sLieferdatum=&quot;Liefer- bzw. Leistungszeitraum: &quot;
+				else
+					sLieferdatum=&quot;Liefer- bzw. Leistungsdatum: &quot;
+				end if
+				SQL_Zwischenbemerkung_einfuegen(sLieferdatum &amp; fsConvertApostroph(sBemerkung))
+				oForm_Bemerkungen.reload()
+			End if		
+		End if
+	else
+		MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub Leistung_duplizieren()
+	Leistungsauswahl_commit()
+	if fSelected_Item(oList_Leistungsauswahl) &lt;&gt; &quot;&quot; then
+		sSQL1=&quot;SELECT LeistungsID,Bestellnummer,Leistungsgruppe,Leistungsbezeichnung,&quot;&amp;_
+			&quot;Einheit,Bauzeit,Einkaufspreis,Listenpreis,Lieferant_1,&quot;&amp;_
+			&quot;Lieferant_2,Lieferant_3,Leistungsbeschreibung&quot;&amp;_
+			&quot; FROM &quot; &amp; sLeistungsstamm &amp; &quot;&quot;&amp;_
+			&quot; WHERE LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sLeistungsID_old=oRecord1.getString(1)
+			sBestellnummer=oRecord1.getString(2)
+			sLeistungsgruppe=oRecord1.getString(3)
+			sLeistungsbezeichnung=oRecord1.getString(4)
+			sEinheit=oRecord1.getString(5)
+			sBauzeit=oRecord1.getString(6)
+			sEinkaufspreis=oRecord1.getString(7)
+			sListenpreis=oRecord1.getString(8)
+			sLieferant_1=oRecord1.getString(9)
+			sLieferant_2=oRecord1.getString(10)
+			sLieferant_3=oRecord1.getString(11)
+			sLeistungsbeschreibung=oRecord1.getString(12)
+		Wend
+		nochmal:
+		sLeistungsID=InputBox(&quot;Geben Sie bitte eine neue Leistungsnummer ein,&quot;&amp;_
+			&quot; für das Duplikat der Leistung mit der Nummer:   &quot;&amp; sLeistungsID_old,sTitle_lokal,sLeistungsID_old)
+		if sLeistungsID = &quot;&quot; then
+			vStatus=MsgBox(&quot;Sie haben noch keine Leistungsnummer eingegeben!&quot;,37,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal
+			elseif vStatus=2 then
+				exit sub
+			End if
+		End if
+		sSQL2=&quot;SELECT COUNT(LeistungsID) FROM &quot; &amp; sLeistungsstamm &amp; &quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL2)
+		While oRecord1.next()
+			iCount=oRecord1.getInt(1)
+		Wend
+		if iCount = 1 then
+			MsgBox(&quot;Diese Nummer ist schon vergeben.&quot; +Chr$(13)+Chr$(13)+_
+				&quot;Bitte benutzen Sie eine neue Leistungsnummer!&quot;,48,sTitle_lokal)
+			goto nochmal
+		elseif iCount = 0 then
+			nocheinmal:
+			sLeistungsbezeichnung=InputBox(&quot;Geben Sie bitte die neue Leistungsbezeichnung&quot;&amp;_
+				&quot; für die zu kopierende Leistung ein!&quot;&amp; Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal,sLeistungsbezeichnung)
+		if sLeistungsbezeichnung = &quot;&quot; then
+			vStatus=MsgBox(&quot;Sie haben noch keine Leistungsbezeichnung eingegeben!&quot;,37,sTitle_lokal)
+			if vStatus=4 then
+				goto nocheinmal
+			elseif vStatus=2 then
+				exit sub
+			End if
+		End if
+		sBestellnummer=InputBox(&quot;Geben Sie bitte die neue Bestellnummer&quot;&amp;_
+			&quot; für die zu kopierende Leistung ein!&quot;,sTitle_lokal,sBestellnummer)
+
+			sSQL3=&quot;INSERT INTO &quot; &amp; sLeistungsstamm &amp; &quot;&quot;&amp;_
+				&quot; (LeistungsID,Bestellnummer,Leistungsgruppe,Leistungsbezeichnung,Einheit,Bauzeit,&quot;&amp;_
+				&quot;Einkaufspreis,Listenpreis,Lieferant_1,Lieferant_2,Lieferant_3,Leistungsbeschreibung) VALUES (&apos;&quot;&amp; sLeistungsID &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp; sLeistungsgruppe &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sBauzeit &amp;&quot;&apos;,&apos;&quot;&amp; sEinkaufspreis &amp;&quot;&apos;,&apos;&quot;&amp; sListenpreis &amp;&quot;&apos;,&apos;&quot;&amp; sLieferant_1 &amp;&quot;&apos;,&apos;&quot;&amp; sLieferant_2 &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sLieferant_3 &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
+			wait 1
+		End if
+		SQL_execute(sSQL3)
+	else
+		MsgBox(&quot;Sie haben noch keine Leistung ausgewählt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+Sub Menge_eingeben_einstellen()
+	fMenge_eingeben(1)
+End Sub
+
+Sub Einfuegen_abfragen_einstellen()
+	fEinfuegen_abfragen(1)
+End Sub
+
+Sub Kontaktdaten_uebernehmen()
+	if lDocumentID &gt; 0 then
+		oList_Kontaktauswahl.commit()
+		if lKontaktID_old &gt; 0 then
+			if lKontaktID_old &lt;&gt; oList_Kontaktauswahl.BoundField.long then
+				vStatus=MsgBox(&quot;Wollen Sie den aktuellen &quot;&amp; sKontakte &amp;&quot; überschreiben?&quot;,36,sTitle_lokal)
+				if vStatus=7 then
+					oList_Kontaktauswahl.BoundField.value = lKontaktID_old
+					oForm_Document.updateRow()
+					oForm_Document.reload()
+					exit sub
+				End if
+			else
+				exit sub
+			End if
+		End if
+		oForm_Document.updateRow()
+		Kontaktdaten_setzen()
+		oList_Ansprechpartner.refresh()
+		if lKontaktID &gt; 0 then
+			Dim sBemerkung as String
+			sSQL1=&quot;SELECT distinct Bemerkung FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+			oRecord1=oResult(sSQL1)
+			While oRecord1.next()
+				sBemerkung=oRecord1.getString(1)
+			Wend
+			if Len(Trim(sBemerkung)) &gt; 0 then
+				if sBemerkung &lt;&gt; fBemerkung then
+					vStatus=MsgBox(&quot;Wollen Sie die Schlussbemerkung für dieses Dokument:&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+					 				sBemerkung &amp; Chr$(13) &amp; Chr$(13) &amp;_
+									&quot;durch die Standard-Bemerkung:&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+									fBemerkung &amp; Chr$(13) &amp; Chr$(13) &amp;_
+									&quot;ersetzen?&quot;,292,sTitle_lokal)
+					if vStatus=6 then &apos;ja
+						SQL_cp_Bemerkung()
+					End if
+				end if
+			else
+				SQL_cp_Bemerkung()
+			end if			
+		end if
+		oForm_Document.reload()
+	else
+		MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+Sub Kontaktdaten_setzen()
+	Dim i13b as Integer,s13bText as String
+	i13b=0
+	if InStr(sKontakte,&quot;Kunden&quot;) &gt; 0 then
+		sSQL1=&quot;SELECT t1.Rabatt_Satz,t1.Skonto_Satz,t1.MwST_Satz,t1.Materialaufschlagsatz,t1.Stundenverrechnungssatz,&quot;&amp;_
+			&quot;t1.Skonto_Tage,t1.Faellig_Tage,t1.13b,t2.13bText AS Text &quot;&amp;_
+			&quot;FROM &quot;&amp; sKontakte &amp;&quot; as t1,Einstellungen as t2 &quot;&amp;_
+			&quot;WHERE t1.KontaktID=&quot;&amp; lKontaktID &amp;_
+			&quot; AND t2.EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			cRabatt_Satz=oRecord1.getString(1)		
+			cSkonto_Satz=oRecord1.getString(2)
+			cMwSt_Satz=oRecord1.getString(3)
+			cMaterialaufschlagsatz=oRecord1.getString(4)
+			cStundenverrechnungssatz=oRecord1.getString(5)
+			iSkonto_Tage=oRecord1.getInt(6)
+			iFaellig_Tage=oRecord1.getInt(7)
+			i13b=oRecord1.getInt(8)
+			s13bText=oRecord1.getString(9)
+		Wend
+
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
+			&quot; SET AnsprechpartnerID=NULL&quot;&amp;_
+			&quot;,Rabatt_Satz=&quot;&amp; cRabatt_Satz &amp;_
+			&quot;,Skonto_Satz=&quot;&amp; cSkonto_Satz &amp;_
+			&quot;,MwSt_Satz=&quot;&amp; cMwSt_Satz &amp;_
+			&quot;,Skonto_Tage=&quot;&amp; iSkonto_Tage &amp;_
+			&quot;,Faellig_Tage=&quot;&amp; iFaellig_Tage &amp;_
+			&quot;,Materialaufschlagsatz=&quot;&amp; cMaterialaufschlagsatz &amp;_
+			&quot;,Erstellungsdatum=(date_add(now(),interval 0 month))&quot;
+
+		if InStr(sTabelle1,&quot;Angebote1&quot;)&gt;0 then 	
+			if cSkonto_Satz = 0 OR iSkonto_Tage = 0 then
+				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day))&quot;&amp;_
+					&quot;,Skonto_bis=NULL &quot;&amp;_
+					&quot;,13b=&quot;&amp; i13b &amp;_
+					&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+			else
+				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day))&quot;&amp;_
+					&quot;,Skonto_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iSkonto_Tage &amp;&quot; day))&quot;&amp;_
+					&quot;,13b=&quot;&amp; i13b &amp;_
+					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
+			End if
+		elseif InStr(sTabelle1,&quot;Rechnungen1&quot;)&gt;0 then
+			if cSkonto_Satz = 0 OR iSkonto_Tage = 0 then
+				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iFaellig_Tage &amp;&quot; day))&quot;&amp;_
+					&quot;,Skonto_bis=NULL&quot;&amp;_
+					&quot;,13b=&quot;&amp; i13b &amp;_
+					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
+			else
+				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iFaellig_Tage &amp;&quot; day))&quot;&amp;_
+					&quot;,Skonto_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iSkonto_Tage &amp;&quot; day))&quot;&amp;_
+					&quot;,13b=&quot;&amp; i13b &amp;_
+					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
+			End if
+		else
+			if cSkonto_Satz = 0 OR iSkonto_Tage = 0 then
+				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(now(),interval 0 day))&quot;&amp;_
+					&quot;,Skonto_bis=NULL&quot;&amp;_
+					&quot;,13b=&quot;&amp; i13b &amp;_
+					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
+			else
+				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(now(),interval 0 day))&quot;&amp;_
+					&quot;,13b=&quot;&amp; i13b &amp;_
+					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
+			End if
+		End if
+		if CCur(oField_MVS.BoundField.string) &gt; 0 then
+			if CCur(oField_MVS.BoundField.string) &lt;&gt; CCur(cStundenverrechnungssatz/60) then
+				vStatus=MsgBox(&quot;Möchten Sie, aus dem in den Stamm-Daten gespeicherten Stundenverrechnungssatz, den Minutenverrechnungssatz(MVS) berechnen und diesen im Dokument verwenden?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
+					&quot;Achtung!!! Vorhandene Positionen werden nicht geändert.&quot;&amp; Chr(10)&amp;_
+					&quot;Für diese, kann durch drücken auf &quot;&amp; chr(34) &amp;&quot;Minutenverrechnungssatz übernehmen&quot;&amp; chr(34) &amp;&quot; der Wert &quot;&amp; chr(34) &amp;&quot;MVS&quot;&amp; chr(34) &amp;&quot; geändert werden&quot;,36,sTitle_lokal)
+				if vStatus=6 then
+					oField_MVS.value=cStundenverrechnungssatz/60
+					oField_MVS.commit()
+					oForm_Document.updateRow()
+				End if
+			End if
+		else
+			oField_MVS.value=cStundenverrechnungssatz/60
+			oField_MVS.commit()
+			oForm_Document.updateRow()
+		End if
+	else
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET AnsprechpartnerID=NULL WHERE DocumentID=&quot;&amp; lDocumentID	
+	End if
+	SQL_execute(sSQL2)
+	if iDocTypID &lt; 7 then
+		if i13b=0 then
+			sSQL3=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET 13bText=&apos;&apos; WHERE DocumentID=&quot;&amp; lDocumentID	
+			SQL_execute(sSQL3)
+		elseif i13b=1 then
+			sSQL3=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET 13bText=&apos;&quot;&amp; s13bText &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID	
+			SQL_execute(sSQL3)
+		End if
+	end if
+End Sub
+
+Sub Datum_setzen_manuel()
+	if lKontaktID &gt; 0 then
+		if InStr(sKontakte,&quot;Kunden&quot;) &gt; 0 then
+			sSQL1=&quot;SELECT Rabatt_Satz,Skonto_Satz,Materialaufschlagsatz,Stundenverrechnungssatz,&quot;&amp;_
+				&quot;Skonto_Tage,Faellig_Tage&quot;&amp;_
+				&quot; FROM &quot;&amp; sKontakte &amp;_
+				&quot; WHERE KontaktID=&quot;&amp; lKontaktID
+			oRecord1=oResult(sSQL1)
+			While oRecord1.next()
+				cRabatt_Satz=oRecord1.getString(1)		
+				cSkonto_Satz=oRecord1.getString(2)		
+				cMaterialaufschlagsatz=oRecord1.getString(3)
+				cStundenverrechnungssatz=oRecord1.getString(4)
+				iSkonto_Tage=oRecord1.getInt(5)
+				iFaellig_Tage=oRecord1.getInt(6)
+			Wend
+			if InStr(sTabelle1,&quot;Angebote1&quot;)&gt;0 then 	
+				if cSkonto_Satz = 0 OR iSkonto_Tage = 0 then
+					sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
+						&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day))&quot;&amp;_
+						&quot;,Skonto_bis=NULL&quot;&amp;_
+						&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
+				else
+					sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
+						&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day))&quot;&amp;_
+						&quot;,Skonto_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iSkonto_Tage &amp;&quot; day))&quot;&amp;_
+						&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
+				End if
+				SQL_execute(sSQL2)
+			elseif InStr(sTabelle1,&quot;Rechnungen1&quot;)&gt;0 then
+				if cSkonto_Satz = 0 OR iSkonto_Tage = 0 then
+					sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
+						&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; fFaellig_Tage &amp;&quot; day))&quot;&amp;_
+						&quot;,Skonto_bis=NULL&quot;&amp;_
+						&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
+				else
+					sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
+						&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; fFaellig_Tage &amp;&quot; day))&quot;&amp;_
+						&quot;,Skonto_bis=(date_add(Erstellungsdatum,interval &quot;&amp; fSkonto_Tage &amp;&quot; day))&quot;&amp;_
+						&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
+				End if
+				SQL_execute(sSQL2)
+			End if
+		End if
+	End if
+End Sub
+
+Sub Leistung_uebernehmen_1(sLeistungsIDneu as String)
+	iMaxPos=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+	iMaxPos_1=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+	SetDocUserProperty(&quot;oPos_neu&quot;, fPos_neu)
+	iPos_neu=fiPos_neu
+	iRowNumber=oForm_Tabellendaten.getRow()
+	if iPos_neu &lt; iMaxPos then
+		iEinfuegen_abfragen=fEinfuegen_abfragen(0)
+		if iEinfuegen_abfragen=1 then
+			vStatus=MsgBox(&quot;Wollen Sie die aktuelle Leistung vor Position &quot;&amp;_
+							 iPos_neu &amp;&quot; einfügen?&quot;,35,sTitle_lokal)
+			if vStatus = 6 then
+				sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+					&quot; SET Pos=Pos+1 WHERE Pos+0 &gt;= &quot;&amp; iPos_neu &amp;&quot; ORDER BY Pos DESC&quot;
+				SQL_execute(sSQL1)
+			elseif vStatus = 7 then
+				iPos_neu=iMaxPos
+			elseif vStatus = 2 then
+				Exit Sub
+			End if
+		else
+			sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+				&quot; SET Pos=Pos+1 WHERE Pos+0 &gt;= &quot;&amp; iPos_neu &amp;&quot; ORDER BY Pos DESC&quot;
+			SQL_execute(sSQL1)
+		End if
+		sSQL3=&quot;SELECT LV_Pos FROM &quot;&amp; sArbeitstabelle &amp;_
+				&quot; WHERE Pos = &apos;&quot;&amp; iPos_neu - 1 &amp;&quot;&apos;&quot;
+	else
+		sSQL3=&quot;SELECT LV_Pos FROM &quot;&amp; sArbeitstabelle &amp;_
+				&quot; WHERE Pos = &apos;&quot;&amp; iPos_neu &amp;&quot;&apos;&quot;
+	End if
+	oRecord1=oResult(sSQL3)
+	While oRecord1.next()
+		sLV_Pos_alt= oRecord1.getString(1)
+	Wend
+	if sLV_Pos_alt &lt;&gt; &quot;&quot; AND sLV_Pos_alt &lt;&gt; &quot;0&quot; then
+		sLV_Pos_neu = fLV_Pos(sLV_Pos_alt)
+	else
+		sLV_Pos_neu = &quot;&quot;
+	End if
+	if sLeistungsIDneu = &quot;&quot; then
+		sLeistungsIDneu = &quot;t2.LeistungsID&quot;
+	elseif sLeistungsIDneu &lt;&gt; &quot;&quot; then
+		sLeistungsIDneu = &quot;&apos;&quot;&amp; sLeistungsIDneu &amp;&quot;&apos;&quot;
+	End if
+	sSQL1=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+		&quot; (DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Einkaufspreis,&quot;&amp;_
+		&quot;Bauzeit,Minutenverrechnungssatz,Materialaufschlagsatz)&quot;&amp;_
+		&quot; SELECT distinct t1.DocumentID,&quot;&amp; sLeistungsIDneu &amp;&quot;,t3.Bestellnummer,t3.Leistungsbezeichnung,t3.Leistungsbeschreibung,&quot;&amp;_
+		&quot;t3.Einheit,t3.&quot;&amp; sKalulationsPreis &amp;&quot;,t3.Bauzeit,t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz&quot;&amp;_
+		&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t1,Steuerung as t2,&quot; &amp; sLeistungsstamm &amp; &quot; as t3 WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; AND t3.LeistungsID=&quot;&amp; sLeistungsIDneu &amp;&quot; AND t1.DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+	iMenge_eingeben=fMenge_eingeben(0)			
+	if iMenge_eingeben=1 then
+		sWert=InputBox(&quot;Bitte geben Sie einen Wert für die Menge ein!&quot;)
+		sMenge=fZahlMitKomma(sWert)
+		if iPos_neu &lt; iMaxPos then
+			iMaxPos=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+			sSQL2=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+				&quot; SET Pos=&quot;&amp; fiPos_neu &amp;&quot; ,LV_Pos=&apos;&quot;&amp; sLV_Pos_neu &amp;&quot;&apos;,Menge=&apos;&quot;&amp; sMenge &amp;&quot;&apos; WHERE Pos= &quot;&amp; iMaxPos		
+		else
+			iMaxPos=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+			sSQL2=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+				&quot; SET LV_Pos=&apos;&quot;&amp; sLV_Pos_neu &amp;&quot;&apos; ,Menge=&apos;&quot;&amp; sMenge &amp;&quot;&apos; WHERE Pos= &quot;&amp; iMaxPos
+		End if
+	else
+		if iPos_neu &lt; iMaxPos then
+			iMaxPos=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+			sSQL2=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+				&quot; SET Pos=&quot;&amp; fiPos_neu &amp;&quot; ,LV_Pos=&apos;&quot;&amp; sLV_Pos_neu &amp;&quot;&apos; WHERE Pos= &quot;&amp; iMaxPos
+		else
+			iMaxPos=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+			sSQL2=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+				&quot; SET LV_Pos=&apos;&quot;&amp; sLV_Pos_neu &amp;&quot;&apos; WHERE Pos= &quot;&amp; iMaxPos
+		End if
+	End if
+	SQL_execute(sSQL2)
+	oForm_Document.reload()
+	oForm_Tabellendaten.last()
+	if iPos_neu &lt; iMaxPos_1 then
+		oForm_Tabellendaten.first()
+		SQL_Update_Pos_Zwischensumme_Pos_einfuegen()
+		SQL_Update_Pos_Zwischenbemerkung_Pos_einfuegen()
+		oForm_Bemerkungen.reload()
+		oForm_Zwischensummen.reload()
+		oForm_Tabellendaten.absolute(iRowNumber+1)
+	End if
+End Sub
+
+Sub Leistung_uebernehmen()
+	Leistungsauswahl_commit()
+ 	if lDocumentID &gt; 0 then
+		if lKontaktID &gt; 0 then
+			if fSelected_Item(oList_Leistungsauswahl) &lt;&gt; &quot;&quot; then
+				Leistung_uebernehmen_1(&quot;&quot;)
+			else
+				MsgBox(&quot;Sie haben noch keine Leistung ausgewählt!&quot;,48,sTitle_lokal)
+			End if
+		else
+			MsgBox(&quot;Sie haben noch keinen &quot;&amp; sKontakte &amp;&quot; ausgewählt!&quot;,48,sTitle_lokal)
+		End if
+	else
+		MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+Sub nach_Artikelnummer_suchen()
+	Dim sLeistungsIDneu as String
+	if lDocumentID &gt; 0 then
+		if lKontaktID &gt; 0 then
+			Weitersuchen:
+			sLeistungsIDneu = &quot;&quot;
+			sWert=InputBox(&quot;Bitte geben Sie eine Artikelnummer ein!&quot;)
+			sSQL1=&quot;SELECT LeistungsID,Leistungsbezeichnung FROM &quot; &amp; sLeistungsstamm &amp; &quot; WHERE LeistungsID= &apos;&quot;&amp; sWert &amp;&quot;&apos;&quot;
+			oRecord1=oResult(sSQL1)
+			While oRecord1.next()	
+				sLeistungsIDneu=oRecord1.getString(1)
+				sLeistungsbezeichnung=oRecord1.getString(2)
+			Wend
+			if sLeistungsIDneu = &quot;&quot; then
+				vStatus=MsgBox(&quot;Es ist kein Artikel mit dieser Nummer vorhanden&quot;+Chr$(13)+Chr$(13)+&quot;Möchten Sie weitersuchen?&quot;,36)
+				if vStatus=6 then
+					goto Weitersuchen
+				elseif vStatus=7 then
+					exit sub
+				End if
+			else
+				Leistung_uebernehmen_1(sLeistungsIDneu)
+			End if
+		else
+			MsgBox(&quot;Sie haben noch keinen &quot;&amp; sKontakte &amp;&quot; ausgewählt!&quot;,16,sTitle_lokal)
+		End if
+	else
+		MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub Zwischensummen_berechnen()
+	SetDocUserProperty(&quot;oDocumentID_old&quot;, lDocumentID)
+	iCount_MAX=fAnzahl_Datensaetze(sZwischensummen,lDocumentID_old)
+	if iCount_MAX = 0 then 
+		exit Sub
+	else
+		Dim cZwischensumme as currency,cBauzeitStunden as currency,cMaterialeinsatz as currency
+		sSQL1=&quot;SELECT Pos FROM &quot;&amp; sZwischensummen &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC&quot;
+	End if
+	if iCount_MAX = 1 then 
+		cZwischensumme=0
+		cBauzeitStunden=0
+		cMaterialeinsatz=0
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iPos=oRecord1.getInt(1)
+		Wend
+		sSQL2=&quot;SELECT SUM(GP),SUM(EP),SUM(Bauzeit*Menge/60),SUM(Einkaufspreis*Menge),Pos_TypID FROM &quot;&amp; sArbeitstabelle &amp;_
+			&quot; WHERE (Pos_TypID = 1 OR  Pos_TypID = 4) AND Pos &lt;= &quot;&amp; iPos &amp;&quot; GROUP BY Pos_TypID&quot;
+		oRecord2=oResult(sSQL2)
+		While oRecord2.next()
+			if oRecord2.getInt(5)=1 then
+				cZwischensumme=oRecord2.getString(1)
+				cBauzeitStunden=oRecord2.getString(3)
+				cMaterialeinsatz=oRecord2.getString(4)
+			elseif oRecord2.getInt(5)=4 then
+				cZwischensumme=oRecord2.getString(2)
+			End if
+		Wend
+		sSQL3=&quot;UPDATE &quot;&amp; sZwischensummen &amp;&quot; SET Zwischensumme=&quot;&amp; cZwischensumme &amp;_
+			&quot;,Bauzeit_Stunden=&quot;&amp; cBauzeitStunden &amp;&quot;,Materialeinsatz=&quot;&amp; cMaterialeinsatz &amp;_
+			&quot; WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; iPos
+		SQL_execute(sSQL3)
+	elseif iCount_MAX &gt; 1 then 
+		iPos_alt=0
+		For iCount = 1 to iCount_MAX
+			cZwischensumme=0
+			cBauzeitStunden=0
+			cMaterialeinsatz=0
+			oRecord1=oResult_Scroll(sSQL1)
+			oRecord1.absolute(iCount)
+			iPos=oRecord1.getInt(1)
+			sSQL2=&quot;SELECT SUM(GP),SUM(EP),SUM(Bauzeit*Menge/60),SUM(Einkaufspreis*Menge),Pos_TypID FROM &quot;&amp; sArbeitstabelle &amp;_
+				&quot; WHERE (Pos_TypID = 1 OR Pos_TypID = 4) AND Pos &lt;= &quot;&amp; iPos &amp;&quot; AND Pos &gt; &quot;&amp; iPos_alt &amp;&quot; GROUP BY Pos_TypID&quot;
+			oRecord2=oResult(sSQL2)
+			While oRecord2.next()
+				if oRecord2.getInt(5)=1 then
+					cZwischensumme=oRecord2.getString(1)
+					cBauzeitStunden=oRecord2.getString(3)
+					cMaterialeinsatz=oRecord2.getString(4)
+				elseif oRecord2.getInt(5)=4 then
+					cZwischensumme=oRecord2.getString(2)
+				End if
+			Wend
+			sSQL3=&quot;UPDATE &quot;&amp; sZwischensummen &amp;&quot; SET Zwischensumme=&quot;&amp; cZwischensumme &amp;_
+				&quot;,Bauzeit_Stunden=&quot;&amp; cBauzeitStunden &amp;&quot;,Materialeinsatz=&quot;&amp; cMaterialeinsatz &amp;_
+				&quot; WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; iPos
+			SQL_execute(sSQL3)
+		iPos_alt=iPos
+		Next iCount
+	End if
+End Sub
+
+Sub MVS_uebernehmen()
+	if lDocumentID &gt; 0 then
+		oField_MVS.commit()
+		oForm_Document.updateRow()
+		sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Minutenverrechnungssatz=&quot;&amp; cMVS &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		Document_berechnen
+	else
+		MsgBox(&quot;Sie haben noch kein Dokument ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub MAS_uebernehmen()
+	if lDocumentID &gt; 0 then
+		oField_MAS.commit()
+		oForm_Document.updateRow()
+		sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Materialaufschlagsatz=&quot;&amp; cMAS &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		Document_berechnen
+	else
+		MsgBox(&quot;Sie haben noch kein Dokument ausgewählt oder angelegt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+Sub MVS_dynamisch()
+	if lDocumentID &gt; 0 then
+		sWert=InputBox(&quot;Bitte geben Sie einen Faktor ein mit dem der Minutenverrechnungssatz multipliziert werden soll! (z.B.: 0,9 oder 1,1)&quot;,sTitle_lokal)
+		if sWert = &quot;&quot; then
+			sFaktor=&quot;1&quot;
+		else
+			sFaktor=fZahlMitKomma(sWert)
+		End if
+		sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Minutenverrechnungssatz=Minutenverrechnungssatz*&quot;&amp; sFaktor 
+		SQL_execute(sSQL1)
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Minutenverrechnungssatz=Minutenverrechnungssatz*&quot;&amp; sFaktor &amp;_
+			&quot; WHERE DocumentID=&quot;&amp; lDocumentID 
+		SQL_execute(sSQL2)
+		Document_berechnen
+	else
+		MsgBox(&quot;Sie haben noch kein Dokument ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub MAS_dynamisch()
+	if lDocumentID &gt; 0 then
+		sWert=InputBox(&quot;Bitte geben Sie einen Faktor ein mit dem der Materialaufschlagsatz multipliziert werden soll! (z.B.: 0,9 oder 1,1)&quot;)
+		if sWert = &quot;&quot; then
+			sFaktor=&quot;1&quot;
+		else
+			sFaktor=fZahlMitKomma(sWert)
+		End if
+		sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Materialaufschlagsatz=Materialaufschlagsatz*&quot;&amp; sFaktor 
+		SQL_execute(sSQL1)
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Materialaufschlagsatz=Materialaufschlagsatz*&quot;&amp; sFaktor &amp;_
+			&quot; WHERE DocumentID=&quot;&amp; lDocumentID 
+		SQL_execute(sSQL2)
+		Document_berechnen
+	else
+		MsgBox(&quot;Sie haben noch kein Dokument ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub Pos_neu()
+	if lDocumentID &gt; 0 then
+		iAnzData=iAnzahl_Datensaetze(sArbeitstabelle)
+		iMaxData=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+		if iAnzData &lt; iMaxData then
+			Dim iMinPositionsID as integer
+			Zwischensummen_Pos_neu()
+			Wait 1
+			Bemerkung_Pos_neu()
+			SQL_PositionsID_entfernen()
+			SQL_Datensaetze_Tabelle2_entfernen()
+			SQL_Reset_AutoIncrement(sTabelle2)
+			SQL_Datensaetze_Tabelle2_einfuegen()
+			SQL_Arbeitstabelle_leeren()
+			SQL_Reset_AutoIncrement(sArbeitstabelle)
+			SQL_Pos_entfernen()
+			SQL_Arbeitstabelle_fuellen()
+			oForm_Tabellendaten.reload()
+			Wait 1
+			oForm_Tabellendaten.last()
+		else
+			SQL_Reset_AutoIncrement(sArbeitstabelle)
+		End if
+	else
+		MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub Pos_nach_LeistungsID()
+	if lDocumentID &gt; 0 then
+		if Msg_Schreibschutz=1 then
+	 		exit Sub
+	 	else
+			SQL_PositionsID_entfernen()
+			SQL_Datensaetze_Tabelle2_entfernen()
+			SQL_Reset_AutoIncrement(sTabelle2)
+			SQL_Datensaetze_Tabelle2_einfuegen()
+			SQL_Arbeitstabelle_leeren()
+			SQL_Reset_AutoIncrement(sArbeitstabelle)
+			SQL_Pos_entfernen()
+			SQL_Arbeitstabelle_fuellen_order_LeistungsID()
+			oForm_Tabellendaten.reload()
+			Wait 1
+			oForm_Tabellendaten.last()
+		End if
+	else
+		MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub Reset_AutoIncrement_Arbeitstabelle()
+	SQL_Reset_AutoIncrement(sArbeitstabelle)
+End Sub
+
+Sub Zwischensummen_Pos_neu()
+	iCount_MAX=fAnzahl_Datensaetze(sZwischensummen,lDocumentID)
+	if iCount_MAX=0 then 
+		exit Sub
+	End if
+	Dim iCount_Positionen as integer,iCountPosAlt as Integer
+	if iCount_MAX=1 then 
+		sSQL1=&quot;SELECT Pos FROM &quot;&amp; sZwischensummen &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iPos=oRecord1.getInt(1)
+		Wend
+		sSQL2=&quot;SELECT COUNT(*) FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos &lt;= &quot;&amp; iPos
+		oRecord2=oResult(sSQL2)
+		While oRecord2.next()
+			iCount_Positionen=oRecord2.getInt(1)
+		Wend
+		if iCount_Positionen=0 then
+			exit Sub
+		elseif iCount_Positionen&gt;0 then
+		sSQL3=&quot;UPDATE &quot;&amp; sZwischensummen &amp;&quot; SET Pos=&quot;&amp; iCount_Positionen &amp;_
+			&quot;,Zwischensumme=NULL,Bauzeit_Stunden=NULL,Materialeinsatz=NULL &quot;&amp;_
+			&quot;WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; iPos
+		SQL_execute(sSQL3)
+		End if
+	elseif iCount_MAX&gt;1 then 
+		iPos_alt=0
+		For iCount = 1 to iCount_MAX
+			sSQL1=&quot;SELECT Pos FROM &quot;&amp; sZwischensummen &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC&quot;
+			oRecord1=oResult_Scroll(sSQL1)
+			oRecord1.absolute(iCount)
+			iPos=oRecord1.getInt(1)
+			if iPos &lt;&gt; iCountPosAlt then
+				sSQL2=&quot;SELECT COUNT(*) FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos &lt;= &quot;&amp; iPos
+				oRecord2=oResult(sSQL2)
+				While oRecord2.next()
+					iCount_Positionen=oRecord2.getInt(1)
+				Wend
+				if iCount_Positionen=0 then
+					exit Sub
+				elseif iCount_Positionen&gt;0 then
+					sSQL3=&quot;UPDATE &quot;&amp; sZwischensummen &amp;&quot; SET Pos=&quot;&amp; iCount_Positionen &amp;_
+						&quot;,Zwischensumme=NULL,Bauzeit_Stunden=NULL,Materialeinsatz=NULL &quot;&amp;_
+						&quot;WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; iPos
+					SQL_execute(sSQL3)
+					iCountPosAlt=iCount_Positionen
+				End if
+			End if
+		Next iCount
+	End if
+	oForm_Zwischensummen.reload()
+End Sub
+
+Sub Bemerkung_Pos_neu()
+	iCount_MAX=fAnzahl_Datensaetze(sBemerkungen,lDocumentID)
+	if iCount_MAX=0 then 
+		exit Sub
+	End if
+	Dim iCount_Positionen as integer,iCountPosAlt as Integer
+	if iCount_MAX=1 then 
+		sSQL1=&quot;SELECT Pos FROM &quot;&amp; sBemerkungen &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iPos=oRecord1.getInt(1)
+		Wend
+		sSQL2=&quot;SELECT COUNT(*) FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos &lt;= &quot;&amp; iPos
+		oRecord2=oResult(sSQL2)
+		While oRecord2.next()
+			iCount_Positionen=oRecord2.getInt(1)
+		Wend
+		if iCount_Positionen=0 then
+			exit Sub
+		elseif iCount_Positionen&gt;0 then
+			sSQL3=&quot;UPDATE &quot;&amp; sBemerkungen &amp;&quot; SET Pos=&quot;&amp; iCount_Positionen &amp;_
+				&quot; WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; iPos
+			SQL_execute(sSQL3)
+		End if
+	elseif iCount_MAX&gt;1 then 
+		iPos_alt=0
+		For iCount = 1 to iCount_MAX
+			sSQL1=&quot;SELECT Pos FROM &quot;&amp; sBemerkungen &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC&quot;
+			oRecord1=oResult_Scroll(sSQL1)
+			oRecord1.absolute(iCount)
+			iPos=oRecord1.getInt(1)
+			if iPos &lt;&gt; iCountPosAlt then
+				sSQL2=&quot;SELECT COUNT(*) FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos &lt;= &quot;&amp; iPos
+				oRecord2=oResult(sSQL2)
+				While oRecord2.next()
+					iCount_Positionen=oRecord2.getInt(1)
+				Wend
+				if iCount_Positionen=0 then
+					exit Sub
+				elseif iCount_Positionen&gt;0 then
+					sSQL3=&quot;UPDATE &quot;&amp; sBemerkungen &amp;&quot; SET Pos=&quot;&amp; iCount_Positionen &amp;_
+						&quot; WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; iPos
+					SQL_execute(sSQL3)
+					iCountPosAlt=iCount_Positionen
+				End if
+			End if
+		Next iCount
+	End if
+	oForm_Bemerkungen.reload()
+End Sub
+
+Sub Jahr_zuruecksetzen(iParameter as integer)
+	Dim iJahr as Integer
+	sSQL1=&quot;SELECT MAX(YEAR(Erstellungsdatum)) FROM &quot;&amp; sTabelle1
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iJahr=oRecord1.getInt(1)
+	Wend
+	if iParameter=0 then
+		sSQL2=&quot;UPDATE Steuerung SET Jahr=&apos;&quot;&amp; iJahr &amp;&quot;&apos; WHERE ClientID=&quot;&amp; iClientID
+	else
+		sSQL2=&quot;UPDATE Steuerung SET Jahr = NULL WHERE ClientID=&quot;&amp; iClientID
+	End if
+	SQL_execute(sSQL2)
+	oList_Kontaktvorauswahl.refresh()
+	oList_Projektvorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Leistungen_Menge_0_loeschen()
+	sSQL1=&quot;DELETE FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Menge=0 OR Menge is Null&quot;
+	SQL_execute(sSQL1)
+	oForm_Tabellendaten.reload()
+	wait 1
+	oForm_Tabellendaten.last()
+End Sub
+
+</script:module>

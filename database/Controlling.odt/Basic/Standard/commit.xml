@@ -1,0 +1,400 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="commit" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim vStatus AS Variant
+Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+Global iTableReload AS Integer
+
+Sub Tabelle_reload()
+	Column_Lokation_refresh()
+	Summen_refresh()
+End Sub
+
+Sub Preisauswahl_commit()
+	oList_Kalkulationspreis.commit()
+	oForm_Steuerung_1.updateRow()
+End Sub
+
+Sub Filter_reset()
+	oDoc.lockControllers()
+	SQL_Steuerung_reset_1()	
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oList_Filter_Jahr.refresh()
+	oList_Filter_Monat.refresh()
+	oList_Filter_Woche.refresh()
+	oList_Filter_Status.refresh()
+	oList_Filter_Lokation.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Projektauswahl.refresh()
+	oColumn_ProjektID.refresh()
+	oForm_Steuerung_1.reload()
+	oForm_Steuerung.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Filter_Jahr_setzen()
+	oDoc.lockControllers()
+	oList_Filter_Jahr.commit()
+	oForm_Steuerung.updateRow()
+	sSQL1=&quot;UPDATE Steuerung SET Monat=NULL,Woche=NULL,Datum=NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oList_Filter_Monat.refresh()
+	oList_Filter_Woche.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Projektauswahl.refresh()
+	oColumn_ProjektID.refresh()
+	oForm_Steuerung_1.reload()
+	oForm_Steuerung.reload()
+	oForm_Tabellendaten.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Filter_Monat_setzen()
+	oDoc.lockControllers()
+	oList_Filter_Monat.commit()
+	oForm_Steuerung.updateRow()
+	sSQL1=&quot;UPDATE Steuerung SET Woche=NULL,Datum=NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oList_Filter_Monat.refresh()
+	oList_Filter_Woche.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Projektauswahl.refresh()
+	oColumn_ProjektID.refresh()
+	oForm_Steuerung_1.reload()
+	oForm_Steuerung.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Filter_Woche_setzen()
+	oDoc.lockControllers()
+	oList_Filter_Woche.commit()
+	oForm_Steuerung.updateRow()
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oList_Filter_Woche.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Projektauswahl.refresh()
+	oColumn_ProjektID.refresh()
+	oForm_Steuerung_1.reload()
+	oForm_Steuerung.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Filter_Lokation_setzen()
+	oDoc.lockControllers()
+	oList_Filter_Lokation.commit()
+	oForm_Steuerung.updateRow()
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oForm_Steuerung.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Filter_LeistungsTyp_setzen()
+	oDoc.lockControllers()
+	oList_Filter_LeistungsTyp.commit()
+	oForm_Steuerung.updateRow()
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oForm_Steuerung.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Filter_Status_setzen()
+	oDoc.lockControllers()
+	oList_Filter_Status.commit()
+	oForm_Steuerung.updateRow()
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oList_Filter_Status.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Projektauswahl.refresh()
+	oColumn_ProjektID.refresh()
+	oForm_Steuerung_1.reload()
+	oForm_Steuerung.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Filter_Kunde_setzen()
+	oDoc.lockControllers()
+	oList_Filter_Kunde.commit()
+	oForm_Steuerung.updateRow()
+	if lProjektID=0 then
+		init_Form_Tabellendaten()
+		Summen_refresh()
+	end if
+	oList_Filter_Kunde.refresh()
+	oList_Projektauswahl.refresh()
+	oList_Filter_Lokation.refresh()
+	oColumn_ProjektID.refresh()
+	oColumn_Lokation.refresh()
+	oForm_Steuerung_1.reload()
+	if lProjektID=0 then
+		oForm_Steuerung.reload()
+	end if
+	oDoc.unlockControllers()
+End Sub
+
+Sub Filter_Datum_setzen()
+	oDoc.lockControllers()
+	oField_Filter_Datum.commit()
+	oForm_Steuerung.updateRow()
+	if oField_Filter_Datum.BoundField.String &lt;&gt; &quot;&quot; then
+		sSQL1=&quot;UPDATE Steuerung SET Jahr=NULL,Monat=NULL,Woche=NULL WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+	End if
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oForm_Steuerung.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Filter_Option_Datum_setzen()
+	oDoc.lockControllers()
+	oForm_Steuerung.updateRow()
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oForm_Steuerung.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Filter_Personal_setzen()
+	oDoc.lockControllers()
+	oList_Filter_Personal.commit()
+	oForm_Steuerung.updateRow()
+	if fSelected_Item(oList_Filter_Personal) &lt;&gt; &quot;&quot; then
+		sSQL1=&quot;UPDATE Steuerung AS t1,&quot;&amp; sPersonal &amp;&quot; AS t2&quot;&amp;_
+			&quot; SET t1.Verrechnungs_Faktor=t2.Verrechnungs_Faktor&quot;&amp;_
+			&quot; WHERE t2.PersonalID=t1.PersonalID AND t1.ClientID=&quot;&amp; iClientID
+	else
+		sSQL1=&quot;UPDATE Steuerung SET Verrechnungs_Faktor=1 WHERE ClientID=&quot;&amp; iClientID
+	End if
+	SQL_execute(sSQL1)
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oForm_Steuerung.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Projektauswahl_setzen()
+	oDoc.lockControllers()
+	oList_Projektauswahl.commit()
+	oForm_Steuerung_1.updateRow()
+	sSQL1=&quot;UPDATE Steuerung AS t1,&quot;&amp; sProjekte &amp;&quot; AS t2 &quot;&amp;_
+		&quot;SET t1.Lokation=NULL,&quot;&amp;_
+		&quot;t1.Stundenverrechnungssatz=t2.Stundenverrechnungssatz,&quot;&amp;_
+		&quot;t1.Materialaufschlagsatz=t2.Materialaufschlagsatz &quot;&amp;_
+		&quot;WHERE t1.ClientID=&quot;&amp; iClientID &amp;&quot; AND t2.ProjektID=t1.ProjektID&quot;
+	SQL_execute(sSQL1)
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oList_Projektauswahl.refresh()
+	oColumn_ProjektID.refresh()
+	oColumn_Lokation.refresh()
+	oList_Filter_Lokation.refresh()
+	oList_Leistungsauswahl_Auftrag.refresh()
+	oList_Leistungsauswahl_Projekt.refresh()
+	oForm_Steuerung.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub ProjektID_setzen()
+	oDoc.lockControllers()
+	oField_ProjektID.commit()
+	oForm_Steuerung.updateRow()
+	sSQL1=&quot;UPDATE Steuerung SET Lokation=NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oForm_Steuerung.reload()
+	oForm_Tabellendaten.reload()
+	Schreibschutz_setzen()
+	oDoc.unlockControllers()
+End Sub
+
+Sub PersonalID_setzen()
+	oDoc.lockControllers()
+	oField_PersonalID.commit()
+	oForm_Steuerung.updateRow()
+	sSQL1=&quot;UPDATE Steuerung SET Lokation=NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	init_Form_Tabellendaten()
+	Summen_refresh()
+	oForm_Steuerung.reload()
+	oForm_Tabellendaten.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Hauptgruppenauswahl_commit()
+	oDoc.lockControllers()
+	oList_Hauptgruppenauswahl.commit()
+	oForm_Steuerung_1.updateRow()
+	wait 10
+	oList_Gruppenauswahl.refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub Hauptgruppenauswahl_reset()
+	oDoc.lockControllers()
+	sSQL1=&quot;UPDATE Steuerung SET HauptgruppenID=NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	oList_Gruppenauswahl.refresh()
+	oForm_Steuerung_1.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Gruppenauswahl_commit()
+	oDoc.lockControllers()
+	oList_Gruppenauswahl.commit()
+	oForm_Steuerung_1.updateRow()
+	wait 10
+	oList_Gruppenauswahl.refresh()
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Gruppenauswahl_reset()
+	oDoc.lockControllers()
+	sSQL1=&quot;UPDATE Steuerung SET GruppenID=NULL WHERE ClientID=&quot;&amp; iClientID 
+	SQL_execute(sSQL1)
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Suchstring_commit()
+	oDoc.lockControllers()
+	oField_Suchstring.commit()
+	oForm_Steuerung_1.updateRow()
+	wait 10
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Suchstring_reset()
+	oDoc.lockControllers()
+	sSQL1=&quot;UPDATE Steuerung SET Suchstring=NULL WHERE ClientID = &quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub Suchstring_2_commit()
+	oDoc.lockControllers()
+	oField_Suchstring_2.commit()
+	oForm_Steuerung_1.updateRow()
+	wait 10
+	oList_Projektauswahl.refresh()
+	oForm_Steuerung_1.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Suchstring_2_reset()
+	oDoc.lockControllers()
+	sSQL1=&quot;UPDATE Steuerung SET Suchstring_2=NULL WHERE ClientID = &quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	oList_Projektauswahl.refresh()
+	oForm_Steuerung_1.reload()
+	oDoc.unlockControllers()
+End Sub
+
+Sub MVS_Faktor_commit()
+	if CCur(oField_MVS_Faktor.value()) &lt;&gt; CCur(oField_MVS_Faktor.boundfield.string()) then
+		sSQL1=&quot;UPDATE Steuerung &quot;&amp;_
+			&quot;SET Verrechnungs_Faktor=&apos;&quot;&amp; CCur(oField_MVS_Faktor.value()) &amp;&quot;&apos; &quot;&amp;_
+			&quot;WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		vStatus=MsgBox(&quot;Möchten Sie den geänderten Verrrechnungssatz-Faktor ZUSÄTZLICH im Personal-Stamm speichern?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
+			&quot;Wenn Sie &quot;&amp; Chr(34) &amp;&quot;Nein&quot;&amp; Chr(34) &amp;&quot; wählen, wird der Wert, bei der nächsten Personalauswahl, wieder durch den im Personalstamm gespeicherten Wert überschrieben!&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sSQL2=&quot;UPDATE &quot;&amp; sPersonal &amp;&quot; AS t1,Steuerung AS t2 SET t1.Verrechnungs_Faktor=t2.Verrechnungs_Faktor WHERE t1.PersonalID=t2.PersonalID AND t2.ClientID=&quot;&amp; iClientID
+			SQL_execute(sSQL2)
+		End if
+	End if
+End Sub
+
+Sub Stundenverrechnungssatz_commit()
+	if CCur(oField_Stundenverrechnungssatz.value()) &lt;&gt; CCur(oField_Stundenverrechnungssatz.boundfield.string()) then
+		sSQL1=&quot;UPDATE Steuerung &quot;&amp;_
+			&quot;SET Stundenverrechnungssatz=&apos;&quot;&amp; CCur(oField_Stundenverrechnungssatz.value()) &amp;&quot;&apos; &quot;&amp;_
+			&quot;WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		vStatus=MsgBox(&quot;Möchten Sie den geänderten Stundenverrechnungssatz ZUSÄTZLICH im Projekt speichern?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
+			&quot;Wenn Sie &quot;&amp; Chr(34) &amp;&quot;Nein&quot;&amp; Chr(34) &amp;&quot; wählen, wird der Wert, bei der nächsten Projektauswahl, wieder durch den im Projekt gespeicherten Wert überschrieben!&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sSQL2=&quot;UPDATE &quot;&amp; sProjekte &amp;&quot; AS t1,Steuerung AS t2 SET t1.Stundenverrechnungssatz=t2.Stundenverrechnungssatz WHERE t1.ProjektID=t2.ProjektID AND t2.ClientID=&quot;&amp; iClientID
+			SQL_execute(sSQL2)
+		End if
+	End if
+End Sub
+
+Sub Materialaufschlagsatz_commit()
+	if CCur(oField_Materialaufschlagsatz.value()) &lt;&gt; CCur(oField_Materialaufschlagsatz.boundfield.string()) then
+		sSQL1=&quot;UPDATE Steuerung &quot;&amp;_
+			&quot;SET Materialaufschlagsatz=&apos;&quot;&amp; CCur(oField_Materialaufschlagsatz.value()) &amp;&quot;&apos; &quot;&amp;_
+			&quot;WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		vStatus=MsgBox(&quot;Möchten Sie den geänderten Materialaufschlagsatz ZUSÄTZLICH im Projekt speichern?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
+			&quot;Wenn Sie &quot;&amp; Chr(34) &amp;&quot;Nein&quot;&amp; Chr(34) &amp;&quot; wählen, wird der Wert, bei der nächsten Projektauswahl, wieder durch den im Projekt gespeicherten Wert überschrieben!&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sSQL2=&quot;UPDATE &quot;&amp; sProjekte &amp;&quot; AS t1,Steuerung AS t2 SET t1.Materialaufschlagsatz=t2.Materialaufschlagsatz WHERE t1.ProjektID=t2.ProjektID AND t2.ClientID=&quot;&amp; iClientID
+			SQL_execute(sSQL2)
+		End if
+	End if
+End Sub
+
+Sub CheckBox_LeistungsID_commit()
+	oForm_Steuerung_1.updateRow()
+	wait 10
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub CheckBox_Bezeichnung_commit()
+	oForm_Steuerung_1.updateRow()
+	wait 10
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub CheckBox_Beschreibung_commit()
+	oForm_Steuerung_1.updateRow()
+	wait 10
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub List_Leistungen_commit()
+	oList_Leistungsauswahl.commit()
+	oForm_Steuerung_1.updateRow()
+	wait 10
+End Sub
+
+Sub List_Leistungen_Auftrag_commit()
+	oList_Leistungsauswahl_Auftrag.commit()
+	oForm_Steuerung_1.updateRow()
+End Sub
+
+Sub List_Leistungen_Projekt_commit()
+	oList_Leistungsauswahl_Projekt.commit()
+	oForm_Steuerung_1.updateRow()
+End Sub
+
+Sub Tabellendaten_commit()
+	oForm_Tabellendaten.updateRow()
+End Sub
+
+</script:module>

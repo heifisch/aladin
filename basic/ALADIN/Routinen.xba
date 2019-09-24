@@ -1,0 +1,431 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option explicit
+Global oDialogLeistung AS Object
+Global oDialogText AS Object
+
+Sub SendMail(sEmpfaenger AS String,sAbsender As String,sSubject As String,sBody as String,sAttachementUrl As String)
+Dim objShell AS Object
+
+	Shell &quot;thunderbird -compose &quot;&amp; Chr(34) &amp;&quot;to=&quot;&amp; sEmpfaenger &amp;_
+		&quot;,from=&quot;&amp; sAbsender &amp;_
+		&quot;,subject=&quot;&amp; Chr(39) &amp; sSubject &amp; Chr(39) &amp;_
+		&quot;,body=&quot;&amp; Chr(39) &amp; sBody &amp; Chr(39) &amp;_
+		&quot;,attachment=&quot;&amp; sAttachementUrl &amp; Chr(34)
+
+&apos;	Dim oMailer AS Object,oMailClient AS Object,oMessage AS Object
+&apos;	Dim vAttachement(0)
+	
+&apos;	vAttachement(0) = sAttachementUrl
+
+&apos;	oMailer = createUnoService(&quot;com.sun.star.system.SystemMailProvider&quot;)
+&apos;	oMailer = createUnoService(&quot;com.sun.star.system.SimpleCommandMail&quot;)
+
+&apos;	oMailClient = oMailer.queryMailClient()
+&apos;	oMailClient = oMailer.querySimpleMailClient()
+
+&apos;	oMessage = oMailClient.createMailMessage()
+&apos;	oMessage = oMailClient.createSimpleMailMessage()
+	
+&apos;	oMessage.Recipient=sEmpfaenger
+&apos;	oMessage.setRecipient(sEmpfaenger)
+
+&apos;	oMessage.Originator=sAbsender
+	
+&apos;	oMessage.Subject=sSubject
+
+&apos;	oMessage.Body=sBody
+
+&apos;	oMessage.Attachement=vAttachement()
+&apos;	oMessage.setAttachement(vAttachement())
+	
+&apos;	oMailClient.sendMailMessage(oMessage,0)
+&apos;	oMailClient.sendSimpleMailMessage(oMessage,0)
+
+&apos;	kill(sAttachementUrl)
+
+End Sub
+
+Sub SetDocUserProperty(sPropertyName as String, sPropertyValue as String, Optional oDoc As Object)
+	Dim oUserProps As Object
+
+	If Not IsMissing(oDoc) Then
+		oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	else
+		oUserProps = ThisComponent.DocumentProperties.getUserDefinedProperties()
+	End If
+	
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = False then
+		oUserProps.addProperty(sPropertyName, ,sPropertyValue)
+	else
+		oUserProps.setPropertyValue(sPropertyName, sPropertyValue)
+	end if
+end Sub
+
+Sub SetUserID(iUserID_lokal as Integer)
+	iSetUserID=iUserID_lokal
+End Sub
+
+Sub StatusBar(bVisible as Boolean, Optional oDoc As Object)
+	Dim oLayoutManager As Object
+	Dim sStatusBar As String
+	
+	sStatusBar = &quot;private:resource/statusbar/statusbar&quot;
+
+	If Not IsMissing(oDoc) Then
+		oLayoutManager = oDoc.CurrentController.Frame.LayoutManager
+	else
+		oLayoutManager = ThisComponent.CurrentController.Frame.LayoutManager
+	End if
+	
+	If bVisible = True then
+		if IsNull(oLayoutManager.getElement(sStatusBar)) Then
+			oLayoutManager.createElement(sStatusBar)
+		End if
+		oLayoutManager.showElement(sStatusBar)
+	else
+		oLayoutManager.hideElement(sStatusBar)
+	End if
+
+End Sub
+
+Sub ToolBar_an
+	ToolBar(true)
+End Sub
+
+Sub ToolBar(bVisible As Boolean, Optional oDoc As Object)
+	Dim sToolBarsRoot As String
+	Dim sToolBarNameHide() As String
+	Dim sToolBarNameShow() As String
+	Dim sResource As String
+	Dim n As Integer
+	Dim oLayoutManager As Object
+	
+	sToolBarsRoot = &quot;private:resource/toolbar/&quot;
+	
+ 	sToolBarNameHide = Array(&quot;textobjectbar&quot;,&quot;viewerbar&quot;,&quot;standardbar&quot;,&quot;formdesign&quot;,&quot;formcontrols&quot;,&quot;moreformcontrols&quot;)
+ 	sToolBarNameShow = Array(&quot;textobjectbar&quot;,&quot;standardbar&quot;)
+
+	If Not IsMissing(oDoc) Then
+		oLayoutManager = oDoc.CurrentController.Frame.LayoutManager
+	else
+		oLayoutManager = ThisComponent.CurrentController.Frame.LayoutManager
+	End if
+	
+	If bVisible = True then
+		For n=1 To Ubound(sToolBarNameShow())
+			sResource = sToolBarsRoot &amp; sToolBarNameShow(n)
+			If IsNull(oLayoutManager.getElement(sResource)) Then
+				oLayoutManager.createElement(sResource)
+			End if
+			oLayoutManager.showElement(sResource)
+		Next n
+	else
+		For n=1 To Ubound(sToolBarNameHide())
+			sResource = sToolBarsRoot &amp; sToolBarNameHide(n)
+			oLayoutManager.hideElement(sResource)
+		Next n
+	End If
+End Sub
+
+Sub FormSize()
+	Dim oFrame as Object
+	Dim oWin as Object
+
+	Dim oStyle as Object
+	Dim lHeight As Long
+	Dim lWidth  As Long
+	Dim iViewFaktorWidth as Integer
+	Dim iViewFaktorlHeight as Integer
+	Dim iLoopCount as Integer
+ 		 	
+    ThisComponent.CurrentController.ViewSettings.ZoomValue = 100
+	ThisComponent.CurrentController.Sidebar.Visible = False
+
+	iViewFaktorWidth=1440/TwipsPerPixelX()/2540*10000
+	iViewFaktorlHeight=1440/TwipsPerPixelY()/2540*10000
+
+	oFrame = StarDesktop.getCurrentFrame()
+	oWin = oFrame.getContainerWindow()
+
+	if lHeightMax=0 OR lWidthMax=0 then
+		iLoopCount=0
+		Do Until oWin.IsMaximized = True OR iLoopCount&gt;500
+			oWin.IsMaximized = True
+			Wait 10
+			iLoopCount=iLoopCount+1
+		Loop
+		lHeightMax=oWin.getSize.Height()
+		lWidthMax=oWin.getSize.Width()
+	End if
+
+	iLoopCount=0
+	Do Until oWin.IsMaximized = False OR iLoopCount&gt;500
+		oWin.IsMaximized = False
+		Wait 10
+		iLoopCount=iLoopCount+1
+	Loop
+
+ 	oStyle = ThisComponent.StyleFamilies.getByName(&quot;PageStyles&quot;).getByName(&quot;Standard&quot;)
+	
+	lWidth  = (oStyle.Width/10000*iViewFaktorWidth)+20
+	lHeight = (oStyle.Height/10000*iViewFaktorlHeight)+80
+
+	if lWidth &gt; lWidthMax then lWidth = lWidthMax
+	if lHeight &gt; lHeightMax then lHeight = lHeightMax
+
+	oWin.setPosSize(oWin.getPosSize.X,0,lWidth,lHeight,15)
+&apos;	oWin.setPosSize(lWidthMax-lWidth,0,lWidth,lHeight,15)
+	
+&apos;	fixBaseForms()
+
+End Sub
+
+Sub FormSizePrint()
+	Dim oFrame as Object
+	Dim oWin as Object
+
+	Dim oStyle as Object
+	Dim lHeight As Long
+	Dim lWidth  As Long
+	Dim iViewFaktorWidth as Integer
+	Dim iViewFaktorlHeight as Integer
+	Dim iLoopCount as Integer
+
+    ThisComponent.CurrentController.ViewSettings.ZoomValue = 100
+	ThisComponent.CurrentController.Sidebar.Visible = False
+
+	iViewFaktorWidth=1440/TwipsPerPixelX()/2540*10000
+	iViewFaktorlHeight=1440/TwipsPerPixelY()/2540*10000
+
+	oFrame = StarDesktop.getCurrentFrame()
+	oWin = oFrame.getContainerWindow()
+
+	If lHeightMax=0 OR lWidthMax=0 then
+		iLoopCount=0
+		Do Until oWin.IsMaximized = True OR iLoopCount&gt;500
+			oWin.IsMaximized = True
+			Wait 10
+			iLoopCount=iLoopCount+1
+		Loop
+		lHeightMax=oWin.getSize.Height()
+		lWidthMax=oWin.getSize.Width()
+	End if
+
+	iLoopCount=0
+	Do Until oWin.IsMaximized = False OR iLoopCount&gt;500
+		oWin.IsMaximized = False
+		Wait 10
+		iLoopCount=iLoopCount+1
+	Loop
+	
+	oStyle = ThisComponent.StyleFamilies.getByName(&quot;PageStyles&quot;).getByName(&quot;Standard&quot;)
+	
+	lWidth  = (oStyle.Width/10000*iViewFaktorWidth)+140
+	lHeight = (oStyle.Height/10000*iViewFaktorlHeight)+100
+
+	if lWidth &gt; lWidthMax then lWidth = lWidthMax
+	if lHeight &gt; lHeightMax then lHeight = lHeightMax
+	
+	oWin.setPosSize(oWin.getPosSize.X,0,lWidth,lHeight,15)
+End Sub
+
+Sub GetViewData()
+	Dim vViewData &apos;Das Objekt View Data
+	Dim i%	 &apos;Indexvariable
+	Dim j%	 &apos;Indexvariable
+	Dim s$	 &apos;Ausgabestring
+	Dim vTemp &apos;Ein bestimmter Ansichtsaspekt als Objekt
+	vViewData = ThisComponent.getViewData()
+	REM Für jeden Ansichtsaspekt der Ansicht
+	For i = 0 To vViewData.getCount() - 1
+		vTemp = vViewData.getByIndex(i)
+		For j = 0 To UBound(vTemp)
+			s = s &amp; vTemp(j).Name &amp; &quot; = &quot; &amp; CStr(vTemp(j).Value) &amp; Chr$(10)
+		Next
+		MsgBox s, 0, &quot;Ansichtsdaten&quot;
+	Next
+End Sub
+
+Sub fixBaseForms()
+	Dim oDoc as Object
+	oDoc = ThisComponent
+    oDoc.CurrentController.ViewSettings.setPropertyValue( &quot;ShowOnlineLayout&quot;, True )
+&apos;    oDoc.CurrentController.ViewSettings.setPropertyValue( &quot;ShowSidebar&quot;, True )
+end Sub
+
+Sub SpellCheckLeistungstext()
+	Dim oDialogLeistungModel as Object
+	Dim oFieldLeistungsbezeichnung as Object
+	Dim oFieldLeistungsbeschreibung as Object
+	
+	oDialogLeistungModel = oDialogLeistung.Model
+	oFieldLeistungsbezeichnung = oDialogLeistungModel.getByName(&quot;Field_Leistungsbezeichnung&quot;)
+	oFieldLeistungsbeschreibung = oDialogLeistungModel.getByName(&quot;Field_Leistungsbeschreibung&quot;)
+	
+	if fbSpellCheck(oFieldLeistungsbezeichnung.Text,&quot;Leistungsbezeichnung&quot;) = False then exit sub
+	if fbSpellCheck(oFieldLeistungsbeschreibung.Text,&quot;Leistungsbeschreibung&quot;) = False then exit sub
+end Sub
+
+Sub SpellCheckText()
+	Dim oDialogTextModel as Object
+	Dim oFieldText as Object
+	
+	oDialogTextModel = oDialogText.Model
+	oFieldText = oDialogTextModel.getByName(&quot;Field_Text&quot;)
+	
+	if fbSpellCheck(oFieldText.Text,&quot;Text&quot;) = False then exit sub
+end Sub
+
+Sub StandardFax()
+	if LCase(sFaxTyp) &lt;&gt; &quot;yajhfc&quot; then
+		Dim oDoc as Object
+		Dim Dummy()
+		Dim printprops(3) as New com.sun.star.beans.PropertyValue
+		oDoc = thisComponent
+		printprops(0).Name = &quot;Name&quot;
+		printprops(0).Value=sFaxPrinter
+		printprops(1).Name = &quot;PaperFormat&quot;
+		printprops(1).Value = com.sun.star.view.PaperFormat.A4
+		printprops(2).Name = &quot;PaperOrientation&quot;
+		printprops(2).Value = com.sun.star.view.PaperOrientation.PORTRAIT
+		oDoc.setPrinter(printprops())
+		oDoc.print(Dummy())
+	else
+		SendFaxYajHFC()
+	end if
+end Sub
+
+Sub ResetAutoincrement()
+	Dim sTableName as String, vStatus as Variant
+nochmal:
+    sTableName=InputBox(&quot;Geben Sie bitte den Tabellennamen&quot;&amp;_
+        &quot; für den der autoincrement-Wert zurück gesetzt werden soll, ein!&quot;,sTitle)
+    if sTableName = &quot;&quot; then
+        vStatus=MsgBox(&quot;Sie haben noch keinen Tabellennamen eingegeben!&quot;,37,sTitle)
+        if vStatus=4 then
+                goto nochmal
+        elseif vStatus=2 then
+                exit sub
+        end if
+    end if
+    SQL_Reset_AutoIncrement(sTableName)
+end Sub
+
+Sub Drucktabelle_leeren(iUserID_lokal as Integer)
+	Dim sSQL1 as String,sSQL2 as String
+	sSQL1=&quot;delete from &quot;&amp; sDrucker_TEMP(iUserID_lokal)
+	SQL_execute(sSQL1)
+	SQL_Reset_AutoIncrement(sDrucker_TEMP(iUserID_lokal))
+end Sub
+
+Sub Drucktabellen_leeren(iUserID_lokal as Integer)
+	Dim sSQL1 as String,sSQL2 as String
+	sSQL1=&quot;delete from &quot;&amp; sDrucker1_TEMP(iUserID_lokal)
+	SQL_execute(sSQL1)
+	sSQL2=&quot;delete from &quot;&amp; sDrucker2_TEMP(iUserID_lokal)
+	SQL_execute(sSQL2)
+	SQL_Reset_AutoIncrement(sDrucker1_TEMP(iUserID_lokal))
+	SQL_Reset_AutoIncrement(sDrucker2_TEMP(iUserID_lokal))
+end Sub
+
+Sub Steuerung_zuruecksetzen(iUserID_lokal as Integer)
+	Dim sSQL1 as String
+&apos;	if iUserID_lokal = 0 then
+&apos;		iUserID_lokal = iUserID
+&apos;	end if
+	if isResetSteuerung = 0 then
+		sSQL1=&quot;UPDATE Steuerung SET Gesperrt=0&quot;&amp;_
+			&quot; WHERE ClientID &lt;= &quot;&amp; (iUserID_lokal*40) &amp;_
+			&quot; AND ClientID &gt; &quot;&amp; (iUserID_lokal*40)-40
+		SQL_execute(sSQL1)
+		Dokumente_zuruecksetzen(iUserID_lokal)
+		isResetSteuerung = 1
+	end if
+end Sub
+
+Sub Dokumente_zuruecksetzen(iUserID_lokal as Integer)
+	Dim sSQL1 as String
+	Dim sTabelle1 as String
+	Dim iCountTable as Integer
+	Dim iEinstellungsID_lokal as Integer
+&apos;	if iUserID_lokal = 0 then
+&apos;		iUserID_lokal = iUserID
+&apos;	end if
+	iEinstellungsID_lokal=iEinstellungsID(iUserID_lokal)
+	For iCountTable = 1 to 10
+		select case iCountTable
+			case 1
+				if iEinstellungsID_lokal=1 OR InStr(fsTableList,&quot;Angebote1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+					sTabelle1=&quot;Angebote1&quot;
+				else
+					sTabelle1=&quot;Angebote1_&quot; &amp; iEinstellungsID_lokal
+				end if
+			case 2
+				if iEinstellungsID_lokal=1 OR InStr(fsTableList,&quot;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+					sTabelle1=&quot;Auftragsbestaetigungen1&quot;
+				else
+					sTabelle1=&quot;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal
+				end if
+			case 3
+				if iEinstellungsID_lokal=1 OR InStr(fsTableList,&quot;Lieferscheine1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+					sTabelle1=&quot;Lieferscheine1&quot;
+				else
+					sTabelle1=&quot;Lieferscheine1_&quot; &amp; iEinstellungsID_lokal
+				end if
+			case 4
+				if iEinstellungsID_lokal=1 OR InStr(fsTableList,&quot;Aufmasze1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+					sTabelle1=&quot;Aufmasze1&quot;
+				else
+					sTabelle1=&quot;Aufmasze1_&quot; &amp; iEinstellungsID_lokal
+				end if
+			case 5
+				if iEinstellungsID_lokal=1 OR InStr(fsTableList,&quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+					sTabelle1=&quot;Rechnungen1&quot;
+				else
+					sTabelle1=&quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal
+				end if
+			case 6
+				if iEinstellungsID_lokal=1 OR InStr(fsTableList,&quot;Gutschriften1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+					sTabelle1=&quot;Gutschriften1&quot;
+				else
+					sTabelle1=&quot;Gutschriften1_&quot; &amp; iEinstellungsID_lokal
+				end if
+			case 7
+				if iEinstellungsID_lokal=1 OR InStr(fsTableList,&quot;Preisanfragen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+					sTabelle1=&quot;Preisanfragen1&quot;
+				else
+					sTabelle1=&quot;Preisanfragen1_&quot; &amp; iEinstellungsID_lokal
+				end if
+			case 8
+				if iEinstellungsID_lokal=1 OR InStr(fsTableList,&quot;Bestellungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+					sTabelle1=&quot;Bestellungen1&quot;
+				else
+					sTabelle1=&quot;Bestellungen1_&quot; &amp; iEinstellungsID_lokal
+				end if
+			case 9
+				if iEinstellungsID_lokal=1 OR InStr(fsTableList,&quot;Korrespondenz_Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+					sTabelle1=&quot;Korrespondenz_Kunden&quot;
+				else
+					sTabelle1=&quot;Korrespondenz_Kunden_&quot; &amp; iEinstellungsID_lokal
+				end if
+			case 10
+				if iEinstellungsID_lokal=1 OR InStr(fsTableList,&quot;Korrespondenz_Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+					sTabelle1=&quot;Korrespondenz_Lieferanten&quot;
+				else
+					sTabelle1=&quot;Korrespondenz_Lieferanten_&quot; &amp; iEinstellungsID_lokal
+				end if
+		end select
+		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Gesperrt=0&quot;&amp;_
+			&quot; WHERE Gesperrt &lt;= &quot;&amp; (iUserID_lokal*40) &amp;_
+			&quot; AND Gesperrt &gt; &quot;&amp; (iUserID_lokal*40)-40
+		SQL_execute(sSQL1)
+	Next iCountTable
+end Sub
+
+</script:module>

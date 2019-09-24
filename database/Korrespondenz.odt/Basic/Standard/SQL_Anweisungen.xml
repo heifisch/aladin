@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="SQL_Anweisungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sTabelle as String
+Dim sDocument_Name as String
+Dim sBezeichnung as String,sBemerkung as String
+Dim oRecord1 as Object
+Dim sSQL1 as String,sSQL2 as String
+
+Sub SQL_delete_Serienbrief_Kontakte()
+	sSQL1=&quot;delete from Serienbrief_Kontakte where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_insert_Serienbrief_Kontakte()
+	sSQL1=&quot;insert into Serienbrief_Kontakte(ClientID,KontaktTyp,KontaktID,Anrede,Name1,Titel,Vorname,Name2,Name3,Name4,&quot;&amp;_
+		&quot;Land,PLZ,Ort,Strasse,Hausnummer,Mindestangaben,Telefon,Funktelefon,Fax,EMail,Url,ReferenzID,Bemerkungen) &quot;&amp;_
+		&quot;select &apos;&quot;&amp; iClientID &amp;&quot;&apos;,&apos;&quot;&amp; sKontakte &amp;&quot;&apos;,KontaktID,Anrede,Name1,Titel,Vorname,Name2,Name3,Name4,&quot;&amp;_
+		&quot;Land,PLZ,Ort,Strasse,Hausnummer,Mindestangaben,Telefon,Funktelefon,Fax,EMail,Url,ReferenzID,Bemerkungen &quot;&amp;_
+		&quot;from &quot;&amp; sKontakte
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Serienbrief_Kontakte_keine()
+	sSQL1=&quot;update Serienbrief_Kontakte set Serienbrief=0&quot;&amp;_
+		&quot; where ClientID=&quot; &amp; iClientID 
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Serienbrief_Kontakte(sTabelle as String,lDocID as long)
+	Dim sSerBrieKontaktIDs as String
+	sSQL1=&quot;select replace(SerBrieKontakte,&apos;,&apos;,&apos; OR KontaktID=&apos;)&quot;&amp;_
+		&quot; from &quot;&amp; sTabelle &amp;&quot; where Option_Serienbrief=1 and DocumentID=&quot;&amp; lDocID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSerBrieKontaktIDs=oRecord1.getString(1)
+	Wend
+	if Len(TRIM(sSerBrieKontaktIDs)) &gt; 0 then
+		SQL_update_Serienbrief_Kontakte_keine() 
+		sSQL2=&quot;update Serienbrief_Kontakte set Serienbrief=1&quot;&amp;_
+			&quot; where ClientID=&quot; &amp; iClientID &amp;_
+			&quot; and (KontaktID=&quot;&amp; sSerBrieKontaktIDs &amp;&quot;)&quot; 
+		SQL_execute(sSQL2)
+	End if
+End Sub
+
+Sub SQL_cp_Bemerkung()
+	sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;_
+		&quot; set Bemerkung=&apos;&quot;&amp; fBemerkung &amp;&quot;&apos; where DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Steuerung_DocumentID(iOption as integer)
+	sSQL1=&quot;update Steuerung set DocumentID=&quot;&amp; lDocumentID_import(iOption) &amp;_
+		&quot; where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Steuerung_export_DocumentID(iOption as integer)
+	sSQL1=&quot;update Steuerung set DocumentID=&quot;&amp; lDocumentID_export(iOption) &amp;_
+		&quot; where ClientID=&quot;&amp; iClientID_export
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_neues_Document(sDocument_Name as String,sSignum_URL as String,sSignumHeight as String,sSignumWidth as String,sGruszformel as String,sAbsender as String)
+	sSQL1=&quot;insert into &quot;&amp; sKorrespondenz &amp;_
+		&quot; (Document_Name,ProjektID,KontaktID,Signum_URL,SignumHeight,SignumWidth,Gruszformel,Absender,Leerzeilen) values(&apos;&quot;&amp;_
+		sDocument_Name &amp;&quot;&apos;,0,0,&apos;&quot;&amp;_
+		fsConvertBackSlash(sSignum_URL) &amp;&quot;&apos;,&apos;&quot;&amp;_
+		sSignumHeight &amp;&quot;&apos;,&apos;&quot;&amp;_
+		sSignumWidth &amp;&quot;&apos;,&apos;&quot;&amp;_
+		sGruszformel &amp;&quot;&apos;,&apos;&quot;&amp;_
+		sAbsender &amp;&quot;&apos;,&apos;\n\n\n\n\n&apos;)&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Standard_setzen(sSignum_URL as String,sSignumHeight as String,sSignumWidth as String,sGruszformel as String,sAbsender as String)
+	sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;_
+		&quot; set Signum_URL=&apos;&quot;&amp; fsConvertBackSlash(sSignum_URL) &amp;_
+		&quot;&apos;,SignumHeight=&apos;&quot;&amp; sSignumHeight &amp;_
+		&quot;&apos;,SignumWidth=&apos;&quot;&amp; sSignumWidth &amp;_
+		&quot;&apos;,Gruszformel=&apos;&quot;&amp; sGruszformel &amp;_
+		&quot;&apos;,Absender=&apos;&quot;&amp; sAbsender &amp;_
+		&quot;&apos; where DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Document_Name_aendern(sDocument_Name)
+	sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;_
+		&quot; set Document_Name=&apos;&quot;&amp; sDocument_Name &amp;&quot;&apos; where DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Tabelle1_DocumentID(iOption as integer)
+	sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;&quot; set DocumentID=&quot;&amp; lDocumentID_import(iOption) &amp;_
+		&quot; where DocumentID=&quot;&amp; iMax_Datensatz(sKorrespondenz,&quot;DocumentID&quot;)
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Tabelle1_export_DocumentID(iOption as integer)
+	sSQL1=&quot;update &quot;&amp; sKorrespondenz_export &amp;&quot; set DocumentID=&quot;&amp; lDocumentID_export(iOption) &amp;_
+		&quot; where DocumentID=&quot;&amp; iMax_Datensatz(sKorrespondenz_export,&quot;DocumentID&quot;)
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Document1_Schreibschutz_1(sTabelle as String,lDocID as long)
+	sSQL1=&quot;update &quot;&amp; sTabelle &amp;_
+		&quot; set Schreibschutz=1 where DocumentID=&quot;&amp; lDocID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Document1_Gesperrt_1(sTabelle as String,lDocID as long)
+	sSQL1=&quot;update &quot;&amp; sTabelle &amp;_
+	&quot; set Gesperrt=&quot;&amp; iClientID &amp;&quot; where DocumentID=&quot;&amp; lDocID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Document1_SerBrieKontakte(sTabelle as String,lDocID as long)
+	sSQL1=&quot;update &quot;&amp; sTabelle &amp;&quot; set SerBrieKontakte=&apos;&quot;&amp; fstoreSerienbriefKontaktID &amp;&quot;&apos; where Option_Serienbrief=1 and DocumentID=&quot;&amp; lDocID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Document1_Gesperrt_0(sTabelle as String,lDocID as long)
+	sSQL1=&quot;update &quot;&amp; sTabelle &amp;&quot; set Gesperrt=0 where DocumentID=&quot;&amp; lDocID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_DocumentID_entfernen()
+	sSQL2=&quot;update Steuerung set DocumentID=null,DocumentID2=null where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL2)
+End Sub
+
+Sub SQL_update_DocumentID()
+	sSQL2=&quot;update Steuerung set DocumentID=DocumentID2 where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL2)
+End Sub
+
+Sub SQL_Document_loeschen_Tabelle3()
+	sSQL1=&quot;delete from &quot;&amp; sKorrespondenz &amp;&quot; where DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Datum_setzen()
+	sSQL2=&quot;update &quot;&amp; sKorrespondenz &amp;_
+		&quot; set Erstellungsdatum=(date_add(now(),interval 0 month)) where DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL2)
+	oForm_Document.reload
+End Sub
+</script:module>

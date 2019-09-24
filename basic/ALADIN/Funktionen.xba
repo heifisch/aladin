@@ -1,0 +1,740 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+
+Sub TestMandant
+print sTitle(3)
+End Sub
+
+Function sTitle(Optional iUserID_lokal as Integer) as String
+	Dim iEinstellungsID_lokal
+	if iAnzahlMandanten &gt; 1 AND not IsMissing(iUserID_lokal) then
+		iEinstellungsID_lokal=iEinstellungsID(iUserID_lokal)
+		if iEinstellungsID_lokal=1 then
+			sTitle=sMandant1
+		elseif iEinstellungsID_lokal=2 then
+			sTitle=sMandant2
+		elseif iEinstellungsID_lokal=3 then
+			sTitle=sMandant3
+		End if
+	else
+		sTitle=&quot;ALADIN&quot;
+	end if
+End Function
+
+Function iUserID(Optional sModul as String) as Integer
+	Dim iMandant as Integer
+	if iAnzahlMandanten &gt; 1 then
+		if sModul=&quot;Start&quot; then
+			if iSetUserID=0 then
+				iMandant=fMandant_waehlen()
+				if iMandant=1 then
+					iSetUserID=iUserID1
+					iUserID=iUserID1
+				elseif iMandant=2 then
+					iSetUserID=iUserID2
+					iUserID=iUserID2
+				elseif iMandant=3 then
+					iSetUserID=iUserID3
+					iUserID=iUserID3
+				end if
+			else
+				iUserID=iSetUserID
+			end if
+		else
+			if iSetUserID=0 then
+				iMandant=fMandant_waehlen()
+				if iMandant=1 then
+					iUserID=iUserID1
+				elseif iMandant=2 then
+					iUserID=iUserID2
+				elseif iMandant=3 then
+					iUserID=iUserID3
+				end if
+			else
+				iUserID=iSetUserID
+				iSetUserID=0
+			end if
+		end if
+	else
+		iUserID=iUserID1
+	end if
+End Function
+
+Function fsTableList as String
+	if sTableList=&quot;&quot; then
+		Dim sSQL as String
+		Dim oRecord1 as Object
+		sSQL=&quot;show tables&quot;
+		oRecord1=oResult(sSQL)
+		While oRecord1.next()
+			sTableList=sTableList &amp; &quot;;&quot; &amp; oRecord1.getString(1)
+		Wend
+		fsTableList=sTableList &amp; &quot;;&quot;
+	else
+		fsTableList=sTableList
+	end if
+End Function
+
+Function iEinstellungsID(iUserID_lokal as Integer) as Integer
+	Dim sSQL1 as String,oRecord1 as Object
+	if iUserID_lokal = 0 then
+		iEinstellungsID=1
+	else
+		sSQL1=&quot;select EinstellungsID from Users WHERE UserID=&quot;&amp; iUserID_lokal
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iEinstellungsID=oRecord1.getInt(1)
+		Wend
+	end if	
+End Function
+
+Function iClientIDOffset(iUserID_lokal as Integer) as Integer
+	iClientIDOffset=(iUserID_lokal*40)-40
+End Function
+
+Function fbSpellCheck(sString as String,sFeld as String) as boolean
+	Dim vStatus As Variant, iCount As Integer,sText() as String
+	Dim aLocale As New com.sun.star.lang.Locale
+	Dim vSpellChecker As Variant, vSpeller as Variant
+	Dim oWoerterBuchListe as Object,oWoerterBuch as Object
+	Dim aProps(0) As New com.sun.star.beans.PropertyValue
+	aLocale.Language = &quot;de&quot;
+	aLocale.Country = &quot;DE&quot;
+ 
+ 	oWoerterBuchListe = createUnoService(&quot;com.sun.star.linguistic2.DictionaryList&quot;)
+	oWoerterBuch = oWoerterBuchListe.getDictionaryByName(&quot;standard.dic&quot;)
+
+	if IsNull(oWoerterBuch) then
+		MsgBox(&quot;Das Wörterbuch &quot;&amp; Chr(34) &amp;&quot;standard.dic&quot;&amp; Chr(34) &amp;&quot; wurde nicht gefunden.&quot; &amp; Chr(13) &amp;_
+			&quot;Das Makro wird jetzt beendet.&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+			&quot;Bitte legen Sie das Benutzerwörterbuch unter Extras - Optionen an!!&quot;,16,sTitle)
+		fbSpellCheck=False
+		Exit Function
+	end if
+
+	sText = Split(fsInTrimSemikolon(fsReplaceToSemikolon(sString)),&quot;;&quot;)
+
+	vSpellChecker = createUnoService(&quot;com.sun.star.linguistic2.SpellChecker&quot;)
+
+	For iCount = LBound(sText()) To UBound(sText())
+		if Len(Trim(sText(iCount))) &gt; 1 then
+			if IsNull(oWoerterBuch.getEntry(Trim(sText(iCount)))) then
+				vStatus = vSpellChecker.isValid(Trim(sText(iCount)), aLocale, aProps())
+				vSpeller = vSpellChecker.Spell(Trim(sText(iCount)), aLocale, aProps())
+				if vStatus=False then
+					vStatus=MsgBox(&quot;Wort &quot;&amp; iCount+1 &amp;&quot; von &quot;&amp; UBound(sText())+1 &amp;&quot; im Feld: &quot;&amp; Chr(34)&amp; sFeld &amp; Chr(34) &amp;_
+						Chr(13) &amp; Chr(13) &amp; Chr(9) &amp; Chr(9) &amp;&quot;&gt; &quot;&amp; sText(iCount) &amp;&quot; &lt;&quot;&amp; Chr(13) &amp;_
+						Chr(13) &amp; Chr(13) &amp;&quot;steht nicht im Wörterbuch!!&quot; &amp;_
+						Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+						&quot;Alternativen wären:&quot;&amp;_
+						Chr(13) &amp; Chr(13) &amp;_
+						Join(vSpeller.getAlternatives) &amp;_
+						Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+						&quot;Soll das Wort dem Wörterbuch hinzugefügt werden?&quot; &amp; Chr(13)&amp; &quot; &quot;,35,sTitle &amp; &quot; - Rechtschreibtest&quot;)
+					if vStatus = 2 then
+						fbSpellCheck=False
+						Exit Function
+					elseif vStatus = 6 then
+						oWoerterBuch.add(Trim(sText(iCount)), FALSE, &quot;&quot; )
+					end if
+				end if
+			end if
+		end if
+	Next
+	fbSpellCheck=True
+End Function
+
+
+Function fsReplaceToSemikolon(sString as String) as String
+	Dim sString_neu as String
+	sString_neu=fsReplace(sString,&quot; &quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;&apos;&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;-&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;_&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;+&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;.&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;:&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;,&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;!&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;?&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;(&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;)&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;[&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;]&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;/&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,&quot;\&quot;,&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,chr(8),&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,chr(9),&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,chr(10),&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,chr(11),&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,chr(12),&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,chr(13),&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,chr(23),&quot;;&quot;)
+	sString_neu=fsReplace(sString_neu,chr(34),&quot;;&quot;)
+	fsReplaceToSemikolon=sString_neu
+End Function
+
+Function fsInTrimSemikolon(sString as String) as String
+	Dim sString_neu as String,iPosition as Integer
+	sString_neu=sString
+	iPosition=InStr(sString_neu,&quot;;;&quot;)
+	Do While iPosition &gt; 0
+		sString_neu=Left(sString_neu,iPosition-1) &amp; &quot;;&quot; &amp; Right(sString_neu,Len(sString_neu)-iPosition-1)
+		iPosition = InStr(sString_neu,&quot;;;&quot;)
+	Loop
+	fsInTrimSemikolon=sString_neu
+End Function
+
+Function ifPrintLeistungsbezeichnungDefault(iUserID_lokal as Integer) as Integer
+	Dim sSQL as String,oRecord1 as Object
+	sSQL=&quot;select PrintLeistungsbezeichnung from Users WHERE UserID=&quot;&amp; iUserID_lokal
+	oRecord1=oResult(sSQL)
+	While oRecord1.next()
+		ifPrintLeistungsbezeichnungDefault=oRecord1.getInt(1)
+	Wend	
+End Function
+
+Function ifPrintLeistungsbeschreibungDefault(iUserID_lokal as Integer) as Integer
+	Dim sSQL as String,oRecord1 as Object
+	sSQL=&quot;select PrintLeistungsbeschreibung from Users WHERE UserID=&quot;&amp; iUserID_lokal
+	oRecord1=oResult(sSQL)
+	While oRecord1.next()
+		ifPrintLeistungsbeschreibungDefault=oRecord1.getInt(1)
+	Wend	
+End Function
+
+Function ifPrintLogoDefault(iUserID_lokal as Integer) as Integer
+	Dim sSQL as String,oRecord1 as Object
+	sSQL=&quot;select PrintLogo from Users WHERE UserID=&quot;&amp; iUserID_lokal
+	oRecord1=oResult(sSQL)
+	While oRecord1.next()
+		ifPrintLogoDefault=oRecord1.getInt(1)
+	Wend	
+End Function
+
+Function ifPrintBestellnummerDefault(iUserID_lokal as Integer) as Integer
+	Dim sSQL as String,oRecord1 as Object
+	sSQL=&quot;select PrintBestellnummer from Users WHERE UserID=&quot;&amp; iUserID_lokal
+	oRecord1=oResult(sSQL)
+	While oRecord1.next()
+		ifPrintBestellnummerDefault=oRecord1.getInt(1)
+	Wend	
+End Function
+
+Function fsReplace(sString as String,sAusdruck as String,sErsetzung as String) as String
+	Dim iOffset as Integer,sString_neu as String,iPosition as Integer
+	iOffset=1
+	sString_neu=sString
+	iPosition=InStr(iOffset,sString_neu,sAusdruck)
+	
+	Do While iPosition &gt; 0
+		sString_neu=Left(sString_neu,iPosition-1) &amp; sErsetzung &amp; Right(sString_neu,Len(sString_neu)-iPosition)
+		iOffset = iPosition + 1
+		iPosition = InStr(iOffset,sString_neu,sAusdruck)
+	Loop
+	fsReplace=sString_neu
+End Function
+
+Function fsLeerzeichenErsetzen(sString as String) as String
+	Dim iOffset as Integer,sString_neu as String,iPosition as Integer
+	iOffset=1
+	sString_neu=sString
+	iPosition=InStr(iOffset,sString_neu,&quot; &quot;)
+	
+	Do While iPosition &gt; 0
+		sString_neu=Trim(Left(sString_neu,iPosition-1)) &amp; &quot;_&quot; &amp; Trim(Right(sString_neu,Len(sString_neu)-iPosition+1))
+		iOffset = iPosition + 2
+		iPosition = InStr(iOffset,sString_neu,&quot; &quot;)
+	Loop
+	fsLeerzeichenErsetzen=sString_neu
+End Function
+
+Function fsLeerzeichenEntfernen(sString as String) as String
+	Dim sString_neu as String,iPosition as Integer
+	sString_neu=sString
+	iPosition=InStr(sString_neu,&quot; &quot;)
+	Do While iPosition &gt; 0
+		sString_neu=Trim(Left(sString_neu,iPosition-1)) &amp; Trim(Right(sString_neu,Len(sString_neu)-iPosition+1))
+		iPosition = InStr(sString_neu,&quot; &quot;)
+	Loop
+	fsLeerzeichenEntfernen=sString_neu
+End Function
+
+Function fsPlusErsetzen(sString as String) as String
+	Dim iOffset as Integer,sString_neu as String,iPosition as Integer
+	iOffset=1
+	sString_neu=fsLeerzeichenEntfernen(sString)
+	iPosition=InStr(iOffset,sString_neu,&quot;+&quot; &amp; sFaxCountryCode)
+	
+	Do While iPosition &gt; 0
+	    sString_neu=Trim(Left(sString_neu,iPosition-1)) &amp; &quot;0&quot; &amp; Trim(Right(sString_neu,Len(sString_neu)-(iPosition+2)))
+	    iOffset = iPosition + 2
+	    iPosition = InStr(iOffset,sString_neu,&quot;+&quot; &amp; sFaxCountryCode)
+	Loop
+	fsPlusErsetzen=sString_neu
+End Function 
+
+Function fsConvertBackSlash(sString as String) as String
+	Dim iOffset as Integer,sString_neu as String,iPosition as Integer
+	iOffset=1
+	sString_neu=sString
+	iPosition=InStr(iOffset,sString_neu,&quot;\&quot;)
+	
+	Do While iPosition &gt; 0
+		sString_neu=Left(sString_neu,iPosition-1) &amp; &quot;\&quot; &amp; Right(sString_neu,Len(sString_neu)-iPosition+1)
+		iOffset = iPosition + 2
+		iPosition = InStr(iOffset,sString_neu,&quot;\&quot;)
+	Loop
+	fsConvertBackSlash=sString_neu
+End Function
+
+Function fsConvertApostroph(sString as String) as String
+	Dim iOffset as Integer,sString_neu as String,iPosition as Integer
+	iOffset=1
+	sString_neu=sString
+	iPosition=InStr(iOffset,sString_neu,&quot;&apos;&quot;)
+	
+	Do While iPosition &gt; 0
+		sString_neu=Left(sString_neu,iPosition-1) &amp; &quot;\&quot; &amp; Right(sString_neu,Len(sString_neu)-iPosition+1)
+		iOffset = iPosition + 2
+		iPosition = InStr(iOffset,sString_neu,&quot;&apos;&quot;)
+	Loop
+	fsConvertApostroph=sString_neu
+End Function
+
+Function fsInTrim(sString as String) as String
+	Dim sString_neu as String,iPosition as Integer
+	sString_neu=sString
+	iPosition=InStr(sString_neu,&quot;  &quot;)
+	Do While iPosition &gt; 0
+		sString_neu=Trim(Left(sString_neu,iPosition-1)) &amp; &quot; &quot; &amp; Trim(Right(sString_neu,Len(sString_neu)-iPosition+1))
+		iPosition = InStr(sString_neu,&quot;  &quot;)
+	Loop
+	fsInTrim=sString_neu
+End Function
+
+Function fsConvertString(sString as String) as String
+	Dim iOffset as Integer,sString_neu as String,iPosition as Integer
+	iOffset=1
+	sString_neu=sString
+	
+	iPosition=InStr(iOffset,sString_neu,&quot;\&quot;)
+	Do While iPosition &gt; 0
+		sString_neu=Left(sString_neu,iPosition-1) &amp; &quot;\&quot; &amp; Right(sString_neu,Len(sString_neu)-iPosition+1)
+		iOffset = iPosition + 2
+		iPosition = InStr(iOffset,sString_neu,&quot;\&quot;)
+	Loop
+	
+	iPosition=InStr(iOffset,sString_neu,&quot;&apos;&quot;)
+	Do While iPosition &gt; 0
+		sString_neu=Left(sString_neu,iPosition-1) &amp; &quot;\&quot; &amp; Right(sString_neu,Len(sString_neu)-iPosition+1)
+		iOffset = iPosition + 2
+		iPosition = InStr(iOffset,sString_neu,&quot;&apos;&quot;)
+	Loop
+	
+	iPosition=InStr(iOffset,sString_neu,&quot;(&quot;)
+	Do While iPosition &gt; 0
+		sString_neu=Left(sString_neu,iPosition-1) &amp; &quot;\&quot; &amp; Right(sString_neu,Len(sString_neu)-iPosition+1)
+		iOffset = iPosition + 2
+		iPosition = InStr(iOffset,sString_neu,&quot;(&quot;)
+	Loop
+	
+	iPosition=InStr(iOffset,sString_neu,&quot;)&quot;)
+	Do While iPosition &gt; 0
+		sString_neu=Left(sString_neu,iPosition-1) &amp; &quot;\&quot; &amp; Right(sString_neu,Len(sString_neu)-iPosition+1)
+		iOffset = iPosition + 2
+		iPosition = InStr(iOffset,sString_neu,&quot;)&quot;)
+	Loop
+	
+	&apos;iPosition=InStr(iOffset,sString_neu,&quot;/&quot;)
+	&apos;Do While iPosition &gt; 0
+	&apos;	sString_neu=Left(sString_neu,iPosition-1) &amp; &quot;\&quot; &amp; Right(sString_neu,Len(sString_neu)-iPosition+1)
+	&apos;	iOffset = iPosition + 2
+	&apos;	iPosition = InStr(iOffset,sString_neu,&quot;/&quot;)
+	&apos;Loop
+	
+	iPosition=InStr(iOffset,sString_neu,Chr(34))
+	Do While iPosition &gt; 0
+		sString_neu=Left(sString_neu,iPosition-1) &amp; &quot;\&quot; &amp; Right(sString_neu,Len(sString_neu)-iPosition+1)
+		iOffset = iPosition + 2
+		iPosition = InStr(iOffset,sString_neu,Chr(34))
+	Loop
+	
+	fsConvertString=sString_neu
+End Function
+
+Sub SQL_execute(sSQL as String) as Object
+&apos;On Error Goto ErrorHandler
+	Dim oStatement as Object
+	oStatement=oConnection.createStatement()
+	oStatement.EscapeProcessing = FALSE
+	oStatement.execute(sSQL)
+Exit Sub
+ErrorHandler:
+	MsgBox &quot;Sie haben möglicherweise nicht das richtige Passwort eingegeben,&quot;&amp;_
+			&quot; oder die notwendigen Rechte in der Datenbank sind nicht gesetzt!&quot;,16,&quot;Fehler&quot;
+	Stop
+	Exit Sub
+end Sub
+
+Function vDesktop as variant
+	vDesktop = createUnoService(&quot;com.sun.star.frame.Desktop&quot;)
+End Function
+
+Function oConnection as Object
+On Error Goto ErrorHandler
+	Dim vDatabaseContext As variant,oAccess as Object
+	Dim vInteractionHandler as variant,vTables as Object
+	vDatabaseContext = createUnoService(&quot;com.sun.star.sdb.DatabaseContext&quot;)
+	if vDatabaseContext.hasByName(sDataSource) = &quot;False&quot; then
+		MsgBox &quot;Sie haben möglicherweise noch nicht die Datenquelle &quot;&amp; Chr$(13) &amp;_
+				&quot;&gt;&gt; ALADIN &lt;&lt; eingerichtet!&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+				&quot;Achtung!! Groß-Kleinschreibung beachten!&quot;,16,sTitle &amp;&quot; - Fehler&quot;
+	Stop
+	Exit Function
+	end if
+	oAccess = vDatabaseContext.getByName(sDataSource)
+nochmal:
+	if Not oAccess.IsPasswordRequired Then
+		oConnection = oAccess.getConnection(&quot;&quot;,&quot;&quot;)
+	else
+		vInteractionHandler = createUnoService(&quot;com.sun.star.sdb.InteractionHandler&quot;)
+		oConnection = oAccess.ConnectWithCompletion(vInteractionHandler)
+	end if
+	Exit Function
+ErrorHandler:
+	Reset
+	MsgBox &quot;Sie haben möglicherweise nicht das richtige Passwort eingegeben,&quot;&amp;_
+			&quot; oder die notwendigen Rechte in der Datenbank sind nicht gesetzt!&quot;,16,sTitle &amp;&quot; - Fehler&quot;
+    goto nochmal
+End Function 
+
+Function oResult_Scroll(sSQL as String)as Object
+	Dim oStatement as Object
+	oStatement=oConnection.createStatement()
+	oStatement.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_INSENSITIVE
+	oStatement.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
+	oStatement.EscapeProcessing = FALSE
+	oResult_Scroll=oStatement.executeQuery(sSQL)
+End Function
+
+Function oResult(sSQL as String)as Object
+	Dim oStatement as Object
+	oStatement=oConnection.createStatement()
+	oStatement.ResultSetType = com.sun.star.sdbc.ResultSetType.FORWARD_ONLY 
+	oStatement.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
+	oStatement.EscapeProcessing = FALSE
+	oResult=oStatement.executeQuery(sSQL)
+End Function
+
+Function oResult_Leistungen(sSQL as String)as Object
+	Dim oStatement_Leistungen as Object
+	oStatement_Leistungen=oConnection.createStatement()
+	oStatement_Leistungen.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_INSENSITIVE
+	oStatement_Leistungen.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
+	oStatement_Leistungen.EscapeProcessing = FALSE
+	oResult_Leistungen=oStatement_Leistungen.executeQuery(sSQL)
+End Function
+
+Function oResult_ZwiSum(sSQL as String)as Object
+	Dim oStatement_ZwiSum as Object
+	oStatement_ZwiSum=oConnection.createStatement()
+	oStatement_ZwiSum.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_INSENSITIVE
+	oStatement_ZwiSum.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
+	oStatement_ZwiSum.EscapeProcessing = FALSE
+	oResult_ZwiSum=oStatement_ZwiSum.executeQuery(sSQL)
+End Function
+
+Function oResult_ZwiBem(sSQL as String)as Object
+	Dim oStatement_ZwiBem as Object
+	oStatement_ZwiBem=oConnection.createStatement()
+	oStatement_ZwiBem.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_INSENSITIVE
+	oStatement_ZwiBem.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
+	oStatement_ZwiBem.EscapeProcessing = FALSE
+	oResult_ZwiBem=oStatement_ZwiBem.executeQuery(sSQL)
+End Function
+
+Function oResult_Serienbrief(sSQL as String)as Object
+	Dim oStatement_Serienbrief as Object
+	oStatement_Serienbrief=oConnection.createStatement()
+	oStatement_Serienbrief.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_INSENSITIVE
+	oStatement_Serienbrief.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
+	oStatement_Serienbrief.EscapeProcessing = FALSE
+	oResult_Serienbrief=oStatement_Serienbrief.executeQuery(sSQL)
+End Function
+
+Function oResultGesperrt(sSQL as String)as Object
+	Dim oStatement as Object
+	oStatement=oConnection.createStatement()
+	oStatement.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_INSENSITIVE
+	oStatement.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
+	oStatement.EscapeProcessing = FALSE
+	oResultGesperrt=oStatement.executeQuery(sSQL)
+End Function
+
+Function iMax_Datensatz(sTabelle as String,sCol as String) as String
+	Dim oRecord1 as Object
+	Dim sSQL1 as String
+	sSQL1=&quot;select Max(&quot;&amp; sCol &amp;&quot;) from &quot;&amp; sTabelle
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iMax_Datensatz=oRecord1.getString(1)
+	Wend	
+End Function
+
+Function fAnzahlDatensaetzeAltPos(iUserID_lokal as Integer) as Long
+	Dim oRecord1 as Object
+	Dim sSQL1 as String
+	sSQL1=&quot;select count(*) from &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; WHERE Pos_TypID != 1&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fAnzahlDatensaetzeAltPos=oRecord1.getLong(1)
+	Wend
+End Function
+
+Function fAnzahlDatensaetze(sTabelle as String,lDocumentID as Long) as long
+	Dim oRecord1 as Object
+	Dim sSQL1 as String
+	sSQL1=&quot;select count(*) from &quot;&amp; sTabelle &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fAnzahlDatensaetze=oRecord1.getLong(1)
+	Wend
+End Function
+
+Function sDocumentID(iUserID_lokal as Integer) as string
+	Dim oRecord1 as Object
+	Dim sSQL1 as String
+	sSQL1=&quot;select distinct DocumentID from &quot;&amp; sDrucker2_TEMP(iUserID_lokal)
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sDocumentID=oRecord1.getString(1)
+	Wend
+End Function
+
+Function fSeitenanzahl as integer
+	fSeitenanzahl=ActiveWindow.NumberOfPages()
+End Function
+
+Function fsGrafik_Url(iUserID_lokal as Integer) as String
+	Dim oRecord1 as Object
+	Dim sSQL1 as String
+	sSQL1=&quot;select Grafik_URL from Users WHERE UserID=&quot;&amp; iUserID_lokal
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fsGrafik_Url=oRecord1.getString(1)
+	Wend
+End Function
+
+Function fsLogo_Url(iUserID_lokal as Integer) as String
+	Dim oRecord1 as Object
+	Dim sSQL1 as String
+	sSQL1=&quot;select Logo_URL from Users WHERE UserID=&quot;&amp; iUserID_lokal
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fsLogo_Url=oRecord1.getString(1)
+	Wend
+End Function
+
+Function fZahlMitKomma(sWert2 as String) as String 
+	Dim iPosKomma as Integer,iAnzahlZeichen as integer,iPosPunkt as integer
+	Dim sTeilString1 as String,sTeilString2 as String
+	Dim iMinus_1 as Integer
+	Dim sWert as String
+	sWert=sWert2
+	if Mid(sWert,1,1) = &quot;-&quot; then
+		sWert = Mid(sWert,2)
+		iMinus_1 = 1
+	else
+		iMinus_1 = 0
+	end if
+	if sWert = &quot;&quot; then
+		fZahlMitKomma =&quot;0&quot;
+	else
+		iPosKomma=Instr(sWert,&quot;,&quot;) 
+		if iPosKomma = 0 Then 
+			fZahlMitKomma = sWert &amp;&quot;.00&quot;
+		else
+			sTeilString1=Mid(sWert,1,iPosKomma-1) 
+			sTeilString2=Mid(sWert,iPosKomma+1)
+			if Len(sTeilString2) = 1 then
+				sTeilString2 = sTeilString2 &amp; &quot;0&quot;
+			elseif Len(sTeilString2) &gt; 1 then
+				sTeilString2=Left(sTeilString2,2)
+			end if
+			if Len(sTeilString1) = 0 then
+				sTeilString1 = &quot;0&quot;
+			end if
+			fZahlMitKomma = sTeilString1 &amp; &quot;.&quot; &amp; sTeilString2 
+		end if
+		if iMinus_1 = 1 then
+			fZahlMitKomma = &quot;-&quot; &amp; fZahlMitKomma 
+		else
+			fZahlMitKomma = fZahlMitKomma 
+		end if
+	end if
+End Function
+
+Function fPunktZuKomma(sWert0 as String) As String 
+	Dim iPosKomma as Integer,iAnzahlZeichen as integer,iPosPunkt as integer
+	Dim sTeilString1 as String,sTeilString2 as String,sErgebnis as string
+	Dim iMinus_1 as Integer
+	Dim sWert as String
+	sWert=sWert0
+	if sWert = &quot;&quot; then
+		fPunktZuKomma =&quot;0&quot;
+	else
+		iPosPunkt=Instr(sWert,&quot;.&quot;) 
+		if iPosPunkt = 0 Then 
+			fPunktZuKomma = sWert &amp;&quot;,00&quot;
+		else
+			sTeilString1=Mid(sWert,1,iPosPunkt-1) 
+			sTeilString2=Mid(sWert,iPosPunkt+1)
+			fPunktZuKomma = sTeilString1 &amp; &quot;,&quot; &amp; sTeilString2 
+		end if
+	end if
+End Function
+
+Function fsZahlMitPunkt(sWert0 as String) As String
+	Dim iPosKomma as Integer,iAnzahlZeichen as integer,iPosPunkt as integer
+	Dim sTeilString1 as String,sTeilString2 as String,sErgebnis as string
+	Dim iMinus_1 as Integer,sWert as String
+	sWert=sWert0
+	if Mid(sWert,1,1) = &quot;-&quot; then
+		sWert = Mid(sWert,2)
+		iMinus_1 = 1
+	else
+		iMinus_1 = 0
+	end if
+	if sWert = &quot;&quot; OR sWert = &quot;0&quot; OR sWert = &quot;0.0&quot; OR sWert = &quot;0.00&quot; OR sWert = &quot;0.000&quot; OR sWert = &quot;0.0000&quot; then
+		fsZahlMitPunkt=&quot;0,00&quot;
+	else
+		iPosPunkt=Instr(sWert,&quot;.&quot;) 
+		if iPosPunkt = 0 Then 
+			fsZahlMitPunkt = sWert &amp;&quot;,00&quot;
+		else
+			sTeilString1=Mid(sWert,1,iPosPunkt-1) 
+			sTeilString2=Mid(sWert,iPosPunkt+1)
+			if Len(sTeilString2) = 1 then
+				sTeilString2 = sTeilString2 &amp; &quot;0&quot;
+			elseif Len(sTeilString2) = 2 then
+				sTeilString2=Left(sTeilString2,2)
+			elseif Len(sTeilString2) &gt; 2 then
+				sTeilString2=Left(sTeilString2,2)
+			end if
+			if Len(sTeilString1) = 0 then
+				sTeilString1 = &quot;0&quot;
+			end if
+			sErgebnis = sTeilString1 &amp; &quot;,&quot; &amp; sTeilString2 
+			if iMinus_1 = 1 then
+				fsZahlMitPunkt = &quot;-&quot; &amp; sErgebnis 
+			else
+				fsZahlMitPunkt = sErgebnis 
+			end if
+		end if
+	end if
+End Function
+
+Function fZahlMitPunkt(sWert0 as String) As String 
+	Dim iPosKomma as Integer,iAnzahlZeichen as integer,iPosPunkt as integer
+	Dim sTeilString1 as String,sTeilString2 as String,sErgebnis as string
+	Dim iMinus_1 as Integer
+	Dim sWert as String
+	sWert=sWert0
+	if Mid(sWert,1,1) = &quot;-&quot; then
+		sWert = Mid(sWert,2)
+		iMinus_1 = 1
+	else
+		iMinus_1 = 0
+	end if
+	if sWert = &quot;&quot; OR sWert = &quot;0&quot; OR sWert = &quot;0.0&quot; OR sWert = &quot;0.00&quot; OR sWert = &quot;0.000&quot; OR sWert = &quot;0.0000&quot; then
+		fZahlMitPunkt=&quot;0,00&quot;
+	else
+		iPosPunkt=Instr(sWert,&quot;.&quot;) 
+		if iPosPunkt = 0 Then 
+			fZahlMitPunkt = sWert &amp;&quot;,00&quot;
+		else
+			sTeilString1=Mid(sWert,1,iPosPunkt-1) 
+			sTeilString2=Mid(sWert,iPosPunkt+1)
+			if Len(sTeilString2) = 1 then
+				sTeilString2 = sTeilString2 &amp; &quot;0&quot;
+			elseif Len(sTeilString2) = 2 then
+				sTeilString2=Left(sTeilString2,2)
+			elseif Len(sTeilString2) &gt; 2 then
+				sTeilString2=Left(sTeilString2,2)
+			end if
+			if Len(sTeilString1) = 0 then
+				sTeilString1 = &quot;0&quot;
+			end if
+			sErgebnis = sTeilString1 &amp; &quot;,&quot; &amp; sTeilString2 
+			if iMinus_1 = 1 then
+				fZahlMitPunkt = &quot;-&quot; &amp; sErgebnis 
+			else
+				fZahlMitPunkt = sErgebnis 
+			end if
+		end if
+	end if
+End Function
+
+Function fTausenderpunkt(sWert1 as String) as String
+	Dim sWertOhneKomma as string,sWertNachKomma as String
+	Dim iPosKomma as Integer,iAnzahlZeichen as integer,iPosPunkt as integer	
+	Dim sTeilString1 as String,sTeilString2 as String,sErgebnis as string
+	Dim iMinus_2 as Integer,sWert as String
+	sWert = sWert1
+	if Mid(sWert,1,1)= &quot;-&quot; then
+		sWert = Mid(sWert,2)
+		iMinus_2 = 1
+	else
+		iMinus_2 = 0
+	end if
+	iPosKomma=Instr(sWert,&quot;,&quot;) 
+	if iPosKomma = 0 Then 
+		sWertOhneKomma = sWert
+	else
+		sWertOhneKomma = Mid(sWert,1,iPosKomma-1) 
+		sWertNachKomma = Mid(sWert,iPosKomma) 
+	end if
+	iPosPunkt = 3
+	iAnzahlZeichen = Len(sWertOhneKomma)
+	if iAnzahlZeichen &gt; 3 then
+		Do While iAnzahlZeichen &gt; iPosPunkt
+			sWertOhneKomma = Mid(sWertOhneKomma,1,iAnzahlZeichen-iPosPunkt) &amp;_
+			&quot;.&quot;&amp; Mid(sWertOhneKomma,iAnzahlZeichen-iPosPunkt+1)
+			iPosPunkt=iPosPunkt+3
+		Loop
+	end if	
+	if iMinus_2 = 1 then
+		fTausenderpunkt = &quot;-&quot; &amp; sWertOhneKomma &amp; sWertNachKomma
+	else
+		fTausenderpunkt=sWertOhneKomma &amp; sWertNachKomma
+	end if
+End Function
+
+Function fConvDatum(sInput as String) as String
+	sInput = Left(sInput,10)
+	if sInput &lt;&gt; &quot;&quot; then
+		fConvDatum = Right(sInput,2) &amp;&quot;.&quot;&amp; Mid(sInput,6,2) &amp;&quot;.&quot;&amp; Left(sInput,4)
+	else
+		fConvDatum=&quot;&quot;
+	end if
+End Function
+
+Function MakePropertyValue(Optional cName As String,Optional uValue ) As com.sun.star.beans.PropertyValue
+	Dim oPropertyValue As New com.sun.star.beans.PropertyValue
+	if Not IsMissing( cName ) Then
+		oPropertyValue.Name = cName
+	end if
+	if Not IsMissing( uValue ) Then
+		oPropertyValue.Value = uValue
+	end If
+	MakePropertyValue() = oPropertyValue
+End Function 
+
+
+</script:module>

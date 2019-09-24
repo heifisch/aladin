@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement as Object
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+Dim oRecord1 as Object,oRecord2 as Object
+Dim vStatus as Variant
+Dim sMwStSatzKundenAlt as String,sMwStSatzKundenNeu as String
+Dim sMwStSatzLieferantenAlt as String,sMwStSatzLieferantenNeu as String
+Dim sStundenSatzKundenAlt as String,sStundenSatzKundenNeu as String
+Dim lCountMwStSatzAlt as Long,lCountStundenSatzAlt as Long
+
+Sub Start_Einstellungen()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+	if oDoc.isReadOnly then
+		Dim oFrame as Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+		
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Einstellungen&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 34)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Einstellungen&quot;)
+
+		sSQL1=&quot;update Steuerung set Gesperrt=1 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		Formular_init()
+		oForm_Steuerung.reload()
+		oForm_Einstellungen.reload()
+		oForm_Users.reload()
+		
+	 	StatusBar(False)
+		ToolBar(False)
+
+	End if
+	FormSize()
+End Sub
+
+Sub Maske_schliessen()
+	if oDoc.isReadOnly then
+		sSQL1=&quot;update Steuerung set Gesperrt=0 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+	End if
+	
+ 	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+Sub update_MwSt_Satz()
+	oField_MwSt_Satz.commit()
+	oForm_Einstellungen.updateRow()
+End Sub
+
+Sub update_Stundenverrechnungssatz()
+	oField_Stundenverrechnungssatz.commit()
+	oForm_Einstellungen.updateRow()
+End Sub
+
+Sub update_Materialaufschlagsatz
+	oField_Materialaufschlagsatz.commit()
+	oForm_Einstellungen.updateRow()
+End Sub
+
+Sub update_Faellig_Tage()
+	oField_Faellig_Tage.commit()
+	oForm_Einstellungen.updateRow()
+End Sub
+
+Sub update_Nummern_Format
+	oList_Nummern_Format.commit()
+	oForm_Einstellungen.updateRow()
+End Sub
+
+Sub Einstellungen_speichern()
+	oForm_Einstellungen.updateRow()
+	oForm_Users.updateRow()
+End Sub
+
+Sub Datei_Logo_uebernehmen()
+	oForm_Einstellungen.updateRow()
+	sSQL1=&quot;update Users set Logo_URL=&apos;&quot;&amp; fsConvertBackSlash(sFileControl_Logo) &amp;&quot;&apos; where UserID=&quot;&amp; iUserID_lokal
+	SQL_execute(sSQL1)
+	oForm_Users.reload()
+End Sub
+
+Sub Datei_Signum_uebernehmen()
+	oForm_Einstellungen.updateRow()
+	sSQL1=&quot;update Users set Signum_URL=&apos;&quot;&amp; fsConvertBackSlash(sFileControl_Signum) &amp;&quot;&apos; where UserID=&quot;&amp; iUserID_lokal
+	SQL_execute(sSQL1)
+	oForm_Users.reload()
+End Sub
+
+Sub Datei_Grafik_uebernehmen()
+	oForm_Einstellungen.updateRow()
+	sSQL1=&quot;update Users set Grafik_URL=&apos;&quot;&amp; fsConvertBackSlash(sFileControl_Grafik) &amp;&quot;&apos; where UserID=&quot;&amp; iUserID_lokal
+	SQL_execute(sSQL1)
+	oForm_Users.reload()
+End Sub
+
+Sub ExportVerzeichnissBuchhaltung_uebernehmen()
+	oForm_Einstellungen.updateRow()
+	sSQL1=&quot;update Einstellungen set ExportVerzeichnissBuchhaltung=&apos;&quot;&amp; fsConvertBackSlash(sFileControl_Buchhaltung) &amp;&quot;&apos; where EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+	SQL_execute(sSQL1)
+	oForm_Einstellungen.reload()
+End Sub
+
+Sub NutzerName_setzen()
+	Dim sNutzerName as String
+nochmal:
+	sNutzerName=InputBox(&quot;Geben Sie den Nutzer-Namen ein, der in die Tabelle Steuerung eingetragen werden soll:&quot;,sTitle_lokal)
+	if sNutzerName = &quot;&quot; then
+		vStatus=MsgBox(&quot;Sie haben noch keinen Nutzer-Namen eingegeben!!&quot;,53,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal
+		elseif vStatus=2 then
+			exit sub
+		End if
+	else
+		sSQL1=&quot;update Steuerung set Nutzer=&apos;&quot;&amp; sNutzerName &amp;&quot;&apos;&quot;&amp;_
+			&quot; where ClientID &lt;= &quot;&amp; (iUserID_lokal*40) &amp;_
+			&quot; and ClientID &gt; &quot;&amp; (iUserID_lokal*40)-40
+		SQL_execute(sSQL1)
+	End if
+	oForm_Steuerung.reload()
+End Sub
+
+Sub MwSt_Satz_Kunden_aendern()
+	if oDoc.isReadOnly then
+nochmal:
+		sMwStSatzKundenAlt=InputBox(&quot;Geben Sie bitte den MwSt-Satz ein, den Sie überschreiben wollen!&quot;&amp;_
+			 Chr$(10) &amp; &quot;Der neue MwSt-Satz wird anschließend abgefragt!&quot;,sTitle_lokal &amp;&quot; - Kunden: MwSt-Satz ändern&quot;)
+	
+		sSQL1=&quot;select count(MwSt_Satz) from Kunden where MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzKundenAlt))
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			lCountMwStSatzAlt=oRecord1.getLong(1)
+		Wend
+	
+		If lCountMwStSatzAlt = 0 Then
+			vStatus=MsgBox(&quot;Es ist kein Kunde mit dem von Ihnen angebebenen MwSt-Satz von &quot;&amp;_
+			sMwStSatzKundenAlt &amp;&quot;% vorhanden!&quot;,37,sTitle_lokal &amp;&quot; - Kunden: MwSt-Satz ändern&quot;)
+			if vStatus=4 then
+				goto nochmal
+			elseif vStatus=2 then
+				exit sub
+			elseif vStatus=3 then
+				exit sub
+			End if
+		End If
+	
+		sMwStSatzKundenNeu=InputBox(&quot;Geben Sie bitte den neuen MwSt-Satz ein mit welchem Sie den alten überschreiben wollen!&quot;_
+				,sTitle_lokal &amp; &quot; - Kunden: MwSt-Satz ändern&quot;)
+	
+		If sMwStSatzKundenNeu=&quot;&quot; Then
+			exit sub
+		End If
+	
+		sSQL2=&quot;update Kunden set MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzKundenNeu)) &amp;_
+				&quot;where MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzKundenAlt))
+		SQL_execute(sSQL2)
+	
+		MsgBox(&quot;Es wurde bei &quot;&amp; lCountMwStSatzAlt &amp;&quot; Kunden der MwSt-Satz von &quot;&amp;_
+			sMwStSatzKundenAlt &amp;&quot;% auf &quot;&amp; sMwStSatzKundenNeu &amp;_
+			&quot;% geändert!&quot;,64,sTitle_lokal &amp;&quot; - Kunden: MwSt-Satz ändern&quot;)
+	End if
+End Sub
+
+Sub MwSt_Satz_Lieferanten_aendern
+	if oDoc.isReadOnly then
+nochmal:
+		sMwStSatzLieferantenAlt=InputBox(&quot;Geben Sie bitte den MwSt-Satz ein, den Sie überschreiben wollen!&quot;&amp;_
+				 Chr$(10) &amp;&quot;Der neue MwSt-Satz wird anschließend abgefragt!&quot;,sTitle_lokal &amp;&quot; - Lieferanten: MwSt-Satz ändern&quot;)
+	
+		sSQL1=&quot;select count(MwSt_Satz) from Lieferanten where MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzLieferantenAlt))
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			lCountMwStSatzAlt=oRecord1.getLong(1)
+		Wend
+	
+		If lCountMwStSatzAlt = 0 Then
+			vStatus=MsgBox(&quot;Es ist kein Lieferant mit dem von Ihnen angebebenen MwSt-Satz von &quot;&amp;_
+			sMwStSatzLieferantenAlt &amp;&quot;% vorhanden!&quot;,37,sTitle_lokal &amp;&quot; - Lieferanten: MwSt-Satz ändern&quot;)
+			if vStatus=4 then
+				goto nochmal
+			elseif vStatus=2 then
+				exit sub
+			elseif vStatus=3 then
+				exit sub
+			End if
+		End If
+	
+		sMwStSatzLieferantenNeu=InputBox(&quot;Geben Sie bitte den neuen MwSt-Satz ein mit welchem Sie den alten überschreiben wollen!&quot;_
+				,sTitle_lokal &amp; &quot; - Lieferanten: MwSt-Satz ändern&quot;)
+	
+		If sMwStSatzLieferantenNeu=&quot;&quot; Then
+			exit sub
+		End If
+	
+		sSQL2=&quot;update Lieferanten set MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzLieferantenNeu)) &amp;_
+				&quot;where MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzLieferantenAlt))
+		SQL_execute(sSQL2)
+	
+		MsgBox(&quot;Es wurde bei &quot;&amp; lCountMwStSatzAlt &amp;&quot; Lieferanten der MwSt-Satz von &quot;&amp;_
+			sMwStSatzLieferantenAlt &amp;&quot;% auf &quot;&amp; sMwStSatzLieferantenNeu &amp;_
+			&quot;% geändert!&quot;,64,sTitle_lokal &amp;&quot; - Lieferanten: MwSt-Satz ändern&quot;)
+	End if
+End Sub
+
+Sub Stunden_Satz_Kunden_aendern
+	if oDoc.isReadOnly then
+nochmal:
+		sStundenSatzKundenAlt=InputBox(&quot;Geben Sie bitte den Stunden-Satz ein, den Sie überschreiben wollen!&quot;&amp;_
+				 Chr$(10) &amp; &quot;Der neue Stunden-Satz wird anschließend abgefragt!&quot;,sTitle_lokal &amp; &quot; - Kunden: Stunden-Satz ändern&quot;)
+	
+		sSQL1=&quot;select count(Stundenverrechnungssatz) from Kunden where Stundenverrechnungssatz=&quot;&amp; CCur(fZahlMitKomma(sStundenSatzKundenAlt))
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			lCountStundenSatzAlt=oRecord1.getLong(1)
+		Wend
+	
+		If lCountStundenSatzAlt = 0 Then
+			vStatus=MsgBox(&quot;Es ist kein Kunde mit dem von Ihnen angebebenen Stunden-Satz von &quot;&amp;_
+			sStundenSatzKundenAlt &amp;&quot; &quot;&amp; sWaehrung &amp;&quot; vorhanden!&quot;,37,sTitle_lokal &amp;&quot; - Kunden: Stunden-Satz ändern&quot;)
+			if vStatus=4 then
+				goto nochmal
+			elseif vStatus=2 then
+				exit sub
+			elseif vStatus=3 then
+				exit sub
+			End if
+		End If
+	
+		sStundenSatzKundenNeu=InputBox(&quot;Geben Sie bitte den neuen Stunden-Satz ein mit welchem Sie den alten überschreiben wollen!&quot;_
+				,sTitle_lokal &amp; &quot; - Kunden: Stunden-Satz ändern&quot;)
+	
+		If sStundenSatzKundenNeu=&quot;&quot; Then
+			exit sub
+		End If
+	
+		sSQL2=&quot;update Kunden set Stundenverrechnungssatz=&quot;&amp; CCur(fZahlMitKomma(sStundenSatzKundenNeu)) &amp;_
+				&quot;where Stundenverrechnungssatz=&quot;&amp; CCur(fZahlMitKomma(sStundenSatzKundenAlt))
+		SQL_execute(sSQL2)
+	
+		MsgBox(&quot;Es wurde bei &quot;&amp; lCountStundenSatzAlt &amp;&quot; Kunden der Stunden-Satz von &quot;&amp;_
+			sStundenSatzKundenAlt &amp;&quot; &quot;&amp; sWaehrung &amp;&quot; auf &quot;&amp; sStundenSatzKundenNeu &amp;&quot; &quot;&amp; sWaehrung &amp;_
+			&quot; geändert!&quot;,64,sTitle_lokal &amp;&quot; - Kunden: Stunden-Satz ändern&quot;)
+	End if
+End Sub
+</script:module>

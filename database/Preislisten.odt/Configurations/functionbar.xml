@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE toolbar:toolbar PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "toolbar.dtd">
+<toolbar:toolbar xmlns:toolbar="http://openoffice.org/2001/toolbar" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <toolbar:toolbaritem xlink:href="slot:5694" toolbar:width="27"/>
+ <toolbar:toolbaritem xlink:href="slot:5596" toolbar:width="300"/>
+ <toolbar:toolbarseparator/>
+ <toolbar:toolbaritem xlink:href="slot:6301" toolbar:visible="false"/>
+ <toolbar:toolbaritem xlink:href="slot:6300"/>
+ <toolbar:toolbaritem xlink:href="slot:6302"/>
+ <toolbar:toolbaritem xlink:href="slot:6303"/>
+ <toolbar:toolbarseparator/>
+ <toolbar:toolbaritem xlink:href="slot:5508"/>
+ <toolbar:toolbaritem xlink:href="slot:6312"/>
+ <toolbar:toolbarseparator/>
+ <toolbar:toolbaritem xlink:href="slot:5500" toolbar:visible="false"/>
+ <toolbar:toolbaritem xlink:href="slot:5501"/>
+ <toolbar:toolbaritem xlink:href="slot:5505"/>
+ <toolbar:toolbaritem xlink:href="slot:5502" toolbar:visible="false"/>
+ <toolbar:toolbaritem xlink:href="slot:5364" toolbar:visible="false"/>
+ <toolbar:toolbaritem xlink:href="slot:5509" toolbar:visible="false"/>
+ <toolbar:toolbaritem xlink:href="slot:20028" toolbar:visible="false"/>
+ <toolbar:toolbarseparator/>
+ <toolbar:toolbaritem xlink:href="slot:5710"/>
+ <toolbar:toolbaritem xlink:href="slot:5711"/>
+ <toolbar:toolbaritem xlink:href="slot:5712"/>
+ <toolbar:toolbarseparator/>
+ <toolbar:toolbaritem xlink:href="slot:5701"/>
+ <toolbar:toolbaritem xlink:href="slot:5700"/>
+ <toolbar:toolbarseparator/>
+ <toolbar:toolbaritem xlink:href="slot:6308"/>
+ <toolbar:toolbaritem xlink:href="slot:6318"/>
+ <toolbar:toolbaritem xlink:href="slot:10366"/>
+ <toolbar:toolbaritem xlink:href="slot:5539"/>
+ <toolbar:toolbaritem xlink:href="slot:5678" toolbar:visible="false"/>
+ <toolbar:toolbaritem xlink:href="slot:5962" toolbar:visible="false"/>
+ <toolbar:toolbaritem xlink:href="slot:5627" toolbar:visible="false"/>
+ <toolbar:toolbarseparator/>
+ <toolbar:toolbaritem xlink:href="slot:6370" toolbar:visible="false"/>
+ <toolbar:toolbarseparator/>
+ <toolbar:toolbaritem xlink:href="slot:5503" toolbar:visible="false"/>
+</toolbar:toolbar>

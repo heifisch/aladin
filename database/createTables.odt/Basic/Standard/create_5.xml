@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="create_5" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+
+Sub SQL_create_Periodische_Zahlungen()
+sSQL=&quot;create Table period_Zahlungen(ZahlungsID int(11)not null auto_increment,LieferantenID int (10),&quot;&amp;_
+	&quot;Rechnungsname varchar(255),ausgefuehrt date,faellig date,Zahlungsintervall int(4),&quot;&amp;_
+	&quot;Betrag_ohne_MwSt decimal(11,2),MwSt_Satz decimal(4,1),MwSt decimal(11,2),&quot;&amp;_
+	&quot;Betrag_mit_MwSt decimal(11,2),Status varchar(20),primary key(ZahlungsID)) ENGINE = InnoDB&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Schriftwechsel_Kunden()
+	sSQL=&quot;create table Korrespondenz_Kunden(DocumentID int(10)not null auto_increment,ProjektID int(10),&quot;&amp;_
+		&quot;Document_TypID int(2) not null default 9,&quot;&amp;_
+		&quot;Referenz varchar(50)not null default &apos;&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),AnsprechpartnerID int(10),&quot;&amp;_
+		&quot;Erstellungsdatum date not null default 0,Body varchar(10000),Anrede varchar(50),Option_Serienbrief int(1) not null default 0,&quot;&amp;_
+		&quot;Option_Signum int(1) not null default 0,Signum_URL varchar(100),SignumHeight int(6)not null default 0,SignumWidth int(6)not null default 0,&quot;&amp;_
+		&quot;Gruszformel varchar(50),Absender varchar(50),&quot;&amp;_
+		&quot;Gesperrt int(2)not null default &apos;1&apos;,Leerzeilen varchar(50),Schreibschutz int(1) not null default 0,&quot;&amp;_
+		&quot;Autor int(3)not null default 0,Geaendert_durch int(3)not null default 0,Geaendert_am date,Rechte int (1)not null default 0,&quot;&amp;_
+		&quot;Serienbriefverteiler varchar(1000),SerBrieKontakte varchar(1000),&quot;&amp;_
+		&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+		sSQL=&quot;CREATE INDEX Index_KontaktID on Korrespondenz_Kunden(KontaktID)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Schriftwechsel_Lieferanten()
+	sSQL=&quot;create table Korrespondenz_Lieferanten(DocumentID int(10)not null auto_increment,ProjektID int(10),&quot;&amp;_
+		&quot;Document_TypID int(2) not null default 10,&quot;&amp;_
+		&quot;Referenz varchar(50)not null default &apos;&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),AnsprechpartnerID int(10),&quot;&amp;_
+		&quot;Erstellungsdatum date not null default 0,Body varchar(10000),Anrede varchar(50),Option_Serienbrief int(1) not null default 0,&quot;&amp;_
+		&quot;Option_Signum int(1) not null default 0,Signum_URL varchar(100),SignumHeight int(6)not null default 0,SignumWidth int(6)not null default 0,&quot;&amp;_
+		&quot;Gruszformel varchar(50),Absender varchar(50),&quot;&amp;_
+		&quot;Gesperrt int(2)not null default &apos;1&apos;,Leerzeilen varchar(50),Schreibschutz int(1) not null default 0,&quot;&amp;_
+		&quot;Autor int(3)not null default 0,Geaendert_durch int(3)not null default 0,Geaendert_am date,Rechte int (1)not null default 0,&quot;&amp;_
+		&quot;Serienbriefverteiler varchar(1000),SerBrieKontakte varchar(1000),&quot;&amp;_
+		&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+		sSQL=&quot;CREATE INDEX Index_KontaktID on Korrespondenz_Lieferanten(KontaktID)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Schriftwechsel_Kontakte()
+	sSQL=&quot;create table Korrespondenz_Kontakte(DocumentID int(10)not null auto_increment,ProjektID int(10),&quot;&amp;_
+		&quot;Document_TypID int(2) not null default 11,&quot;&amp;_
+		&quot;Referenz varchar(50)not null default &apos;&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),AnsprechpartnerID int(10),&quot;&amp;_
+		&quot;Erstellungsdatum date not null default 0,Body varchar(10000),Anrede varchar(50),Option_Serienbrief int(1) not null default 0,&quot;&amp;_
+		&quot;Option_Signum int(1) not null default 0,Signum_URL varchar(100),SignumHeight int(6)not null default 0,SignumWidth int(6)not null default 0,&quot;&amp;_
+		&quot;Gruszformel varchar(50),Absender varchar(50),&quot;&amp;_
+		&quot;Gesperrt int(2)not null default &apos;1&apos;,Leerzeilen varchar(50),Schreibschutz int(1) not null default 0,&quot;&amp;_
+		&quot;Autor int(3)not null default 0,Geaendert_durch int(3)not null default 0,Geaendert_am date,Rechte int (1)not null default 0,&quot;&amp;_
+		&quot;Serienbriefverteiler varchar(1000),SerBrieKontakte varchar(1000),&quot;&amp;_
+		&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+		sSQL=&quot;CREATE INDEX Index_KontaktID on Korrespondenz_Kontakte(KontaktID)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_drop_Druckertabelle()
+if iUserAnzahl &lt; 1 then
+	SetUserAnzahl()
+End if
+	For iCount = 1 to 100
+	sSQL=&quot;drop table if exists Drucker_TEMP&quot;&amp; iCount
+	SQL_execute_mysql(sSQL)
+	Next iCount
+End Sub
+
+Sub SQL_create_Druckertabelle()
+if iUserAnzahl &lt; 1 then
+	SetUserAnzahl()
+End if
+	For iCount = 1 to iUserAnzahl
+	sSQL=&quot;create table Drucker_TEMP&quot;&amp; iCount &amp;_
+		&quot;(PrintID int(4) not null auto_increment,DocumentID int(10)not null default 0,KontaktID int(10)not null default 0,&quot;&amp;_
+		&quot;EinstellungsID int(2)not null default 0,UserID int(2)not null default 0,Erstellungsdatum date not null default 0,&quot;&amp;_
+		&quot;KontaktTyp varchar(20)not null default &apos;&apos;,KorrespondenzTyp varchar(50)not null default &apos;&apos;,&quot;&amp;_
+		&quot;Document_TypID int(2) not null default 0,Print_Typ int(2) default 0,Document_Name varchar(255),&quot;&amp;_
+		&quot;Betreff varchar(255),Fax varchar(30),EMail varchar(50),&quot;&amp;_
+		&quot;Nummern varchar(255),Anrede varchar(100),Body varchar(10000),Anschrift varchar(255),Gruszformel varchar(100),Absender varchar(100),&quot;&amp;_
+		&quot;Option_Signum int(1) not null default 0,Signum_URL varchar(100),SignumHeight int(6)not null default 0,SignumWidth int(6)not null default 0,&quot;&amp;_
+		&quot;Leerzeilen varchar(50),Print_Logo int(1) default 0,Serienbrief int(1) default 0,&quot;&amp;_
+		&quot;primary key(PrintID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+	Next iCount
+End Sub
+
+Sub SQL_drop_Druckertabelle1()
+use_Aladin
+if iUserAnzahl &lt; 1 then
+	SetUserAnzahl()
+End if
+	For iCount = 1 to 40
+	sSQL=&quot;drop table if exists Drucker1_TEMP&quot;&amp; iCount 
+	SQL_execute_mysql(sSQL)
+	Next iCount
+End Sub
+
+Sub SQL_create_Druckertabelle1()
+use_Aladin
+if iUserAnzahl &lt; 1 then
+	SetUserAnzahl()
+End if
+	For iCount = 1 to iUserAnzahl
+	sSQL=&quot;create table Drucker1_TEMP&quot;&amp; iCount &amp;_
+		&quot;(DocumentID int(10)not null default 0,Document_TypID int(2) not null default 0,Document_Typ varchar(100),&quot;&amp;_
+		&quot;EinstellungsID int(2)not null default 0,UserID int(2)not null default 0,KontaktTyp varchar(20)not null default &apos;&apos;,&quot;&amp;_
+		&quot;Print_Typ int(2) default 0,AZ int(2) default 0,Bestellnummer int(1) default 0,Leistungsbezeichnung int(1) default 0,&quot;&amp;_
+		&quot;Leistungsbeschreibung int(1) default 0,LiefuLeist int(1) default 0,LV_Pos int(1) default 0,&quot;&amp;_
+		&quot;Document_Name varchar(255),Betreff varchar(255),Fax varchar(30),EMail varchar(50),&quot;&amp;_
+		&quot;Nummern varchar(255),Summe_ohne_MwSt varchar(50),Rabatt varchar(50),&quot;&amp;_
+		&quot;Summe_nach_Rabatt varchar(50),Korrektur varchar(50),Summe_nach_Korrektur varchar(50),MwSt varchar(50),&quot;&amp;_
+		&quot;Summe_mit_MwSt varchar(50),Rechnungsbetrag varchar(100),Abschlagszahlungen varchar(100),Restbetrag varchar(100),&quot;&amp;_
+		&quot;Bemerkung varchar(2000),Schluss_Text varchar(2000),&quot;&amp;_
+		&quot;Anschrift varchar(255),Mindestangaben varchar(255),Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),&quot;&amp;_
+		&quot;13bText varchar(255),&quot;&amp;_
+		&quot;Leerzeilen varchar(50),Print_Logo int(1) default 0,&quot;&amp;_
+		&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+	Next iCount
+End Sub
+
+Sub SQL_drop_Druckertabelle2()
+if iUserAnzahl &lt; 1 then
+	SetUserAnzahl()
+End if
+	For iCount = 1 to 40
+	sSQL=&quot;drop table if exists Drucker2_TEMP&quot;&amp; iCount
+	SQL_execute_mysql(sSQL)
+	Next iCount
+End Sub
+
+Sub SQL_create_Druckertabelle2()
+if iUserAnzahl &lt; 1 then
+	SetUserAnzahl()
+End if
+	For iCount = 1 to iUserAnzahl
+	sSQL=&quot;create table Drucker2_TEMP&quot;&amp; iCount &amp;_
+		&quot;(PosID int(6)not null default 0,Pos varchar(20) not null default &apos;&apos;,Pos_TypID int(1) not null default 1,&quot;&amp;_
+		&quot;DocumentID int(10)not null default 0,LeistungsID varchar(25) not null default &apos;&apos;,Bestellnummer varchar(25),&quot;&amp;_
+		&quot;Leistungsbezeichnung varchar(255),Leistungsbeschreibung varchar(10000) not null,Einheit varchar(10),Menge decimal(9,2),&quot;&amp;_
+		&quot;Lieferung decimal(11,2),Leistung decimal(11,2),EP decimal(11,2),GP decimal(11,2),GZ decimal(11,2),primary key(PosID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+	Next iCount
+End Sub
+
+
+
+</script:module>

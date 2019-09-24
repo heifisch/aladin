@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Buchhaltung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+&apos;WriteDbgInfo(oFileAccessService)
+
+Sub Buchhaltung_export()
+	Dim oTextOutputStream AS Object,oFileAccessService AS Object,oOutputStream AS Object
+	Dim oRecord_ExportVerzeichnissBuchhaltung AS Object,oRecordCountBuchungen AS Object,oRecordBuchungen AS Object
+	Dim oProgressbar AS Object
+	Dim sFileURL AS String,sFileURL1 AS String
+	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String,sSQL4 AS String,sSQL5 AS String
+	Dim vStatus AS Variant,sKopfZeile AS String,sDatensatz AS String
+	Dim iFileCount AS Integer,iAnzahlBuchungen AS Integer,iCountBuchungen
+	Dim sRechnungsID AS String,sName1 AS String,sVorname AS String,sName2 AS String
+	Dim sBetragMitMwSt AS String,sMwStSatz AS String,sBetragOhneMwSt AS String,sMwSt AS String,sRechnungsTypKuerzel AS String
+	Dim sRechnungsName AS String,sRechnungsNummer AS String,sRechnungsDatum AS String,sSkontoBis AS String
+	Dim sFaellig AS String,sSkontoSatz AS String,sSkonto AS String,sBetragBezahlt AS String
+	Dim sSicherheitsEinbehalt AS String,sBezahltAm AS String,iKasse AS Integer
+	Dim sFT AS String,sTT AS String,sEncoding AS String
+	
+	if oDoc.isReadOnly then	
+
+		sFT=&quot;,&quot;
+		sTT=Chr(34)
+&apos;		sEncoding=&quot;UTF-8&quot;
+&apos;		sEncoding=&quot;IBM850&quot;
+		sEncoding=&quot;ISO-8859-15&quot;	
+		iFileCount=0
+		iCountBuchungen=0
+	
+		sSQL1=&quot;SELECT COUNT(*) &quot;&amp;_
+			&quot;FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+			&quot; WHERE t1.Buchhaltung=1&quot;&amp;_
+			&quot; AND t1.gebucht=0&quot;
+			
+		oRecordCountBuchungen=oResult(sSQL1)
+		While oRecordCountBuchungen.next()
+			iAnzahlBuchungen=CInt(oRecordCountBuchungen.getString(1))
+		Wend
+	
+		if iAnzahlBuchungen = 0 then
+			MsgBox(&quot;Es sind keine neuen Buchungen vorhanden&quot;,48,sTitle_lokal)
+			exit sub
+		end if	
+	
+		sSQL2=&quot;SELECT DISTINCT ExportVerzeichnissBuchhaltung,DATE_ADD(now(),INTERVAL 0 DAY) FROM Einstellungen WHERE EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+		oRecord_ExportVerzeichnissBuchhaltung=oResult(sSQL2)
+		While oRecord_ExportVerzeichnissBuchhaltung.next()
+			sFileUrl=oRecord_ExportVerzeichnissBuchhaltung.getString(1) &amp; Left(oRecord_ExportVerzeichnissBuchhaltung.getString(2),4) &amp;_
+																		Mid(oRecord_ExportVerzeichnissBuchhaltung.getString(2),6,2) &amp;_
+																		Mid(oRecord_ExportVerzeichnissBuchhaltung.getString(2),9,2) &amp; &quot;_ER.csv&quot;
+		Wend
+		
+		oTextOutputStream = CreateUnoService(&quot;com.sun.star.io.TextOutputStream&quot;)
+		oFileAccessService = createUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+		sFileURL1=sFileURL
+	nochmal:
+		If oFileAccessService.exists(sFileURL1) then
+			iFileCount=iFileCount+1
+			vStatus=MsgBox(&quot;Folgende Datei ist schon vorhanden: &quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+						 sFileURL1 &amp; Chr(13) &amp; Chr(13) &amp;_
+						 &quot;Wollen Sie für diesen Tag eine zusätzliche Datei anlegen?&quot;,36,sTitle_lokal)
+			if vStatus=6 then
+				sFileURL1=Left(sFileURL,Len(sFileURL)-4) &amp; &quot;_&quot;&amp; CStr(iFileCount) &amp;&quot;.csv&quot;
+				goto nochmal
+			elseif vStatus=7 then
+				exit sub
+			End if
+		End If
+	
+		oProgressbar = oDoc.GetCurrentController.GetFrame.CreateStatusIndicator
+		oProgressbar.Start(&quot;&quot;, iAnzahlBuchungen)
+		oOutputStream = oFileAccessService.openFileWrite(sFileURL1)	
+		oTextOutputStream.setOutputStream(oOutputStream)
+		oTextOutputStream.setEncoding(sEncoding)
+
+		sKopfZeile=sTT &amp;&quot;lfd. Nr.&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Lieferant&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Re-Betrag&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Steuersatz&quot;&amp; sTT &amp; sFT 
+		sKopfZeile=sKopfZeile &amp; sTT &amp;&quot;Netto-Betrag&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Steuer&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Bezeichnung&quot;&amp; sTT &amp; sFT 
+		sKopfZeile=sKopfZeile &amp; sTT &amp;&quot;Rechn.-Datum&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;fällig am&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Skonto-Betrag&quot;&amp; sTT &amp; sFT
+		sKopfZeile=sKopfZeile &amp; sTT &amp;&quot;gezahlter Betrag&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;bezahlt am&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Kasse/Bank&quot;&amp; sTT
+		
+		oTextOutputStream.writeString(sKopfZeile &amp; Chr(13))
+		sSQL3=&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.RechnungsID,t2.Name1,t2.Vorname,t2.Name2,&quot;&amp;_
+			&quot;ROUND(t1.Betrag_mit_MwSt,2),ROUND(t1.MwSt_Satz,2),ROUND(t1.Betrag_ohne_MwSt,2),ROUND(t1.MwSt,2),&quot;&amp;_
+			&quot;t1.Rechnungsname,t1.Rechnungsnummer,t1.Rechnungsdatum,&quot;&amp;_
+			&quot;t1.Skonto_bis,t1.faellig,ROUND(t1.Skonto_Satz,2),ROUND(t1.Skonto,2),ROUND(t1.Betrag_bezahlt,2),&quot;&amp;_
+			&quot;ROUND(t1.Sicherheitseinbehalt,2),t1.bezahlt_am,t1.Kasse,t3.RechnungsTypKuerzel &quot;&amp;_
+			&quot;FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1,&quot;&amp; sLieferanten &amp;&quot;  AS t2,RechnungsTypen AS t3 &quot;&amp;_
+			&quot;WHERE t2.KontaktID = t1.KontaktID&quot;&amp;_
+			&quot; AND t3.RechnungsTypID=t1.RechnungsTypID&quot;&amp;_
+			&quot; AND t1.Buchhaltung=1&quot;&amp;_
+			&quot; AND t1.gebucht=0&quot;&amp;_
+			&quot; ORDER BY t1.RechnungsID ASC&quot;
+		iCountBuchungen=1
+		
+		Do While iAnzahlBuchungen &gt;= iCountBuchungen
+			sDatensatz=&quot;&quot;
+			oRecordBuchungen=oResult_Scroll(sSQL3)
+			oRecordBuchungen.absolute(iCountBuchungen)
+			sRechnungsID=oRecordBuchungen.getString(1)
+			sName1=oRecordBuchungen.getString(2)
+			sVorname=oRecordBuchungen.getString(3)
+			sName2=oRecordBuchungen.getString(4)
+			sBetragMitMwSt=fZahlMitPunkt(oRecordBuchungen.getString(5))
+			sMwStSatz=fZahlMitPunkt(oRecordBuchungen.getString(6))
+			sBetragOhneMwSt=fZahlMitPunkt(oRecordBuchungen.getString(7))
+			sMwSt=fZahlMitPunkt(oRecordBuchungen.getString(8))
+			sRechnungsName=oRecordBuchungen.getString(9)
+			sRechnungsNummer=oRecordBuchungen.getString(10)
+			sRechnungsDatum=fConvDatum(oRecordBuchungen.getString(11))
+			sSkontoBis=fConvDatum(oRecordBuchungen.getString(12))
+			sFaellig=fConvDatum(oRecordBuchungen.getString(13))
+			sSkontoSatz=fZahlMitPunkt(oRecordBuchungen.getString(14))
+			sSkonto=fZahlMitPunkt(oRecordBuchungen.getString(15))
+			sBetragBezahlt=fZahlMitPunkt(oRecordBuchungen.getString(16))
+			sSicherheitsEinbehalt=fZahlMitPunkt(oRecordBuchungen.getString(17))
+			sBezahltAm=fConvDatum(oRecordBuchungen.getString(18))
+			iKasse=oRecordBuchungen.getLong(19)
+			sRechnungsTypKuerzel=oRecordBuchungen.getString(20)
+
+			if Trim(sRechnungsNummer) = &quot;&quot; then
+				sRechnungsNummer = Trim(&quot;sRechnungsID&quot;)
+			End if
+			sDatensatz=sTT &amp; sRechnungsID &amp; sTT &amp; sFT &amp; sTT &amp; sName1
+			if sVorname &lt;&gt; &quot;&quot; then
+				sDatensatz=sDatensatz &amp;&quot;, &quot;&amp; sVorname
+			end if
+			if sName2 &lt;&gt; &quot;&quot; then
+				sDatensatz=sDatensatz &amp;&quot;, &quot;&amp; sName2
+			end if
+			
+			sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp; sBetragMitMwSt &amp; sTT &amp; sFT &amp; sTT &amp; sMwStSatz &amp; sTT &amp; sFT &amp; sTT &amp; sBetragOhneMwSt &amp; sTT &amp; sFT &amp; sTT &amp; sMwSt 
+			sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp; &quot;[&quot;&amp; sRechnungsTypKuerzel &amp; &quot;] &quot; &amp; fsReplace(sRechnungsName,Chr(34),&quot; &quot;)
+			sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp; sRechnungsDatum &amp; sTT &amp; sFT &amp; sTT &amp; sFaellig
+			sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp; sSkonto &amp; sTT &amp; sFT &amp; sTT &amp; sBetragBezahlt &amp; sTT &amp; sFT &amp; sTT &amp; sBezahltAm
+			
+			if iKasse=0 then
+				sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp;&quot;Bank&quot; &amp; sTT
+			elseif iKasse=1 then
+				sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp;&quot;Kasse&quot; &amp; sTT
+			end if
+			
+			oProgressbar.Value = iCountBuchungen
+			oTextOutputStream.writeString(fsInTrim(fsReplace(sDatensatz,Chr(10),&quot; &quot;)) &amp; Chr(13))
+			
+			iCountBuchungen=iCountBuchungen+1
+		
+		Loop
+		vStatus=MsgBox(&quot;Sollen die exportierten Datensätze als übertragen gesetzt werden?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sSQL4=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET gebucht=1 WHERE gebucht=0 AND Buchhaltung=1&quot;
+			SQL_execute(sSQL4)
+		End if
+		
+		oProgressbar.End
+	end if
+End Sub
+
+Sub Buchhaltung_export_Kuepper()
+	Dim oTextOutputStream AS Object,oFileAccessService AS Object,oOutputStream AS Object
+	Dim oRecord_ExportVerzeichnissBuchhaltung AS Object,oRecordCountBuchungen AS Object,oRecordBuchungen AS Object
+	Dim oProgressbar AS Object
+	Dim sFileURL AS String,sFileURL1 AS String
+	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String,sSQL4 AS String,sSQL5 AS String
+	Dim vStatus AS Variant,sKopfZeile AS String,sDatensatz AS String
+	Dim iFileCount AS Integer,iAnzahlBuchungen AS Integer,iCountBuchungen
+	Dim sRechnungsID AS String,sName1 AS String,sVorname AS String,sName2 AS String
+	Dim sBetragMitMwSt AS String,sMwStSatz AS String,sBetragOhneMwSt AS String,sMwSt AS String,sRechnungsTypKuerzel AS String
+	Dim sRechnungsName AS String,sRechnungsNummer AS String,sRechnungsDatum AS String,sSkontoBis AS String
+	Dim sFaellig AS String,sSkontoSatz AS String,sSkonto AS String,sBetragBezahlt AS String
+	Dim sSicherheitsEinbehalt AS String,sBezahltAm AS String,iKasse AS Integer
+	Dim sFT AS String,sTT AS String,sEncoding AS String
+	
+	if oDoc.isReadOnly then	
+
+		sFT=&quot;,&quot;
+		sTT=Chr(34)
+&apos;		sEncoding=&quot;UTF-8&quot;
+&apos;		sEncoding=&quot;IBM850&quot;
+		sEncoding=&quot;ISO-8859-15&quot;	
+		iFileCount=0
+		iCountBuchungen=0
+	
+		sSQL1=&quot;SELECT COUNT(*) &quot;&amp;_
+			&quot;FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+			&quot; WHERE t1.Buchhaltung=1&quot;&amp;_
+			&quot; AND t1.gebucht=0&quot;
+			
+		oRecordCountBuchungen=oResult(sSQL1)
+		While oRecordCountBuchungen.next()
+			iAnzahlBuchungen=CInt(oRecordCountBuchungen.getString(1))
+		Wend
+	
+		if iAnzahlBuchungen = 0 then
+			MsgBox(&quot;Es sind keine neuen Buchungen vorhanden&quot;,48,sTitle_lokal)
+			exit sub
+		end if	
+	
+		sSQL2=&quot;SELECT DISTINCT ExportVerzeichnissBuchhaltung,DATE_ADD(now(),INTERVAL 0 DAY) FROM Einstellungen WHERE EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+		oRecord_ExportVerzeichnissBuchhaltung=oResult(sSQL2)
+		While oRecord_ExportVerzeichnissBuchhaltung.next()
+			sFileUrl=oRecord_ExportVerzeichnissBuchhaltung.getString(1) &amp; Left(oRecord_ExportVerzeichnissBuchhaltung.getString(2),4) &amp;_
+																		Mid(oRecord_ExportVerzeichnissBuchhaltung.getString(2),6,2) &amp;_
+																		Mid(oRecord_ExportVerzeichnissBuchhaltung.getString(2),9,2) &amp; &quot;_ER.txt&quot;
+		Wend
+		
+		oTextOutputStream = CreateUnoService(&quot;com.sun.star.io.TextOutputStream&quot;)
+		oFileAccessService = createUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+		sFileURL1=sFileURL
+	nochmal:
+		If oFileAccessService.exists(sFileURL1) then
+			iFileCount=iFileCount+1
+			vStatus=MsgBox(&quot;Folgende Datei ist schon vorhanden: &quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+						 sFileURL1 &amp; Chr(13) &amp; Chr(13) &amp;_
+						 &quot;Wollen Sie für diesen Tag eine zusätzliche Datei anlegen?&quot;,36,sTitle_lokal)
+			if vStatus=6 then
+				sFileURL1=Left(sFileURL,Len(sFileURL)-4) &amp; &quot;_&quot;&amp; CStr(iFileCount) &amp;&quot;.txt&quot;
+				goto nochmal
+			elseif vStatus=7 then
+				exit sub
+			End if
+		End If
+	
+		oProgressbar = oDoc.GetCurrentController.GetFrame.CreateStatusIndicator
+		oProgressbar.Start(&quot;&quot;, iAnzahlBuchungen)
+		oOutputStream = oFileAccessService.openFileWrite(sFileURL1)	
+		oTextOutputStream.setOutputStream(oOutputStream)
+		oTextOutputStream.setEncoding(sEncoding)
+
+		sKopfZeile=sTT &amp;&quot;lfd. Nr.&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Lieferant&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Re-Betrag&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Steuersatz&quot;&amp; sTT &amp; sFT 
+		sKopfZeile=sKopfZeile &amp; sTT &amp;&quot;Netto-Betrag&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Steuer&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Bezeichnung&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Re-Nr. Lieferant&quot;&amp; sTT &amp; sFT 
+		sKopfZeile=sKopfZeile &amp; sTT &amp;&quot;Rechn.-Datum&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Skonto bis&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;fällig am&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Skonto %&quot;&amp; sTT &amp; sFT
+		sKopfZeile=sKopfZeile &amp; sTT &amp;&quot;Skonto-Betrag&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;gezahlter Betrag&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Sicherheitseinbehalt&quot;&amp; sTT &amp; sFT 
+		sKopfZeile=sKopfZeile &amp; sTT &amp;&quot;bezahlt am&quot;&amp; sTT &amp; sFT &amp; sTT &amp;&quot;Kasse/Bank&quot;&amp; sTT
+		
+		oTextOutputStream.writeString(sKopfZeile &amp; Chr(13))
+		sSQL3=&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.RechnungsID,t2.Name1,t2.Vorname,t2.Name2,&quot;&amp;_
+			&quot;ROUND(t1.Betrag_mit_MwSt,2),ROUND(t1.MwSt_Satz,2),ROUND(t1.Betrag_ohne_MwSt,2),ROUND(t1.MwSt,2),&quot;&amp;_
+			&quot;t1.Rechnungsname,t1.Rechnungsnummer,t1.Rechnungsdatum,&quot;&amp;_
+			&quot;t1.Skonto_bis,t1.faellig,ROUND(t1.Skonto_Satz,2),ROUND(t1.Skonto,2),ROUND(t1.Betrag_bezahlt,2),&quot;&amp;_
+			&quot;ROUND(t1.Sicherheitseinbehalt,2),t1.bezahlt_am,t1.Kasse,t3.RechnungsTypKuerzel &quot;&amp;_
+			&quot;FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1,&quot;&amp; sLieferanten &amp;&quot;  AS t2,RechnungsTypen AS t3 &quot;&amp;_
+			&quot;WHERE t2.KontaktID = t1.KontaktID&quot;&amp;_
+			&quot; AND t3.RechnungsTypID=t1.RechnungsTypID&quot;&amp;_
+			&quot; AND t1.Buchhaltung=1&quot;&amp;_
+			&quot; AND t1.gebucht=0&quot;&amp;_
+			&quot; ORDER BY t1.RechnungsID ASC&quot;
+		iCountBuchungen=1
+		
+		Do While iAnzahlBuchungen &gt;= iCountBuchungen
+			sDatensatz=&quot;&quot;
+			oRecordBuchungen=oResult_Scroll(sSQL3)
+			oRecordBuchungen.absolute(iCountBuchungen)
+			sRechnungsID=oRecordBuchungen.getString(1)
+			sName1=oRecordBuchungen.getString(2)
+			sVorname=oRecordBuchungen.getString(3)
+			sName2=oRecordBuchungen.getString(4)
+			sBetragMitMwSt=fZahlMitPunkt(oRecordBuchungen.getString(5))
+			sMwStSatz=fZahlMitPunkt(oRecordBuchungen.getString(6))
+			sBetragOhneMwSt=fZahlMitPunkt(oRecordBuchungen.getString(7))
+			sMwSt=fZahlMitPunkt(oRecordBuchungen.getString(8))
+			sRechnungsName=oRecordBuchungen.getString(9)
+			sRechnungsNummer=oRecordBuchungen.getString(10)
+			sRechnungsDatum=fConvDatum(oRecordBuchungen.getString(11))
+			sSkontoBis=fConvDatum(oRecordBuchungen.getString(12))
+			sFaellig=fConvDatum(oRecordBuchungen.getString(13))
+			sSkontoSatz=fZahlMitPunkt(oRecordBuchungen.getString(14))
+			sSkonto=fZahlMitPunkt(oRecordBuchungen.getString(15))
+			sBetragBezahlt=fZahlMitPunkt(oRecordBuchungen.getString(16))
+			sSicherheitsEinbehalt=fZahlMitPunkt(oRecordBuchungen.getString(17))
+			sBezahltAm=fConvDatum(oRecordBuchungen.getString(18))
+			iKasse=oRecordBuchungen.getLong(19)
+			sRechnungsTypKuerzel=oRecordBuchungen.getString(20)
+
+			if Trim(sRechnungsNummer) = &quot;&quot; then
+				sRechnungsNummer = Trim(&quot;sRechnungsID&quot;)
+			End if
+			sDatensatz=sTT &amp; sRechnungsID &amp; sTT &amp; sFT &amp; sTT &amp; sName1
+			if sVorname &lt;&gt; &quot;&quot; then
+				sDatensatz=sDatensatz &amp;&quot;, &quot;&amp; sVorname
+			end if
+			if sName2 &lt;&gt; &quot;&quot; then
+				sDatensatz=sDatensatz &amp;&quot;, &quot;&amp; sName2
+			end if
+			
+			sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp; sBetragMitMwSt &amp; sTT &amp; sFT &amp; sTT &amp; sMwStSatz &amp; sTT &amp; sFT &amp; sTT &amp; sBetragOhneMwSt &amp; sTT &amp; sFT &amp; sTT &amp; sMwSt 
+			sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp; &quot;[&quot;&amp; sRechnungsTypKuerzel &amp; &quot;] &quot; &amp; fsReplace(sRechnungsName,Chr(34),&quot; &quot;)
+			sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp; sRechnungsNummer &amp; sTT &amp; sFT &amp; sTT &amp; sRechnungsDatum &amp; sTT &amp; sFT &amp; sTT &amp; sSkontoBis &amp; sTT &amp; sFT &amp; sTT &amp; sFaellig &amp; sTT &amp; sFT &amp; sTT &amp; sSkontoSatz
+			sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp; sSkonto &amp; sTT &amp; sFT &amp; sTT &amp; sBetragBezahlt &amp; sTT &amp; sFT &amp; sTT &amp; sSicherheitsEinbehalt &amp; sTT &amp; sFT &amp; sTT &amp; sBezahltAm
+			
+			if iKasse=0 then
+				sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp;&quot;Bank&quot; &amp; sTT
+			elseif iKasse=1 then
+				sDatensatz=sDatensatz &amp; sTT &amp; sFT &amp; sTT &amp;&quot;Kasse&quot; &amp; sTT
+			end if
+			
+			oProgressbar.Value = iCountBuchungen
+			oTextOutputStream.writeString(fsInTrim(fsReplace(sDatensatz,Chr(10),&quot; &quot;)) &amp; Chr(13))
+			
+			iCountBuchungen=iCountBuchungen+1
+		
+		Loop
+		vStatus=MsgBox(&quot;Sollen die exportierten Datensätze als übertragen gesetzt werden?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sSQL4=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET gebucht=1 WHERE gebucht=0 AND Buchhaltung=1&quot;
+			SQL_execute(sSQL4)
+		End if
+		
+		oProgressbar.End
+	end if
+End Sub
+</script:module>

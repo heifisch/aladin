@@ -1,0 +1,502 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc as Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_Steuerung as Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oForm_Steuerung_1 as Object
+	oForm_Steuerung_1=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung_1&quot;)
+End Function
+
+Function oForm_Document as Object
+	oForm_Document=oForm_Steuerung.getByName(&quot;Form_Document&quot;)
+End Function
+
+Function oForm_Tabellendaten as Object
+	oForm_Tabellendaten=oForm_Document.getByName(&quot;Form_Tabellendaten&quot;)
+End Function
+
+Function oForm_Zwischensummen as Object
+	oForm_Zwischensummen=oForm_Document.getByName(&quot;Form_Zwischensummen&quot;)
+End Function
+
+Function oForm_Bemerkungen as Object
+	oForm_Bemerkungen=oForm_Document.getByName(&quot;Form_Bemerkungen&quot;)
+End Function
+
+Function oForm_Kontaktdaten as Object
+	oForm_Kontaktdaten=oForm_Document.getByName(&quot;Form_Kontaktdaten&quot;)
+End Function
+
+Function oForm_Projektdaten as Object
+	oForm_Projektdaten=oForm_Document.getByName(&quot;Form_Projektdaten&quot;)
+End Function
+
+Function oGrid_Tabellendaten as Object
+	oGrid_Tabellendaten=oForm_Tabellendaten.getByName(&quot;Grid_Leistungstabelle&quot;)
+End Function
+
+Function oGrid_Zwischensummen as Object
+	oGrid_Zwischensummen=oForm_Zwischensummen.getByName(&quot;Grid_Zwischensummen&quot;)
+End Function
+
+Function oGrid_Bemerkungen as Object
+	oGrid_Bemerkungen=oForm_Bemerkungen.getByName(&quot;Grid_Bemerkungen&quot;)
+End Function
+
+Function oColumn_Position as Object
+	oColumn_Position=oGrid_Tabellendaten.getByName(&quot;Position&quot;)
+End Function
+
+Function oColumn_LV_Position as Object
+	oColumn_LV_Position=oGrid_Tabellendaten.getByName(&quot;LV_Position&quot;)
+End Function
+
+Function oColumn_Leistungsbezeichnung as Object
+	oColumn_Leistungsbezeichnung=oGrid_Tabellendaten.getByName(&quot;Leistungsbezeichnung&quot;)
+End Function
+
+Function oColumn_Einheit as Object
+	oColumn_Einheit=oGrid_Tabellendaten.getByName(&quot;Einheit&quot;)
+End Function
+
+Function oColumn_Menge as Object
+	oColumn_Menge=oGrid_Tabellendaten.getByName(&quot;Menge&quot;)
+End Function
+
+Function oColumn_Einkaufspreis as Object
+	oColumn_Einkaufspreis=oGrid_Tabellendaten.getByName(&quot;Einkaufspreis&quot;)
+End Function
+
+Function oColumn_Bauzeit as Object
+	oColumn_Bauzeit=oGrid_Tabellendaten.getByName(&quot;Bauzeit&quot;)
+End Function
+
+Function oColumn_MAS as Object
+	oColumn_MAS=oGrid_Tabellendaten.getByName(&quot;Materialaufschlagsatz&quot;)
+End Function
+
+Function oColumn_MVS as Object
+	oColumn_MVS=oGrid_Tabellendaten.getByName(&quot;Minutenverrechnungssatz&quot;)
+End Function
+
+Function oColumn_Pos_Typ as Object
+	oColumn_Pos_Typ=oGrid_Tabellendaten.getByName(&quot;Pos_Typ&quot;)
+End Function
+
+Function oColumn_Materialaufschlagsatz as Object
+	oColumn_Materialaufschlagsatz=oGrid_Tabellendaten.getByName(&quot;Materialaufschlagsatz&quot;)
+End Function
+
+Function oColumn_Minutenverrechnungssatz as Object
+	oColumn_Minutenverrechnungssatz=oGrid_Tabellendaten.getByName(&quot;Minutenverrechnungssatz&quot;)
+End Function
+
+Function oColumn_ZwiSu_Position as Object
+	oColumn_ZwiSu_Position=oGrid_Zwischensummen.getByName(&quot;Position&quot;)
+End Function
+
+Function oColumn_ZwiSu_Zwischensummen_Name as Object
+	oColumn_ZwiSu_Zwischensummen_Name=oGrid_Zwischensummen.getByName(&quot;Zwischensummen_Name&quot;)
+End Function
+
+Function oColumn_ZwiBem_Position as Object
+	oColumn_ZwiBem_Position=oGrid_Bemerkungen.getByName(&quot;Position&quot;)
+End Function
+
+Function oColumn_ZwiBem_Bemerkung as Object
+	oColumn_ZwiBem_Bemerkung=oGrid_Bemerkungen.getByName(&quot;Bemerkung&quot;)
+End Function
+
+Function oColumn_ZwiBemID as Object
+	oColumn_ZwiBemID=oGrid_Bemerkungen.getByName(&quot;ZwiBemID&quot;)
+End Function
+
+Function oColumn_ZwiSuID as Object
+	oColumn_ZwiSuID=oGrid_Zwischensummen.getByName(&quot;ZwiSuID&quot;)
+End Function
+
+Function oField_DocumentID as Object
+	oField_DocumentID=oForm_Document.getByName(&quot;Field_DocumentID&quot;)
+End Function
+
+Function oField_ProjektID as Object
+	oField_ProjektID=oForm_Document.getByName(&quot;Field_ProjektID&quot;)
+End Function
+
+Function oField_Document_Name as Object
+	oField_Document_Name=oForm_Document.getByName(&quot;Field_Document_Name&quot;)
+End Function
+
+Function oField_MwSt_Satz as Object  
+	oField_MwSt_Satz=oForm_Document.getByName(&quot;Field_MwSt_Satz&quot;)
+End Function
+
+Function oField_Skonto_Satz as Object  
+	oField_Skonto_Satz=oForm_Document.getByName(&quot;Field_Skonto_Satz&quot;)
+End Function
+
+Function oField_Rabatt_Satz as Object  
+	oField_Rabatt_Satz=oForm_Document.getByName(&quot;Field_Rabatt_Satz&quot;)
+End Function
+
+Function oField_Korrektur_Satz as Object  
+	oField_Korrektur_Satz=oForm_Document.getByName(&quot;Field_Korrektur_Satz&quot;)
+End Function
+
+Function oField_Korrektur as Object  
+	oField_Korrektur=oForm_Document.getByName(&quot;Field_Korrektur&quot;)
+End Function
+
+Function oLabel_Korrektur as Object  
+	oLabel_Korrektur=oForm_Document.getByName(&quot;Label_Korrektur&quot;)
+End Function
+
+Function oLabel_Korrektur_Anlass as Object  
+	oLabel_Korrektur_Anlass=oForm_Document.getByName(&quot;Label_Korrektur_Anlass&quot;)
+End Function
+
+Function oField_MVS as Object
+	oField_MVS=oForm_Document.getByName(&quot;Field_Minutenverrechnungssatz&quot;)
+End Function
+
+Function oField_MAS as Object
+	oField_MAS=oForm_Document.getByName(&quot;Field_Materialaufschlagsatz&quot;)
+End Function
+
+Function oField_Rabatt as Object
+	oField_Rabatt=oForm_Document.getByName(&quot;Field_Rabatt&quot;)
+End Function
+
+Function oField_MwSt as Object
+	oField_MwSt=oForm_Document.getByName(&quot;Field_MwSt&quot;)
+End Function
+
+Function oField_Summe_mit_MwSt as Object
+	oField_Summe_mit_MwSt=oForm_Document.getByName(&quot;Field_Summe_mit_MwSt&quot;)
+End Function
+
+Function oField_Korrektur_Anlass as Object
+	oField_Korrektur_Anlass=oForm_Document.getByName(&quot;Field_Korrektur_Anlass&quot;)
+End Function
+
+Function oField_Document_Typ as Object
+	oField_Document_Typ=oForm_Document.getByName(&quot;Field_Document_Typ&quot;)
+End Function
+
+Function oField_Erstellungsdatum as Object
+	oField_Erstellungsdatum=oForm_Document.getByName(&quot;Field_Erstellungsdatum&quot;)
+End Function
+
+Function oField_Faellig_Tage as Object
+	oField_Faellig_Tage=oForm_Document.getByName(&quot;Field_Faellig_Tage&quot;)
+End Function
+
+Function oField_Skonto_Tage as Object
+	oField_Skonto_Tage=oForm_Document.getByName(&quot;Field_Skonto_Tage&quot;)
+End Function
+
+Function oField_Bemerkung as Object
+	oField_Bemerkung=oForm_Document.getByName(&quot;Field_Bemerkung&quot;)
+End Function
+
+Function oField_13bText as Object
+	oField_13bText=oForm_Document.getByName(&quot;Field_13bText&quot;)
+End Function
+
+Function oField_Leistungsempfaenger as Object
+	oField_Leistungsempfaenger=oForm_Document.getByName(&quot;Field_Leistungsempfaenger&quot;)
+End Function
+
+Function oField_Lieferbemerkung as Object
+	oField_Lieferbemerkung=oForm_Document.getByName(&quot;Field_Lieferbemerkung&quot;)
+End Function
+
+Function oField_Stundensatz_Kontakt as Object
+	oField_Stundensatz_Kontakt=oForm_Kontaktdaten.getByName(&quot;Field_Stundensatz_Kontakt&quot;)
+End Function
+
+Function oField_Stundensatz_Projekt as Object
+	oField_Stundensatz_Projekt=oForm_Projektdaten.getByName(&quot;Field_Stundensatz_Projekt&quot;)
+End Function
+
+Function oField_Ordner as Object
+	oField_Ordner=oForm_Kontaktdaten.getByName(&quot;Field_Ordner&quot;)
+End Function
+
+Function oField_Materialaufschlagsatz as Object
+	oField_Materialaufschlagsatz=oForm_Document.getByName(&quot;Field_Materialaufschlagsatz&quot;)
+End Function
+
+Function oField_Minutenverrechnugssatz as Object
+	oField_Minutenverrechnugssatz=oForm_Document.getByName(&quot;Field_Minutenverrechnungssatz&quot;)
+End Function
+
+Function oField_gueltig_bis as Object
+	oField_gueltig_bis=oForm_Document.getByName(&quot;Field_gueltig_bis&quot;)
+End Function
+
+Function oField_Status as Object
+	oField_Status=oForm_Document.getByName(&quot;Field_Status&quot;)
+End Function
+
+Function oList_Hauptgruppenauswahl as Object
+	oList_Hauptgruppenauswahl=oForm_Steuerung_1.getByName(&quot;List_Hauptgruppenauswahl&quot;)
+End Function
+
+Function oList_Gruppenauswahl as Object
+	oList_Gruppenauswahl=oForm_Steuerung_1.getByName(&quot;List_Gruppenauswahl&quot;)
+End Function
+
+Function oList_Korrektur_Vorzeichen as Object
+	oList_Korrektur_Vorzeichen=oForm_Document.getByName(&quot;List_Korrektur_Vorzeichen&quot;)
+End Function
+
+Function oField_Suchstring as Object
+	oField_Suchstring=oForm_Steuerung_1.getByName(&quot;Field_Suchstring&quot;)
+End Function
+
+Function oField_Suchstring_2 as Object
+	oField_Suchstring_2=oForm_Steuerung.getByName(&quot;Field_Suchstring_2&quot;)
+End Function
+
+Function oList_Leistungsauswahl as Object
+	oList_Leistungsauswahl=oForm_Steuerung_1.getByName(&quot;List_Leistungsauswahl&quot;)
+End Function
+
+Function oCheckBox_LeistungsID as Object
+	oCheckBox_LeistungsID=oForm_Steuerung_1.getByName(&quot;CheckBox_LeistungsID&quot;)
+End Function
+
+Function oCheckBox_Bezeichnung as Object
+	oCheckBox_Bezeichnung=oForm_Steuerung_1.getByName(&quot;CheckBox_Bezeichnung&quot;)
+End Function
+
+Function oCheckBox_Beschreibung as Object
+	oCheckBox_Beschreibung=oForm_Steuerung_1.getByName(&quot;CheckBox_Beschreibung&quot;)
+End Function
+
+Function oList_Kalkulationspreis as Object
+	oList_Kalkulationspreis=oForm_Steuerung_1.getByName(&quot;List_Kalkulationspreis&quot;)
+End Function
+
+Function oList_Kontaktauswahl as Object
+	oList_Kontaktauswahl=oForm_Document.getByName(&quot;List_Kontaktauswahl&quot;)
+End Function
+
+Function oList_Projektauswahl as Object
+	oList_Projektauswahl=oForm_Document.getByName(&quot;List_Projektauswahl&quot;)
+End Function
+
+Function oList_Ansprechpartner as Object
+	oList_Ansprechpartner=oForm_Document.getByName(&quot;List_Ansprechpartner&quot;)
+End Function
+
+Function oList_Leerzeilen as Object
+	oList_Leerzeilen=oForm_Document.getByName(&quot;List_Leerzeilen&quot;)
+End Function
+
+Function oList_Kontaktvorauswahl as Object
+	oList_Kontaktvorauswahl=oForm_Steuerung.getByName(&quot;List_Kontaktvorauswahl&quot;)
+End Function
+
+Function oList_Projektvorauswahl as Object
+	oList_Projektvorauswahl=oForm_Steuerung.getByName(&quot;List_Projektvorauswahl&quot;)
+End Function
+
+Function oList_Documentauswahl as Object
+	oList_Documentauswahl=oForm_Steuerung.getByName(&quot;List_Documentauswahl&quot;)
+End Function
+
+Function oList_Jahrauswahl as Object
+	oList_Jahrauswahl=oForm_Steuerung.getByName(&quot;List_Geschaeftsjahr&quot;)
+End Function
+
+Function oTextField_Document_Name_List as Object
+	oTextField_Document_Name_List=oForm_Steuerung.getByName(&quot;Label_Document_Name&quot;)
+End Function
+
+Function oTextField_Document_Name as Object
+	oTextField_Document_Name=oForm_Document.getByName(&quot;Label_Document_Name&quot;)
+End Function
+
+Function oTextField_gueltig_bis as Object
+	oTextField_gueltig_bis=oForm_Document.getByName(&quot;Label_gueltig_bis&quot;)
+End Function
+
+Function oTextField_DocumentID as Object
+	oTextField_DocumentID=oForm_Document.getByName(&quot;Label_DocumentID&quot;)
+End Function
+
+Function oTextField_Erstellungsdatum as Object
+	oTextField_Erstellungsdatum=oForm_Document.getByName(&quot;Label_Erstellungsdatum&quot;)
+End Function
+
+Function oTextField_Betriebsart as Object
+	oTextField_Betriebsart=oForm_Steuerung.getByName(&quot;Label_Betriebsart&quot;)
+End Function
+
+Function oTextField_Kontaktvorauswahl as Object
+	oTextField_Kontaktvorauswahl=oForm_Steuerung.getByName(&quot;Label_Kontaktname&quot;)
+End Function
+
+Function oTextField_Kontaktdaten as Object
+	oTextField_Kontaktdaten=oForm_Document.getByName(&quot;Label_Kontaktdaten&quot;)
+End Function
+
+Function oButton_Document_berechnen as Object
+	oButton_Document_berechnen=oForm_Steuerung_1.getByName(&quot;Button_Document_berechnen&quot;)
+End Function
+
+Function oButton_Pos_kopieren as Object
+	oButton_Pos_kopieren=oForm_Steuerung_1.getByName(&quot;Button_Pos_Kopieren&quot;)
+End Function
+
+Function oButton_Pos_verschieben as Object
+	oButton_Pos_verschieben=oForm_Steuerung_1.getByName(&quot;Button_Pos_Verschieben&quot;)
+End Function
+
+Function oButton_Projekt_ruecksetzen as Object
+	oButton_Projekt_ruecksetzen=oForm_Steuerung_1.getByName(&quot;Button_Projekt_ruecksetzen&quot;)
+End Function
+
+Function oButton_Ansprechpartner_ruecksetzen as Object
+	oButton_Ansprechpartner_ruecksetzen=oForm_Steuerung_1.getByName(&quot;Button_Ansprechpartner_ruecksetzen&quot;)
+End Function
+
+Function oButton_MAS_dynamisch as Object
+	oButton_MAS_dynamisch=oForm_Steuerung_1.getByName(&quot;Button_MAS_dynamisch&quot;)
+End Function
+
+Function oButton_MVS_dynamisch as Object
+	oButton_MVS_dynamisch=oForm_Steuerung_1.getByName(&quot;Button_MVS_dynamisch&quot;)
+End Function
+
+Function oButton_MAS_uebernehmen as Object
+	oButton_MAS_uebernehmen=oForm_Steuerung_1.getByName(&quot;Button_MAS_uebernehmen&quot;)
+End Function
+
+Function oButton_MVS_uebernehmen as Object
+	oButton_MVS_uebernehmen=oForm_Steuerung_1.getByName(&quot;Button_MVS_uebernehmen&quot;)
+End Function
+
+Function oButton_Leistung_uebernehmen as Object
+	oButton_Leistung_uebernehmen=oForm_Steuerung_1.getByName(&quot;Button_Leistung_uebernehmen&quot;)
+End Function
+
+Function oButton_LeistungsID_uebernehmen as Object
+	oButton_LeistungsID_uebernehmen=oForm_Steuerung_1.getByName(&quot;Button_LeistungsID_uebernehmen&quot;)
+End Function
+
+Function oButton_Pos_neu as Object
+	oButton_Pos_neu=oForm_Steuerung_1.getByName(&quot;Button_Pos_neu&quot;)
+End Function
+
+Function oButton_AusgefuehrtAm as Object
+	oButton_AusgefuehrtAm=oForm_Steuerung_1.getByName(&quot;Button_AusgefuehrtAm&quot;)
+End Function
+
+Function oButton_Bemerkung as Object
+	oButton_Bemerkung=oForm_Steuerung_1.getByName(&quot;Button_Bemerkung&quot;)
+End Function
+
+Function oButton_Zwischensumme as Object
+	oButton_Zwischensumme=oForm_Steuerung_1.getByName(&quot;Button_Zwischensumme&quot;)
+End Function
+
+Function oButton_Blanko as Object
+	oButton_Blanko=oForm_Steuerung_1.getByName(&quot;Button_Blanko&quot;)
+End Function
+
+Function oButton_EK_BZ_uebernehmen as Object
+	oButton_EK_BZ_uebernehmen=oForm_Steuerung_1.getByName(&quot;Button_EK_BZ_uebernehmen&quot;)
+End Function
+
+Function oButton_Leistungsdaten_bearbeiten as Object
+	oButton_Leistungsdaten_bearbeiten=oForm_Steuerung_1.getByName(&quot;Button_Leistungsdaten_bearbeiten&quot;)
+End Function
+
+Function oButton_Zwischenbemerkung_bearbeiten as Object
+	oButton_Zwischenbemerkung_bearbeiten=oForm_Steuerung_1.getByName(&quot;Button_Zwischenbemerkung_bearbeiten&quot;)
+End Function
+
+Function oButton_Zwischensumme_bearbeiten as Object
+	oButton_Zwischensumme_bearbeiten=oForm_Steuerung_1.getByName(&quot;Button_Zwischensumme_bearbeiten&quot;)
+End Function
+
+Function oButton_DokumentName_bearbeiten as Object
+	oButton_DokumentName_bearbeiten=oForm_Steuerung_1.getByName(&quot;Button_DokumentName_bearbeiten&quot;)
+End Function
+
+Function oButton_AZ as Object
+	oButton_AZ=oForm_Steuerung_1.getByName(&quot;Button_AZ&quot;)
+End Function
+
+Function oOption_Schreibschutz as Object
+	oOption_Schreibschutz=oForm_Document.getByName(&quot;Option_Schreibschutz&quot;)
+End Function
+
+Function oOption_13b as Object
+	oOption_13b=oForm_Document.getByName(&quot;Option_13b&quot;)
+End Function
+
+Function oOption_AZ as Object
+	oOption_AZ=oForm_Document.getByName(&quot;Option_AZ&quot;)
+End Function
+
+Function lDocumentID as long
+	lDocumentID=CLng(oField_DocumentID.Value)
+End Function
+
+Function lDocumentID_Auswahl as long
+	lDocumentID_Auswahl=oList_Documentauswahl.BoundField.string
+End Function
+
+Function fFaellig_Tage as integer
+	fFaellig_Tage=oField_Faellig_Tage.BoundField.short
+End Function
+
+Function fSkonto_Tage as integer
+	fSkonto_Tage=oField_Skonto_Tage.BoundField.short
+End Function
+
+Function sStundensatz_Kontakt as single
+	sStundensatz_Kontakt=oField_Stundensatz_Kontakt.BoundField.float
+End Function
+
+Function sStundensatz_Projekt as single
+	sStundensatz_Projekt=oField_Stundensatz_Projekt.BoundField.float
+End Function
+
+Function cMVS as currency
+	cMVS=oField_MVS.BoundField.float
+End Function
+
+Function cMAS as currency
+	cMAS=oField_MAS.Boundfield.float
+End Function
+
+Function iOption_Schreibschutz as integer
+	iOption_Schreibschutz=oOption_Schreibschutz.BoundField.short
+End Function
+
+Function iOption_13b as integer
+	iOption_13b=oOption_13b.BoundField.short
+End Function
+
+Function iOption_AZ as integer
+	iOption_AZ=oOption_AZ.BoundField.short
+End Function
+
+</script:module>

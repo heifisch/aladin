@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="aktualisieren" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Position_bearbeiten()
+	Dim vStatus AS Variant
+	Dim sSQL1 AS String,sSQL2 AS String
+	Dim oRecordLeistung AS Object
+	Dim oDialogLeistungModel AS Object
+	Dim oFieldLeistungsID AS Object, oFieldLeistungsbezeichnung AS Object
+	Dim oFieldEinheit AS Object,oFieldBauzeit AS Object,oFieldEinkaufspreis AS Object
+	Dim oFieldLeistungsbeschreibung AS Object,oFieldBestellnummer AS Object
+	Dim sFieldLeistungsID AS String, sFieldLeistungsbezeichnung AS String
+	Dim sFieldEinheit AS String,sFieldBauzeit AS String,sFieldEinkaufspreis AS String
+	Dim sFieldLeistungsbeschreibung AS String,sFieldBestellnummer AS String
+	Dim iRowNumber AS Integer
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogLeistung = LoadDialog(&quot;ALADIN&quot;, &quot;Leistungsstamm&quot;)
+	oDialogLeistungModel = oDialogLeistung.Model
+	oFieldLeistungsID = oDialogLeistungModel.getByName(&quot;Field_LeistungsID&quot;)
+	oFieldLeistungsbezeichnung = oDialogLeistungModel.getByName(&quot;Field_Leistungsbezeichnung&quot;)
+	oFieldEinheit = oDialogLeistungModel.getByName(&quot;Field_Einheit&quot;)
+	oFieldBauzeit = oDialogLeistungModel.getByName(&quot;Field_Bauzeit&quot;)
+	oFieldEinkaufspreis = oDialogLeistungModel.getByName(&quot;Field_Einkaufspreis&quot;)
+	oFieldLeistungsbeschreibung = oDialogLeistungModel.getByName(&quot;Field_Leistungsbeschreibung&quot;)
+	oFieldBestellnummer = oDialogLeistungModel.getByName(&quot;Field_Bestellnummer&quot;)
+	
+	oDialogLeistungModel.getByName(&quot;Field_Listenpreis&quot;).Enabled=0
+	oDialogLeistungModel.getByName(&quot;Label_Listenpreis&quot;).Enabled=0
+	
+	oDialogLeistungModel.Title=sTitle_lokal &amp; &quot; - Leistung bearbeiten aus Tabelle &quot;&amp; sControlling
+
+	lPositionsID=flPositionsID()
+	iRowNumber=oForm_Tabellendaten.getRow()
+	if lPositionsID &gt; 0 then
+		sSQL1=&quot;SELECT LeistungsID,Bestellnummer,Leistungsbezeichnung,Einheit,Bauzeit,Einkaufspreis,Leistungsbeschreibung&quot;&amp;_
+			&quot; FROM &quot;&amp; sControlling &amp;&quot; WHERE PositionsID=&quot;&amp; lPositionsID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			oFieldLeistungsID.Text=oRecord1.getString(1)
+			oFieldBestellnummer.Text=oRecord1.getString(2)
+			oFieldLeistungsbezeichnung.Text=oRecord1.getString(3)
+			oFieldEinheit.Text=oRecord1.getString(4)
+			oFieldBauzeit.Text=fZahlMitPunkt(oRecord1.getString(5))
+			oFieldEinkaufspreis.Text=fZahlMitPunkt(oRecord1.getString(6))
+			oFieldLeistungsbeschreibung.Text=oRecord1.getString(7)
+		Wend
+		vStatus = oDialogLeistung.Execute()
+		if vStatus = 0 then
+			exit sub
+		End if
+		sSQL2=&quot;UPDATE &quot;&amp; sControlling &amp;&quot; SET &quot;&amp;_
+			&quot;Bestellnummer=&apos;&quot;&amp; oFieldBestellnummer.Text &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(oFieldLeistungsbezeichnung.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Einheit=&apos;&quot;&amp; oFieldEinheit.Text &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Bauzeit=&apos;&quot;&amp; fZahlMitKomma(oFieldBauzeit.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Einkaufspreis=&apos;&quot;&amp; fZahlMitKomma(oFieldEinkaufspreis.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(oFieldLeistungsbeschreibung.Text) &amp;&quot;&apos; &quot;&amp;_
+			&quot;WHERE PositionsID=&quot;&amp; lPositionsID
+			SQL_execute(sSQL2)
+			oForm_Tabellendaten.reload()
+			oForm_Tabellendaten.last()
+			oForm_Tabellendaten.first()
+			oForm_Tabellendaten.absolute(iRowNumber)
+	else
+		MsgBox(&quot;Sie haben noch keine Position ausgewählt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub Leistung_bearbeiten()
+	Dim vStatus AS Variant
+	Dim sSQL1 AS String,sSQL2 AS String
+	Dim oRecordLeistung AS Object
+	Dim oDialogLeistungModel AS Object
+	Dim oFieldLeistungsID AS Object, oFieldLeistungsbezeichnung AS Object
+	Dim oFieldEinheit AS Object,oFieldBauzeit AS Object,oFieldEinkaufspreis AS Object,oFieldListenpreis AS Object
+	Dim oFieldLeistungsbeschreibung AS Object,oFieldBestellnummer AS Object
+	Dim sFieldLeistungsID AS String, sFieldLeistungsbezeichnung AS String
+	Dim sFieldEinheit AS String,sFieldBauzeit AS String,sFieldEinkaufspreis AS String,sFieldListenpreis AS String
+	Dim sFieldLeistungsbeschreibung AS String,sFieldBestellnummer AS String
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogLeistung = LoadDialog(&quot;ALADIN&quot;, &quot;Leistungsstamm&quot;)
+	oDialogLeistungModel = oDialogLeistung.Model
+	oFieldLeistungsID = oDialogLeistungModel.getByName(&quot;Field_LeistungsID&quot;)
+	oFieldLeistungsbezeichnung = oDialogLeistungModel.getByName(&quot;Field_Leistungsbezeichnung&quot;)
+	oFieldEinheit = oDialogLeistungModel.getByName(&quot;Field_Einheit&quot;)
+	oFieldBauzeit = oDialogLeistungModel.getByName(&quot;Field_Bauzeit&quot;)
+	oFieldEinkaufspreis = oDialogLeistungModel.getByName(&quot;Field_Einkaufspreis&quot;)
+	oFieldListenpreis = oDialogLeistungModel.getByName(&quot;Field_Listenpreis&quot;)
+	oFieldLeistungsbeschreibung = oDialogLeistungModel.getByName(&quot;Field_Leistungsbeschreibung&quot;)
+	oFieldBestellnummer = oDialogLeistungModel.getByName(&quot;Field_Bestellnummer&quot;)
+	
+	oDialogLeistungModel.Title=sTitle_lokal &amp;&quot; - Leistung bearbeiten aus Tabelle &quot;&amp; sLeistungsstamm
+	
+	List_Leistungen_commit()
+	
+	if fLeistungsID &lt;&gt; &quot;&quot; then
+		sSQL1=&quot;SELECT LeistungsID,Bestellnummer,Leistungsbezeichnung,Einheit,Bauzeit,Einkaufspreis,Listenpreis,Leistungsbeschreibung&quot;&amp;_
+			&quot; FROM &quot;&amp; sLeistungsstamm &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			oFieldLeistungsID.Text=oRecord1.getString(1)
+			oFieldBestellnummer.Text=oRecord1.getString(2)
+			oFieldLeistungsbezeichnung.Text=oRecord1.getString(3)
+			oFieldEinheit.Text=oRecord1.getString(4)
+			oFieldBauzeit.Text=fZahlMitPunkt(oRecord1.getString(5))
+			oFieldEinkaufspreis.Text=fZahlMitPunkt(oRecord1.getString(6))
+			oFieldListenpreis.Text=fZahlMitPunkt(oRecord1.getString(7))
+			oFieldLeistungsbeschreibung.Text=oRecord1.getString(8)
+		Wend
+		vStatus = oDialogLeistung.Execute()
+		if vStatus = 0 then
+			exit sub
+		End if
+		sSQL2=&quot;UPDATE &quot;&amp; sLeistungsstamm &amp;&quot; SET &quot;&amp;_
+			&quot;Bestellnummer=&apos;&quot;&amp; oFieldBestellnummer.Text &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(oFieldLeistungsbezeichnung.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Einheit=&apos;&quot;&amp; oFieldEinheit.Text &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Bauzeit=&apos;&quot;&amp; fZahlMitKomma(oFieldBauzeit.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Einkaufspreis=&apos;&quot;&amp; fZahlMitKomma(oFieldEinkaufspreis.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Listenpreis=&apos;&quot;&amp; fZahlMitKomma(oFieldListenpreis.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(oFieldLeistungsbeschreibung.Text) &amp;&quot;&apos; &quot;&amp;_
+			&quot;WHERE LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL2)
+	else
+		MsgBox(&quot;Sie haben noch keine Leistung ausgewählt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub Werte_uebernehmen()
+	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+	Dim oRecordLeistungenNeu AS Object
+	Dim sEinkaufspreis_neu AS String
+	Dim sBauzeit_neu AS String,sLeistungsID AS String
+	Dim sLeistungsbezeichnung_neu AS String,sLeistungsbeschreibung_neu AS String
+	Dim lPositionsID AS Long
+&apos;	Tabelle_updateRow()	
+	wait 100
+	lPositionsID=flPositionsID()
+	sSQL1=&quot;SELECT LeistungsID,Leistungsbezeichnung,Leistungsbeschreibung,Einkaufspreis,Bauzeit&quot;&amp;_
+			&quot; FROM &quot;&amp; sControlling &amp;_
+			&quot; WHERE PositionsID=&quot;&amp; lPositionsID
+	oRecordLeistungenNeu=oResult(sSQL1)
+	While oRecordLeistungenNeu.next()
+		sLeistungsID=oRecordLeistungenNeu.getString(1)
+		sLeistungsbezeichnung_neu=oRecordLeistungenNeu.getString(2)
+		sLeistungsbeschreibung_neu=oRecordLeistungenNeu.getString(3)
+		sEinkaufspreis_neu=oRecordLeistungenNeu.getString(4)
+		sBauzeit_neu=oRecordLeistungenNeu.getString(5)
+	Wend
+	sSQL3=&quot;UPDATE &quot;&amp; sControlling &amp;&quot; SET&quot;&amp;_
+			&quot; Einkaufspreis=&apos;&quot; &amp; sEinkaufspreis_neu &amp;&quot;&apos;,&quot;&amp;_
+			&quot; Bauzeit=&apos;&quot;&amp; sBauzeit_neu &amp;&quot;&apos; &quot;&amp; sSQL_WHERE &amp;_
+			&quot; AND LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
+			&quot; AND Leistungsbezeichnung=&apos;&quot;&amp; sLeistungsbezeichnung_neu &amp;&quot;&apos;&quot;&amp;_
+			&quot; AND Leistungsbeschreibung=&apos;&quot;&amp; sLeistungsbeschreibung_neu &amp;&quot;&apos;&quot;
+	SQL_execute(sSQL3)
+	oForm_Tabellendaten.reload()
+End Sub
+
+Sub MAS_uebernehmen()
+	Dim sSQL1 AS String
+	sSQL1=&quot;UPDATE &quot;&amp; sControlling &amp;&quot; SET &quot;&amp;_
+			&quot;Materialaufschlagsatz=&apos;&quot; &amp; sMAS_Steuerung &amp;&quot;&apos; &quot;&amp; sSQL_WHERE
+	SQL_execute(sSQL1)
+	oForm_Tabellendaten.reload()
+End Sub
+
+Sub MVS_uebernehmen()
+	Dim sSQL1 AS String
+	sSQL1=&quot;UPDATE &quot;&amp; sControlling &amp;&quot; SET &quot;&amp;_
+			&quot;Minutenverrechnungssatz=&apos;&quot; &amp; sMVS_Steuerung &amp;&quot;&apos; &quot;&amp; sSQL_WHERE
+	SQL_execute(sSQL1)
+	oForm_Tabellendaten.reload()
+End Sub
+
+
+</script:module>

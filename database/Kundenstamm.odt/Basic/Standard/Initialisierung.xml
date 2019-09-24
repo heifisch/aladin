@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Initialisierung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sSQL1 AS String,sSQL2 AS String
+Dim vSQLArray AS Variant
+
+Sub Formular_init()
+	init_Form_Kontaktdaten()
+	init_Form_Ansprechpartner()
+	init_Form_Steuerung()
+	init_List_Kontaktauswahl()
+	init_List_Kalenderjahr()
+	init_Box_Anrede()
+	init_Box_Titel()
+	init_Column_Anrede()
+	init_Column_Titel()
+End Sub
+
+Sub init_Form_Kontaktdaten()
+	sSQL1=&quot;SELECT * FROM &quot;&amp; sKunden &amp;&quot; WHERE KontaktID=:c&quot;
+	oForm_Kontaktdaten.DataSourceName=sDataSource
+	oForm_Kontaktdaten.NavigationBarMode=0
+	oForm_Kontaktdaten.CommandType=2
+	oForm_Kontaktdaten.Command=sSQL1
+	oForm_Kontaktdaten.Cycle=1
+	oForm_Kontaktdaten.AllowInserts=false
+End Sub
+
+Sub init_Form_Ansprechpartner()
+	sSQL1=&quot;SELECT * FROM &quot;&amp; sAnsprechpartner_Kunden &amp;&quot; WHERE KontaktID=:c&quot;
+	oForm_Ansprechpartner.DataSourceName=sDataSource
+	oForm_Ansprechpartner.NavigationBarMode=0
+	oForm_Ansprechpartner.CommandType=2
+	oForm_Ansprechpartner.Command=sSQL1
+	oForm_Ansprechpartner.Cycle=1
+	oForm_Ansprechpartner.AllowInserts=false
+End Sub
+
+Sub init_Form_Steuerung()
+	sSQL1=&quot;SELECT * FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oForm_Steuerung.DataSourceName=sDataSource
+	oForm_Steuerung.NavigationBarMode=0
+	oForm_Steuerung.CommandType=2
+	oForm_Steuerung.Command=sSQL1
+	oForm_Steuerung.Cycle=1
+	oForm_Steuerung.AllowInserts=false
+End Sub
+
+Sub init_List_Kontaktauswahl()
+	vSQLArray=Array(&quot;SELECT DISTINCT&quot;&amp;_
+		&quot; CONCAT(t1.Name1,&apos;, &apos;,t1.Vorname,&apos; &apos;,t1.Name2,&apos;  --&gt;  &apos;,t1.Ort) AS Name,&quot;&amp;_
+		&quot; t1.KontaktID&quot;&amp;_
+		&quot; FROM &quot;&amp; sKunden &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE ((((t1.Name1 LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Vorname LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Name2 LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Name3 LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Name4 LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Land LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.PLZ LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Ort LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Strasse LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Hausnummer LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Mindestangaben LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Telefon LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Funktelefon LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Fax LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.EMail LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Url LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Aquise LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.Bemerkungen LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+			&quot;  OR t1.ReferenzID LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;))&quot;&amp;_
+		&quot; AND t2.Suchstring IS NOT NULL))&quot;&amp;_
+		&quot;  OR (t1.Name1 LIKE &apos;%&apos; AND t2.Suchstring IS NULL))&quot;&amp;_
+		&quot; ORDER BY t1.Name1 ASC&quot;)
+	oList_Kontaktauswahl.ListSourceType=4
+	oList_Kontaktauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Kalenderjahr()
+	vSQLArray=Array(&quot;SELECT DISTINCT YEAR(t1.Erstellungsdatum),YEAR(t1.Erstellungsdatum) AS Jahr&quot;&amp;_
+		&quot; FROM (&quot;&amp; sRechnungen1 &amp;&quot; AS t1,&quot;&amp; sGutschriften1 &amp;&quot; AS t2)&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (t1.KontaktID=t3.KontaktID&quot;&amp;_
+		&quot; OR t2.KontaktID=t3.KontaktID)&quot;&amp;_
+		&quot; ORDER BY Jahr DESC&quot;)
+	oList_Kalenderjahr.ListSourceType=4
+	oList_Kalenderjahr.ListSource=vSQLArray
+End Sub
+
+Sub init_Box_Anrede()
+	vSQLArray=&quot;SELECT DISTINCT Anrede&quot;&amp;_
+		&quot; FROM &quot;&amp; sKunden &amp;&quot; ORDER BY Anrede ASC&quot;
+	oComboBox_Anrede.ListSourceType=4
+	oComboBox_Anrede.ListSource=vSQLArray
+End Sub
+
+Sub init_Box_Titel()
+	vSQLArray=&quot;SELECT DISTINCT Titel&quot;&amp;_
+		&quot; FROM &quot;&amp; sKunden &amp;&quot; ORDER BY Titel ASC&quot;
+	oComboBox_Titel.ListSourceType=4
+	oComboBox_Titel.ListSource=vSQLArray
+End Sub
+
+Sub init_Column_Anrede()
+	vSQLArray=&quot;SELECT DISTINCT Anrede&quot;&amp;_
+		&quot; FROM &quot;&amp; sAnsprechpartner_Kunden &amp;&quot; ORDER BY Anrede ASC&quot;
+	oColumn_Anrede.ListSourceType=4
+	oColumn_Anrede.ListSource=vSQLArray
+End Sub
+
+Sub init_Column_Titel()
+	vSQLArray=&quot;SELECT DISTINCT Titel&quot;&amp;_
+		&quot; FROM &quot;&amp; sAnsprechpartner_Kunden &amp;&quot; ORDER BY Titel ASC&quot;
+	oColumn_Titel.ListSourceType=4
+	oColumn_Titel.ListSource=vSQLArray
+End Sub
+
+</script:module>

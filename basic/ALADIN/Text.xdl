@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="2" dlg:id="Text" dlg:left="35" dlg:top="52" dlg:width="304" dlg:height="300" dlg:closeable="true" dlg:moveable="true" dlg:title="Text bearbeiten">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:text-color="0x0" dlg:font-name="Arial" dlg:font-height="12" dlg:font-stylename="Fett" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="1" dlg:border="simple"/>
+  <dlg:style dlg:style-id="2" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="150"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:button dlg:style-id="0" dlg:id="Button_Speichern" dlg:tab-index="2" dlg:left="116" dlg:top="273" dlg:width="81" dlg:height="20" dlg:value="Speichern" dlg:button-type="ok"/>
+  <dlg:button dlg:style-id="0" dlg:id="Button_Abbrechen" dlg:tab-index="1" dlg:left="213" dlg:top="273" dlg:width="79" dlg:height="20" dlg:value="Abbrechen" dlg:button-type="cancel"/>
+  <dlg:button dlg:style-id="0" dlg:id="Button_Rechtschreibtest" dlg:tab-index="3" dlg:left="12" dlg:top="273" dlg:width="88" dlg:height="20" dlg:help-text="Einfacher Rechtschreibtest" dlg:value="Rechtschreibtest">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:ALADIN.Routinen.SpellCheckText?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:textfield dlg:style-id="1" dlg:id="Field_Text" dlg:tab-index="0" dlg:left="12" dlg:top="13" dlg:width="282" dlg:height="250" dlg:help-text="Für Tabulator kann die Zeichenfolge    \t    zwischen den Text eingefügt werden!" dlg:hard-linebreaks="true" dlg:vscroll="true" dlg:multiline="true"/>
+ </dlg:bulletinboard>
+</dlg:window>

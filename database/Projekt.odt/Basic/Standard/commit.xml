@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="commit" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim vStatus as Variant
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+
+Sub SET_AZ()
+	Dim sDocumentTyp as String
+	if lDocumentID &lt;&gt; 0 then
+		if iDocTypID = 5 OR iDocTypID = 6 then
+			oForm_Document.updateRow()
+			wait 10
+			if iOption_AZ = 0 then
+				sDocumentTyp=&quot;Rechnung&quot;
+			elseif iOption_AZ = 1 then
+				sDocumentTyp=&quot;Abschlagsrechnung&quot;
+			end if
+			sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Document_Typ=&apos;&quot;&amp; sDocumentTyp &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
+			SQL_execute(sSQL1)
+			oForm_Document.reload()
+			wait 1
+			oForm_Tabellendaten.last()
+		end if
+	End if
+End Sub
+
+Sub SET_13b()
+	Dim sMwSt_Satz as String,s13bText as String
+	Dim oRecord1 as Object
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;SELECT MwSt_Satz,13bText as Text FROM Einstellungen WHERE EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sMwSt_Satz=oRecord1.getString(1)
+			s13bText=oRecord1.getString(2)
+		Wend
+		oForm_Document.updateRow()
+		wait 10
+		if iOption_13b = 0 then
+			s13bText=&quot;&quot;
+		elseif iOption_13b = 1 then
+			sMwSt_Satz=&quot;0&quot;
+		end if
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET MwSt_Satz=&quot;&amp; sMwSt_Satz &amp;&quot;, 13bText=&apos;&quot;&amp; s13bText &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL2)
+		oForm_Document.reload()
+		wait 1
+		oForm_Tabellendaten.last()
+	End if
+End Sub
+
+Sub store_DocumentID_old
+	SetDocUserProperty(&quot;oDocumentID_old&quot;, lDocumentID)
+End Sub
+
+Sub SET_DocumentID_new()
+	oField_DocumentID.commit()
+	if lDocumentID &lt;&gt; 0 AND lDocumentID &lt;&gt; lDocumentID_old then
+		if fAnzahl_Datensaetze(sTabelle1,lDocumentID) = 0 then
+			sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET DocumentID=&quot;&amp; lDocumentID &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID_old
+			SQL_execute(sSQL1)
+			SQL_Reset_AutoIncrement(sTabelle1)
+			SQL_Datensaetze_Tabelle2_entfernen
+			SQL_Reset_AutoIncrement(sTabelle2)
+			sSQL2=&quot;UPDATE Steuerung SET DocumentID=&quot;&amp; lDocumentID &amp;&quot; WHERE ClientID=&quot;&amp; iClientID
+			SQL_execute(sSQL2)
+			sSQL3=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET DocumentID=&quot;&amp; lDocumentID
+			SQL_DocumentID_uebernehmen_Zwischensumme(lDocumentID_old)
+			SQL_DocumentID_uebernehmen_Bemerkungen(lDocumentID_old)
+			SQL_execute(sSQL3)
+			SQL_Datensaetze_Tabelle2_einfuegen()
+		else
+			MsgBox(&quot;Die DocumentID ist schon vergeben! Wählen sie bitte eine neue ID!&quot;,16,sTitle_lokal)
+		End if
+		oForm_Steuerung.reload()
+		wait 1
+		oForm_Tabellendaten.last()
+	End if
+End Sub
+
+Sub Erstellungsdatum_commit()
+	oField_Erstellungsdatum.commit()
+	oForm_Document.updateRow()
+	Datum_setzen_manuel()
+	oForm_Document.reload()
+	wait 1
+	oForm_Tabellendaten.last()
+End Sub
+
+Sub Tabelle_commit()
+	if CLng(oColumn_Position.getCurrentValue) &gt; 0 then
+		oColumn_LV_Position.commit()
+		oColumn_Leistungsbezeichnung.commit()
+		oColumn_Einheit.commit()
+		oColumn_Menge.commit()
+		oColumn_Einkaufspreis.commit()
+		oColumn_Bauzeit.commit()
+		oColumn_MAS.commit()
+		oColumn_MVS.commit()
+		wait 1
+		oForm_Tabellendaten.updateRow()
+	End if
+End Sub
+
+Sub Preisauswahl_commit()
+	oList_Kalkulationspreis.commit()
+	oForm_Steuerung_1.updateRow()
+	oList_Kalkulationspreis.refresh()
+End Sub
+
+Sub Korrektur_Vorzeichen_commit()
+	oList_Korrektur_Vorzeichen.commit()
+	oForm_Document.updateRow()
+	if oList_Korrektur_Vorzeichen.BoundField.String=&quot;-&quot; then
+		oList_Korrektur_Vorzeichen.TextColor=16711680
+		oField_Korrektur.TextColor=16711680
+		oLabel_Korrektur.Label=&quot;Abzug [%] &quot;
+		oLabel_Korrektur_Anlass.Label=&quot;Abzug: &quot;
+	elseif oList_Korrektur_Vorzeichen.BoundField.String=&quot;+&quot; then
+		oList_Korrektur_Vorzeichen.TextColor=255
+		oField_Korrektur.TextColor=255
+		oLabel_Korrektur.Label=&quot;Aufschlag [%] &quot;
+		oLabel_Korrektur_Anlass.Label=&quot;Aufschlag: &quot;
+	End if
+End Sub
+
+Sub Kontaktvorauswahl_commit()
+	oList_Kontaktvorauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Kontaktvorauswahl.refresh()
+	oList_Projektvorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Projektvorauswahl_commit()
+	oList_Projektvorauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Projektvorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Kontaktvorauswahl_reset()
+	sSQL1=&quot;UPDATE Steuerung SET KontaktID = NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	oList_Kontaktvorauswahl.refresh()
+	oList_Projektvorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Projektvorauswahl_reset()
+	sSQL1=&quot;UPDATE Steuerung SET ProjektID = NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	oList_Projektvorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Field_MwSt_Satz_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_MwSt_Satz.commit()
+		oForm_Document.updateRow()
+	End if
+End Sub
+
+Sub Field_Skonto_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Skonto_Satz.commit()
+		oForm_Document.updateRow()
+	End if
+End Sub
+
+Sub Field_Rabatt_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Rabatt_Satz.commit()
+		oForm_Document.updateRow()
+	End if
+End Sub
+
+Sub Field_Ordner_commit()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &lt;&gt; 0 then
+			oField_Ordner.commit()
+			oForm_Kontaktdaten.updateRow()
+		End if
+	End if
+End Sub
+
+Sub CheckBox_LeistungsID_commit()
+	oForm_Steuerung_1.updateRow()
+	wait 15
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub CheckBox_Bezeichnung_commit()
+	oForm_Steuerung_1.updateRow()
+	wait 15
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub CheckBox_Beschreibung_commit()
+	oForm_Steuerung_1.updateRow()
+	wait 15
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub Suchstring_commit()
+	oField_Suchstring.commit()
+	oForm_Steuerung_1.updateRow()
+	wait 15
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub Suchstring_2_commit()
+	oField_Suchstring_2.commit()
+	oForm_Steuerung.updateRow()
+	wait 15
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Suchstring_reset()
+	sSQL1=&quot;UPDATE Steuerung SET Suchstring = NULL WHERE ClientID = &quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	wait 15
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub Suchstring_2_reset()
+	sSQL1=&quot;UPDATE Steuerung SET Suchstring_2 = NULL WHERE ClientID = &quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	wait 15
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Skontoziel_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Skonto_Tage.commit()
+		oForm_Document.updateRow()
+		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Skonto_bis=(date_add(Erstellungsdatum,interval &quot;&amp; fSkonto_Tage &amp;_
+		&quot; day)) WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oForm_Document.reload()
+	End if
+End Sub
+
+Sub Zahlungsziel_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Faellig_Tage.commit()
+		oForm_Document.updateRow()
+		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; fFaellig_Tage &amp;_
+		&quot; day)) WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oForm_Document.reload()
+	End if
+End Sub
+
+Sub Ansprechpartner_reset()
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET AnsprechpartnerID = NULL WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oForm_Document.reload()
+		wait 1
+		oForm_Tabellendaten.last()
+	End if
+End Sub
+
+Sub Projektauswahl_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oList_Projektauswahl.commit()
+		oForm_Document.updateRow()
+		oForm_Projektdaten.reload()
+		if CCur(oField_MVS.BoundField.string) &gt; 0 then
+			if CCur(oField_MVS.BoundField.string) &lt;&gt; CCur(oField_Stundensatz_Projekt.BoundField.string)/60 then
+				vStatus=MsgBox(&quot;Möchten Sie, aus dem im Projekt gespeicherten Stundenverrechnungssatz, den Minutenverrechnungssatz (MVS) berechnen und diesen im Dokument verwenden?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
+					&quot;Achtung!!! Vorhandene Positionen werden nicht geändert.&quot;&amp; Chr(10)&amp;_
+					&quot;Für diese, kann durch drücken auf &quot;&amp; chr(34) &amp;&quot;Minutenverrechnungssatz übernehmen&quot;&amp; chr(34) &amp;&quot; der Wert &quot;&amp; chr(34) &amp;&quot;MVS&quot;&amp; chr(34) &amp;&quot; geändert werden&quot;,36,sTitle_lokal)
+				if vStatus=6 then
+					oField_MVS.value=CCur(oField_Stundensatz_Projekt.BoundField.string)/60
+					oField_MVS.commit()
+					oForm_Document.updateRow()
+				End if
+			End if
+		else
+			oField_MVS.value=CCur(oField_Stundensatz_Projekt.BoundField.string)/60
+			oField_MVS.commit()
+			oForm_Document.updateRow()
+		End if
+		oForm_Document.refreshRow()
+	End if
+End Sub
+
+Sub Projektauswahl_reset()
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET ProjektID = 0 WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oList_Projektvorauswahl.refresh()
+		oForm_Steuerung.reload()
+		wait 1
+		oForm_Tabellendaten.last()
+	End if
+End Sub
+
+Sub Field_Stundensatz_Projekt_commit()
+	if lDocumentID &lt;&gt; 0 then
+		if lProjektID &lt;&gt; 0 then
+			if CCur(oField_Stundensatz_Projekt.value()) &lt;&gt; CCur(oField_Stundensatz_Projekt.boundfield.string()) then
+				oForm_Projektdaten.updateRow()
+				if CCur(oField_MVS.BoundField.string) &gt; 0 then
+					if CCur(oField_MVS.BoundField.string) &lt;&gt; CCur(oField_Stundensatz_Projekt.value/60) then
+						vStatus=MsgBox(&quot;Der Stundenverrechnungssatz im Projekt wurde geändert.&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
+							&quot;Möchten Sie, aus dem geänderten Stundenverrechnungssatz, den Minutenverrechnungssatz (MVS) berechnen und diesen im Dokument verwenden?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
+							&quot;Achtung!!! Vorhandene Positionen werden nicht geändert.&quot;&amp; Chr(10)&amp;_
+							&quot;Für diese, kann durch drücken auf &quot;&amp; chr(34) &amp;&quot;Minutenverrechnungssatz übernehmen&quot;&amp; chr(34) &amp;&quot; der Wert &quot;&amp; chr(34) &amp;&quot;MVS&quot;&amp; chr(34) &amp;&quot; geändert werden&quot;,36,sTitle_lokal)
+						if vStatus=6 then
+							oField_MVS.value=CCur(oField_Stundensatz_Projekt.value/60)
+							oField_MVS.commit()
+							oForm_Document.updateRow()
+						End if
+					End if
+				else
+					oField_MVS.value=CCur(oField_Stundensatz_Projekt.value/60)
+					oField_MVS.commit()
+					oForm_Document.updateRow()
+				End if
+			End if
+		End if
+	End if
+End Sub
+
+Sub Field_Stundensatz_Kontakt_commit()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &lt;&gt; 0 then
+			if CCur(oField_Stundensatz_Kontakt.value()) &lt;&gt; CCur(oField_Stundensatz_Kontakt.boundfield.string()) then
+				oForm_Kontaktdaten.updateRow()
+				if CCur(oField_MVS.BoundField.string) &gt; 0 then
+					if CCur(oField_MVS.BoundField.string) &lt;&gt; CCur(oField_Stundensatz_Kontakt.value/60) then
+						vStatus=MsgBox(&quot;Der Stundenverrechnungssatz in den Stamm-Daten wurde geändert.&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
+							&quot;Möchten Sie, aus dem geänderten Stundenverrechnungssatz, den Minutenverrechnungssatz (MVS) berechnen und diesen im Dokument verwenden?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
+							&quot;Achtung!!! Vorhandene Positionen werden nicht geändert.&quot;&amp; Chr(10)&amp;_
+							&quot;Für diese, kann durch drücken auf &quot;&amp; chr(34) &amp;&quot;Minutenverrechnungssatz übernehmen&quot;&amp; chr(34) &amp;&quot; der Wert &quot;&amp; chr(34) &amp;&quot;MVS&quot;&amp; chr(34) &amp;&quot; geändert werden&quot;,36,sTitle_lokal)
+						if vStatus=6 then
+							oField_MVS.value=CCur(oField_Stundensatz_Kontakt.value/60)
+							oField_MVS.commit()
+							oForm_Document.updateRow()
+						End if
+					End if
+				else
+					oField_MVS.value=CCur(oField_Stundensatz_Kontakt.value/60)
+					oField_MVS.commit()
+					oForm_Document.updateRow()
+				End if
+			End if
+		End if
+	End if
+End Sub
+
+Sub Leistungsauswahl_commit()
+	oList_Leistungsauswahl.commit()
+	oForm_Steuerung_1.updateRow()
+	wait 10
+End Sub
+
+Sub Document_Name_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Document_Name.commit()
+		oForm_Document.updateRow()
+		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Document_Name=&apos;&quot;&amp; fsConvertApostroph(oField_Document_Name.BoundField.String) &amp;_
+				&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oList_Documentauswahl.refresh()
+		oForm_Steuerung.reload()
+		oForm_Document.reload()
+		wait 1
+		oForm_Tabellendaten.last()
+	End If
+End Sub
+
+Sub Bemerkung_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Bemerkung.commit()
+		oForm_Document.updateRow()
+	End if
+End Sub
+
+Sub Lieferbemerkung_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Lieferbemerkung.commit()
+		oForm_Document.updateRow()
+	End if
+End Sub
+
+Sub Leistungsempfaenger_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Leistungsempfaenger.commit()
+		oForm_Document.updateRow()
+	End if
+End Sub
+
+Sub Hauptgruppenauswahl_commit()
+	oList_Hauptgruppenauswahl.commit()
+	oForm_Steuerung_1.updateRow()
+	wait 10
+	oList_Gruppenauswahl.refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub Hauptgruppenauswahl_reset()
+	sSQL1=&quot;UPDATE Steuerung SET HauptgruppenID=NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	wait 10
+	oList_Gruppenauswahl.refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub Gruppenauswahl_commit()
+	oField_Suchstring.commit()
+	oList_Gruppenauswahl.commit()
+	oForm_Steuerung_1.updateRow()
+	wait 15
+	oList_Gruppenauswahl.refresh()
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub Gruppenauswahl_reset()
+	oField_Suchstring.commit()
+	oForm_Steuerung_1.updateRow()
+	wait 15
+	sSQL1=&quot;UPDATE Steuerung SET GruppenID=NULL WHERE ClientID=&quot;&amp; iClientID 
+	SQL_execute(sSQL1)
+	wait 15
+	oList_Gruppenauswahl.refresh()
+	List_Leistungen_refresh()
+	oForm_Steuerung_1.reload()
+End Sub
+
+Sub Ansprechpartner_commit()
+	oList_Ansprechpartner.commit()
+	oForm_Document.updateRow()
+End Sub
+
+Sub MVS_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_MVS.commit()
+		oForm_Document.updateRow()
+	End if
+End Sub
+
+Sub MAS_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_MAS.commit()
+		oForm_Document.updateRow()
+	End if
+End Sub
+
+Sub Korrektur_Satz_commit()
+	Dim sAnlass as String
+	if lDocumentID &lt;&gt; 0 then
+		oField_Korrektur_Satz.commit()
+		if oField_Korrektur_Satz.BoundField.float &gt; 0 then
+			if oField_Korrektur_Anlass.BoundField.String = &quot;&quot; OR  oField_Korrektur_Anlass.BoundField.String = &quot; &quot; then
+	nochmal:
+				sAnlass=InputBox(&quot;Geben Sie bitte den Anlass für die Korrektur an.&quot;,sTitle_lokal &amp;&quot; Korrektur&quot;)
+				if sAnlass = &quot;&quot; then
+					vStatus=MsgBox(&quot;Sie haben noch keinen Anlass eingegeben!&quot;,37,sTitle_lokal &amp; &quot; Korrektur&quot;)
+					if vStatus=4 then
+						goto nochmal
+					elseif vStatus=2 then
+						oField_Korrektur_Satz.value = 0
+						oField_Korrektur_Satz.commit()
+						oField_Korrektur_Anlass.Text = &quot;&quot;
+						oField_Korrektur_Anlass.commit()
+						oForm_Document.updateRow()
+						exit sub
+					End if
+				End if
+				oField_Korrektur_Anlass.Text = sAnlass
+				oField_Korrektur_Anlass.commit()
+			End if
+			oField_Korrektur_Satz.commit()
+			oForm_Document.updateRow()
+		else
+			oField_Korrektur_Anlass.Text = &quot;&quot;
+			oField_Korrektur_Anlass.commit()
+			oForm_Document.updateRow()
+		End if
+	End if
+End Sub
+
+Sub Korrektur_Anlass_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Korrektur_Anlass.commit()
+		oForm_Document.updateRow()
+	End if
+End Sub
+
+Sub Document_Typ_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Document_Typ.commit()
+		oForm_Document.updateRow()
+	End if
+End Sub
+
+Sub Leerzeilen_commit()
+	oList_Leerzeilen.commit()
+	oForm_Document.updateRow()
+End Sub
+
+Sub Jahr_commit()
+	oList_Jahrauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Kontaktvorauswahl.refresh()
+	oList_Projektvorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Jahr_reset()
+	Jahr_zuruecksetzen(1)
+End Sub
+
+
+</script:module>

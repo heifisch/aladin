@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc AS Object
+	oDoc=ThisComponent
+End Function
+
+Function oDocView AS Object
+	oDocView = oDoc.getCurrentController()
+End Function
+
+Function oForm_Document AS Object
+	oForm_Document=oForm_Steuerung.getByName(&quot;Form_Document&quot;)
+End Function
+
+Function oForm_Steuerung AS Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oForm_Lieferantendaten AS Object
+	oForm_Lieferantendaten=oForm_Document.getByName(&quot;Form_Lieferantendaten&quot;)
+End Function
+
+Function oField_DocumentID AS Object
+	oField_DocumentID=oForm_Document.getByName(&quot;Field_DocumentID&quot;)
+End Function
+
+Function oList_RechnungsTyp AS Object
+	oList_RechnungsTyp=oForm_Document.getByName(&quot;List_RechnungsTyp&quot;)
+End Function
+
+Function oList_Filter_RechnungsTyp AS Object
+	oList_Filter_RechnungsTyp=oForm_Steuerung.getByName(&quot;List_Filter_RechnungsTyp&quot;)
+End Function
+
+Function oField_Erstellungsdatum AS Object
+	oField_Erstellungsdatum=oForm_Document.getByName(&quot;Field_Erstellungsdatum&quot;)
+End Function
+
+Function oField_KontaktID AS Object
+	oField_KontaktID=oForm_Document.getByName(&quot;Field_KontaktID&quot;)
+End Function
+
+Function oField_Bank AS Object
+	oField_Bank=oForm_Lieferantendaten.getByName(&quot;Field_Bank&quot;)
+End Function
+
+Function oField_BIC AS Object
+	oField_BIC=oForm_Lieferantendaten.getByName(&quot;Field_BIC&quot;)
+End Function
+
+Function oField_IBAN AS Object
+	oField_IBAN=oForm_Lieferantendaten.getByName(&quot;Field_IBAN&quot;)
+End Function
+
+Function oField_Telefon AS Object
+	oField_Telefon=oForm_Lieferantendaten.getByName(&quot;Field_Telefon&quot;)
+End Function
+
+Function oField_Fax AS Object
+	oField_Fax=oForm_Lieferantendaten.getByName(&quot;Field_Fax&quot;)
+End Function
+
+Function oField_Ordner AS Object
+	oField_Ordner=oForm_Lieferantendaten.getByName(&quot;Field_Ordner&quot;)
+End Function
+
+Function oField_Betrag_ohne_MwSt AS Object
+	oField_Betrag_ohne_MwSt=oForm_Document.getByName(&quot;Field_Betrag_ohne_MwSt&quot;)
+End Function
+
+Function oField_Betrag_mit_MwSt AS Object
+	oField_Betrag_mit_MwSt=oForm_Document.getByName(&quot;Field_Betrag_mit_MwSt&quot;)
+End Function
+
+Function oField_Skonto_Satz AS Object
+	oField_Skonto_Satz=oForm_Document.getByName(&quot;Field_Skonto_Satz&quot;)
+End Function
+
+Function oField_Skonto AS Object
+	oField_Skonto=oForm_Document.getByName(&quot;Field_Skonto&quot;)
+End Function
+
+Function oField_MwSt_Satz AS Object
+	oField_MwSt_Satz=oForm_Document.getByName(&quot;Field_MwSt_Satz&quot;)
+End Function
+
+Function oField_MwSt AS Object
+	oField_MwSt=oForm_Document.getByName(&quot;Field_MwSt&quot;)
+End Function
+
+Function oField_bezahlt_am AS Object
+	oField_bezahlt_am=oForm_Document.getByName(&quot;Field_bezahlt_am&quot;)
+End Function
+
+Function oField_Betrag_bezahlt AS Object
+	oField_Betrag_bezahlt=oForm_Document.getByName(&quot;Field_Betrag_bezahlt&quot;)
+End Function
+
+Function oField_Suchstring AS Object
+	oField_Suchstring=oForm_Steuerung.getByName(&quot;Field_Suchstring&quot;)
+End Function
+
+Function oList_Documentauswahl AS Object
+	oList_Documentauswahl=oForm_Steuerung.getByName(&quot;List_Documentauswahl&quot;)
+End Function
+
+Function oList_Lieferanten AS Object
+	oList_Lieferanten=oForm_Document.getByName(&quot;List_Lieferanten&quot;)
+End Function
+
+Function oList_Filter_Jahr AS Object
+	oList_Filter_Jahr=oForm_Steuerung.getByName(&quot;List_Filter_Jahr&quot;)
+End Function
+
+Function oList_Filter_Monat AS Object
+	oList_Filter_Monat=oForm_Steuerung.getByName(&quot;List_Filter_Monat&quot;)
+End Function
+
+Function oList_Filter_Status AS Object
+	oList_Filter_Status=oForm_Steuerung.getByName(&quot;List_Filter_Status&quot;)
+End Function
+
+Function oList_Filter_Lieferant AS Object
+	oList_Filter_Lieferant=oForm_Steuerung.getByName(&quot;List_Filter_Lieferant&quot;)
+End Function
+
+Function oList_Status AS Object
+	oList_Status=oForm_Document.getByName(&quot;List_Status&quot;)
+End Function
+
+Function oField_Summe_nach_Skontoabzug AS Object
+	oField_Summe_nach_Skontoabzug=oForm_Steuerung.getByName(&quot;Field_Summe_nach_Skontoabzug&quot;)
+End Function
+
+Function oField_Summe_nach_Skontoabzug_entsprechend_Status AS Object
+	oField_Summe_nach_Skontoabzug_entsprechend_Status=oForm_Steuerung.getByName(&quot;Field_Summe_nach_Skontoabzug_entsprechend_Status&quot;)
+End Function
+
+Function oField_Summe_ohne_Skontoabzug AS Object
+	oField_Summe_ohne_Skontoabzug=oForm_Steuerung.getByName(&quot;Field_Summe_ohne_Skontoabzug&quot;)
+End Function
+
+Function oField_Summe_aller_offenen_Verbindlichkeiten AS Object
+	oField_Summe_aller_offenen_Verbindlichkeiten=oForm_Steuerung.getByName(&quot;Field_Summe_aller_offenen_Verbindlichkeiten&quot;)
+End Function
+
+Function oField_Ausgaben_nicht_Buchhaltung_aktuelles_Jahr AS Object
+	oField_Ausgaben_nicht_Buchhaltung_aktuelles_Jahr=oForm_Steuerung.getByName(&quot;Field_Ausgaben_nicht_Buchhaltung_aktuelles_Jahr&quot;)
+End Function
+
+Function oField_Netto_Ausgaben_Buchhaltung_aktuelles_Jahr AS Object
+	oField_Netto_Ausgaben_Buchhaltung_aktuelles_Jahr=oForm_Steuerung.getByName(&quot;Field_Netto_Ausgaben_Buchhaltung_aktuelles_Jahr&quot;)
+End Function
+
+Function oField_alle_Ausgaben_aktuelles_Jahr AS Object
+	oField_alle_Ausgaben_aktuelles_Jahr=oForm_Steuerung.getByName(&quot;Field_alle_Ausgaben_aktuelles_Jahr&quot;)
+End Function
+
+Function oField_Ausgaben_nicht_Buchhaltung_aktueller_Monat AS Object
+	oField_Ausgaben_nicht_Buchhaltung_aktueller_Monat=oForm_Steuerung.getByName(&quot;Field_Ausgaben_nicht_Buchhaltung_aktueller_Monat&quot;)
+End Function
+
+Function oField_Netto_Ausgaben_Buchhaltung_aktueller_Monat AS Object
+	oField_Netto_Ausgaben_Buchhaltung_aktueller_Monat=oForm_Steuerung.getByName(&quot;Field_Netto_Ausgaben_Buchhaltung_aktueller_Monat&quot;)
+End Function
+
+Function oField_alle_Ausgaben_aktueller_Monat AS Object
+	oField_alle_Ausgaben_aktueller_Monat=oForm_Steuerung.getByName(&quot;Field_alle_Ausgaben_aktueller_Monat&quot;)
+End Function
+
+Function oField_Ausgaben_nicht_Buchhaltung_Jahr AS Object
+	oField_Ausgaben_nicht_Buchhaltung_Jahr=oForm_Steuerung.getByName(&quot;Field_Ausgaben_nicht_Buchhaltung_Jahr&quot;)
+End Function
+
+Function oField_Netto_Ausgaben_Buchhaltung_Jahr AS Object
+	oField_Netto_Ausgaben_Buchhaltung_Jahr=oForm_Steuerung.getByName(&quot;Field_Netto_Ausgaben_Buchhaltung_Jahr&quot;)
+End Function
+
+Function oField_alle_Ausgaben_Jahr AS Object
+	oField_alle_Ausgaben_Jahr=oForm_Steuerung.getByName(&quot;Field_alle_Ausgaben_Jahr&quot;)
+End Function
+
+Function oField_Ausgaben_nicht_Buchhaltung_Monat AS Object
+	oField_Ausgaben_nicht_Buchhaltung_Monat=oForm_Steuerung.getByName(&quot;Field_Ausgaben_nicht_Buchhaltung_Monat&quot;)
+End Function
+
+Function oField_Netto_Ausgaben_Buchhaltung_Monat AS Object
+	oField_Netto_Ausgaben_Buchhaltung_Monat=oForm_Steuerung.getByName(&quot;Field_Netto_Ausgaben_Buchhaltung_Monat&quot;)
+End Function
+
+Function oField_alle_Ausgaben_Monat AS Object
+	oField_alle_Ausgaben_Monat=oForm_Steuerung.getByName(&quot;Field_alle_Ausgaben_Monat&quot;)
+End Function
+
+Function oField_Ausgaben_nicht_Buchhaltung_bis_Monat AS Object
+	oField_Ausgaben_nicht_Buchhaltung_bis_Monat=oForm_Steuerung.getByName(&quot;Field_Ausgaben_nicht_Buchhaltung_bis_Monat&quot;)
+End Function
+
+Function oField_Netto_Ausgaben_Buchhaltung_bis_Monat AS Object
+	oField_Netto_Ausgaben_Buchhaltung_bis_Monat=oForm_Steuerung.getByName(&quot;Field_Netto_Ausgaben_Buchhaltung_bis_Monat&quot;)
+End Function
+
+Function oField_alle_Ausgaben_bis_Monat AS Object
+	oField_alle_Ausgaben_bis_Monat=oForm_Steuerung.getByName(&quot;Field_alle_Ausgaben_bis_Monat&quot;)
+End Function
+
+Function oField_Rechnungsnummer AS Object
+	oField_Rechnungsnummer=oForm_Document.getByName(&quot;Field_Rechnungsnummer&quot;)
+End Function
+
+Function oField_Rechnungsname AS Object
+	oField_Rechnungsname=oForm_Document.getByName(&quot;Field_Rechnungsname&quot;)
+End Function
+
+Function oButton_Dokument_ansehen AS Object
+	oButton_Dokument_ansehen=oForm_Steuerung.getByName(&quot;Button_Dokument_ansehen&quot;)
+End Function
+
+Function oButton_Scannen AS Object
+	oButton_Scannen=oForm_Steuerung.getByName(&quot;Button_Scannen&quot;)
+End Function
+
+Function lDocumentID AS long
+	sSQL1=&quot;SELECT COALESCE(DocumentID,0) FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lDocumentID=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function lKontaktID AS long
+	lKontaktID=oField_KontaktID.BoundField.value
+End Function
+
+Function sField_Erstellungsdatum AS string
+	sField_Erstellungsdatum=oField_Erstellungsdatum.BoundField.string
+End Function
+
+Function sField_Rechnungsnummer AS string
+	sField_Rechnungsnummer=oField_Rechnungsnummer.BoundField.string
+End Function
+
+Function oList_Kalenderjahr AS Object
+	oList_Kalenderjahr=oForm_Steuerung.getByName(&quot;List_Kalenderjahr&quot;)
+End Function
+
+Function oList_Monat AS Object
+	oList_Monat=oForm_Steuerung.getByName(&quot;List_Monat&quot;)
+End Function
+
+Function oBuchhaltung AS Object
+	oBuchhaltung=oForm_Document.getByName(&quot;CheckBox_Buchhaltung&quot;)
+End Function
+
+Function iBuchhaltung AS Integer
+	iBuchhaltung=oBuchhaltung.BoundField.long
+End Function
+
+Function fAnzahlDatensaetzeRechnungen(sTabelle AS String,lDocumentID AS Long) AS integer
+	Dim oRecord1 AS Object
+	Dim sSQL1 AS String
+	sSQL1=&quot;SELECT count(*) FROM &quot;&amp; sTabelle &amp;&quot; WHERE RechnungsID=&quot;&amp; lDocumentID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fAnzahlDatensaetzeRechnungen=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function flDocumentID_import AS long
+	sSQL1=&quot;SELECT Max(RechnungsID) FROM &quot;&amp; sEingangsrechnungen
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		flDocumentID_import=oRecord1.getString(1)
+	Wend
+End Function
+
+Function flMax_Datensatz(sTabelle AS String,sCol AS String) AS long
+	sSQL1=&quot;SELECT Max(&quot;&amp; sCol &amp;&quot;) FROM &quot;&amp; sTabelle
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		flMax_Datensatz=oRecord1.getInt(1)
+	Wend	
+End Function
+
+Function flDocumentID_import_auto(iRefresh AS integer) AS string
+	STATIC lDocumentID_2 AS String
+	Dim sDocumentID_1 AS String,sDocumentID_2 AS String
+	Dim sJahr AS String,sJahr_1 AS String,sJahr_2 AS String
+	Dim sMonat AS String,sMonat_1 AS String,sMonat_2 AS String
+	Dim iMonat AS integer
+	Dim sNummer_1 AS String,sNummer_2 AS String
+	if iRefresh = 1 then	
+		sDocumentID_1=flMax_Datensatz(sEingangsrechnungen,&quot;RechnungsID&quot;)
+		sJahr_1=Mid(sDocumentID_1,1,4)
+		sMonat_1=Mid(sDocumentID_1,5,2)
+		sNummer_1=Mid(sDocumentID_1,7)
+		sJahr=YEAR(Now)
+		sMonat=MONTH(Now)
+		iMonat=MONTH(Now)
+		if iMonat&lt;10 then
+			sMonat= &quot;0&quot; &amp; MONTH(Now)
+		End if
+		if sJahr_1=sJahr then
+			sJahr_2=sJahr_1
+			sNummer_2=sNummer_1
+		else
+			sJahr_2=sJahr
+			sNummer_2=&quot;0001&quot;
+		End if
+		if sMonat_1=sMonat then
+			sMonat_2=sMonat_1
+		else
+			sMonat_2=sMonat
+		End if
+		sDocumentID_2=sJahr_2 &amp; sMonat_2 &amp; sNummer_2
+		lDocumentID_2=sDocumentID_2
+	End if
+	flDocumentID_import=lDocumentID_2
+End Function
+
+Function GetDocUserProperty(sPropertyName AS String) AS String
+	Dim oUserProps AS Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

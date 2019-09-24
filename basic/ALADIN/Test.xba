@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Test" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option explicit
+
+    Global ConfProvider as Variant
+    Global ConfUpdateAccess as Variant
+	Global ConfController as Variant
+	Global vConfiguration as Variant
+	Global vControllerManager as Variant
+
+Sub Test_CCur()
+	Dim cErgebnis as Currency
+	Dim sErgebnis as String
+	Dim cWert1 as Currency
+	Dim cWert2 as Currency
+	Dim iErgebnis as Integer
+		
+		cWert1=0
+		cWert2=4
+		
+		cErgebnis =cWert1-cWert2
+		iErgebnis=CInt(cErgebnis)
+		sErgebnis=CStr(cErgebnis)
+		
+	print cErgebnis
+	print CCur(iErgebnis)
+	print CCur(sErgebnis)
+End Sub
+
+Sub Test_Currency()
+	Dim sSQL as String
+	Dim oRecord as Object
+	Dim cErgebnis as Currency
+	Dim sErgebnis as String
+	Dim cWert1 as Currency
+	Dim cWert2 as Currency
+	
+	sSQL=&quot;select 0-5.2&quot;
+	oRecord=oResult(sSQL)
+	While oRecord.next()
+&apos;		cErgebnis=oRecord.getFloat(1)
+		sErgebnis=oRecord.getString(1)
+	Wend
+
+	print sErgebnis
+	print cErgebnis
+		
+		cWert1=0
+		cWert2=4.5
+		
+		cErgebnis =cWert1-cWert2
+		sErgebnis=CStr(cErgebnis)
+		
+	print CCur(sErgebnis)
+	print cErgebnis
+
+End Sub
+
+Sub Set_AntiAliasing(bAntiAliasing as boolean)
+
+    Dim arrPropVal(1) as new com.sun.star.beans.PropertyValue
+ 
+    Dim oDesktop as Object
+    Dim svcUpdateRootElement as Variant
+    Dim instUpdateRootElement as Variant
+    
+&apos;    oDesktop = createUnoService(&quot;com.sun.star.frame.Desktop&quot;)
+    ConfProvider = createUnoService(&quot;com.sun.star.configuration.ConfigurationProvider&quot;)
+    vConfiguration = createUnoService(&quot;com.sun.star.drawing.framework.Configuration&quot;)
+
+    ConfController = createUnoService(&quot;com.sun.star.drawing.framework.ConfigurationController&quot;)
+ &apos;   vControllerManager = createUnoService(&quot;com.sun.star.drawing.framework.XControllerManager&quot;)
+
+&apos;	ConfController.initialize(&quot;&quot;)
+&apos;  	ConfController.unlock()
+
+	
+    arrPropVal(0).Name = &quot;nodepath&quot;
+    arrPropVal(0).Value = &quot;/org.openoffice.Office.Common/Drawinglayer&quot;
+    arrPropVal(1).Name = &quot;enableasync&quot;
+    arrPropVal(1).Value = False
+    
+    ConfUpdateAccess=ConfProvider.createInstanceWithArguments(&quot;com.sun.star.configuration.ConfigurationUpdateAccess&quot;, arrPropVal())
+   	
+    GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+    GlobalScope.BasicLibraries.LoadLibrary(&quot;XrayTool&quot;)
+	
+&apos;	Xray StarDesktop
+
+&apos;    WriteDbgInfo(ConfProvider)
+   
+    print ConfUpdateAccess.AntiAliasing
+   
+    ConfUpdateAccess.replaceByName(&quot;AntiAliasing&quot;, bAntiAliasing)
+   
+    ConfUpdateAccess.commitChanges()
+ 
+    ConfProvider.flush()
+    ConfProvider.refresh()
+    
+ &apos;  	ConfController.update()
+
+    print ConfUpdateAccess.AntiAliasing
+   
+    ConfUpdateAccess.dispose()
+
+End Sub
+
+
+Sub Main_Picklist
+        ChangePickListSize( 100 )
+End Sub
+
+Sub ChangePickListSize( nSize as Integer )
+        &apos; access the global configuration provider
+        Dim aConfigProvider As Object
+        aConfigProvider = createUnoService( &quot;com.sun.star.configuration.ConfigurationProvider&quot; )
+       
+        &apos; create an access object for the history node
+        Dim aHistorySettings As Object
+        Dim aParams(0) As new com.sun.star.beans.PropertyValue
+        aParams(0).Name = &quot;nodepath&quot;
+        aParams(0).Value = &quot;/org.openoffice.Office.Common/History&quot;
+        aHistorySettings = aConfigProvider.createInstanceWithArguments( &quot;com.sun.star.configuration.ConfigurationUpdateAccess&quot;, aParams() )
+       
+        &apos; set the pick list size
+        aHistorySettings.replaceByName( &quot;PickListSize&quot;, nSize )
+       
+        &apos; commit the changes done
+        aHistorySettings.commitChanges
+End Sub
+
+Sub FormSize_Test()
+	Dim oFrame as Object
+	Dim oWin as Object
+
+	Dim oStyle as Object
+	Dim lHeight As Long
+	Dim lWidth  As Long
+	Dim iViewFaktorWidth as Integer
+	Dim iViewFaktorlHeight as Integer
+	Dim iPosSizeX as Integer
+	Dim iPosSizeY as Integer
+	Dim iPosSizeWidth as Integer
+	Dim iPosSizeHeight as Integer
+	
+	iViewFaktorWidth=1440/TwipsPerPixelX()/2540*10000
+	iViewFaktorlHeight=1440/TwipsPerPixelY()/2540*10000
+
+	oFrame = StarDesktop.getCurrentFrame()
+	oWin = oFrame.getContainerWindow()
+
+	iPosSizeX=oWin.getPosSize.X
+	iPosSizeY=oWin.getPosSize.Y
+	iPosSizeWidth=oWin.getPosSize.Width
+	iPosSizeHeight=oWin.getPosSize.Height
+
+	MsgBox(&quot;PosSizeX: &quot;&amp; iPosSizeX &amp; Chr$(13) &amp;&quot;PosSizeY: &quot;&amp; iPosSizeY  &amp; Chr$(13) &amp;&quot;iPosSizeWidth: &quot;&amp; iPosSizeWidth &amp; Chr$(13) &amp;&quot;iPosSizeHeight: &quot;&amp; iPosSizeHeight,0,sTitle &amp; &quot; - Aktuelle Fenstergröße&quot;)
+	MsgBox(&quot;Max-Höhe: &quot; &amp; lHeightMax &amp; Chr$(13)&amp; &quot;Max-Breite: &quot; &amp; lWidthMax,0,sTitle &amp; &quot; - Maximale Fenstergröße&quot;)
+
+	if lHeightMax=0 OR lWidthMax=0 then
+		oWin.IsMaximized = True
+		Wait 1000
+		lHeightMax=oWin.getSize.Height()
+		lWidthMax=oWin.getSize.Width()
+&apos;		MsgBox(&quot;Max-Höhe: &quot; &amp; lHeightMax &amp; Chr$(13)&amp; &quot;Max-Breite: &quot; &amp; lWidthMax,0,sTitle &amp; &quot; - Maximale Fenstergröße&quot;)
+		oWin.IsMaximized = False
+		Wait 1000
+	end if
+
+&apos;	GlobalScope.BasicLibraries.LoadLibrary(&quot;XrayTool&quot;)
+&apos;	Xray oWin
+	
+	oStyle = ThisComponent.StyleFamilies.getByName(&quot;PageStyles&quot;).getByName(&quot;Standard&quot;)
+	
+	lWidth  = (oStyle.Width/10000*iViewFaktorWidth)+40
+	lHeight = (oStyle.Height/10000*iViewFaktorlHeight)+100
+
+	MsgBox(&quot;Max-Höhe: &quot; &amp; lHeightMax &amp; Chr$(13) &amp;&quot;Max-Breite: &quot; &amp; lWidthMax &amp; Chr$(13) &amp;&quot;berechnete Höhe: &quot;&amp; lHeight &amp; Chr$(13) &amp;&quot;berechnete Breite: &quot;&amp; lWidth,0,sTitle &amp; &quot; - Fenstergröße&quot;)
+
+	if lWidth &gt; lWidthMax then lWidth = lWidthMax
+	if lHeight &gt; lHeightMax then lHeight = lHeightMax
+
+	oWin.setPosSize(oWin.getPosSize.X,0,lWidth,lHeight,15)
+&apos;	oWin.setPosSize(lWidthMax-lWidth,0,lWidth,lHeight,15)
+
+&apos;	iPosSizeX=oWin.getPosSize.X
+&apos;	iPosSizeY=oWin.getPosSize.Y
+&apos;	iPosSizeWidth=oWin.getPosSize.Width
+&apos;	iPosSizeHeight=oWin.getPosSize.Height
+
+&apos;	MsgBox(&quot;PosSizeX: &quot;&amp; iPosSizeX &amp; Chr$(13) &amp;&quot;PosSizeY: &quot;&amp; iPosSizeY  &amp; Chr$(13) &amp;&quot;iPosSizeWidth: &quot;&amp; iPosSizeWidth &amp; Chr$(13) &amp;&quot;iPosSizeHeight: &quot;&amp; iPosSizeHeight,0,sTitle &amp; &quot; - Aktuelle Fenstergröße&quot;)
+
+	
+	fixBaseForms()
+&apos;	GetViewData()
+End Sub
+
+Sub FormSize_Test_Do_Until()
+	Dim oFrame as Object
+	Dim oWin as Object
+
+	Dim oStyle as Object
+	Dim lHeight As Long
+	Dim lWidth  As Long
+	Dim iViewFaktorWidth as Integer
+	Dim iViewFaktorlHeight as Integer
+	
+	iViewFaktorWidth=1440/TwipsPerPixelX()/2540*10000
+	iViewFaktorlHeight=1440/TwipsPerPixelY()/2540*10000
+
+	oFrame = StarDesktop.getCurrentFrame()
+	oWin = oFrame.getContainerWindow()
+
+	if lHeightMax=0 OR lWidthMax=0 then
+		Do Until oWin.IsMaximized = True
+			oWin.IsMaximized = True
+			Wait 10
+		Loop
+		lHeightMax=oWin.getSize.Height()
+		lWidthMax=oWin.getSize.Width()
+		Do Until oWin.IsMaximized = False
+			oWin.IsMaximized = False
+			Wait 10
+		Loop
+	End if
+	
+	oStyle = ThisComponent.StyleFamilies.getByName(&quot;PageStyles&quot;).getByName(&quot;Standard&quot;)
+	
+	lWidth  = (oStyle.Width/10000*iViewFaktorWidth)+20
+	lHeight = (oStyle.Height/10000*iViewFaktorlHeight)+80
+
+	if lWidth &gt; lWidthMax then lWidth = lWidthMax
+	if lHeight &gt; lHeightMax then lHeight = lHeightMax
+
+	Do Until oWin.getPosSize.Width=lWidth AND oWin.getPosSize.Height=(lHeight-oWin.getPosSize.Y)
+		oWin.setPosSize(oWin.getPosSize.X,0,lWidth,lHeight,15)
+		Wait 10
+
+
+	Dim iPosSizeX as Integer
+	Dim iPosSizeY as Integer
+	Dim iPosSizeWidth as Integer
+	Dim iPosSizeHeight as Integer
+
+	iPosSizeX=oWin.getPosSize.X
+	iPosSizeY=oWin.getPosSize.Y
+	iPosSizeWidth=oWin.getPosSize.Width
+	iPosSizeHeight=oWin.getPosSize.Height
+
+	MsgBox(&quot;PosSizeX: &quot;&amp; iPosSizeX &amp; Chr$(13) &amp;&quot;PosSizeY: &quot;&amp; iPosSizeY  &amp; Chr$(13) &amp;&quot;iPosSizeWidth: &quot;&amp; iPosSizeWidth &amp;&quot; - &quot;&amp; lWidth &amp; Chr$(13) &amp;&quot;iPosSizeHeight: &quot;&amp; iPosSizeHeight &amp;&quot; - &quot;&amp; lHeight,0,sTitle &amp; &quot; - Aktuelle Fenstergröße&quot;)
+&apos;	MsgBox(&quot;Max-Höhe: &quot; &amp; lHeightMax &amp; Chr$(13)&amp; &quot;Max-Breite: &quot; &amp; lWidthMax,0,sTitle &amp; &quot; - Maximale Fenstergröße&quot;)
+
+	Loop
+	
+&apos;	oWin.setPosSize(lWidthMax-lWidth,0,lWidth,lHeight,15)
+	
+&apos;	fixBaseForms()
+
+End Sub
+</script:module>

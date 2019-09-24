@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE library:library PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "library.dtd">
+<library:library xmlns:library="http://openoffice.org/2000/library" library:name="ALADIN" library:readonly="false" library:passwordprotected="false">
+ <library:element library:name="YajHFCSettings"/>
+ <library:element library:name="Projekt"/>
+ <library:element library:name="Start"/>
+ <library:element library:name="Dokument"/>
+ <library:element library:name="Leistungsstamm"/>
+ <library:element library:name="Mandant"/>
+ <library:element library:name="Text"/>
+ <library:element library:name="Scanner"/>
+</library:library>

@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_2" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sDocumentID_1 as String,sDocumentID_2 as String
+Dim sJahr as String,sJahr_1 as String,sJahr_2 as String
+Dim sMonat as String,sMonat_1 as String,sMonat_2 as String
+Dim iMonat as integer
+Dim sNummer_1 as String,sNummer_2 as String
+Dim sWert as String
+Dim sMenge as String,iMenge_eingeben as integer
+Dim oRecord1 as Object
+Dim vStatus as Variant
+Dim sSQL1 as String
+
+Function fAnzahlSerienbriefe as Integer
+	Dim oRecord1 as Object
+	Dim sSQL1 as String
+	sSQL1=&quot;select count(*) from Serienbrief_Kontakte where Serienbrief=1 and ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fAnzahlSerienbriefe=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function fstoreSerienbriefKontaktID as String
+	Dim oRecord1 as Object
+	Dim sSQL1 as String
+	sSQL1=&quot;select group_concat(KontaktID separator &apos;,&apos;) from Serienbrief_Kontakte where Serienbrief=1 and ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fstoreSerienbriefKontaktID=oRecord1.getString(1)
+	Wend
+End Function
+
+Function fBemerkung as String
+	sSQL1=&quot;select distinct Bemerkung from Document_Typ where Document_TypID=&quot;&amp; iDocTypID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fBemerkung=oRecord1.getString(1)
+	Wend
+End Function
+
+Function LoadDialog_Korrespondenz(LibName as String, DialogName as String, Optional oLibContainer)
+	Dim oLib as Object
+	Dim oLibDialog as Object
+	Dim oRuntimeDialog as Object
+		If IsMissing(oLibContainer) then
+			oLibContainer = DialogLibraries
+		End If
+	oLibContainer.LoadLibrary(LibName)
+	oLib = oLibContainer.GetByName(LibName)
+	oLibDialog = oLib.GetByName(DialogName)
+	oRuntimeDialog = CreateUnoDialog(oLibDialog)
+	LoadDialog_Korrespondenz() = oRuntimeDialog
+End Function
+
+Function fVorhanden(sTabelName as string) as integer
+	sSQL1=&quot;select count(*) from &quot;&amp; sTabelName &amp;&quot; where DocumentID=&quot;&amp; lDocumentID &amp;&quot; and Pos=&quot;&amp; fPos_neu 
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fVorhanden=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function fAnzahl_Datensaetze(sTabelle as String,lDocumentID_param as Long) as integer
+	sSQL1=&quot;select count(*) from &quot;&amp; sTabelle &amp;&quot; where DocumentID=&quot;&amp; lDocumentID_param
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fAnzahl_Datensaetze=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function fDocumentOpen(DocumentName as String) as integer
+	For iCount =1 to Application.Documents.Count 
+		if Application.Documents.Item(iCount).Name = DocumentName then
+			fDocumentOpen=1
+			goto raus
+		End if
+	Next iCount 
+	fDocumentOpen=0
+	raus:
+End Function
+
+Function fSelected_Item(oList as Object)as String
+	Dim oList_View as Object
+	oList_View=oDoc.CurrentController.getControl(oList)
+	fSelected_Item=oList_View.SelectedItem()
+End Function
+
+Function iAnzahl_Datensaetze(sTabelle as String) as integer
+	sSQL1=&quot;select count(*) as Anzahl from &quot;&amp; sTabelle 
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iAnzahl_Datensaetze=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function iDatensatznummer(sTabelle as String) as integer
+	iDatensatznummer=iAnzahl_Datensaetze(sTabelle) - 1
+End Function
+
+Function iMax_Datensatz(sTabelle as String,sCol as String) as String
+	sSQL1=&quot;select Max(&quot;&amp; sCol &amp;&quot;) from &quot;&amp; sTabelle
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iMax_Datensatz=oRecord1.getInt(1)
+	Wend	
+End Function
+
+Function iMin_Data(sTabelle as String,sCol as String) as String
+	sSQL1=&quot;select Min(&quot;&amp; sCol &amp;&quot;) from &quot;&amp; sTabelle
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iMin_Data=oRecord1.getInt(1)
+	Wend	
+End Function
+
+Function fsNummern_Format as String
+	sSQL1=&quot;select Nummern_Format from Einstellungen where EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fsNummern_Format=oRecord1.getString(1)
+	Wend	
+End Function
+
+Function lDocumentID_import(iRefresh as integer) as long
+	Dim sNummern_Format as String
+	if iRefresh = 1 then	
+		sDocumentID_1=iMax_Datensatz(sKorrespondenz,&quot;DocumentID&quot;)
+		if Len(sDocumentID_1) = Len(fsNummern_Format)+6 then
+			sNummern_Format=fsNummern_Format
+		elseif Len(sDocumentID_1) &lt; Len(fsNummern_Format)+6 then
+			sNummern_Format=fsNummern_Format
+		elseif Len(sDocumentID_1) = Len(fsNummern_Format)+7 then
+			sNummern_Format= &quot;0&quot;&amp; fsNummern_Format
+		elseif Len(sDocumentID_1) = Len(fsNummern_Format)+8 then
+			sNummern_Format= &quot;00&quot;&amp; fsNummern_Format
+		elseif Len(sDocumentID_1) = Len(fsNummern_Format)+9 then
+			sNummern_Format= &quot;000&quot;&amp; fsNummern_Format
+		End if
+		sJahr_1=Mid(sDocumentID_1,1,4)
+		sMonat_1=Mid(sDocumentID_1,5,2)
+		sNummer_1=Mid(sDocumentID_1,7)
+		sJahr=Year(Now)
+		sMonat=Month(Now)
+		iMonat=Month(Now)
+		if iMonat&lt;10 then
+			sMonat= &quot;0&quot; &amp; Month(Now)
+		End if
+		if sJahr_1=sJahr then
+			sJahr_2=sJahr_1
+			sNummer_2=sNummer_1
+		else
+			sJahr_2=sJahr
+			sNummer_2=sNummern_Format
+		End if
+		if sMonat_1=sMonat then
+			sMonat_2=sMonat_1
+		else
+			sMonat_2=sMonat
+		End if
+		sDocumentID_2=sJahr_2 &amp; sMonat_2 &amp; sNummer_2
+		SetDocUserProperty(&quot;oDocumentID_imp2&quot;, CLng(sDocumentID_2))
+	End if
+	lDocumentID_import=lDocumentID_imp2
+End Function
+
+Function lDocumentID_export(iRefresh as integer) as long
+	Dim sNummern_Format as String
+	if iRefresh = 1 then	
+		sDocumentID_1=iMax_Datensatz(sKorrespondenz_export,&quot;DocumentID&quot;)
+		if Len(sDocumentID_1) = Len(fsNummern_Format)+6 then
+			sNummern_Format=fsNummern_Format
+		elseif Len(sDocumentID_1) &lt; Len(fsNummern_Format)+6 then
+			sNummern_Format=fsNummern_Format
+		elseif Len(sDocumentID_1) = Len(fsNummern_Format)+7 then
+			sNummern_Format= &quot;0&quot;&amp; fsNummern_Format
+		elseif Len(sDocumentID_1) = Len(fsNummern_Format)+8 then
+			sNummern_Format= &quot;00&quot;&amp; fsNummern_Format
+		elseif Len(sDocumentID_1) = Len(fsNummern_Format)+9 then
+			sNummern_Format= &quot;000&quot;&amp; fsNummern_Format
+		End if
+		sJahr_1=Mid(sDocumentID_1,1,4)
+		sMonat_1=Mid(sDocumentID_1,5,2)
+		sNummer_1=Mid(sDocumentID_1,7)
+		sJahr=Year(Now)
+		sMonat=Month(Now)
+		iMonat=Month(Now)
+		if iMonat&lt;10 then
+			sMonat= &quot;0&quot; &amp; Month(Now)
+		End if
+		if sJahr_1=sJahr then
+			sJahr_2=sJahr_1
+			sNummer_2=sNummer_1
+		else
+			sJahr_2=sJahr
+			sNummer_2=sNummern_Format
+		End if
+		if sMonat_1=sMonat then
+			sMonat_2=sMonat_1
+		else
+			sMonat_2=sMonat
+		End if
+		sDocumentID_2=sJahr_2 &amp; sMonat_2 &amp; sNummer_2
+		SetDocUserProperty(&quot;oDocumentID_exp2&quot;, CLng(sDocumentID_2))
+	End if
+	lDocumentID_export=lDocumentID_exp2
+End Function
+
+Function lDocumentID_Steuerung as Long
+	sSQL1=&quot;select DocumentID from Steuerung where ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lDocumentID_Steuerung=oRecord1.getLong(1)
+	Wend
+End Function
+
+Function lSerBrieListenID as Long
+	sSQL1=&quot;select SerBrieListenID from Steuerung where ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lSerBrieListenID=oRecord1.getLong(1)
+	Wend
+End Function
+
+Function fDocumentID as long
+	sSQL1=&quot;select distinct DocumentID from &quot;&amp; sArbeitstabelle
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fDocumentID=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function lKontaktID as long
+	sSQL1=&quot;select KontaktID from &quot;&amp; sKorrespondenz &amp;&quot; where DocumentID=&quot;&amp; lDocumentID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lKontaktID=oRecord1.getString(1)
+	Wend
+End Function
+
+Function lAnsprechpartnerID as long
+	sSQL1=&quot;select AnsprechpartnerID from &quot;&amp; sKorrespondenz &amp;&quot; where DocumentID=&quot;&amp; lDocumentID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lAnsprechpartnerID=oRecord1.getString(1)
+	Wend
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

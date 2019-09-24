@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Initialisierung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sSQL1 AS String,sSQL2 AS String
+Dim vSQLArray AS Variant
+
+Sub Formular_init()
+	reset_Summen()
+	init_Form_Document()
+	init_List_Lieferanten()
+	init_Form_Steuerung()
+	init_Form_Lieferantendaten()
+	init_List_Filter_Jahr()
+	init_List_Filter_Monat()
+	init_List_Filter_Status()
+	init_List_Filter_Lieferant()
+	init_List_Filter_RechnungsTyp()
+	init_List_Documentauswahl()
+	init_List_RechnungsTyp()
+	init_List_Monat()
+	init_List_Kalenderjahr()
+End Sub
+
+Sub init_Form_Document()
+	sSQL1=&quot;SELECT * FROM &quot;&amp; sEingangsrechnungen &amp;&quot; WHERE RechnungsID=:c&quot;
+	oForm_Document.DataSourceName=sDataSource
+	oForm_Document.NavigationBarMode=0
+	oForm_Document.CommandType=2
+	oForm_Document.Command=sSQL1
+	oForm_Document.Cycle=1
+	oForm_Document.AllowInserts=false
+End Sub
+
+Sub init_Form_Steuerung()
+	sSQL1=&quot;SELECT * FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oForm_Steuerung.DataSourceName=sDataSource
+	oForm_Steuerung.NavigationBarMode=0
+	oForm_Steuerung.CommandType=2
+	oForm_Steuerung.Command=sSQL1
+	oForm_Steuerung.Cycle=1
+	oForm_Steuerung.AllowInserts=false
+End Sub
+
+Sub init_Form_Lieferantendaten()
+	sSQL1=&quot;SELECT * FROM &quot;&amp; sLieferanten &amp;&quot;  WHERE KontaktID=:f&quot;
+	oForm_Lieferantendaten.DataSourceName=sDataSource
+	oForm_Lieferantendaten.NavigationBarMode=0
+	oForm_Lieferantendaten.CommandType=2
+	oForm_Lieferantendaten.Command=sSQL1
+	oForm_Lieferantendaten.Cycle=1
+	oForm_Lieferantendaten.AllowInserts=false
+End Sub
+
+Sub init_List_Documentauswahl()
+	vSQLArray=Array(&quot;SELECT DISTINCT&quot;&amp;_
+		&quot; concat(t1.RechnungsID,&apos;: &apos;,t3.Name1,&apos;;  &apos;,t1.Rechnungsnummer,&apos;  --&gt;  &apos;,t1.Rechnungsname) AS Name,t1.RechnungsID&quot;&amp;_
+		&quot; FROM (&quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sLieferanten &amp;&quot;  AS t3&quot;&amp;_
+		&quot; ON t3.KontaktID=t1.KontaktID)&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((YEAR(t1.Rechnungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((MONTH(t1.Rechnungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0)))&quot;&amp;_
+		&quot; AND ((t1.Status=t2.Status AND LENGTH(t2.Status) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Status) IS NULL OR LENGTH(t2.Status)=0)))&quot;&amp;_
+		&quot; AND ((t1.Rechnungsname LIKE concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;) AND LENGTH(t2.Suchstring) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Suchstring) IS NULL OR LENGTH(t2.Suchstring)=0)))&quot;&amp;_
+		&quot; AND ((t1.KontaktID=t2.LieferantenID AND LENGTH(t2.LieferantenID) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.LieferantenID) IS NULL OR LENGTH(t2.LieferantenID)=0)))&quot;&amp;_
+		&quot; AND ((t1.RechnungsTypID=t2.Option_2 AND t2.Option_2 &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Option_2) IS NULL OR t2.Option_2=0)))&quot;&amp;_
+		&quot; AND (((t1.gebucht=1 AND t2.Option_1=1) AND t1.Buchhaltung=1)&quot;&amp;_
+		&quot; OR ((t1.gebucht=0 AND t2.Option_1=2) AND t1.Buchhaltung=1)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Option_1) IS NULL OR t2.Option_1=0)))&quot;&amp;_
+		&quot; OR t1.RechnungsID=t2.DocumentID)&quot;&amp;_
+		&quot; ORDER BY t1.RechnungsID DESC&quot;)
+	oList_Documentauswahl.ListSourceType=4
+	oList_Documentauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Lieferanten()
+	vSQLArray=Array(&quot;SELECT DISTINCT concat(t1.Name1,&apos;, &apos;,t1.Vorname,&apos; &apos;,t1.Name2,&apos;  --&gt;  &apos;,t1.Ort) AS Name,&quot;&amp;_
+		&quot;t1.KontaktID FROM &quot;&amp; sLieferanten &amp;&quot;  AS t1 ORDER BY t1.Name1 ASC&quot;)
+	oList_Lieferanten.ListSourceType=4
+	oList_Lieferanten.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Jahr()
+	vSQLArray=Array(&quot;SELECT DISTINCT YEAR(Rechnungsdatum) AS Jahr,YEAR(Rechnungsdatum)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; ORDER BY Jahr DESC&quot;)
+	oList_Filter_Jahr.ListSourceType=4
+	oList_Filter_Jahr.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Monat()
+	vSQLArray=Array(&quot;SELECT DISTINCT t1.Monat,t1.MonatID&quot;&amp;_
+		&quot; FROM (Monate AS t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sEingangsrechnungen &amp;&quot; AS t2&quot;&amp;_
+		&quot; ON t1.MonatID = MONTH(t2.Rechnungsdatum))&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE ((YEAR(t2.Rechnungsdatum)=t3.Jahr AND LENGTH(t3.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR (YEAR(t2.Rechnungsdatum) LIKE &apos;%&apos; AND (LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0))&quot;&amp;_
+		&quot; OR t1.MonatID = t3.Monat)&quot;&amp;_
+		&quot; ORDER BY t1.MonatID+0 ASC&quot;)
+	oList_Filter_Monat.ListSourceType=4
+	oList_Filter_Monat.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Status()
+	vSQLArray=Array(&quot;SELECT DISTINCT t1.Status,t1.Status AS Stat&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((YEAR(t1.Rechnungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR (YEAR(t1.Rechnungsdatum) LIKE &apos;%&apos; AND (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((MONTH(t1.Rechnungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+		&quot; OR (MONTH(t1.Rechnungsdatum) LIKE &apos;%&apos; AND (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0)))&quot;&amp;_
+		&quot; OR t1.Status=t2.Status)&quot;&amp;_
+		&quot; UNION&quot;&amp;_
+		&quot; SELECT DISTINCT t2.Status,t2.Status AS Stat&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE t2.Status&lt;&gt;t1.Status&quot;)
+	oList_Filter_Status.ListSourceType=4
+	oList_Filter_Status.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Lieferant()
+	vSQLArray=Array(&quot;SELECT DISTINCT concat(t3.Name1,&apos;, &apos;,t3.Vorname,&apos; &apos;,t3.Name2,&apos;  --&gt;  &apos;,t3.Ort),t1.KontaktID&quot;&amp;_
+		&quot; FROM (&quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sLieferanten &amp;&quot;  AS t3&quot;&amp;_
+		&quot; ON t3.KontaktID=t1.KontaktID)&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((YEAR(t1.Rechnungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR (YEAR(t1.Rechnungsdatum) LIKE &apos;%&apos; AND (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((MONTH(t1.Rechnungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+		&quot; OR (MONTH(t1.Rechnungsdatum) LIKE &apos;%&apos; AND (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0)))&quot;&amp;_
+		&quot; AND ((t1.Status=t2.Status AND LENGTH(t2.Status) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.Status LIKE &apos;%&apos; AND (LENGTH(t2.Status) IS NULL OR LENGTH(t2.Status)=0)))&quot;&amp;_
+		&quot; OR t1.KontaktID=t2.LieferantenID)&quot;&amp;_
+		&quot; ORDER BY t3.Name1 ASC&quot;)
+	oList_Filter_Lieferant.ListSourceType=4
+	oList_Filter_Lieferant.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_RechnungsTyp()
+	vSQLArray=Array(&quot;SELECT DISTINCT RechnungsTyp,RechnungsTypID&quot;&amp;_
+		&quot; FROM RechnungsTypen ORDER BY RechnungsTypID&quot;)
+	oList_Filter_RechnungsTyp.ListSourceType=4
+	oList_Filter_RechnungsTyp.ListSource=vSQLArray
+End Sub
+
+Sub init_List_RechnungsTyp()
+	vSQLArray=Array(&quot;SELECT DISTINCT RechnungsTyp,RechnungsTypID&quot;&amp;_
+		&quot; FROM RechnungsTypen ORDER BY RechnungsTypID&quot;)
+	oList_RechnungsTyp.ListSourceType=4
+	oList_RechnungsTyp.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Kalenderjahr()
+	vSQLArray=Array(&quot;SELECT DISTINCT YEAR(t1.Rechnungsdatum) AS Jahr,YEAR(t1.Rechnungsdatum)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1 ORDER BY Jahr DESC&quot;)
+	oList_Kalenderjahr.ListSourceType=4
+	oList_Kalenderjahr.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Monat()
+	vSQLArray=Array(&quot;SELECT DISTINCT Monat,MonatID FROM Monate ORDER BY MonatID+0&quot;)
+	oList_Monat.ListSourceType=4
+	oList_Monat.ListSource=vSQLArray
+End Sub
+
+</script:module>

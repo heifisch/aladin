@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Global" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option explicit
+
+Global isResetSteuerung as Integer
+Global lHeightMax as Long
+Global lWidthMax as Long
+Global sTableList as String
+
+Global const sWaehrung=&quot;€&quot;
+Global const sDataSource=&quot;ALADIN&quot;
+
+Global const sAladinPfad=&quot;/home/fischer/ALADIN/database/&quot;	&apos;Pfad zu Formular-Dateien
+Global const sStandardPfad=&quot;/daten/aladin&quot;							&apos;Standard-Speicherpfad z.B. für PDF-Erzeugung
+
+&apos;--------------------------------------------------------------------------------------------------------------------------------------------------------––––––––––––––––––––––––––––––––––
+&apos;Mandantenfähigkeit
+&apos;--------------------------------------------------------------------------------------------------------------------------------------------------------––––––––––––––––––––––––––––––––––
+
+Global const iAnzahlMandanten=1 &apos;mindestens 1
+
+&apos;Für Mehrplatzlösungen jedem User eine eigene ID vergeben und entsprechende 
+&apos;Datensätze in der Tabelle Users anlegen
+
+Global const iUserID1=1 &apos;pro Benutzer und Mandant unterschiedliche UserID
+Global const iUserID2=2
+Global const iUserID3=3
+
+Global const sMandant1=&quot;Mandant 1&quot;
+Global const sMandant2=&quot;Mandant 2&quot;
+Global const sMandant3=&quot;Mandant 3&quot;
+
+&apos;--------------------------------------------------------------------------------------------------------------------------------------------------------––––––––––––––––––––––––––––––––––
+
+Global const iLDAP=0							&apos; Update LDAP-Datenbank für OpenLDAP back-sql 
+
+&apos; Faxeinstellungen
+Global const sFaxPrinter=&quot;HylaFax&quot;
+&apos;Global const sFaxTyp=&quot;Hylafax&quot;			&apos; Hylafax, yajhfc, fritzfax
+Global const sFaxTyp=&quot;yajhfc&quot;				&apos; Hylafax, yajhfc, fritzfax
+Global const sFaxCountryCode=&quot;49&quot;		&apos; Country-Code wird aus der Nummer entfernt 
+Global const sFaxNumberPraefix=&quot;&quot;		&apos; Amtsholung bei Betrieb an einer TK-Anlage
+Global const iFaxLenInternNumber=&quot;3&quot;	&apos; Länge der internen Nmmern bei Betrieb an Nebenstelle
+															&apos; wird benötigt um auch intern Faxe versenden zu können
+
+&apos;--------------------------------------------------------------------------------------------------------------------------------------------------------––––––––––––––––––––––––––––––––––
+
+Global const iGroup2Lokation=0			&apos; 1 = Leistungsgruppennamen werden im Controlling in Spalte Lokation übernommen
+															&apos; 0 = Leistungsgruppennamen werden im Controlling nicht in Spalte Lokation übernommen
+
+&apos;Global const sKonsole=&quot;/usr/bin/konsole --hold -e&quot;
+Global const sKonsole=&quot;/usr/bin/xterm -e&quot;
+
+Global const sScannerScript=&quot;/usr/local/bin/pct-scanner-script&quot;
+
+Global const iScannerAktiv=1
+Global const sScanDevice=&quot;fujitsu:ScanSnap S500:18197&quot;
+Global const sPathEingangsRechnungen=&quot;/daten/aladin/ALADIN/Eingangsrechnungen/&quot;
+Global const sPathAusgangsRechnungen=&quot;/daten/aladin/ALADIN/Ausgangsrechnungen/&quot;
+
+Sub Main
+
+End Sub
+</script:module>

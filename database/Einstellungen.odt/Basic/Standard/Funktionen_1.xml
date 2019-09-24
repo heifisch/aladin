@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc as Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_DocumentTyp as Object
+	oForm_DocumentTyp=oForm_Steuerung.getByName(&quot;Form_DocumentTyp&quot;)
+End Function
+
+Function oForm_Steuerung as Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oForm_Einstellungen as Object
+	oForm_Einstellungen=oDoc.DrawPage.Forms.getByName(&quot;Form_Einstellungen&quot;)
+End Function
+
+Function oForm_Users as Object
+	oForm_Users=oDoc.DrawPage.Forms.getByName(&quot;Form_Users&quot;)
+End Function
+
+Function oField_MwSt_Satz as Object
+	oField_MwSt_Satz=oForm_Einstellungen.getByName(&quot;Field_MwSt_Satz&quot;)
+End Function
+
+Function oField_Faellig_Tage as Object
+	oField_Faellig_Tage=oForm_Einstellungen.getByName(&quot;Field_Faellig_Tage&quot;)
+End Function
+
+Function oField_Stundenverrechnungssatz as Object
+	oField_Stundenverrechnungssatz=oForm_Einstellungen.getByName(&quot;Field_Stundenverrechnungssatz&quot;)
+End Function
+
+Function oField_Materialaufschlagsatz as Object
+	oField_Materialaufschlagsatz=oForm_Einstellungen.getByName(&quot;Field_Materialaufschlagsatz&quot;)
+End Function
+
+Function oList_Nummern_Format as Object
+	oList_Nummern_Format=oForm_Einstellungen.getByName(&quot;List_Nummern_Format&quot;)
+End Function
+
+Function oOption_Geschaeftsfuehrer as Object
+	oOption_Geschaeftsfuehrer=oForm_Einstellungen.getByName(&quot;Option_Geschaeftsfuehrer&quot;)
+End Function
+
+Function oOption_Inhaber as Object
+	oOption_Inhaber=oForm_Einstellungen.getByName(&quot;Option_Inhaber&quot;)
+End Function
+
+Function oFileControl_Logo as Object
+	oFileControl_Logo=oForm_Users.getByName(&quot;FileControl_Logo&quot;)
+End Function
+
+Function oFileControl_Signum as Object
+	oFileControl_Signum=oForm_Users.getByName(&quot;FileControl_Signum&quot;)
+End Function
+
+Function oFileControl_Grafik as Object
+	oFileControl_Grafik=oForm_Users.getByName(&quot;FileControl_Grafik&quot;)
+End Function
+
+Function oFileControl_Buchhaltung as Object
+	oFileControl_Buchhaltung=oForm_Users.getByName(&quot;FileControl_Buchhaltung&quot;)
+End Function
+
+Function sFileControl_Logo as String
+	sFileControl_Logo=oFileControl_Logo.Text
+End Function
+
+Function sFileControl_Signum as String
+	sFileControl_Signum=oFileControl_Signum.Text
+End Function
+
+Function sFileControl_Grafik as String
+	sFileControl_Grafik=oFileControl_Grafik.Text
+End Function
+
+Function sFileControl_Buchhaltung as String
+	sFileControl_Buchhaltung=oFileControl_Buchhaltung.Text
+End Function
+
+Function oList_Document_Typ as Object
+	oList_Document_Typ=oForm_Steuerung.getByName(&quot;List_Documen_Typ&quot;)
+End Function
+
+Function oField_DocumentID as Object
+	oField_DocumentID=oForm_DocumentTyp.getByName(&quot;Field_DocumentID&quot;)
+End Function
+
+Function oField_KontaktID as Object
+	oField_KontaktID=oForm_DocumentTyp.getByName(&quot;Field_KontaktID&quot;)
+End Function
+
+Function oField_Summe_ohne_MwSt as Object
+	oField_Summe_ohne_MwSt=oForm_DocumentTyp.getByName(&quot;Field_Summe_ohne_MwSt&quot;)
+End Function
+
+Function oField_Summe_mit_MwSt as Object
+	oField_Summe_mit_MwSt=oForm_DocumentTyp.getByName(&quot;Field_Summe_mit_MwSt&quot;)
+End Function
+
+Function oField_Schluss_Text1 as Object
+	oField_Schluss_Text1=oForm_DocumentTyp.getByName(&quot;Field_Schluss_Text1&quot;)
+End Function
+
+Function oField_Schluss_Text2 as Object
+	oField_Schluss_Text2=oForm_DocumentTyp.getByName(&quot;Field_Schluss_Text2&quot;)
+End Function
+
+Function oField_Bemerkung as Object
+	oField_Bemerkung=oForm_DocumentTyp.getByName(&quot;Field_Bemerkung&quot;)
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

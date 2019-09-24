@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Infos" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sAnrede AS String,sTitel AS String,sVorname AS String,sName1 AS String
+Dim sName2 AS String,sName3 AS String,sName4 AS String
+Dim sLand AS String,sPLZ AS String,sOrt AS String
+Dim sStrasse AS String,sHausnummer AS String,sMindestangaben AS String,sTelefon AS String
+Dim sFunktelefon AS String,sFax AS String,sEMail AS String,sUrl AS String
+Dim sReferenzID AS String,sOrdner AS String
+Dim sAnrede_Ansprechpartner AS String,sTitel_Ansprechpartner AS String
+Dim sVorname_Ansprechpartner AS String,sName_Ansprechpartner AS String
+Dim sFunktelefon_Ansprechpartner AS String,sFax_Ansprechpartner AS String
+Dim sEMail_Ansprechpartner AS String,sTelefon_Ansprechpartner AS String
+Dim sBemerkung_Ansprechpartner AS String,sAbteilung_Ansprechpartner AS String
+
+Dim sMaterialeinsatz AS String,sBauzeit_Tage AS String,sBauzeit_Stunden AS String
+Dim sLeistungsID AS String,sMenge AS String,sMaterialaufschlagsatz AS String
+Dim sMinutenverrechnungssatz AS String,sLieferung AS String,sLeistung AS String
+Dim	sEP AS String,sGP AS String,lDocumentID_Auftrag AS Long,sDocument_Name AS String
+Dim sMenge_verbaut AS String,sLV_POS AS String,sListenpreis AS String
+Dim sLeistungsID_Summe AS String,sBestellnummer_Summe AS String
+Dim sLeistungsbezeichnung_Summe AS String,sLeistungsbeschreibung_Summe AS String
+Dim sEinkaufspreis_Summe AS String,sMaterialaufschlagsatz_Summe AS String
+Dim sBauzeit_Summe AS String,sMinutenverrechnungssatz_Summe AS String
+
+Dim sLeistungsgruppe AS String,sBauzeit AS String,sEinkaufspreis AS String
+Dim sWarenbestand AS String,sGruppenname AS String
+Dim sLeistungsID AS string,sBestellnummer AS String
+Dim sLeistungsbezeichnung AS string,sLeistungsbeschreibung AS String,sEinheit AS String
+Dim iPos AS integer,lPositionsID AS long
+Dim sBemerkung AS String
+Dim oRecord1 AS Object,oRecord2 AS Object,oRecord3 AS Object,oRecord4 AS Object
+Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String,sSQL4 AS String
+
+Sub Leistungsdaten_anzeigen()
+	Dim sLeistungsdaten AS String
+
+	List_Leistungen_commit()
+
+	if fSelected_Item(oList_Leistungsauswahl) &lt;&gt; &quot;&quot; then
+		sSQL1=&quot;SELECT t1.Bestellnummer,t1.Leistungsgruppe,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&quot;&amp;_
+			&quot;t1.Einheit,t1.Bauzeit,t1.Einkaufspreis,t1.Listenpreis,t1.Warenbestand,t2.Gruppenname&quot;&amp;_
+			&quot; FROM &quot;&amp; sLeistungsstamm &amp;&quot; AS t1,&quot;&amp; sLeistungsgruppen &amp;&quot; AS t2 WHERE LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;_
+			&quot;&apos; AND t2.GruppenID=t1.Leistungsgruppe&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sBestellnummer=oRecord1.getString(1)
+			sLeistungsgruppe=oRecord1.getString(2)
+			sLeistungsbezeichnung=oRecord1.getString(3)
+			sLeistungsbeschreibung=oRecord1.getString(4)
+			sEinheit=oRecord1.getString(5)
+			sBauzeit=oRecord1.getString(6)
+			sEinkaufspreis=oRecord1.getString(7)
+			sListenpreis=oRecord1.getString(8)
+			sWarenbestand=oRecord1.getString(9)
+			sGruppenname=oRecord1.getString(10)
+		Wend
+		sLeistungsdaten = &quot;        LeistungsID:&quot;&amp;Chr$(9)&amp; fLeistungsID &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  &quot;  Bestellnummer:&quot;&amp;Chr$(9)&amp; sBestellnummer &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  &quot;Leistungsgruppe:&quot;&amp;Chr$(9)&amp; sLeistungsgruppe &amp;&quot; - &quot;&amp; sGruppenname &amp;Chr$(13)&amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  &quot;Leistungsbezeichnung:&quot; &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  sLeistungsbezeichnung &amp;Chr$(13)&amp;Chr$(13)&amp;Chr$(13)
+		if sLeistungsbeschreibung &lt;&gt; &quot;&quot; then
+						sLeistungsdaten = sLeistungsdaten &amp;_
+						  &quot;Leistungsbeschreibung:&quot; &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  sLeistungsbeschreibung &amp;Chr$(13)&amp;Chr$(13)&amp;Chr$(13)
+		End if
+		sLeistungsdaten = sLeistungsdaten &amp;_
+			  &quot;              Einheit:&quot;&amp; Chr$(9)&amp; sEinheit &amp;Chr$(13)&amp;_
+			  &quot;             Bauzeit:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sBauzeit) &amp;&quot; Minuten &quot; &amp;Chr$(13)&amp;_
+			  &quot;    Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
+			  &quot;        Listenpreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sListenpreis) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
+			  &quot;  Warenbestand:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sWarenbestand) &amp;&quot; &quot;&amp; sEinheit &amp;Chr$(13)
+		MsgBox(sLeistungsdaten,64,sTitle_lokal &amp;&quot; Leistungsdaten&quot;)
+	End if
+End Sub
+
+
+Sub Leistungsdaten_anzeigen_Auftrag()
+	Dim sLeistungsdaten AS String
+
+	List_Leistungen_Auftrag_commit()
+
+	if fSelected_Item(oList_Leistungsauswahl_Auftrag) &lt;&gt; &quot;&quot; then
+		sSQL1=&quot;SELECT t1.Bestellnummer,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&quot;&amp;_
+			&quot;t1.Einheit,t1.Bauzeit,t1.Einkaufspreis,t1.LeistungsID,t1.Materialaufschlagsatz,&quot;&amp;_
+			&quot;t1.Minutenverrechnungssatz,t1.Lieferung,t1.Leistung,t1.EP,t1.GP,t1.DocumentID,&quot;&amp;_
+			&quot;t3.Document_Name,t1.LeistungsID&quot;&amp;_
+			&quot; FROM &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; AS t1,Steuerung AS t2,&quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; AS t3&quot;&amp;_
+			&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; AND t1.PositionsID=t2.PositionsID&quot;&amp;_
+			&quot; AND t3.DocumentID=t1.DocumentID&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sBestellnummer=oRecord1.getString(1)
+			sLeistungsbezeichnung=oRecord1.getString(2)
+			sLeistungsbeschreibung=oRecord1.getString(3)
+			sEinheit=oRecord1.getString(4)
+			sBauzeit=oRecord1.getString(5)
+			sEinkaufspreis=oRecord1.getString(6)
+			sLeistungsID=oRecord1.getString(7)
+			sMaterialaufschlagsatz=oRecord1.getString(8)
+			sMinutenverrechnungssatz=oRecord1.getString(9)
+			sLieferung=oRecord1.getString(10)
+			sLeistung=oRecord1.getString(11)
+			sEP=oRecord1.getString(12)
+			sGP=oRecord1.getString(13)
+			lDocumentID_Auftrag=oRecord1.getLong(14)
+			sDocument_Name=oRecord1.getString(15)
+			sLeistungsID=oRecord1.getString(16)
+		Wend
+		sSQL4=&quot;SELECT SUM(t1.Menge)&quot;&amp;_
+			&quot; FROM &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; AS t1,&quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; AS t2 &quot;&amp;_
+			&quot; WHERE t2.ProjektID=&quot;&amp; lProjektID &amp;_
+			&quot; AND t1.DocumentID=t2.DocumentID&quot;&amp;_
+			&quot; AND t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;_
+			&quot;&apos; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;_
+			&quot;&apos; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; sLeistungsbezeichnung &amp;_
+			&quot;&apos; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; sLeistungsbeschreibung &amp;_
+			&quot;&apos; AND t1.Einkaufspreis=&apos;&quot;&amp; sEinkaufspreis &amp;_
+			&quot;&apos; AND t1.Materialaufschlagsatz=&apos;&quot;&amp; sMaterialaufschlagsatz &amp;_
+			&quot;&apos; AND t1.Bauzeit=&apos;&quot;&amp; sBauzeit &amp;_
+			&quot;&apos; AND t1.Minutenverrechnungssatz=&apos;&quot;&amp; sMinutenverrechnungssatz &amp;&quot;&apos;&quot;
+		
+		oRecord4=oResult(sSQL4)
+		While oRecord4.next()
+			sMenge=oRecord4.getString(1)
+		Wend
+		sSQL2=&quot;SELECT DISTINCT t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&quot;&amp;_
+			&quot;t1.Einkaufspreis,t1.Materialaufschlagsatz,t1.Bauzeit,t1.Minutenverrechnungssatz&quot;&amp;_
+			&quot; FROM &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
+			&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; AND t1.PositionsID=t2.PositionsID&quot;
+	
+		oRecord2=oResult(sSQL2)
+		While oRecord2.next()
+			sLV_Pos=oRecord2.getString(1)
+			sLeistungsID_Summe=oRecord2.getString(2)
+			sBestellnummer_Summe=oRecord2.getString(3)
+			sLeistungsbezeichnung_Summe=oRecord2.getString(4)
+			sLeistungsbeschreibung_Summe=oRecord2.getString(5)
+			sEinkaufspreis_Summe=oRecord2.getString(6)
+			sMaterialaufschlagsatz_Summe=oRecord2.getString(7)
+			sBauzeit_Summe=oRecord2.getString(8)
+			sMinutenverrechnungssatz_Summe=oRecord2.getString(9)
+		Wend
+		
+		sSQL3=&quot;SELECT SUM(Menge)&quot;&amp;_
+			&quot; FROM &quot;&amp; sControlling &amp;&quot;&quot;&amp;_
+			&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID_Summe &amp;_
+			&quot;&apos; AND Bestellnummer=&apos;&quot;&amp; sBestellnummer_Summe &amp;_
+			&quot;&apos; AND Leistungsbezeichnung=&apos;&quot;&amp; sLeistungsbezeichnung_Summe &amp;_
+			&quot;&apos; AND Leistungsbeschreibung=&apos;&quot;&amp; sLeistungsbeschreibung_Summe &amp;_
+			&quot;&apos; AND Einkaufspreis=&apos;&quot;&amp; sEinkaufspreis_Summe &amp;_
+			&quot;&apos; AND Materialaufschlagsatz=&apos;&quot;&amp; sMaterialaufschlagsatz_Summe &amp;_
+			&quot;&apos; AND Bauzeit=&apos;&quot;&amp; sBauzeit_Summe &amp;_
+			&quot;&apos; AND Minutenverrechnungssatz=&apos;&quot;&amp; sMinutenverrechnungssatz_Summe &amp;_
+			&quot;&apos; AND ProjektID=&quot;&amp; lProjektID
+		
+		oRecord3=oResult(sSQL3)
+		While oRecord3.next()
+			sMenge_verbaut=oRecord3.getString(1)
+		Wend
+
+		sLeistungsdaten = &quot;        LeistungsID:&quot;&amp;Chr$(9)&amp; fLeistungsID &amp;Chr$(13)&amp;Chr$(13)
+		if sBestellnummer &lt;&gt; &quot;&quot; then
+			sLeistungsdaten = sLeistungsdaten &amp;_
+						  &quot;  Bestellnummer:&quot;&amp;Chr$(9)&amp; sBestellnummer &amp;Chr$(13)&amp;Chr$(13)
+		End if
+			sLeistungsdaten = sLeistungsdaten &amp;_
+						  &quot;Leistungsbezeichnung:&quot; &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  sLeistungsbezeichnung &amp;Chr$(13)&amp;Chr$(13)&amp;Chr$(13)
+		if sLeistungsbeschreibung &lt;&gt; &quot;&quot; then
+						sLeistungsdaten = sLeistungsdaten &amp;_
+						  &quot;Leistungsbeschreibung:&quot; &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  sLeistungsbeschreibung &amp;Chr$(13)&amp;Chr$(13)&amp;Chr$(13)
+		End if
+		if  sLV_Pos &lt;&gt; &quot;&quot; then
+			sLeistungsdaten = sLeistungsdaten &amp;_
+			&quot;      LV-Position:&quot;&amp;Chr$(9)&amp; sLV_Pos &amp;Chr$(13)&amp;Chr$(13)
+		End if
+			sLeistungsdaten = sLeistungsdaten &amp;_
+				&quot;     verbaute Menge:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sMenge_verbaut)) &amp;&quot; &quot;&amp; sEinheit &amp;Chr$(13)&amp;_
+				&quot;angebotene Menge:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sMenge)) &amp;&quot; &quot;&amp; sEinheit &amp;Chr$(13)&amp;Chr$(13)&amp;_
+				&quot;          Bauzeit:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sBauzeit) &amp;&quot; Minuten &quot; &amp;Chr$(13)&amp;_
+				&quot; Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
+				&quot;       Lieferung:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sLieferung)) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
+				&quot;        Leistung:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sLeistung)) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
+				&quot;                 EP:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sEP)) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
+				&quot;                 GP:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sGP)) &amp;&quot; €&quot; &amp;Chr$(13)&amp;Chr$(13)&amp;_
+				&quot;Auftragsbestätigung:&quot;&amp;Chr$(9)&amp; lDocumentID_Auftrag &amp;Chr$(13)&amp; sDocument_Name 
+		MsgBox(sLeistungsdaten,64,sTitle_lokal &amp;&quot; Leistungsdaten&quot;)
+	End if
+End Sub
+
+Sub Leistungsdaten_anzeigen_Projekt()
+	Dim sLeistungsdaten AS String
+	List_Leistungen_Projekt_commit()
+	
+	if fSelected_Item(oList_Leistungsauswahl_Projekt) &lt;&gt; &quot;&quot; then
+	
+		sSQL1=&quot;SELECT t1.Bestellnummer,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&quot;&amp;_
+			&quot;t1.Einheit,t1.Bauzeit,t1.Einkaufspreis,t1.LeistungsID,t1.Materialaufschlagsatz,&quot;&amp;_
+			&quot;t1.Minutenverrechnungssatz,t1.LeistungsID&quot;&amp;_
+			&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
+			&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; AND t1.PositionsID=t2.PositionsID2&quot;
+			
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sBestellnummer=oRecord1.getString(1)
+			sLeistungsbezeichnung=oRecord1.getString(2)
+			sLeistungsbeschreibung=oRecord1.getString(3)
+			sEinheit=oRecord1.getString(4)
+			sBauzeit=oRecord1.getString(5)
+			sEinkaufspreis=oRecord1.getString(6)
+			sLeistungsID=oRecord1.getString(7)
+			sMaterialaufschlagsatz=oRecord1.getString(8)
+			sMinutenverrechnungssatz=oRecord1.getString(9)
+			sLeistungsID=oRecord1.getString(10)
+		Wend
+
+		sSQL2=&quot;SELECT DISTINCT t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&quot;&amp;_
+			&quot;t1.Einkaufspreis,t1.Materialaufschlagsatz,t1.Bauzeit,t1.Minutenverrechnungssatz&quot;&amp;_
+			&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
+			&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; AND t1.PositionsID=t2.PositionsID2&quot;
+
+		oRecord2=oResult(sSQL2)
+		While oRecord2.next()
+			sLV_Pos=oRecord2.getString(1)
+			sLeistungsID_Summe=oRecord2.getString(2)
+			sBestellnummer_Summe=oRecord2.getString(3)
+			sLeistungsbezeichnung_Summe=oRecord2.getString(4)
+			sLeistungsbeschreibung_Summe=oRecord2.getString(5)
+			sEinkaufspreis_Summe=oRecord2.getString(6)
+			sMaterialaufschlagsatz_Summe=oRecord2.getString(7)
+			sBauzeit_Summe=oRecord2.getString(8)
+			sMinutenverrechnungssatz_Summe=oRecord2.getString(9)
+		Wend
+		
+		sSQL3=&quot;SELECT SUM(Menge)&quot;&amp;_
+			&quot; FROM &quot;&amp; sControlling &amp;&quot;&quot;&amp;_
+			&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID_Summe &amp;_
+			&quot;&apos; AND Bestellnummer=&apos;&quot;&amp; sBestellnummer_Summe &amp;_
+			&quot;&apos; AND Leistungsbezeichnung=&apos;&quot;&amp; sLeistungsbezeichnung_Summe &amp;_
+			&quot;&apos; AND Leistungsbeschreibung=&apos;&quot;&amp; sLeistungsbeschreibung_Summe &amp;_
+			&quot;&apos; AND Einkaufspreis=&apos;&quot;&amp; sEinkaufspreis_Summe &amp;_
+			&quot;&apos; AND Materialaufschlagsatz=&apos;&quot;&amp; sMaterialaufschlagsatz_Summe &amp;_
+			&quot;&apos; AND Bauzeit=&apos;&quot;&amp; sBauzeit_Summe &amp;_
+			&quot;&apos; AND Minutenverrechnungssatz=&apos;&quot;&amp; sMinutenverrechnungssatz_Summe &amp;_
+			&quot;&apos; AND ProjektID=&quot;&amp; lProjektID
+		
+		oRecord3=oResult(sSQL3)
+		While oRecord3.next()
+			sMenge_verbaut=oRecord3.getString(1)
+		Wend
+
+		sLeistungsdaten = &quot;        LeistungsID:&quot;&amp;Chr$(9)&amp; fLeistungsID &amp;Chr$(13)&amp;Chr$(13)
+		if sBestellnummer &lt;&gt; &quot;&quot; then
+			sLeistungsdaten = sLeistungsdaten &amp;_
+						  &quot;  Bestellnummer:&quot;&amp;Chr$(9)&amp; sBestellnummer &amp;Chr$(13)&amp;Chr$(13)
+		End if
+			sLeistungsdaten = sLeistungsdaten &amp;_
+						  &quot;Leistungsbezeichnung:&quot; &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  sLeistungsbezeichnung &amp;Chr$(13)&amp;Chr$(13)&amp;Chr$(13)
+		if sLeistungsbeschreibung &lt;&gt; &quot;&quot; then
+						sLeistungsdaten = sLeistungsdaten &amp;_
+						  &quot;Leistungsbeschreibung:&quot; &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  sLeistungsbeschreibung &amp;Chr$(13)&amp;Chr$(13)&amp;Chr$(13)
+		End if
+		if  sLV_Pos &lt;&gt; &quot;&quot; then
+			sLeistungsdaten = sLeistungsdaten &amp;_
+			&quot;      LV-Position:&quot;&amp;Chr$(9)&amp; sLV_Pos &amp;Chr$(13)&amp;Chr$(13)
+		End if
+			sLeistungsdaten = sLeistungsdaten &amp;_
+			&quot;verbaute Menge:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sMenge_verbaut)) &amp;&quot; &quot;&amp; sEinheit &amp;Chr$(13)&amp;_
+			&quot;              Bauzeit:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sBauzeit) &amp;&quot; Minuten &quot; &amp;Chr$(13)&amp;_
+			&quot;     Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; €&quot; &amp;Chr$(13)
+		MsgBox(sLeistungsdaten,64,sTitle_lokal &amp;&quot; Leistungsdaten&quot;)
+	End if
+End Sub
+
+Sub Leistungsbeschreibung_anzeigen()
+	Dim sLeistungsinfo AS String
+	lPositionsID=flPositionsID()
+	if lPositionsID &gt; 0 then
+		sSQL1=&quot;SELECT DISTINCT Leistungsbeschreibung,LeistungsID,Bestellnummer,Einheit FROM &quot;&amp; sControlling &amp;&quot; WHERE PositionsID=&quot;&amp; lPositionsID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()	
+			sLeistungsbeschreibung=oRecord1.getString(1)
+			sLeistungsID=oRecord1.getString(2)
+			sBestellnummer=oRecord1.getString(3)
+			sEinheit=oRecord1.getString(4)
+		Wend
+		
+		sSQL2=&quot;SELECT DISTINCT t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&quot;&amp;_
+			&quot;t1.Einkaufspreis,t1.Materialaufschlagsatz,t1.Bauzeit,t1.Minutenverrechnungssatz&quot;&amp;_
+			&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
+			&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; AND t1.PositionsID=&quot;&amp; lPositionsID
+			
+		oRecord2=oResult(sSQL2)
+		While oRecord2.next()
+			sLV_Pos=oRecord2.getString(1)
+			sLeistungsID_Summe=oRecord2.getString(2)
+			sBestellnummer_Summe=oRecord2.getString(3)
+			sLeistungsbezeichnung_Summe=oRecord2.getString(4)
+			sLeistungsbeschreibung_Summe=oRecord2.getString(5)
+			sEinkaufspreis_Summe=oRecord2.getString(6)
+			sMaterialaufschlagsatz_Summe=oRecord2.getString(7)
+			sBauzeit_Summe=oRecord2.getString(8)
+			sMinutenverrechnungssatz_Summe=oRecord2.getString(9)
+		Wend
+		
+		sSQL3=&quot;SELECT SUM(Menge)&quot;&amp;_
+			&quot; FROM &quot;&amp; sControlling &amp;&quot;&quot;&amp;_
+			&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID_Summe &amp;_
+			&quot;&apos; AND Bestellnummer=&apos;&quot;&amp; sBestellnummer_Summe &amp;_
+			&quot;&apos; AND Leistungsbezeichnung=&apos;&quot;&amp; sLeistungsbezeichnung_Summe &amp;_
+			&quot;&apos; AND Leistungsbeschreibung=&apos;&quot;&amp; sLeistungsbeschreibung_Summe &amp;_
+			&quot;&apos; AND Einkaufspreis=&apos;&quot;&amp; sEinkaufspreis_Summe &amp;_
+			&quot;&apos; AND Materialaufschlagsatz=&apos;&quot;&amp; sMaterialaufschlagsatz_Summe &amp;_
+			&quot;&apos; AND Bauzeit=&apos;&quot;&amp; sBauzeit_Summe &amp;_
+			&quot;&apos; AND Minutenverrechnungssatz=&apos;&quot;&amp; sMinutenverrechnungssatz_Summe &amp;_
+			&quot;&apos; AND ProjektID=&quot;&amp; lProjektID
+			
+			oRecord3=oResult(sSQL3)
+			While oRecord3.next()
+				sMenge_verbaut=oRecord3.getString(1)
+			Wend
+
+		sLeistungsinfo=sLeistungsID &amp;Chr$(13)&amp;Chr$(13)
+		if sBestellnummer &lt;&gt; &quot;&quot; AND sBestellnummer &lt;&gt; &quot; &quot; then
+			sLeistungsinfo=sLeistungsinfo &amp; &quot;Bestellnummer: &quot;&amp; sBestellnummer &amp;Chr$(13)&amp;Chr$(13)
+		End if
+
+		if sLeistungsbeschreibung = &quot;&quot; OR sLeistungsbeschreibung = &quot; &quot; then
+			sLeistungsinfo=sLeistungsinfo &amp;&quot;*** Keine Leistungsbeschreibung vorhanden! ***&quot; &amp;Chr$(13)&amp;Chr$(13)
+		else 
+			sLeistungsinfo=sLeistungsinfo &amp; sLeistungsbeschreibung &amp;Chr$(13)&amp;Chr$(13)&amp;Chr$(13)
+		End if
+		sLeistungsinfo=sLeistungsinfo &amp;&quot; verbaute Menge:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sMenge_verbaut)) &amp;&quot; &quot;&amp; sEinheit &amp;Chr$(13)
+
+		MsgBox(sLeistungsinfo,64,sTitle_lokal &amp;&quot; Leistungsbeschreibung&quot;)
+	else
+		MsgBox(&quot;Sie haben noch keine Position ausgewählt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+</script:module>

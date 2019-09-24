@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Initialisierung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sSQL1 as String,sSQL2 as String
+Dim vSQLArray as Variant
+
+Sub Formular_init()
+init_Form_Steuerung()
+init_Form_Hauptgruppen()
+init_Form_Leistungsgruppen()
+init_List_Hauptgruppen()
+init_List_Leistungsgruppen()
+init_Column_HauptgruppenID()
+End Sub
+
+Sub init_Form_Steuerung()
+	sSQL1=&quot;select * from Steuerung where ClientID=&quot;&amp; iClientID
+	oForm_Steuerung.DataSourceName=sDataSource
+	oForm_Steuerung.NavigationBarMode=0
+	oForm_Steuerung.CommandType=2
+	oForm_Steuerung.Command=sSQL1
+	oForm_Steuerung.Cycle=1
+	oForm_Steuerung.AllowInserts=false
+	oForm_Steuerung.AllowDeletes=false
+End Sub
+
+Sub init_Form_Hauptgruppen()
+	sSQL1=&quot;select * from &quot;&amp; sHauptgruppen &amp;&quot; order by HauptgruppenID ASC&quot;
+	oForm_Hauptgruppen.DataSourceName=sDataSource
+	oForm_Hauptgruppen.NavigationBarMode=0
+	oForm_Hauptgruppen.CommandType=2
+	oForm_Hauptgruppen.Command=sSQL1
+	oForm_Hauptgruppen.Cycle=1
+	oForm_Hauptgruppen.AllowInserts=false
+	oForm_Hauptgruppen.AllowDeletes=false
+End Sub
+
+Sub init_Form_Leistungsgruppen()
+	sSQL1=&quot;select * from &quot;&amp; sLeistungsgruppen &amp;&quot; where HauptgruppenID like :f order by GruppenID ASC&quot;
+	oForm_Leistungsgruppen.DataSourceName=sDataSource
+	oForm_Leistungsgruppen.NavigationBarMode=0
+	oForm_Leistungsgruppen.CommandType=2
+	oForm_Leistungsgruppen.Command=sSQL1
+	oForm_Leistungsgruppen.Cycle=1
+	oForm_Leistungsgruppen.AllowInserts=false
+	oForm_Leistungsgruppen.AllowDeletes=false
+End Sub
+
+Sub init_List_Hauptgruppen()
+	vSQLArray=Array(&quot;select distinct Hauptgruppenname,HauptgruppenID &quot;&amp;_
+	&quot;from &quot;&amp; sHauptgruppen &amp;&quot; order by HauptgruppenID ASC&quot;)
+	oList_Hauptgruppen.ListSourceType=4
+	oList_Hauptgruppen.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Leistungsgruppen()
+	vSQLArray=Array(&quot;select distinct t1.Gruppenname,t1.GruppenID&quot;&amp;_
+	&quot; from &quot;&amp; sLeistungsgruppen &amp;&quot; as t1&quot;&amp;_
+	&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+	&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+	&quot; where ((t1.HauptgruppenID=t2.HauptgruppenID and t2.HauptgruppenID IS NOT NULL)&quot;&amp;_
+	&quot; or (t1.HauptgruppenID like &apos;%&apos; and t2.HauptgruppenID IS NULL))&quot;&amp;_
+	&quot; order by t1.GruppenID ASC&quot;)
+	oList_Leistungsgruppen.ListSourceType=4
+	oList_Leistungsgruppen.ListSource=vSQLArray
+End Sub
+
+Sub init_Column_HauptgruppenID()
+	vSQLArray=Array(&quot;select distinct HauptgruppenID,HauptgruppenID &quot;&amp;_
+	&quot;from &quot;&amp; sHauptgruppen &amp;&quot; order by HauptgruppenID ASC&quot;)
+	oColumn_HauptgruppenID.ListSourceType=4
+	oColumn_HauptgruppenID.ListSource=vSQLArray
+End Sub
+</script:module>

@@ -1,0 +1,580 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Kontaktdaten" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub KontaktDaten()
+	Dim oTables as Object
+	Dim vTable_Summen as Variant
+	Dim vRows_Summen as Variant,oRecord_Kontakt as Object,sDocument_Typ as String
+	Dim sSumme as String,sSumme_Bezahlt as currency,sZinssatz as currency,sZinsen as currency
+	Dim sMahngebuehr as currency,sSumme_mit_Aufschlag as currency
+	Dim sAnschrift as String,sNummern as String,sLeerzeilen as String,sLeistungsprofil as String
+	Dim sName1Eigen as String,sName2Eigen as String,sName3Eigen as String,sName4Eigen as String,sNameKurzEigen as String
+	Dim sLandEigen as String,sPLZEigen as String,sPlatzhalter as String
+	Dim sOrtEigen as String,sStrasseEigen as String,sHausnummerEigen as String,sTelefonEigen as String,sKontaktEigen as String
+	Dim sFunktelefonEigen as String,sFaxEigen as String,sEMailEigen as String,sUrlEigen as String,sKontakt_Bez as String
+	Dim sBankEigen as String,sBICEigen as String,sIBANEigen as String,sGeschaeftsfuehrerEigen as String,sGeschaeftsfuehrer_Bez as String
+	DIM sBankverbindung as String,sBankverbindung_Bez as String,sFirmendaten as String,iOptionInhaberEigen as Integer
+	Dim sAmtsgerichtEigen as String,sHRBEigen as String,sUmsatzsteuernummerEigen as String,sUmsatzsteuerIDEigen as String
+	Dim sLeist_Pro_1 as String,sLeist_Pro_2 as String,sLeist_Pro_3 as String,sLeist_Pro_4 as String
+	Dim sLeist_Pro_5 as String,sLeist_Pro_6 as String,sLeist_Pro_7 as String,sLeist_Pro_8 as String
+	Dim sGrafik_URL as String,sSignum_URL as String,sLogo_URL as String,oGraphic as Object,oGraphic1 as Object,vCursor as Variant
+	Dim sAnschrift_Eigen_1 as String,sAnschrift_Eigen_2 as String,sAnschrift_Eigen_3 as String
+	Dim oStyleFamilies as Object,oPageStyles as Object,oPageStyle_1 as Object,oPageStyle_2 as Object
+	Dim oBookmark As Object,oBookmarkAnchor as Object,oRangeCursor as Object
+	Dim oSelections as Object,oSize as Object,vGraphics as Variant
+	Dim oTable_Logo1 as Object,oTable_Logo2 as Object,iCount as integer
+	Dim iOption1 as Integer,iOption2 as Integer,iOption3 as Integer
+	Dim sErinnertAm as String,sErinnertBis as String,sGemahntAm as String,sGemahntBis as String
+	Dim oCursorZinsen as Object,oCursorKopf1 as Object,oCursorKopf2 as Object
+	Dim lGrafikHeight as Long,lGrafikWidth as Long,lSignumHeight as Long,lSignumWidth as Long
+	Dim lLogoHeight as Long,lLogoWidth as Long
+	
+	Dim sSQL1 as String
+	
+	Dim sKontaktID as String,sKontakt as String
+	Dim sAnrede as String,sTitel as String,sVorname as String,sName1 as String
+	Dim sName2 as String,sName3 as String,sName4 as String
+	Dim sLand as String,sPLZ as String,sOrt as String
+	Dim sStrasse as String,sHausnummer as String,sTelefon as String
+	Dim sFax as String,sEMail as String
+	Dim sAnrede_Ansprechpartner as String,sTitel_Ansprechpartner as String
+	Dim sVorname_Ansprechpartner as String,sName_Ansprechpartner as String
+	Dim sFunktelefon_Ansprechpartner as String,sFax_Ansprechpartner as String
+	Dim sEMail_Ansprechpartner as String,sTelefon_Ansprechpartner as String
+	Dim sAbteilung_Ansprechpartner as String
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	
+	sSQL1=&quot;SELECT DISTINCT &quot;&amp;_
+		&quot;t1.KontaktID,t3.Anrede,t3.Name1,t3.Titel,t3.Vorname,t3.Name2,t3.Name3,t3.Name4,&quot;&amp;_
+		&quot;t3.Land,t3.PLZ,t3.Ort,t3.Strasse,t3.Hausnummer,t3.Fax,t3.EMail,&quot;&amp;_
+		&quot;t4.Anrede as Anrede_Ansprechpartner,t4.Titel as Titel_Ansprechpartner,&quot;&amp;_
+		&quot;t4.Name as Name_Ansprechpartner,t4.Vorname as Vorname_Ansprechpartner,&quot;&amp;_
+		&quot;t4.Abteilung as Abteilung_Ansprechpartner,t4.Fax as Fax_Ansprechpartner,&quot;&amp;_
+		&quot;t4.EMail as EMail_Ansprechpartner,&quot;&amp;_
+		&quot;t5.Name1,t5.Name2,t5.Name3,t5.Name4,t5.NameKurz,&quot;&amp;_
+		&quot;t5.Land,t5.PLZ,t5.Ort,t5.Strasse,t5.Hausnummer,t5.Telefon,t5.Funktelefon,t5.Fax,t5.EMail,&quot;&amp;_
+		&quot;t5.Url,t5.Bank,t5.BIC,t5.IBAN,t5.Geschaeftsfuehrer,t5.OptionInhaber,t5.Amtsgericht,t5.HRB,t5.Umsatzsteuernummer,t5.UmsatzsteuerID,&quot;&amp;_
+		&quot;t5.Leist_Pro_1,t5.Leist_Pro_2,t5.Leist_Pro_3,t5.Leist_Pro_4,t5.Leist_Pro_5,t5.Leist_Pro_6,t5.Leist_Pro_7,t5.Leist_Pro_8,&quot;&amp;_
+		&quot;t6.Grafik_URL,t6.Signum_URL,t6.Logo_URL,t6.GrafikHeight,t6.GrafikWidth,t6.SignumHeight,t6.SignumWidth,t6.LogoHeight,t6.LogoWidth,&quot;&amp;_
+		&quot;SUM( t1.Zahlbetrag_mit_MwSt ) AS Summe,&quot;&amp;_
+		&quot;SUM( t1.Summe_bezahlt ) AS Bezahlt,&quot;&amp;_
+		&quot;t5.Zinssatz,&quot;&amp;_
+		&quot;SUM(( t1.Zahlbetrag_mit_MwSt - t1.Summe_bezahlt ) * t5.Zinssatz/100/365* ((to_days(now()))-(to_days(t1.gueltig_bis)))) AS Zinsen,&quot;&amp;_
+		&quot;t5.Mahngebuehr,&quot;&amp;_
+		&quot;(SUM( t1.Zahlbetrag_mit_MwSt - t1.Summe_bezahlt ) + &quot;&amp;_
+		&quot;SUM(( t1.Zahlbetrag_mit_MwSt - t1.Summe_bezahlt )* t5.Zinssatz/100/365* ((to_days(now()))-(to_days(t1.gueltig_bis)))) + t5.Mahngebuehr ) AS Betrag,&quot;&amp;_
+		&quot;t1.erinnert_am,t1.erinnert_bis,t1.gemahnt_am,t1.gemahnt_bis,(date_add(now(),interval 8 Day)),&quot;&amp;_
+		&quot;t2.Option_1,t2.Option_2,t2.Option_3 &quot;&amp;_
+		&quot;FROM &quot;&amp;_
+		&quot;Steuerung AS t2,&quot;&amp; sKunden &amp;&quot; AS t3,&quot;&amp;_
+		&quot;Einstellungen AS t5,&quot;&amp;_
+		&quot;Users AS t6,&quot;&amp; sRechnungen1 &amp;&quot; AS t1 &quot;&amp;_
+		&quot;LEFT OUTER JOIN &quot;&amp; sAnsprechpartner_Kunden &amp;&quot; as t4 &quot;&amp;_
+		&quot;ON t4.AnsprechpartnerID=t1.AnsprechpartnerID &quot;&amp;_
+		&quot;WHERE t2.ClientID = &quot;&amp; iClientID &amp;_
+		&quot; AND t5.EinstellungsID = &quot;&amp; iEinstellungsID_lokal &amp;_
+		&quot; AND t6.UserID = &quot;&amp; iUserID_lokal &amp;_
+		&quot; AND t1.KontaktID = t2.KontaktID &quot;&amp;_
+		&quot; AND t3.KontaktID = t1.KontaktID &quot;&amp;_
+		&quot; AND ( t1.Status = &apos;fällig&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;erinnert&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;überfällig&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;gemahnt&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;überüberfällig&apos; ) &quot;&amp;_
+		&quot; GROUP BY t1.KontaktID&quot;
+	
+		oRecord_Kontakt=oResult(sSQL1)
+		While oRecord_Kontakt.next()
+			sKontaktID=oRecord_Kontakt.getString(1)
+			sAnrede=oRecord_Kontakt.getString(2)
+			sName1=oRecord_Kontakt.getString(3)
+			sTitel=oRecord_Kontakt.getString(4)
+			sVorname=oRecord_Kontakt.getString(5)
+			sName2=oRecord_Kontakt.getString(6)
+			sName3=oRecord_Kontakt.getString(7)
+			sName4=oRecord_Kontakt.getString(8)
+			sLand=oRecord_Kontakt.getString(9)
+			sPLZ=oRecord_Kontakt.getString(10)
+			sOrt=oRecord_Kontakt.getString(11)
+			sStrasse=oRecord_Kontakt.getString(12)
+			sHausnummer=oRecord_Kontakt.getString(13)
+			sFax=oRecord_Kontakt.getString(14)
+			sEMail=oRecord_Kontakt.getString(15)
+			sAnrede_Ansprechpartner=oRecord_Kontakt.getString(16)
+			sTitel_Ansprechpartner=oRecord_Kontakt.getString(17)
+			sName_Ansprechpartner=oRecord_Kontakt.getString(18)
+			sVorname_Ansprechpartner=oRecord_Kontakt.getString(19)
+			sAbteilung_Ansprechpartner=oRecord_Kontakt.getString(20)
+			sFax_Ansprechpartner=oRecord_Kontakt.getString(21)
+			sEMail_Ansprechpartner=oRecord_Kontakt.getString(22)
+			sName1Eigen=oRecord_Kontakt.getString(23)
+			sName2Eigen=oRecord_Kontakt.getString(24)
+			sName3Eigen=oRecord_Kontakt.getString(25)
+			sName4Eigen=oRecord_Kontakt.getString(26)
+			sNameKurzEigen=oRecord_Kontakt.getString(27)
+			sLandEigen=oRecord_Kontakt.getString(28)
+			sPLZEigen=oRecord_Kontakt.getString(29)
+			sOrtEigen=oRecord_Kontakt.getString(30)
+			sStrasseEigen=oRecord_Kontakt.getString(31)
+			sHausnummerEigen=oRecord_Kontakt.getString(32)
+			sTelefonEigen=oRecord_Kontakt.getString(33)
+			sFunktelefonEigen=oRecord_Kontakt.getString(34)
+			sFaxEigen=oRecord_Kontakt.getString(35)
+			sEMailEigen=oRecord_Kontakt.getString(36)
+			sUrlEigen=oRecord_Kontakt.getString(37)
+			sBankEigen=oRecord_Kontakt.getString(38)
+			sBICEigen=oRecord_Kontakt.getString(39)
+			sIBANEigen=oRecord_Kontakt.getString(40)
+			sGeschaeftsfuehrerEigen=oRecord_Kontakt.getString(41)
+			iOptionInhaberEigen=oRecord_Kontakt.getLong(42
+			sAmtsgerichtEigen=oRecord_Kontakt.getString(43)
+			sHRBEigen=oRecord_Kontakt.getString(44)
+			sUmsatzsteuernummerEigen=oRecord_Kontakt.getString(45)
+			sUmsatzsteuerIDEigen=oRecord_Kontakt.getString(46)
+			sLeist_Pro_1=oRecord_Kontakt.getString(47)
+			sLeist_Pro_2=oRecord_Kontakt.getString(48)
+			sLeist_Pro_3=oRecord_Kontakt.getString(49)
+			sLeist_Pro_4=oRecord_Kontakt.getString(50)
+			sLeist_Pro_5=oRecord_Kontakt.getString(51)
+			sLeist_Pro_6=oRecord_Kontakt.getString(52)
+			sLeist_Pro_7=oRecord_Kontakt.getString(53)
+			sLeist_Pro_8=oRecord_Kontakt.getString(54)
+			sGrafik_URL=oRecord_Kontakt.getString(55)
+			sSignum_URL=oRecord_Kontakt.getString(56)
+			sLogo_URL=oRecord_Kontakt.getString(57)
+			lGrafikHeight=oRecord_Kontakt.getLong(58)
+			lGrafikWidth=oRecord_Kontakt.getLong(59)
+			lSignumHeight=oRecord_Kontakt.getLong(60)
+			lSignumWidth=oRecord_Kontakt.getLong(61)
+			lLogoHeight=oRecord_Kontakt.getLong(62)
+			lLogoWidth=oRecord_Kontakt.getLong(63)
+			sSumme=oRecord_Kontakt.getString(64)
+			sSumme_Bezahlt=oRecord_Kontakt.getString(65)
+			sZinssatz=oRecord_Kontakt.getString(66)
+			sZinsen=oRecord_Kontakt.getString(67)
+			sMahngebuehr=oRecord_Kontakt.getString(68)
+			sSumme_mit_Aufschlag=oRecord_Kontakt.getString(69)
+			sErinnertAm=oRecord_Kontakt.getString(70)
+			if oRecord_Kontakt.getString(71) = &quot;&quot; then
+				sErinnertBis=oRecord_Kontakt.getString(74)
+			else
+				sErinnertBis=oRecord_Kontakt.getString(71)
+			End if
+			sGemahntAm=oRecord_Kontakt.getString(72)
+			if oRecord_Kontakt.getString(73) = &quot;&quot; then
+				sGemahntBis=oRecord_Kontakt.getString(74)
+			else
+				sGemahntBis=oRecord_Kontakt.getString(73)
+			End if
+			SetDocUserProperty(&quot;oPrint_Typ&quot;, oRecord_Kontakt.getLong(75))
+			iOption2=oRecord_Kontakt.getString(76)
+			iOption3=oRecord_Kontakt.getString(77)
+		Wend	
+	
+		if Trim(sFax_Ansprechpartner) &lt;&gt; &quot;&quot; then
+			SetDocUserProperty(&quot;oFax_Empfaenger&quot;, sFax_Ansprechpartner)
+		else
+			SetDocUserProperty(&quot;oFax_Empfaenger&quot;, sFax)
+		End if
+			
+		if Trim(sEMail_Ansprechpartner) &lt;&gt; &quot;&quot; then
+			SetDocUserProperty(&quot;oEMail_Empfaenger&quot;, sEMail_Ansprechpartner)
+		else
+			SetDocUserProperty(&quot;oEMail_Empfaenger&quot;, sEMail)
+		End if
+	
+		SetDocUserProperty(&quot;oKontaktID&quot;,sKontaktID)
+	
+		if iPrint_Typ = 1 and fsInTrim(sFax_Empfaenger) &lt;&gt; &quot;&quot; and LCase(sFaxTyp) &lt;&gt; &quot;fritzfax&quot; and LCase(sFaxTyp) &lt;&gt; &quot;yajhfc&quot; then
+			if sFaxNumberPrefix &lt;&gt; &quot;&quot; and Len(fsLeerzeichenEntfernen(sFax_Empfaenger)) &gt; CInt(iFaxLenInternNumber) then
+				Feld_fuellen(&quot;FaxNr&quot;,&quot;@@#&quot; &amp; fsLeerzeichenEntfernen(sFaxNumberPrefix &amp; fsPlusErsetzen(sFax_Empfaenger)) &amp; &quot;@@&quot;)
+			else
+				Feld_fuellen(&quot;FaxNr&quot;,&quot;@@#&quot; &amp; fsLeerzeichenEntfernen(sFax_Empfaenger) &amp; &quot;@@&quot;)
+			End if
+		else
+			if sFaxNumberPrefix &lt;&gt; &quot;&quot; and Len(fsLeerzeichenEntfernen(sFax_Empfaenger)) &gt; CInt(iFaxLenInternNumber) then
+				sFaxNummer=fsLeerzeichenEntfernen(sFaxNumberPrefix &amp; fsPlusErsetzen(sFax_Empfaenger))
+			else
+				sFaxNummer=fsLeerzeichenEntfernen(sFax_Empfaenger)
+			End if
+			Feld_loeschen(&quot;FaxNr&quot;)
+		End if	
+		
+		sDocument_Typ = &quot;Mahnung&quot;
+		SetDocUserProperty(&quot;oDocument_Name&quot;, sDocument_Typ)
+	
+		if sFax_Ansprechpartner &lt;&gt; &quot;&quot; then
+			sFax = sFax_Ansprechpartner
+		End if
+		if sEMail_Ansprechpartner &lt;&gt; &quot;&quot; then
+			sEMail = sEMail_Ansprechpartner
+		End if
+		
+		if sAnrede &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sAnrede + Chr(10)	
+		End if
+		if sTitel &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sTitel + &quot; &quot;
+		End if
+		if sVorname &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sVorname + &quot; &quot;
+		End if
+		if sName1 &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sName1 + Chr(10)
+		End if
+		if sName2 &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sName2 + Chr(10)
+		End if
+		if sName3 &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sName3 + Chr(10)
+		End if
+		if sName4 &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sName4 + Chr(10)
+		End if
+		if sAbteilung_Ansprechpartner &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sAbteilung_Ansprechpartner + Chr(10)
+		End if
+		if sAnrede_Ansprechpartner &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sAnrede_Ansprechpartner + &quot; &quot;
+		End if
+		if sTitel_Ansprechpartner &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sTitel_Ansprechpartner + &quot; &quot;
+		End if
+		if sVorname_Ansprechpartner &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sVorname_Ansprechpartner + &quot; &quot;
+		End if
+		if sName_Ansprechpartner &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sName_Ansprechpartner + Chr(10)
+		End if
+		if sStrasse &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sStrasse + &quot; &quot;
+		End if
+		if sHausnummer &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sHausnummer + Chr(10)
+		else
+			sAnschrift = sAnschrift + Chr(10)
+		End if
+		if sPLZ &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sPLZ + &quot; &quot;
+		End if
+		if sOrt &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sOrt 
+		End if
+		if sLand &lt;&gt; &quot;&quot; and UCASE(sLand) &lt;&gt; UCASE(sLandEigen) then
+			sAnschrift = sAnschrift + Chr(10) + UCASE(sLand)
+		End if
+	
+		if iPrint_Typ = 1 then					&apos;faxen
+			if sFax &lt;&gt; &quot;&quot; then
+				sAnschrift = sAnschrift + Chr(10)+ Chr$(10) + &quot;an Fax: &quot; + sFax 
+			End if
+		elseif iPrint_Typ = 2 then					&apos;mailen
+			if sEMail &lt;&gt; &quot;&quot; then
+				sAnschrift = sAnschrift + Chr$(10) + Chr$(10) + &quot;an E-Mail: &quot; + sEMail
+			End if
+		End if
+	
+	oStyleFamilies= oDoc.getStyleFamilies()
+	oPageStyles = oStyleFamilies.getByName(&quot;PageStyles&quot;)
+	oPageStyle_1 = oPageStyles.getByName(&quot;Erste Seite&quot;)
+	oPageStyle_2 = oPageStyles.getByName(&quot;Standard&quot;)
+	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	oTables = oDoc.getTextTables
+	vTable_Summen = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTable_Summen = oTables.getByName(&quot;Summen&quot;)
+	vRows_Summen = vTable_Summen.getRows()
+	
+	if iPrint_Typ = 0 then
+		if ifPrintLogoDefault(iUserID_lokal) = 0 then
+			oPageStyle_1.TopMargin = 3200
+			oPageStyle_2.TopMargin = 3200
+			oPageStyle_1.LeftMargin = 2000
+			oPageStyle_2.LeftMargin = 2000
+			oTables.getByName(&quot;Logo1&quot;).getRows().removeByIndex(0,1)
+			oTables.getByName(&quot;Logo2&quot;).getRows().removeByIndex(0,1)
+	
+		elseif ifPrintLogoDefault(iUserID_lokal) = 1 then
+			oPageStyle_1.TopMargin = 640
+			oPageStyle_2.TopMargin = 640
+		
+			oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+			oGraphic.GraphicURL=convertToUrl(sLogo_URL)
+	&apos;		oGraphic.AnchorType=1
+			oGraphic.Height=lLogoHeight
+			oGraphic.Width=lLogoWidth
+			oGraphic.HoriOrient=3
+			oTable_Logo1 = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+			oTable_Logo1 = oTables.getByName(&quot;Logo1&quot;).getCellByName(&quot;B1&quot;)
+			oTable_Logo1.insertTextContent(oTable_Logo1, oGraphic, false)
+	
+			oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+			oGraphic.GraphicURL=convertToUrl(sLogo_URL)
+	&apos;		oGraphic.AnchorType=1
+			oGraphic.Height=lLogoHeight
+			oGraphic.Width=lLogoWidth
+			oGraphic.HoriOrient=3
+	&apos;		oTable_Logo2 = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	&apos;		oTable_Logo2 = oTables.getByName(&quot;Logo2&quot;).getCellByName(&quot;B1&quot;)
+	&apos;		oTable_Logo2.insertTextContent(oTable_Logo2, oGraphic, false)
+		End if	
+	elseif iPrint_Typ &gt; 0 then
+		oPageStyle_1.TopMargin = 640
+		oPageStyle_2.TopMargin = 640
+	
+		oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+		oGraphic.GraphicURL=convertToUrl(sLogo_URL)
+	&apos;	oGraphic.AnchorType=1
+		oGraphic.Height=lLogoHeight
+		oGraphic.Width=lLogoWidth
+		oGraphic.HoriOrient=3
+		oTable_Logo1 = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+		oTable_Logo1 = oTables.getByName(&quot;Logo1&quot;).getCellByName(&quot;B1&quot;)
+		oTable_Logo1.insertTextContent(oTable_Logo1, oGraphic, false)
+	
+		oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+		oGraphic.GraphicURL=convertToUrl(sLogo_URL)
+	&apos;	oGraphic.AnchorType=1
+		oGraphic.Height=lLogoHeight
+		oGraphic.Width=lLogoWidth
+		oGraphic.HoriOrient=3
+	&apos;	oTable_Logo2 = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	&apos;	oTable_Logo2 = oTables.getByName(&quot;Logo2&quot;).getCellByName(&quot;B1&quot;)
+	&apos;	oTable_Logo2.insertTextContent(oTable_Logo2, oGraphic, false)
+	End if
+	
+	sAnschrift_Eigen_1 = sStrasseEigen &amp; &quot; &quot; &amp; sHausnummerEigen &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sPLZEigen &amp; &quot; &quot; &amp; sOrtEigen
+	sAnschrift_Eigen_2 =  sNameKurzEigen &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sStrasseEigen &amp; &quot; &quot; &amp; sHausnummerEigen &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sPLZEigen &amp; &quot; &quot; &amp; sOrtEigen
+&apos;	if iPrint_Typ = 0 then
+		sAnschrift_Eigen_3 =  sName1Eigen &amp; Chr(10) &amp; sName2Eigen &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sStrasseEigen &amp; &quot; &quot; &amp; sHausnummerEigen &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sPLZ &amp; &quot; &quot; &amp; sOrt
+&apos;	else 
+&apos;		sAnschrift_Eigen_3 = sStrasseEigen &amp; &quot; &quot; &amp; sHausnummerEigen &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sPLZEigen &amp; &quot; &quot; &amp; sOrtEigen
+&apos;	End if
+	
+	if sLeist_Pro_1 &lt;&gt; &quot;&quot; then
+		sLeistungsprofil = Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_1 &amp; Chr(10)
+	else
+		sPlatzhalter = Chr(10)
+	End if
+	if sLeist_Pro_2 &lt;&gt; &quot;&quot; then
+		sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_2 &amp; Chr(10)
+	else
+		sPlatzhalter = sPlatzhalter &amp; Chr(10)
+	End if
+	if sLeist_Pro_3 &lt;&gt; &quot;&quot; then
+		sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_3 &amp; Chr(10)
+	else
+		sPlatzhalter = sPlatzhalter &amp; Chr(10)
+	End if
+	if sLeist_Pro_4 &lt;&gt; &quot;&quot; then
+		sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_4 &amp; Chr(10)
+	else
+		sPlatzhalter = sPlatzhalter &amp; Chr(10)
+	End if
+	if sLeist_Pro_5 &lt;&gt; &quot;&quot; then
+		sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_5 &amp; Chr(10)
+	else
+		sPlatzhalter = sPlatzhalter &amp; Chr(10)
+	End if
+	if sLeist_Pro_6 &lt;&gt; &quot;&quot; then
+		sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_6 &amp; Chr(10)
+	else
+		sPlatzhalter = sPlatzhalter &amp; Chr(10)
+	End if
+	if sLeist_Pro_7 &lt;&gt; &quot;&quot; then
+		sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_7 &amp; Chr(10)
+	else
+		sPlatzhalter = sPlatzhalter &amp; Chr(10)
+	End if
+	if sLeist_Pro_8 &lt;&gt; &quot;&quot; then
+		sLeistungsprofil = sLeistungsprofil &amp; Chr(8226) &amp; &quot;  &quot; &amp; sLeist_Pro_8 &amp; Chr(10)
+	else
+		sPlatzhalter = sPlatzhalter &amp; Chr(10)
+	End if
+	sLeistungsprofil = sLeistungsprofil &amp; sPlatzhalter
+	
+	if sLeerzeilen = &quot;&quot; then
+		sLeerzeilen = &quot; &quot;
+	End if
+	
+	if sTelefonEigen &lt;&gt; &quot;&quot; then
+		sKontakt_Bez = &quot;Telefon:&quot;
+		sKontakt = sTelefonEigen
+	End if
+	if sFaxEigen &lt;&gt; &quot;&quot; then
+		if sKontakt_Bez &lt;&gt; &quot;&quot; then
+			sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;Fax:&quot;
+			sKontakt = sKontakt &amp; Chr(10) &amp; sFaxEigen 
+		else
+			sKontakt_Bez = &quot;Fax:&quot;
+			sKontakt = sFaxEigen
+		end if
+	End if
+	if sFunktelefonEigen &lt;&gt; &quot;&quot; then
+		if sKontakt_Bez &lt;&gt; &quot;&quot; then
+			sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;Mobil:&quot;
+			sKontakt = sKontakt &amp; Chr(10) &amp; sFunktelefonEigen 
+		else
+			sKontakt_Bez = &quot;Mobil:&quot;
+			sKontakt = sFunktelefonEigen
+		end if
+	End if
+	if sUrlEigen &lt;&gt; &quot;&quot; then
+		if sKontakt_Bez &lt;&gt; &quot;&quot; then
+			sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;Url:&quot;
+			sKontakt = sKontakt &amp; Chr(10) &amp; sUrlEigen 
+		else
+			sKontakt_Bez = &quot;Url:&quot;
+			sKontakt = sUrlEigen
+		end if
+	End if
+	if sEMailEigen &lt;&gt; &quot;&quot; then
+		if sKontakt_Bez &lt;&gt; &quot;&quot; then
+			sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;e-Mail:&quot;
+			sKontakt = sKontakt &amp; Chr(10) &amp; sEMailEigen 
+		else
+			sKontakt_Bez = &quot;e-Mail:&quot;
+			sKontakt = sEMailEigen
+		end if
+	End if
+	
+	if sBankEigen &lt;&gt; &quot;&quot; then
+		sBankverbindung_Bez = &quot;Bankverbindung:&quot; &amp; Chr(10)
+		sBankverbindung = sBankEigen &amp; Chr(10) &amp; &quot;IBAN: &quot; &amp; sIBANEigen &amp; Chr(10) &amp; &quot;BIC: &quot; &amp; sBICEigen
+	else
+		sBankverbindung_Bez = &quot;&quot;
+		sBankverbindung = &quot;&quot;
+	End if
+	
+	if sGeschaeftsfuehrerEigen &lt;&gt; &quot;&quot; then
+		if iOptionInhaberEigen = 0 then
+			sGeschaeftsfuehrer_Bez = &quot;Geschäftsführer:&quot; &amp; Chr(10)
+		elseif iOptionInhaberEigen = 1 then
+			sGeschaeftsfuehrer_Bez = &quot;Inhaber:&quot; &amp; Chr(10)
+		End if
+		sFirmendaten = sGeschaeftsfuehrerEigen
+		if sUmsatzsteuerIDEigen = &quot;&quot; or sUmsatzsteuernummerEigen = &quot;&quot; then
+			sFirmendaten = sFirmendaten &amp; Chr(10)
+		End if
+	else
+		sGeschaeftsfuehrer_Bez = &quot;&quot;
+		sFirmendaten = &quot;&quot;
+	End if
+	if sAmtsgerichtEigen &lt;&gt; &quot;&quot; then
+		if sFirmendaten &lt;&gt; &quot;&quot; then
+			sFirmendaten = sFirmendaten &amp; Chr(10) &amp; sAmtsgerichtEigen &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sHRBEigen
+		else
+			sFirmendaten = sAmtsgerichtEigen &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sHRBEigen
+		end if
+	End if
+	if sUmsatzsteuerIDEigen &lt;&gt; &quot;&quot; then
+		if sFirmendaten &lt;&gt; &quot;&quot; then
+			sFirmendaten = sFirmendaten &amp; Chr(10) &amp; &quot;UmsatzsteuerID: &quot; &amp; sUmsatzsteuerIDEigen 
+		else
+			sFirmendaten = &quot;UmsatzsteuerID: &quot; &amp; sUmsatzsteuerIDEigen 
+		end if
+	else
+		sFirmendaten = sFirmendaten &amp; Chr(10)
+	End if
+	if sUmsatzsteuernummerEigen &lt;&gt; &quot;&quot; then
+		if sFirmendaten &lt;&gt; &quot;&quot; then
+			sFirmendaten = sFirmendaten &amp; Chr(10) &amp; &quot;Umsatzsteuernummer: &quot; &amp; sUmsatzsteuernummerEigen
+		else
+			sFirmendaten = &quot;Umsatzsteuernummer: &quot; &amp; sUmsatzsteuernummerEigen
+		end if
+	End if
+	
+	&apos;sNummern = Chr(10) &amp; Chr(10)
+	sNummern = &quot;&quot;
+	sNummern = sNummern + Chr(9) + &quot;Datum:&quot; + Chr(9)
+	
+	if sGemahntAm = &quot;&quot; then
+		sNummern = sNummern + Date 
+		Feld_fuellen(&quot;Gemahnt_am&quot;,Date)
+	else 
+		sNummern = sNummern + fConvDatum(sGemahntAm)
+		Feld_fuellen(&quot;Gemahnt_am&quot;,fConvDatum(sGemahntAm))
+	End if
+	
+	sNummern = sNummern + Chr(10) + Chr(9) + &quot;Kundennummer:&quot; + Chr(9) + sKontaktID
+	
+	if sName1Eigen &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;Name1&quot;,sName1Eigen)
+	else
+		Feld_loeschen(&quot;Name1&quot;)
+	End if
+	if sName2Eigen &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;Name2&quot;,sName2Eigen)
+	else
+		Feld_loeschen(&quot;Name2&quot;)
+	End if
+	if sName3Eigen &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;Name3&quot;,sName3Eigen)
+	else
+		Feld_loeschen(&quot;Name3&quot;)
+	End if
+	if sName4Eigen &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;Name4&quot;,sName4Eigen)
+	else
+		Feld_loeschen(&quot;Name4&quot;)
+	End if
+	
+	Feld_fuellen(&quot;Name1_Eigen&quot;,sNameKurzEigen)
+	Feld_fuellen(&quot;Anschrift_Eigen_1&quot;,sAnschrift_Eigen_1)
+	if iPrint_Typ &gt; 0 then
+		loesche_Falzmarken()
+		Feld_loeschen(&quot;unzustellbar&quot;)
+		Feld_loeschen(&quot;Anschrift_Eigen_2&quot;)
+	else
+		Feld_fuellen(&quot;Anschrift_Eigen_2&quot;,sAnschrift_Eigen_2)
+	end if
+	
+	Feld_fuellen(&quot;Anschrift_Eigen_3&quot;,sAnschrift_Eigen_3)
+	Feld_fuellen(&quot;Anschrift&quot;,sAnschrift)
+	Feld_fuellen(&quot;Leerzeilen&quot;,Chr(10) &amp; Chr(10))
+	Feld_fuellen(&quot;Document_Typ&quot;,sDocument_Typ)
+	Feld_fuellen(&quot;Erinnert_am&quot;,fConvDatum(sErinnertAm))
+	Feld_fuellen(&quot;Gemahnt_bis&quot;,fConvDatum(sGemahntBis))
+	Feld_fuellen(&quot;Summe&quot;,&quot;Summe nicht ausgeglichener Rechnungen:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sSumme) &amp; &quot; €&quot;)
+	if sMahngebuehr &gt; 0 then
+		Feld_fuellen(&quot;Mahngebuehr&quot;,&quot;+ zuzüglich Mahngebühr:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sMahngebuehr) &amp; &quot; €&quot;)
+	else
+		vRows_Summen.removeByIndex(4,1)
+	End if
+	if sZinssatz &gt; 0 then
+		if sGemahntAm = &quot;&quot; then
+			Feld_fuellen(&quot;Zinsen&quot;,&quot;+ zuzüglich &quot; &amp; fZahlMitPunkt(sZinssatz) &amp; &quot;% Verzugszinsen per &quot; &amp; Date &amp; &quot;:&quot; &amp;_
+			 Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sZinsen) &amp; &quot; €&quot;)
+		else
+			Feld_fuellen(&quot;Zinsen&quot;,&quot;+ zuzüglich &quot; &amp; fZahlMitPunkt(sZinssatz) &amp; &quot;% Verzugszinsen per &quot; &amp; fConvDatum(sGemahntAm) &amp; &quot;:&quot; &amp;_
+			 Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sZinsen) &amp; &quot; €&quot;)
+		End if
+	else
+		vRows_Summen.removeByIndex(3,1)
+	End if
+	if sSumme_Bezahlt &gt; 0 then
+		Feld_fuellen(&quot;Summe_Bezahlt&quot;,&quot;- abzüglich geleisteter Zahlungen:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sSumme_Bezahlt) &amp; &quot; €&quot;)
+	else
+		vRows_Summen.removeByIndex(2,1)
+	End if
+	Feld_fuellen(&quot;Zahlungsbetrag&quot;,&quot;Zahlungsbetrag:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sSumme_mit_Aufschlag) &amp; &quot; €&quot;)
+	Feld_fuellen(&quot;Nummern&quot;,sNummern)
+	Feld_fuellen(&quot;Leistungsprofil&quot;,sLeistungsprofil)
+	Feld_fuellen(&quot;Kontakt_Bez&quot;,sKontakt_Bez)
+	Feld_fuellen(&quot;Kontakt&quot;,sKontakt)
+	Feld_fuellen(&quot;Bankverbindung_Bez&quot;,sBankverbindung_Bez)
+	Feld_fuellen(&quot;Bankverbindung&quot;,sBankverbindung)
+	Feld_fuellen(&quot;Geschaeftsfuehrer_Bez&quot;,sGeschaeftsfuehrer_Bez)
+	Feld_fuellen(&quot;Firmendaten&quot;,sFirmendaten)
+	oDoc.getTextFields().refresh()
+
+End Sub
+
+
+</script:module>

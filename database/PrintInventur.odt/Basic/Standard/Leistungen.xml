@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Leistungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+&apos;Global vViewCursor as Variant
+
+Sub Leistungen()
+	Dim sLeistungsID as String
+	Dim sLeistungsbezeichnung as String,sEinheit as String
+	Dim sWarenbestand as String,sEinkaufspreis as String
+	Dim sGP as String,cGP as currency,cUebertrag as currency,sUebertrag as String
+	Dim iPosLeistung as Integer
+	Dim iCountLeistung as integer,iCountInsert as Integer
+	Dim oCursorDocTyp1 as Object,oCursorDocTyp2 as Object
+	Dim oRangeAltPos as Object,oRangeZwiSum as Object
+	Dim vColumns as Variant,vColumnPos as Variant
+	Dim iPageCountNew as Integer,iPageCount as Integer,iPageNumber as Integer
+	Dim oTables as Object
+	Dim vTableKopf1 as Variant,vTableKopf2 as Variant
+	Dim vTableLeistungen as Variant,vRowsLeistungen as Variant
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+	Dim oRecordLeistungen as Object
+	Dim oStyleFamilies as Object,oPageStyles as Object,oPageStyle_1 as Object,oPageStyle_2 as Object
+	Dim vViewCursor as Variant
+	Dim lAnzahlLeistungen as long
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	oTables = oDoc.getTextTables
+	vTableLeistungen = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTableLeistungen = oTables.getByName(&quot;Leistungen&quot;)
+	vRowsLeistungen = vTableLeistungen.getRows()
+	vViewCursor = oDoc.CurrentController.getViewCursor()
+	oStyleFamilies= oDoc.getStyleFamilies()
+	oPageStyles = oStyleFamilies.getByName(&quot;PageStyles&quot;)
+	oPageStyle_1 = oPageStyles.getByName(&quot;Erste Seite&quot;)
+	oPageStyle_2 = oPageStyles.getByName(&quot;Standard&quot;)
+	
+	lAnzahlLeistungen=flAnzahlLeistungen
+	
+	if lAnzahlLeistungen &gt; 0 then
+	sSQL1=&quot;select distinct LeistungsID,Leistungsbezeichnung,Einheit,&quot;&amp;_
+		&quot;Warenbestand,Einkaufspreis,Einkaufspreis*Warenbestand,Einkaufspreis*Warenbestand as GP &quot;&amp;_
+		&quot;from &quot;&amp; sLeistungsstamm &amp;&quot; where Warenbestand &gt; 0 and Warenbestand is not null &quot;&amp;_
+		&quot;order by Leistungsgruppe ASC,LeistungsID ASC&quot;
+	End if
+	
+		iCountLeistung = 1
+		iCountinsert = 2
+		iPageCount = 1
+		cUebertrag = 0
+	
+	Do While lAnzahlLeistungen &gt;= iCountLeistung
+	
+		oRecordLeistungen=oResult_Leistungen(sSQL1)
+		oRecordLeistungen.absolute(iCountLeistung)
+		sLeistungsID = oRecordLeistungen.getString(1)
+		sLeistungsbezeichnung = oRecordLeistungen.getString(2)
+		sEinheit = oRecordLeistungen.getString(3)
+		sWarenbestand = oRecordLeistungen.getString(4)
+		sEinkaufspreis = oRecordLeistungen.getString(5)
+		sGP = oRecordLeistungen.getString(6)
+		cGP = oRecordLeistungen.getString(7)
+	
+		vRowsLeistungen.insertByIndex(iCountInsert,1)
+		vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
+	
+		vTableLeistungen.getCellByName(&quot;A&quot; &amp; iCountInsert).String=sLeistungsID
+		vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=sLeistungsbezeichnung
+		vTableLeistungen.getCellByName(&quot;C&quot; &amp; iCountInsert).String=sEinheit
+		vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sWarenbestand))
+		vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sEinkaufspreis))
+		vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sGP))
+		
+		if ifInsertCarry(iPageCount) = 0 then
+			cUebertrag = cUebertrag	+ cGP
+			iCountInsert=iCountInsert + 1
+		elseif ifInsertCarry(iPageCount) = 1 then
+			sUebertrag = fTausenderpunkt(fZahlMitPunkt(Left((CStr(cUebertrag)),Len(CStr(cUebertrag))-2)))
+			iCountInsert=fInsertCarry(iCountInsert,sUebertrag,iPageCount) + 1
+			cUebertrag = cUebertrag	+ cGP
+			iPageCount=iPageCount+1
+		End if
+		iCountLeistung=iCountLeistung + 1
+	Loop
+
+	vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
+
+	sUebertrag = fTausenderpunkt(fZahlMitPunkt(Left((CStr(cUebertrag)),Len(CStr(cUebertrag))-2)))
+
+	if ifPageCount = iPageCount+1 then
+		fInsertCarry(iCountInsert,sUebertrag,iPageCount)
+	End if
+	Feld_fuellen(&quot;Inventurwert&quot;,sUebertrag &amp;&quot; &quot;&amp; sWaehrung)
+	oDoc.getTextFields().refresh()
+End Sub
+
+
+
+
+
+</script:module>

@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement as Object
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+Dim oRecord1 as Object,oRecord2 as Object
+Dim vStatus as Variant, sLeistungsID as string
+Dim sLeistungsbezeichnung as string,iCount as Integer
+Dim sLeistungsgruppe as String,sEinheit as String,sBauzeit as String,sEinkaufspreis as String
+Dim sLieferant_1 as String,sLieferant_2 as String,sLieferant_3 as String,sLeistungsbeschreibung as String
+
+Sub Start_Leistungen()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+	if oDoc.isReadOnly then
+		Dim oFrame as Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+		
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Leistungsstamm&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 28)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+		
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Hauptgruppen_&quot;&amp; iEinstellungsID_lokal &amp;&quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Leistungsgruppen_&quot;&amp; iEinstellungsID_lokal &amp;&quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Leistungsstamm_&quot;&amp; iEinstellungsID_lokal &amp;&quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm&quot;)
+		else
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen_&quot;&amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen_&quot;&amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm_&quot;&amp; iEinstellungsID_lokal)
+		end if
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Leistungsstamm&quot;)
+		
+		sSQL1=&quot;update Steuerung set Gesperrt=1 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		Formular_init()						&apos;Initialisierung für Mehrplatzlösung
+		oForm_Steuerung.reload()
+	 	StatusBar(False)
+		ToolBar(False)
+	End if
+	FormSize()
+End Sub
+
+Sub Suchstring_setzen()
+	oField_Suchstring.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	Leistungsauswahl_refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Suchstring_ruecksetzen()
+	sSQL1=&quot;update Steuerung set Suchstring = &apos;&apos; where ClientID = &quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	Leistungsauswahl_refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Hauptgruppenauswahl_ruecksetzen()
+	sSQL1=&quot;update Steuerung set HauptgruppenID=null where ClientID=&quot;&amp; iClientID 
+	SQL_execute(sSQL1)
+	oList_Gruppenauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Gruppenauswahl_ruecksetzen()
+	sSQL1=&quot;update Steuerung set GruppenID=null where ClientID=&quot;&amp; iClientID 
+	SQL_execute(sSQL1)
+	oList_Gruppenauswahl.refresh()
+	Leistungsauswahl_refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Leistungsauswahl_refresh()
+Dim sSQL1 as String,sSQL2 as String,lCount as Long,oRecord1 as Object
+	sSQL1=&quot;select count(distinct concat(t1.LeistungsID,&apos; - &apos;,t1.Leistungsbezeichnung),t1.LeistungsID)&quot;&amp;_
+		&quot; from &quot;&amp; sLeistungsstamm &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where ((t1.Leistungsgruppe=t2.GruppenID and t2.GruppenID IS NOT NULL)&quot;&amp;_
+		&quot; or (t1.Leistungsgruppe like &apos;%&apos; and t2.GruppenID IS NULL))&quot;&amp;_
+		&quot; and ((concat(t1.LeistungsID,&apos; &apos;,t1.Leistungsbezeichnung,&apos; &apos;,t1.Leistungsbeschreibung)&quot;&amp;_
+		&quot; like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;) and t2.Suchstring IS NOT NULL)&quot;&amp;_
+		&quot; or (concat(t1.LeistungsID,&apos; &apos;,t1.Leistungsbezeichnung,&apos; &apos;,t1.Leistungsbeschreibung) like &apos;%&apos;&quot;&amp;_
+		&quot; and t2.Suchstring IS NULL))&quot;
+		oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lCount=oRecord1.getInt(1)
+	Wend
+	if lCount &gt; 1000 then
+		MsgBox(&quot;Sie haben &quot;&amp; lCount &amp;_
+			&quot; Artikel ausgewählt!! Bitte wählen Sie eine Artikelgruppe aus oder geben Sie einen genaueren Suchstring ein!&quot;,16,sTitle_lokal)
+		Exit Sub
+	End If
+	oList_Leistungsauswahl.refresh()
+End Sub
+
+Sub List_Leistungen_refresh()
+	oList_Leistungsauswahl.refresh()
+End Sub
+
+Sub Leistung_loeschen()
+	vStatus=MsgBox(&quot;Soll die aktuelle Leistung gelöscht werden?&quot;&amp; Chr$(13)&amp; Chr$(13)&amp; Chr$(13) &amp;_
+		&quot;Wenn &gt;Ja&lt; ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+		&quot;Wollen Sie trotzdem fortfahren?&quot;,36,sTitle_lokal)
+	if vStatus=6 then
+		sSQL1=&quot;delete from &quot;&amp; sLeistungsstamm &amp;&quot; where LeistungsID= &apos;&quot;&amp; fLeistungsID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL1)
+		SQL_LeistungsID_entfernen
+		Steuerung_reload()
+		oForm_Leistungsdaten.reload()
+		oForm_Leistungsdaten.reset()
+	End if
+End Sub
+
+Sub Steuerung_reload()
+	oForm_Steuerung.reload()
+	oForm_Steuerung.reset()
+End Sub
+
+Sub List_Hauptgruppenauswahl_refresh()
+	oList_Hauptgruppenauswahl.refresh()
+End Sub
+
+Sub List_Gruppenauswahl_refresh()
+	oList_Gruppenauswahl.refresh()
+End Sub
+
+Sub List_Leistungsgruppe_refresh()
+	oList_Leistungsgruppe.refresh()
+End Sub
+
+Sub update_Hauptgruppenauswahl()
+	oList_Hauptgruppenauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Gruppenauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub update_Gruppenauswahl()
+	oList_Gruppenauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Gruppenauswahl.refresh()
+	oList_Leistungsauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Leistung_uebernehmen()
+	oList_Leistungsauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Leistungsgruppe.refresh()
+	oList_Leistungsauswahl.refresh()
+	oForm_Steuerung.reload()
+End sub
+
+Sub Leistungsdaten_speichern()
+	if fLeistungsID &lt;&gt; &quot;&quot; then
+		oForm_Leistungsdaten.updateRow()
+		SQL_LeistungsID_entfernen()
+		vSQLArray=Array(&quot;select &apos;&apos;,&apos;&apos;&quot;)
+		oList_Leistungsgruppe.ListSource=vSQLArray
+		oList_Leistungsgruppe.refresh()
+		oForm_Steuerung.reload()
+		oForm_Standard_Artikel.reload()
+		oForm_Steuerung.reset()
+		init_List_Leistungsgruppe()
+	End if
+End Sub
+
+Sub List_Standard_commit()
+	oList_Standard.commit()
+	oForm_Leistungsdaten.updateRow()
+	oForm_Standard_Artikel.reload()
+End Sub
+
+Sub Form_Standard_Artikel_reload()
+	oForm_Standard_Artikel.reload()
+End Sub
+
+Sub Maske_schliessen()
+	if oDoc.isReadOnly then
+		SQL_LeistungsID_entfernen()
+		sSQL1=&quot;update Steuerung set Gesperrt=0 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+	End if
+	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+Sub neue_Leistung()
+nochmal_Bez:
+	sLeistungsbezeichnung=InputBox(&quot;Geben Sie bitte die Leistungsbezeichnung ein!&quot;,sTitle_lokal)
+	if sLeistungsbezeichnung = &quot;&quot; then
+		vStatus=MsgBox(&quot;Sie haben noch keine Bezeichnung eingegeben!&quot;,37,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal_Bez
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+nochmal_ID:
+	sLeistungsID=InputBox(&quot;Geben Sie bitte eine neue Leistungsnummer ein!&quot;,sTitle_lokal)
+	if sLeistungsID = &quot;&quot; then
+		vStatus=MsgBox(&quot;Sie haben noch keine Leistungsnummer eingegeben!&quot;,37,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal_ID
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+	sSQL1=&quot;select count(LeistungsID) from &quot;&amp; sLeistungsstamm &amp;&quot; where LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iCount=oRecord1.getInt(1)
+	Wend
+	if iCount = 1 then
+		MsgBox(&quot;Diese Nummer ist schon vergeben.&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+			&quot;Bitte benutzen Sie eine neue Leistungsnummer!&quot;,48,sTitle_lokal)
+		goto nochmal_ID
+	elseif iCount = 0 then
+		sSQL2=&quot;insert into &quot;&amp; sLeistungsstamm &amp;&quot; (LeistungsID,Leistungsgruppe,Leistungsbezeichnung,Leistungsbeschreibung)&quot;&amp;_
+			&quot; select &apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,GruppenID,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&apos;&quot;&amp;_
+			&quot; from Steuerung&quot;&amp;_
+			&quot; where ClientID=&quot;&amp; iClientID
+	End if
+	SQL_execute(sSQL2)
+	sSQL3=&quot;update Steuerung set LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos; where ClientID = &quot;&amp; iClientID
+	SQL_execute(sSQL3)
+	oList_Leistungsgruppe.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Leistung_duplizieren()
+	if fSelected_Item(oList_Leistungsauswahl) &lt;&gt; &quot;&quot; then
+		sSQL1=&quot;select Leistungsgruppe,Leistungsbezeichnung,Einheit,Bauzeit,Einkaufspreis,Lieferant_1,&quot;&amp;_
+			&quot;Lieferant_2,Lieferant_3,Leistungsbeschreibung from &quot;&amp; sLeistungsstamm &amp;&quot; where LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sLeistungsgruppe=oRecord1.getString(1)
+			sLeistungsbezeichnung=oRecord1.getString(2)
+			sEinheit=oRecord1.getString(3)
+			sBauzeit=oRecord1.getString(4)
+			sEinkaufspreis=oRecord1.getString(5)
+			sLieferant_1=oRecord1.getString(6)
+			sLieferant_2=oRecord1.getString(7)
+			sLieferant_3=oRecord1.getString(8)
+			sLeistungsbeschreibung=oRecord1.getString(9)
+		Wend
+		nochmal:
+		sLeistungsID=InputBox(&quot;Geben Sie bitte eine neue Leistungsnummer ein!&quot;,sTitle_lokal)
+		if sLeistungsID = &quot;&quot; then
+			vStatus=MsgBox(&quot;Sie haben noch keine Leistungsnummer eingegeben!&quot;,37,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal
+			elseif vStatus=2 then
+				exit sub
+			End if
+		End if
+		sSQL2=&quot;select count(LeistungsID) from &quot;&amp; sLeistungsstamm &amp;&quot; where LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL2)
+		While oRecord1.next()
+			iCount=oRecord1.getInt(1)
+		Wend
+		if iCount = 1 then
+			MsgBox(&quot;Diese Nummer ist schon vergeben.&quot;&amp; Chr$(13)&amp; Chr$(13) &amp; &quot;Bitte benutzen Sie eine neue Leistungsnummer!&quot;,48,sTitle_lokal)
+			goto nochmal
+		elseif iCount = 0 then
+			nocheinmal:
+			sLeistungsbezeichnung=InputBox(&quot;Geben Sie bitte die neue Leistungsbezeichnung&quot;&amp;_
+			&quot; für die zu kopierende Leistung ein!&quot;&amp; Chr$(10) &amp;&quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal,sLeistungsbezeichnung)
+			if sLeistungsbezeichnung = &quot;&quot; then
+				vStatus=MsgBox(&quot;Sie haben noch keine Leistungsbezeichnung eingegeben!&quot;,37,sTitle_lokal)
+				if vStatus=4 then
+					goto nocheinmal
+				elseif vStatus=2 then
+					exit sub
+				End if
+			End if
+			sSQL3=&quot;insert into &quot;&amp; sLeistungsstamm &amp;&quot; (LeistungsID,Leistungsgruppe,Leistungsbezeichnung,Einheit,Bauzeit,&quot;&amp;_
+				&quot;Einkaufspreis,Lieferant_1,Lieferant_2,Lieferant_3,Leistungsbeschreibung) values (&apos;&quot;&amp; sLeistungsID &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sLeistungsgruppe &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sBauzeit &amp;&quot;&apos;,&apos;&quot;&amp; sEinkaufspreis &amp;&quot;&apos;,&apos;&quot;&amp; sLieferant_1 &amp;&quot;&apos;,&apos;&quot;&amp; sLieferant_2 &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sLieferant_3 &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
+			wait 1
+		End if
+		SQL_execute(sSQL3)
+		sSQL1=&quot;update Steuerung set LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos; where ClientID = &quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		oForm_Steuerung.reload()
+	else
+		MsgBox(&quot;Sie haben noch keine Leistung ausgewählt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+Sub Rechtschreibung()
+	if fLeistungsID &lt;&gt; &quot;&quot; then
+		if fbSpellCheck(oField_Leistungsbezeichnung.BoundField.String,&quot;Leistungsbezeichnung&quot;) = False then exit sub
+		if fbSpellCheck(oField_Leistungsbeschreibung.BoundField.String,&quot;Leistungsbeschreibung&quot;) = False then exit sub
+	End if
+End Sub
+</script:module>

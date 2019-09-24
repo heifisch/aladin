@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Start" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Start()
+	Dim sSQL1 AS String
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+	if oDoc.isReadOnly then
+		Dim oFrame AS Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Controlling&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 30)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+
+		sSQL1=&quot;UPDATE Steuerung SET Gesperrt=1 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SetDocUserProperty(&quot;oMenge_eingeben_abfragen&quot;, &quot;&quot;)
+		SetDocUserProperty(&quot;oIstZeit_eingeben_abfragen&quot;, &quot;&quot;)
+		SetDocUserProperty(&quot;oLokation_eingeben_abfragen&quot;, &quot;&quot;)
+		if iEinstellungsID_lokal=1 _
+			OR InStr(fsTableList,&quot;;Hauptgruppen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			OR InStr(fsTableList,&quot;;Leistungsgruppen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			OR InStr(fsTableList,&quot;;Leistungsstamm_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm&quot;)
+		else
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _
+			OR InStr(fsTableList,&quot;;Controlling_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Projekte_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			OR InStr(fsTableList,&quot;;Personal_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oControlling&quot;, &quot;Controlling&quot;)
+			SetDocUserProperty(&quot;oProjekte&quot;, &quot;Projekte&quot;)
+			SetDocUserProperty(&quot;oPersonal&quot;, &quot;Personal&quot;)
+		else
+			SetDocUserProperty(&quot;oControlling&quot;, &quot;Controlling_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oProjekte&quot;, &quot;Projekte_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oPersonal&quot;, &quot;Personal_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 OR InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden&quot;	)
+		else
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _
+			OR InStr(fsTableList,&quot;;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			OR InStr(fsTableList,&quot;;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			OR InStr(fsTableList,&quot;;ZwiBemAuftragsbestaetigungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			OR InStr(fsTableList,&quot;;ZwiSuAuftragsbestaetigungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oAuftragsbestaetigungen1&quot;, &quot;Auftragsbestaetigungen1&quot;)
+			SetDocUserProperty(&quot;oAuftragsbestaetigungen2&quot;, &quot;Auftragsbestaetigungen2&quot;)
+			SetDocUserProperty(&quot;oZwiBemAuftragsbestaetigungen&quot;, &quot;ZwiBemAuftragsbestaetigungen&quot;)
+			SetDocUserProperty(&quot;oZwiSuAuftragsbestaetigungen&quot;, &quot;ZwiSuAuftragsbestaetigungen&quot;)
+		else
+			SetDocUserProperty(&quot;oAuftragsbestaetigungen1&quot;, &quot;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oAuftragsbestaetigungen2&quot;, &quot;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oZwiBemAuftragsbestaetigungen&quot;, &quot;ZwiBemAuftragsbestaetigungen_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oZwiSuAuftragsbestaetigungen&quot;, &quot;ZwiSuAuftragsbestaetigungen_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Controlling&quot;)
+
+		Formular_init()				&apos;Initialisierung für Mehrplatzlösung
+		oForm_Steuerung.reload()
+		oForm_Steuerung_1.reload()
+		oForm_Tabellendaten.reload()
+		Summen_refresh()
+
+		StatusBar(False,oDoc)
+		ToolBar(False,oDoc)
+	End if
+	FormSize()
+End Sub
+
+Sub Maske_schliessen()
+	if oDoc.isReadOnly then
+		SQL_Steuerung_reset_1
+		sSQL1=&quot;UPDATE Steuerung SET Gesperrt=0 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+	End if
+ 	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+</script:module>

@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:officeooo="http://openoffice.org/2009/office" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2">
+  <office:scripts>
+    <office:event-listeners>
+      <script:event-listener script:language="ooo:script" script:event-name="office:start-app"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:close-app"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:new" xlink:href="vnd.sun.star.script:Standard.Zahlungsziele.Zahlungsziele?language=Basic&amp;location=document" xlink:type="simple"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:load-finished"/>
+      <script:event-listener script:language="ooo:script" script:event-name="dom:load"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:prepare-unload"/>
+      <script:event-listener script:language="ooo:script" script:event-name="dom:unload"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:save"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:save-done"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:save-as"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:save-as-done"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:copy-to"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:copy-to-done"/>
+      <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn"/>
+      <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusOut"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:print"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:view-created"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:prepare-view-closing"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:view-close"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:modify-changed"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:visarea-changed"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:page-count-change"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:mail-merge"/>
+    </office:event-listeners>
+  </office:scripts>
+  <office:font-face-decls>
+    <style:font-face style:name="Lucidasans1" svg:font-family="Lucidasans"/>
+    <style:font-face style:name="Bitstream Vera Sans" svg:font-family="'Bitstream Vera Sans'" style:font-pitch="variable"/>
+    <style:font-face style:name="Lucidasans" svg:font-family="Lucidasans" style:font-pitch="variable"/>
+    <style:font-face style:name="Times New Roman" svg:font-family="'Times New Roman'" style:font-family-generic="roman" style:font-pitch="variable"/>
+    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>
+  </office:font-face-decls>
+  <office:automatic-styles>
+    <style:style style:name="Zahlungsziele" style:family="table">
+      <style:table-properties style:width="28.42cm" style:rel-width="100%" table:align="left"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.A" style:family="table-column">
+      <style:table-column-properties style:column-width="2.007cm" style:rel-column-width="1138*"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.B" style:family="table-column">
+      <style:table-column-properties style:column-width="10.788cm" style:rel-column-width="6116*"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.C" style:family="table-column">
+      <style:table-column-properties style:column-width="2.427cm" style:rel-column-width="1376*"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.D" style:family="table-column">
+      <style:table-column-properties style:column-width="1.976cm" style:rel-column-width="1120*"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.E" style:family="table-column">
+      <style:table-column-properties style:column-width="3.903cm" style:rel-column-width="2213*"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.F" style:family="table-column">
+      <style:table-column-properties style:column-width="5.519cm" style:rel-column-width="3129*"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.G" style:family="table-column">
+      <style:table-column-properties style:column-width="1.799cm" style:rel-column-width="1020*"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.A1" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.049cm" fo:border-left="1pt solid #000000" fo:border-right="none" fo:border-top="1pt solid #000000" fo:border-bottom="1pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.B1.1.1" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="1pt solid #000000" fo:border-bottom="0.05pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.B1.1.2" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="1pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.E1.2" style:family="table-column">
+      <style:table-column-properties style:column-width="1.896cm" style:rel-column-width="1075*"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.F1.1" style:family="table-column">
+      <style:table-column-properties style:column-width="2.293cm" style:rel-column-width="1300*"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.F1.2" style:family="table-column">
+      <style:table-column-properties style:column-width="3.226cm" style:rel-column-width="1829*"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.G1" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="1pt solid #000000" fo:border-top="1pt solid #000000" fo:border-bottom="1pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.A2" style:family="table-cell">
+      <style:table-cell-properties style:vertical-align="top" fo:background-color="transparent" fo:padding="0.049cm" fo:border-left="1pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="1pt solid #000000">
+        <style:background-image/>
+      </style:table-cell-properties>
+    </style:style>
+    <style:style style:name="Zahlungsziele.B2.1.1" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.C2.1.1" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.D2.1.1" style:family="table-cell">
+      <style:table-cell-properties style:vertical-align="bottom" fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.E2.1.1" style:family="table-cell" style:data-style-name="N107">
+      <style:table-cell-properties style:vertical-align="bottom" fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.E2.2.1" style:family="table-cell">
+      <style:table-cell-properties style:vertical-align="bottom" fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.E2.2.2" style:family="table-cell" style:data-style-name="N36">
+      <style:table-cell-properties fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="1pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.F2.1.1" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="0.05pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.F2.1.2" style:family="table-cell">
+      <style:table-cell-properties style:vertical-align="top" fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="none" fo:border-top="none" fo:border-bottom="1pt solid #000000"/>
+    </style:style>
+    <style:style style:name="Zahlungsziele.G2" style:family="table-cell">
+      <style:table-cell-properties fo:padding="0.049cm" fo:border-left="0.05pt solid #000000" fo:border-right="1pt solid #000000" fo:border-top="none" fo:border-bottom="1pt solid #000000"/>
+    </style:style>
+    <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Table_20_Heading">
+      <style:text-properties fo:color="#000000" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" fo:font-weight="bold"/>
+    </style:style>
+    <style:style style:name="P2" style:family="paragraph" style:parent-style-name="Table_20_Heading">
+      <style:paragraph-properties fo:text-align="end" style:justify-single-word="false"/>
+      <style:text-properties fo:color="#000000" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" fo:font-weight="bold"/>
+    </style:style>
+    <style:style style:name="P3" style:family="paragraph" style:parent-style-name="Table_20_Heading">
+      <style:paragraph-properties fo:hyphenation-ladder-count="no-limit"/>
+      <style:text-properties fo:color="#000000" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" fo:font-weight="bold" fo:hyphenate="false" fo:hyphenation-remain-char-count="2" fo:hyphenation-push-char-count="2"/>
+    </style:style>
+    <style:style style:name="P4" style:family="paragraph" style:parent-style-name="Table_20_Heading">
+      <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
+      <style:text-properties fo:color="#000000" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" fo:font-weight="bold"/>
+    </style:style>
+    <style:style style:name="P5" style:family="paragraph" style:parent-style-name="Table_20_Heading">
+      <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false"/>
+      <style:text-properties fo:color="#000000" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" fo:font-weight="bold"/>
+    </style:style>
+    <style:style style:name="P6" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+      <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
+      <style:text-properties fo:color="#000000" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal"/>
+    </style:style>
+    <style:style style:name="P7" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+      <style:text-properties fo:color="#000000" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" style:font-size-asian="8pt" style:font-size-complex="8pt"/>
+    </style:style>
+    <style:style style:name="P8" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+      <style:paragraph-properties fo:text-align="end" style:justify-single-word="false"/>
+      <style:text-properties fo:color="#000000" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" style:font-size-asian="8pt" style:font-size-complex="8pt"/>
+    </style:style>
+    <style:style style:name="P9" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+      <style:text-properties fo:color="#000000" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" style:font-size-asian="8pt" style:font-size-complex="8pt"/>
+    </style:style>
+    <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Table_20_Contents">
+      <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
+      <style:text-properties fo:color="#000000" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" fo:font-weight="bold" style:font-size-asian="8pt" style:font-size-complex="8pt"/>
+    </style:style>
+    <style:style style:name="T1" style:family="text">
+      <style:text-properties style:font-name="Arial" fo:font-size="10pt"/>
+    </style:style>
+    <style:style style:name="T2" style:family="text">
+      <style:text-properties style:font-name="Arial" fo:font-size="10pt" fo:font-style="italic" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="T3" style:family="text">
+      <style:text-properties style:font-name="Arial" fo:font-size="10pt" fo:font-weight="normal" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
+    </style:style>
+    <number:date-style style:name="N36" number:automatic-order="true">
+      <number:day number:style="long"/>
+      <number:text>.</number:text>
+      <number:month number:style="long"/>
+      <number:text>.</number:text>
+      <number:year number:style="long"/>
+    </number:date-style>
+    <number:number-style style:name="N107P0" style:volatile="true">
+      <number:number number:decimal-places="2" loext:min-decimal-places="2" number:min-integer-digits="1" number:grouping="true"/>
+    </number:number-style>
+    <number:number-style style:name="N107">
+      <style:text-properties fo:color="#ff0000"/>
+      <number:text>-</number:text>
+      <number:number number:decimal-places="2" loext:min-decimal-places="2" number:min-integer-digits="1" number:grouping="true"/>
+      <style:map style:condition="value()&gt;=0" style:apply-style-name="N107P0"/>
+    </number:number-style>
+  </office:automatic-styles>
+  <office:body>
+    <office:text>
+      <office:forms form:automatic-focus="false" form:apply-design-mode="false"/>
+      <text:sequence-decls>
+        <text:sequence-decl text:display-outline-level="0" text:name="Illustration"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Table"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Text"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Drawing"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Figure"/>
+      </text:sequence-decls>
+      <text:user-field-decls>
+        <text:user-field-decl office:value-type="string" office:string-value="von" text:name="Of"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Seite" text:name="Page"/>
+      </text:user-field-decls>
+      <table:table table:name="Zahlungsziele" table:style-name="Zahlungsziele">
+        <table:table-column table:style-name="Zahlungsziele.A"/>
+        <table:table-column table:style-name="Zahlungsziele.B"/>
+        <table:table-column table:style-name="Zahlungsziele.C"/>
+        <table:table-column table:style-name="Zahlungsziele.D"/>
+        <table:table-column table:style-name="Zahlungsziele.E"/>
+        <table:table-column table:style-name="Zahlungsziele.F"/>
+        <table:table-column table:style-name="Zahlungsziele.G"/>
+        <table:table-header-rows>
+          <table:table-row>
+            <table:table-cell table:style-name="Zahlungsziele.A1" office:value-type="string">
+              <text:p text:style-name="P1"><text:line-break/>RechnungsID</text:p>
+            </table:table-cell>
+            <table:table-cell>
+              <table:table table:is-sub-table="true">
+                <table:table-column table:style-name="Zahlungsziele.B"/>
+                <table:table-row>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.1" office:value-type="string">
+                    <text:p text:style-name="P1"><text:line-break/>Lieferantenname</text:p>
+                  </table:table-cell>
+                </table:table-row>
+                <table:table-row>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                    <text:p text:style-name="P1">Rechnungsbezeichnung</text:p>
+                  </table:table-cell>
+                </table:table-row>
+              </table:table>
+            </table:table-cell>
+            <table:table-cell>
+              <table:table table:is-sub-table="true">
+                <table:table-column table:style-name="Zahlungsziele.C"/>
+                <table:table-row>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.1" office:value-type="string">
+                    <text:p text:style-name="P5"><text:line-break/>Kundennummer</text:p>
+                  </table:table-cell>
+                </table:table-row>
+                <table:table-row>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                    <text:p text:style-name="P1">Rechnungs-Nr.</text:p>
+                  </table:table-cell>
+                </table:table-row>
+              </table:table>
+            </table:table-cell>
+            <table:table-cell>
+              <table:table table:is-sub-table="true">
+                <table:table-column table:style-name="Zahlungsziele.D"/>
+                <table:table-row>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.1" office:value-type="string">
+                    <text:p text:style-name="P2">Betrag mit MwSt</text:p>
+                  </table:table-cell>
+                </table:table-row>
+                <table:table-row>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                    <text:p text:style-name="P2">fällig am</text:p>
+                  </table:table-cell>
+                </table:table-row>
+              </table:table>
+            </table:table-cell>
+            <table:table-cell>
+              <table:table table:is-sub-table="true">
+                <table:table-column table:style-name="Zahlungsziele.A"/>
+                <table:table-column table:style-name="Zahlungsziele.E1.2"/>
+                <table:table-row>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.1" office:value-type="string">
+                    <text:p text:style-name="P2">Betrag nach Skonto</text:p>
+                  </table:table-cell>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.1" office:value-type="string">
+                    <text:p text:style-name="P2">Summe mit <text:s/>Status</text:p>
+                  </table:table-cell>
+                </table:table-row>
+                <table:table-row>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                    <text:p text:style-name="P2">Skonto bis</text:p>
+                  </table:table-cell>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                    <text:p text:style-name="P2">bezahlt am</text:p>
+                  </table:table-cell>
+                </table:table-row>
+              </table:table>
+            </table:table-cell>
+            <table:table-cell>
+              <table:table table:is-sub-table="true">
+                <table:table-column table:style-name="Zahlungsziele.F1.1"/>
+                <table:table-column table:style-name="Zahlungsziele.F1.2"/>
+                <table:table-row>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.1" table:number-columns-spanned="2" office:value-type="string">
+                    <text:p text:style-name="P1"><text:line-break/>IBAN</text:p>
+                  </table:table-cell>
+                  <table:covered-table-cell/>
+                </table:table-row>
+                <table:table-row>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                    <text:p text:style-name="P3">BIC <text:s text:c="10"/></text:p>
+                  </table:table-cell>
+                  <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                    <text:p text:style-name="P1">Bank</text:p>
+                  </table:table-cell>
+                </table:table-row>
+              </table:table>
+            </table:table-cell>
+            <table:table-cell table:style-name="Zahlungsziele.G1" office:value-type="string">
+              <text:p text:style-name="P4"><text:line-break/>Status</text:p>
+            </table:table-cell>
+          </table:table-row>
+        </table:table-header-rows>
+        <table:table-row>
+          <table:table-cell table:style-name="Zahlungsziele.A2" office:value-type="string">
+            <text:p text:style-name="P6"/>
+          </table:table-cell>
+          <table:table-cell>
+            <table:table table:is-sub-table="true">
+              <table:table-column table:style-name="Zahlungsziele.B"/>
+              <table:table-row>
+                <table:table-cell table:style-name="Zahlungsziele.B2.1.1" office:value-type="string">
+                  <text:p text:style-name="P7"/>
+                </table:table-cell>
+              </table:table-row>
+              <table:table-row>
+                <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                  <text:p text:style-name="P7"/>
+                </table:table-cell>
+              </table:table-row>
+            </table:table>
+          </table:table-cell>
+          <table:table-cell>
+            <table:table table:is-sub-table="true">
+              <table:table-column table:style-name="Zahlungsziele.C"/>
+              <table:table-row>
+                <table:table-cell table:style-name="Zahlungsziele.C2.1.1" office:value-type="string">
+                  <text:p text:style-name="P7"/>
+                </table:table-cell>
+              </table:table-row>
+              <table:table-row>
+                <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                  <text:p text:style-name="P7"/>
+                </table:table-cell>
+              </table:table-row>
+            </table:table>
+          </table:table-cell>
+          <table:table-cell>
+            <table:table table:is-sub-table="true">
+              <table:table-column table:style-name="Zahlungsziele.D"/>
+              <table:table-row>
+                <table:table-cell table:style-name="Zahlungsziele.D2.1.1" office:value-type="string">
+                  <text:p text:style-name="P8"/>
+                </table:table-cell>
+              </table:table-row>
+              <table:table-row>
+                <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                  <text:p text:style-name="P8"/>
+                </table:table-cell>
+              </table:table-row>
+            </table:table>
+          </table:table-cell>
+          <table:table-cell>
+            <table:table table:is-sub-table="true">
+              <table:table-column table:style-name="Zahlungsziele.A"/>
+              <table:table-column table:style-name="Zahlungsziele.E1.2"/>
+              <table:table-row>
+                <table:table-cell table:style-name="Zahlungsziele.E2.1.1">
+                  <text:p text:style-name="P8"/>
+                </table:table-cell>
+                <table:table-cell table:style-name="Zahlungsziele.E2.2.1" office:value-type="string">
+                  <text:p text:style-name="P8"/>
+                </table:table-cell>
+              </table:table-row>
+              <table:table-row>
+                <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                  <text:p text:style-name="P8"/>
+                </table:table-cell>
+                <table:table-cell table:style-name="Zahlungsziele.E2.2.2">
+                  <text:p text:style-name="P8"/>
+                </table:table-cell>
+              </table:table-row>
+            </table:table>
+          </table:table-cell>
+          <table:table-cell>
+            <table:table table:is-sub-table="true">
+              <table:table-column table:style-name="Zahlungsziele.F1.1"/>
+              <table:table-column table:style-name="Zahlungsziele.F1.2"/>
+              <table:table-row>
+                <table:table-cell table:style-name="Zahlungsziele.F2.1.1" table:number-columns-spanned="2" office:value-type="string">
+                  <text:p text:style-name="P7"/>
+                </table:table-cell>
+                <table:covered-table-cell/>
+              </table:table-row>
+              <table:table-row>
+                <table:table-cell table:style-name="Zahlungsziele.F2.1.2" office:value-type="string">
+                  <text:p text:style-name="P9"/>
+                </table:table-cell>
+                <table:table-cell table:style-name="Zahlungsziele.B1.1.2" office:value-type="string">
+                  <text:p text:style-name="P7"/>
+                </table:table-cell>
+              </table:table-row>
+            </table:table>
+          </table:table-cell>
+          <table:table-cell table:style-name="Zahlungsziele.G2" office:value-type="string">
+            <text:p text:style-name="P10"/>
+          </table:table-cell>
+        </table:table-row>
+      </table:table>
+      <text:p text:style-name="Standard"/>
+    </office:text>
+  </office:body>
+</office:document-content>

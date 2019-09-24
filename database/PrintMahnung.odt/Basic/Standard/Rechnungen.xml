@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Rechnungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Rechnungen()
+	Dim oTables AS Object
+	Dim vTableRechnungen AS Variant
+	Dim vRowsRechnungen AS Variant,oRecordRechnungen AS Object,oRecordCountRechnungen AS Object
+	Dim sDocumentID AS String,sErstellungsdatum AS String,sGueltigBis AS String
+	Dim sRechnungsbetrag AS String,sStatus AS String
+	Dim sSQL1 AS String,sSQL2 AS String
+	Dim iAnzahlRechnungen AS Integer,iCountRechnungen AS Integer
+	
+	GlobalScope.BASicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	oTables = oDoc.getTextTables
+	vTableRechnungen = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTableRechnungen = oTables.getByName(&quot;Rechnungen&quot;)
+	vRowsRechnungen = vTableRechnungen.getRows()
+	
+	sSQL1=&quot;SELECT COUNT(*) &quot;&amp;_
+		&quot;FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1,&quot;&amp;_
+		&quot;Steuerung AS t2 &quot;&amp;_
+		&quot;WHERE t2.ClientID = &quot;&amp; iClientID &amp;_
+		&quot; AND t1.KontaktID = t2.KontaktID &quot;&amp;_
+		&quot; AND ( t1.Status = &apos;fällig&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;erinnert&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;überfällig&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;gemahnt&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;überüberfällig&apos; )&quot;
+	
+	
+	sSQL2=&quot;SELECT DISTINCT &quot;&amp;_
+		&quot;t1.DocumentID,t1.Erstellungsdatum,t1.gueltig_bis,t1.Zahlbetrag_mit_MwSt,&quot;&amp;_
+		&quot;t1.Status,t1.erinnert_am,t1.erinnert_bis,t1.gemahnt_am,t1.gemahnt_bis &quot;&amp;_
+		&quot;FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1,&quot;&amp;_
+		&quot;Steuerung AS t2 &quot;&amp;_
+		&quot;WHERE t2.ClientID = &quot;&amp; iClientID &amp;_
+		&quot; AND t1.KontaktID = t2.KontaktID &quot;&amp;_
+		&quot; AND ( t1.Status = &apos;fällig&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;erinnert&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;überfällig&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;gemahnt&apos; &quot;&amp;_
+		&quot; OR t1.Status = &apos;überüberfällig&apos; )&quot;
+	
+	
+	oRecordCountRechnungen=oResult(sSQL1)
+	While oRecordCountRechnungen.next()
+		iAnzahlRechnungen=CInt(oRecordCountRechnungen.getString(1))
+	Wend
+	
+	iCountRechnungen=1
+	
+	Do While iAnzahlRechnungen &gt;= iCountRechnungen
+		oRecordRechnungen=oResult_Scroll(sSQL2)
+		oRecordRechnungen.absolute(iCountRechnungen)
+		sDocumentID=oRecordRechnungen.getString(1)
+		sErstellungsdatum=oRecordRechnungen.getString(2)
+		sGueltigBis=oRecordRechnungen.getString(3)
+		sRechnungsbetrag=oRecordRechnungen.getString(4)
+		sStatus=oRecordRechnungen.getString(5)
+		
+		iCountRechnungen=iCountRechnungen+1
+	
+		vRowsRechnungen.insertByIndex(iCountRechnungen,1)
+		vTableRechnungen.getCellByName(&quot;A&quot; &amp; iCountRechnungen).String=sDocumentID
+		vTableRechnungen.getCellByName(&quot;B&quot; &amp; iCountRechnungen).String=fConvDatum(sErstellungsdatum)
+		vTableRechnungen.getCellByName(&quot;C&quot; &amp; iCountRechnungen).String=fConvDatum(sGueltigBis)
+		vTableRechnungen.getCellByName(&quot;D&quot; &amp; iCountRechnungen).String=fTausenderpunkt(fZahlMitPunkt(sRechnungsbetrag))
+		vTableRechnungen.getCellByName(&quot;E&quot; &amp; iCountRechnungen).String=sStatus
+		
+	Loop
+	vRowsRechnungen.removeByIndex(iCountRechnungen,1)
+
+End Sub
+
+
+
+
+
+</script:module>

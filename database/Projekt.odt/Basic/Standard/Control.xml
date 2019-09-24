@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Control" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function iStartoption as Integer
+	iStartoption=GetDocUserProperty(&quot;oStartoption&quot;)
+End Function
+
+Function iUnloaded as Integer
+	iUnloaded=GetDocUserProperty(&quot;oUnloaded&quot;)
+End Function
+
+Function iExport as Integer
+	iExport=GetDocUserProperty(&quot;oExport&quot;)
+End Function
+
+Function iDocTypID as Integer
+	iDocTypID=CInt(GetDocUserProperty(&quot;oDocTypID&quot;))
+End Function
+
+Function iClientID as Integer
+	iClientID=GetDocUserProperty(&quot;oClientID&quot;)
+End Function
+
+Function iClientID_export as integer
+	iClientID_export=GetDocUserProperty(&quot;oClientID_export&quot;)
+End Function
+
+Function iClientID_import as integer
+	iClientID_import=GetDocUserProperty(&quot;oClientID_import&quot;)
+End Function
+
+Function iGueltig as Integer
+	iGueltig=CInt(GetDocUserProperty(&quot;oGueltig&quot;))
+End Function
+
+Function sMenge_eingeben_abfragen as String
+	sMenge_eingeben_abfragen=GetDocUserProperty(&quot;oMenge_eingeben_abfragen&quot;)
+End Function
+
+Function sEinfuegen_abfragen as String
+	sEinfuegen_abfragen=GetDocUserProperty(&quot;oEinfuegen_abfragen&quot;)
+End Function
+
+Function sHauptgruppen as String
+	sHauptgruppen=GetDocUserProperty(&quot;oHauptgruppen&quot;)
+End Function
+
+Function sLeistungsgruppen as String
+	sLeistungsgruppen=GetDocUserProperty(&quot;oLeistungsgruppen&quot;)
+End Function
+
+Function sLeistungsstamm as String
+	sLeistungsstamm=GetDocUserProperty(&quot;oLeistungsstamm&quot;)
+End Function
+
+Function sProjekte as String
+	sProjekte=GetDocUserProperty(&quot;oProjekte&quot;)
+End Function
+
+Function sTabelle1 as String
+	sTabelle1=GetDocUserProperty(&quot;oTabelle1&quot;)
+End Function
+
+Function sTabelle2 as String
+	sTabelle2=GetDocUserProperty(&quot;oTabelle2&quot;)
+End Function
+
+Function sTabelle1_export as String
+	sTabelle1_export=GetDocUserProperty(&quot;oTabelle1_export&quot;)
+End Function
+
+Function sTabelle2_export as String
+	sTabelle2_export=GetDocUserProperty(&quot;oTabelle2_export&quot;)
+End Function
+
+Function sTabelle1_import as String
+	sTabelle1_import=GetDocUserProperty(&quot;oTabelle1_import&quot;)
+End Function
+
+Function sTabelle2_import as String
+	sTabelle2_import=GetDocUserProperty(&quot;oTabelle2_import&quot;)
+End Function
+
+Function sTabelle1_old as String
+	sTabelle1_old=GetDocUserProperty(&quot;oTabelle1_old&quot;)
+End Function
+
+Function sTabelle2_old as String
+	sTabelle2_old=GetDocUserProperty(&quot;oTabelle2_old&quot;)
+End Function
+
+Function sArbeitstabelle as String
+	sArbeitstabelle=GetDocUserProperty(&quot;oArbeitstabelle&quot;)
+End Function
+
+Function sArbeitstabelle_export as String
+	sArbeitstabelle_export=GetDocUserProperty(&quot;oArbeitstabelle_export&quot;)
+End Function
+
+Function sArbeitstabelle_import as String
+	sArbeitstabelle_import=GetDocUserProperty(&quot;oArbeitstabelle_import&quot;)
+End Function
+
+Function sArbeitstabelle_old as String
+	sArbeitstabelle_old=GetDocUserProperty(&quot;oArbeitstabelle_old&quot;)
+End Function
+
+Function sKontakte as String
+	sKontakte=GetDocUserProperty(&quot;oKontakte&quot;)
+End Function
+
+Function sKontakte_export as String
+	sKontakte_export=GetDocUserProperty(&quot;oKontakte_export&quot;)
+End Function
+
+Function sKontakte_old as String
+	sKontakte_old=GetDocUserProperty(&quot;oKontakte_old&quot;)
+End Function
+
+Function sAnsprechpartner as String
+	sAnsprechpartner=GetDocUserProperty(&quot;oAnsprechpartner&quot;)
+End Function
+
+Function sAnsprechpartner_export as String
+	sAnsprechpartner_export=GetDocUserProperty(&quot;oAnsprechpartner_export&quot;)
+End Function
+
+Function sAnsprechpartner_old as String
+	sAnsprechpartner_old=GetDocUserProperty(&quot;oAnsprechpartner_old&quot;)
+End Function
+
+Function sZwischensummen as String
+	sZwischensummen=GetDocUserProperty(&quot;oZwischensummen&quot;)
+End Function
+
+Function sZwischensummen_export as String
+	sZwischensummen_export=GetDocUserProperty(&quot;oZwischensummen_export&quot;)
+End Function
+
+Function sZwischensummen_old as String
+	sZwischensummen_old=GetDocUserProperty(&quot;oZwischensummen_old&quot;)
+End Function
+
+Function sBemerkungen as String
+	sBemerkungen=GetDocUserProperty(&quot;oBemerkungen&quot;)
+End Function
+
+Function sBemerkungen_export as String
+	sBemerkungen_export=GetDocUserProperty(&quot;oBemerkungen_export&quot;)
+End Function
+
+Function sBemerkungen_old as String
+	sBemerkungen_old=GetDocUserProperty(&quot;oBemerkungen_old&quot;)
+End Function
+
+Function iVorgang_cp as Integer
+	iVorgang_cp=GetDocUserProperty(&quot;oVorgang_cp&quot;)
+End Function
+
+Function iVorgang_mv as Integer
+	iVorgang_mv=GetDocUserProperty(&quot;oVorgang_mv&quot;)
+End Function
+
+Function sLeistungsID_cp as String
+	sLeistungsID_cp=GetDocUserProperty(&quot;oLeistungsID_cp&quot;)
+End Function
+
+Function sBestellnummer_cp as String
+	sBestellnummer_cp=GetDocUserProperty(&quot;oBestellnummer_cp&quot;)
+End Function
+
+Function sLeistungsbezeichnung_cp as String
+	sLeistungsbezeichnung_cp=GetDocUserProperty(&quot;oLeistungsbezeichnung_cp&quot;)
+End Function
+
+Function sLeistungsbeschreibung_cp as String
+	sLeistungsbeschreibung_cp=GetDocUserProperty(&quot;oLeistungsbeschreibung_cp&quot;)
+End Function
+
+Function sEinheit_cp as String
+	sEinheit_cp=GetDocUserProperty(&quot;oEinheit_cp&quot;)
+End Function
+
+Function cMenge_cp as Currency
+&apos;	cMenge_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMenge_cp&quot;))
+	cMenge_cp=CCur(GetDocUserProperty(&quot;oMenge_cp&quot;))
+End Function
+
+Function cEinkaufspreis_cp as Currency
+&apos;	cEinkaufspreis_cp=fZahlMitKomma(GetDocUserProperty(&quot;oEinkaufspreis_cp&quot;))
+	cEinkaufspreis_cp=CCur(GetDocUserProperty(&quot;oEinkaufspreis_cp&quot;))
+End Function
+
+Function cBauzeit_cp as Currency
+&apos;	cBauzeit_cp=fZahlMitKomma(GetDocUserProperty(&quot;oBauzeit_cp&quot;))
+	cBauzeit_cp=CCur(GetDocUserProperty(&quot;oBauzeit_cp&quot;))
+End Function
+
+Function cMinutenverechnungssatz_cp as Currency
+&apos;	cMinutenverechnungssatz_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;))
+	cMinutenverechnungssatz_cp=CCur(GetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;))
+End Function
+
+Function cMaterialaufschlagsatz_cp as Currency
+&apos;	cMaterialaufschlagsatz_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;))
+	cMaterialaufschlagsatz_cp=CCur(GetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;))
+End Function
+
+Function iPos_TypID_cp as Integer
+	iPos_TypID_cp=GetDocUserProperty(&quot;oPos_TypID_cp&quot;)
+End Function
+
+Function sLeistungsID_mv as String
+	sLeistungsID_mv=GetDocUserProperty(&quot;oLeistungsID_mv&quot;)
+End Function
+
+Function sBestellnummer_mv as String
+	sBestellnummer_mv=GetDocUserProperty(&quot;oBestellnummer_mv&quot;)
+End Function
+
+Function sLeistungsbezeichnung_mv as String
+	sLeistungsbezeichnung_mv=GetDocUserProperty(&quot;oLeistungsbezeichnung_mv&quot;)
+End Function
+
+Function sLeistungsbeschreibung_mv as String
+	sLeistungsbeschreibung_mv=GetDocUserProperty(&quot;oLeistungsbeschreibung_mv&quot;)
+End Function
+
+Function sEinheit_mv as String
+	sEinheit_mv=GetDocUserProperty(&quot;oEinheit_mv&quot;)
+End Function
+
+Function cMenge_mv as Currency
+&apos;	cMenge_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMenge_mv&quot;))
+	cMenge_mv=CCur(GetDocUserProperty(&quot;oMenge_mv&quot;))
+End Function
+
+Function cEinkaufspreis_mv as Currency
+&apos;	cEinkaufspreis_mv=fZahlMitKomma(GetDocUserProperty(&quot;oEinkaufspreis_mv&quot;))
+	cEinkaufspreis_mv=CCur(GetDocUserProperty(&quot;oEinkaufspreis_mv&quot;))
+End Function
+
+Function cBauzeit_mv as Currency
+&apos;	cBauzeit_mv=fZahlMitKomma(GetDocUserProperty(&quot;oBauzeit_mv&quot;))
+	cBauzeit_mv=CCur(GetDocUserProperty(&quot;oBauzeit_mv&quot;))
+End Function
+
+Function cMinutenverechnungssatz_mv as Currency
+&apos;	cMinutenverechnungssatz_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;))
+	cMinutenverechnungssatz_mv=CCur(GetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;))
+End Function
+
+Function cMaterialaufschlagsatz_mv as Currency
+&apos;	cMaterialaufschlagsatz_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;))
+	cMaterialaufschlagsatz_mv=CCur(GetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;))
+End Function
+
+Function iPos_TypID_mv as Integer
+	iPos_TypID_mv=GetDocUserProperty(&quot;oPos_TypID_mv&quot;)
+End Function
+
+Function lDocumentID_imp2 as Long
+	lDocumentID_imp2=GetDocUserProperty(&quot;oDocumentID_imp2&quot;)
+End Function
+
+Function lDocumentID_exp2 as Long
+	lDocumentID_exp2=GetDocUserProperty(&quot;oDocumentID_exp2&quot;)
+End Function
+
+Function lDocumentID_old as Long
+	lDocumentID_old=GetDocUserProperty(&quot;oDocumentID_old&quot;)
+End Function
+
+Function lKontaktID_old as Long
+	lKontaktID_old=GetDocUserProperty(&quot;oKontaktID_old&quot;)
+End Function
+
+Function iEinstellungsID_lokal as Integer
+	iEinstellungsID_lokal=GetDocUserProperty(&quot;oEinstellungsID_lokal&quot;)
+End Function
+
+Function iUserID_lokal as Integer
+	iUserID_lokal=GetDocUserProperty(&quot;oUserID_lokal&quot;)
+End Function
+
+Function sTitle_lokal as String
+	 sTitle_lokal=GetDocUserProperty(&quot;oTitle_lokal&quot;)
+End Function
+
+Function fiPos_neu as String
+	 fiPos_neu=GetDocUserProperty(&quot;oPos_neu&quot;)
+End Function
+
+</script:module>

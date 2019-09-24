@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="old" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+
+Sub Daten_einlesen
+SQL_use_ALADIN
+SQL_cp_Kunden
+SQL_cp_Lieferanten
+SQL_cp_Ansprechpartner_Kunden
+SQL_cp_Ansprechpartner_Lieferanten
+SQL_cp_Adressen
+SQL_cp_Angebote1
+SQL_cp_Angebote2
+SQL_cp_Rechnungen1
+SQL_cp_Rechnungen2
+SQL_cp_Eingangsrechnungen
+SQL_cp_Leistungsstamm
+SQL_cp_Hauptgruppen
+SQL_cp_Leistungsgruppen
+SQL_cp_ZwiSuAngebote
+SQL_cp_ZwiSuRechnungen
+SQL_cp_ZwiBemAngebote
+SQL_cp_ZwiBemRechnungen
+End Sub
+
+Sub SQL_use_ALADIN
+	sSQL=&quot;use &quot;&amp; sDatabase_Name
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Kunden
+sSQL=&quot;Insert into aladin.Kunden &quot;&amp;_
+&quot;(KontaktID,Anrede,Name1,Titel,Vorname,Name2,Land,PLZ,Ort,Strasse,Hausnummer,Telefon,Funktelefon,Fax,&quot;&amp;_
+&quot;EMail,Url,Bank,BLZ,Konto,UmsatzsteuerID,Aquise,ReferenzID,Bemerkungen,Ordner,Erstkontakt,Letztes_Update,&quot;&amp;_
+&quot;Rabatt_Satz,Skonto_Satz,Skonto_Tage,Faellig_Tage,Materialaufschlagsatz,Stundenverrechnungssatz) &quot;&amp;_
+&quot;select distinct &quot;&amp;_
+&quot;KundenID,Anrede,Name1,Titel,Vorname,Name2,Land,PLZ,Ort,Strasse,Hausnummer,Telefon,Funktelefon,Fax,&quot;&amp;_
+&quot;EMail,Url,Bank,BLZ,Konto,UmsatzsteuerID,Aquise,Kreditorennummer,Bemerkungen,Ordner,Erstkontakt,Letztes_Update,&quot;&amp;_
+&quot;Rabatt_Satz,Skonto_Satz,Skonto_Tage,Faellig_Tage,Materialaufschlagsatz,Stundenverrechnungssatz from aladin_old.Kunden &quot;&amp;_
+&quot;order by KundenID ASC&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Lieferanten
+sSQL=&quot;Insert into aladin.Lieferanten &quot;&amp;_
+&quot;(KontaktID,Anrede,Name1,Titel,Vorname,Name2,Land,PLZ,Ort,Strasse,Hausnummer,Telefon,Funktelefon,Fax,&quot;&amp;_
+&quot;EMail,Url,Bank,BLZ,Konto,UmsatzsteuerID,ReferenzID,Bemerkungen,Ordner,Erstkontakt,Letztes_Update,&quot;&amp;_
+&quot;Skonto_Satz,Skonto_Tage,Faellig_Tage,MwSt_Satz,Zahlungsweise) &quot;&amp;_
+&quot;select distinct &quot;&amp;_
+&quot;LieferantenID,Anrede,Name1,Titel,Vorname,Name2,Land,PLZ,Ort,Strasse,Hausnummer,Telefon,Funktelefon,Fax,&quot;&amp;_
+&quot;EMail,Url,Bank,BLZ,Konto,UmsatzsteuerID,Kundennummer,Bemerkungen,Ordner,Erstkontakt,Letztes_Update,&quot;&amp;_
+&quot;Skonto_Satz,Skonto_Tage,Faellig_Tage,MwSt_Satz,Zahlungsweise from aladin_old.Lieferanten order by LieferantenID ASC&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Ansprechpartner_Kunden
+sSQL=&quot;insert into aladin.Ansprechpartner_Kunden &quot;&amp;_
+&quot;(AnsprechpartnerID,KontaktID,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen) &quot;&amp;_
+&quot;select distinct &quot;&amp;_
+&quot;AnsprechpartnerID,KundenID,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen &quot;&amp;_
+&quot;from aladin_old.Ansprechpartner_Kunden&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Ansprechpartner_Lieferanten
+sSQL=&quot;insert into aladin.Ansprechpartner_Lieferanten &quot;&amp;_
+&quot;(AnsprechpartnerID,KontaktID,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen) &quot;&amp;_
+&quot;select distinct &quot;&amp;_
+&quot;AnsprechpartnerID,LieferantenID,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen &quot;&amp;_
+&quot;from aladin_old.Ansprechpartner_Lieferanten&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Adressen
+sSQL=&quot;insert into aladin.Adressen select * from aladin_old.Adressen&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Angebote1
+sSQL=&quot;insert into aladin.Angebote1 &quot;&amp;_
+&quot;(DocumentID,Document_Name,KontaktID,AnsprechpartnerID,Erstellungsdatum,gueltig_bis,Skonto_bis,&quot;&amp;_
+&quot;Minutenverrechnungssatz,Materialaufschlagsatz,MwSt_Satz,Rabatt_Satz,Skonto_Satz,Korrektur_Satz,Korrektur_Anlass,&quot;&amp;_
+&quot;Summe_ohne_MwSt,Rabatt,Summe_nach_Rabatt,Korrektur,Summe_nach_Korrektur,MwSt,Summe_mit_MwSt,Skonto,&quot;&amp;_
+&quot;Summe_nach_Skonto,Bemerkung,Status,Pos_Format,Gesperrt,Materialeinsatz,Bauzeit_Tage,Bauzeit_Stunden,Skonto_Tage,Faellig_Tage) &quot;&amp;_
+&quot;select distinct &quot;&amp;_
+&quot;DocumentID,Document_Name,KundenID,AnsprechpartnerID,Erstellungsdatum,gueltig_bis,Skonto_bis,&quot;&amp;_
+&quot;Minutenverrechnungssatz,Materialaufschlagsatz,MwSt_Satz,Rabatt_Satz,Skonto_Satz,Korrektur_Satz,Korrektur_Anlass,&quot;&amp;_
+&quot;Summe_ohne_MwSt,Rabatt,Summe_nach_Rabatt,Korrektur,Summe_nach_Korrektur,MwSt,Summe_mit_MwSt,Skonto,&quot;&amp;_
+&quot;Summe_nach_Skonto,Bemerkung,Status,Pos_Format,Gesperrt,Materialeinsatz,Bauzeit_Tage,Bauzeit_Stunden,Skonto_Tage,Faellig_Tage &quot;&amp;_
+&quot;from aladin_old.Angebote1 order by DocumentID ASC&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Angebote2
+sSQL=&quot;insert into aladin.Angebote2 select * from aladin_old.Angebote2 order by DocumentID ASC&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Rechnungen1
+sSQL=&quot;insert into aladin.Rechnungen1 &quot;&amp;_
+&quot;(DocumentID,Document_Name,KontaktID,AnsprechpartnerID,Erstellungsdatum,gueltig_bis,Skonto_bis,&quot;&amp;_
+&quot;erinnert_am,erinnert_bis,gemahnt_am,gemahnt_bis,bezahlt_am,Minutenverrechnungssatz,Materialaufschlagsatz,&quot;&amp;_
+&quot;MwSt_Satz,Rabatt_Satz,Skonto_Satz,Korrektur_Satz,Korrektur_Anlass,Summe_ohne_MwSt,Rabatt,Summe_nach_Rabatt,Korrektur,&quot;&amp;_
+&quot;Summe_nach_Korrektur,MwSt,Summe_mit_MwSt,Skonto,Summe_nach_Skonto,Summe_bezahlt,Bemerkung,Status,Pos_Format,&quot;&amp;_
+&quot;Gesperrt,Materialeinsatz,Bauzeit_Tage,Bauzeit_Stunden,Skonto_Tage,Faellig_Tage) &quot;&amp;_
+&quot;select distinct &quot;&amp;_
+&quot;DocumentID,Document_Name,KundenID,AnsprechpartnerID,Erstellungsdatum,gueltig_bis,Skonto_bis,&quot;&amp;_
+&quot;erinnert_am,erinnert_bis,gemahnt_am,gemahnt_bis,bezahlt_am,Minutenverrechnungssatz,Materialaufschlagsatz,&quot;&amp;_
+&quot;MwSt_Satz,Rabatt_Satz,Skonto_Satz,Korrektur_Satz,Korrektur_Anlass,Summe_ohne_MwSt,Rabatt,Summe_nach_Rabatt,Korrektur,&quot;&amp;_
+&quot;Summe_nach_Korrektur,MwSt,Summe_mit_MwSt,Skonto,Summe_nach_Skonto,Summe_bezahlt,Bemerkung,Status,Pos_Format,&quot;&amp;_
+&quot;Gesperrt,Materialeinsatz,Bauzeit_Tage,Bauzeit_Stunden,Skonto_Tage,Faellig_Tage &quot;&amp;_
+&quot;from aladin_old.Rechnungen1 order by DocumentID ASC&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Rechnungen2
+sSQL=&quot;insert into aladin.Rechnungen2 select * from aladin_old.Rechnungen2 order by DocumentID ASC&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Eingangsrechnungen
+sSQL=&quot;insert into aladin.Eingangsrechnungen &quot;&amp;_
+&quot;(RechnungsID,KontaktID,Rechnungsnummer,Rechnungsname,Rechnungsdatum,faellig,Skonto_bis,bezahlt_am,&quot;&amp;_
+&quot;Betrag_ohne_MwSt,MwSt_Satz,MwSt,Betrag_mit_MwSt,Skonto_Satz,Skonto,Betrag_nach_Skonto,Betrag_bezahlt,Status) &quot;&amp;_
+&quot;select distinct &quot;&amp;_
+&quot;RechnungsID,LieferantenID,Rechnungsnummer,Rechnungsname,Rechnungsdatum,faellig,Skonto_bis,bezahlt_am,&quot;&amp;_
+&quot;Betrag_ohne_MwSt,MwSt_Satz,MwSt,Betrag_mit_MwSt,Skonto_Satz,Skonto,Betrag_nach_Skonto,Betrag_bezahlt,Status &quot;&amp;_
+&quot;from aladin_old.Eingangsrechnungen order by RechnungsID ASC&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Leistungsstamm
+sSQL=&quot;insert into aladin.Leistungsstamm select * from aladin_old.Leistungsstamm&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Hauptgruppen
+sSQL=&quot;insert into aladin.Hauptgruppen select * from aladin_old.Hauptgruppen&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_Leistungsgruppen
+sSQL=&quot;insert into aladin.Leistungsgruppen select * from aladin_old.Leistungsgruppen&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_ZwiSuAngebote
+sSQL=&quot;insert into aladin.ZwiSuAngebote select * from aladin_old.ZwiSuAngebote&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_ZwiSuRechnungen
+sSQL=&quot;insert into aladin.ZwiSuRechnungen select * from aladin_old.ZwiSuRechnungen&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_ZwiBemAngebote
+sSQL=&quot;insert into aladin.ZwiBemAngebote select * from aladin_old.ZwiBemAngebote&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_cp_ZwiBemRechnungen
+sSQL=&quot;insert into aladin.ZwiBemRechnungen select * from aladin_old.ZwiBemRechnungen&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+
+</script:module>

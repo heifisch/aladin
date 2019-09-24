@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="User" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Global oResultTable as Object
+
+Sub UserAnzahl_aendern()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	Dim vTables as Variant
+	Dim sTables as String
+	Dim iMaxID as Integer
+	Dim sTableName as String
+	Dim oRecord1 as Object
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String
+	Dim iCountTable as Integer,iCountDelete as Integer
+	SetUserAnzahl()
+	
+	Use_Aladin
+	sSQL1=&quot;show tables&quot;
+	oRecord1=oResult_Scroll_mysql(sSQL1)
+	oRecord1.AFTERLast
+	oRecord1.previous
+	iCountTable=oRecord1.getRow()
+	sTables=&quot;&quot;
+	iCountDelete=0
+	For iCount=1 to iCountTable
+		oRecord1=oResult_Scroll_mysql(sSQL1)
+		oRecord1.absolute(iCount)
+		sTableName=oRecord1.getString(1)
+&apos;		print sTableName
+		if LCase(sTableName)=&quot;steuerung&quot; or LCase(sTableName)=&quot;start&quot; or Right(LCase(sTableName),4)= &quot;temp&quot; _
+		or Left(Right(LCase(sTableName),5),4)= &quot;temp&quot; or Left(Right(LCase(sTableName),6),4)= &quot;temp&quot; then
+			if sTables=&quot;&quot; then
+				sTables=sTableName
+			else
+				sTables= sTables &amp;&quot;;&quot;&amp; sTableName
+			End if
+			iCountDelete=iCountDelete+1
+		End if
+	Next iCount
+	
+	vTables=Split(sTables,&quot;;&quot;)
+	
+	For iCount=0 to iCountDelete-1
+		sSQL2=&quot;DROP Table &quot;&amp; vTables(iCount)
+&apos;print sSQL2
+		SQL_execute_mysql(sSQL2)
+	Next iCount
+	
+	SQL_create_Start
+	SQL_create_Steuerung
+	SQL_create_Druckertabelle
+	SQL_create_Druckertabelle1
+	SQL_create_Druckertabelle2
+	SQL_create_Arbeitstabellen
+	
+	if iUserAnzahl &lt; 1 then
+		SetUserAnzahl()
+	End if
+	sSQL3=&quot;select max(UserID) from Users&quot;
+	oRecord1=oResult_mysql1(sSQL3)
+	While oRecord1.next()
+		iMaxID=oRecord1.getInt(1)
+	Wend
+
+	if iUserAnzahl &gt; iMaxID then
+		For iCount = 1 + iMaxID to iUserAnzahl
+			sSQL= &quot;insert into Users(UserID)values(&quot;&amp; iCount &amp;&quot;)&quot;
+			SQL_execute_mysql(sSQL)
+		Next iCount
+	End if
+End Sub
+</script:module>

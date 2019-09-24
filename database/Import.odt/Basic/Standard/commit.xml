@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="commit" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Leistungsbeschreibung_commit()
+	oField_Leistungsbeschreibung.commit()
+	oForm_Import.updateRow()
+End Sub
+
+Sub Field_LeistungsID_nach_commit()
+	oField_LeistungsID_nach.commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub Field_Bestellnummer_nach_commit()
+	oField_Bestellnummer_nach.commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub Field_Kuerzel_vor_LeistungsID_commit()
+	oField_Kuerzel_vor_LeistungsID.commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub Field_Zeile_auslassen_1_commit()
+	oField_Zeile_auslassen_1.commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub Field_Zeile_auslassen_2_commit()
+	oField_Zeile_auslassen_2.commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub Field_Zeile_auslassen_3_commit()
+	oField_Zeile_auslassen_3.commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub Field_Einheit_Ist_commit()
+	oField_Einheit_Ist.commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub Field_Einheit_Soll_commit
+	oField_Einheit_Soll.commit
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub List_Encoding_commit()
+	oList_Encoding.commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+
+</script:module>

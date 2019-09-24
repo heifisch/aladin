@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Tabellen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option explicit
+Sub PrintTable
+print sAngebote2_TEMP2(2)
+end Sub
+
+Function sAngebote2_TEMP1(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)-1
+	sAngebote2_TEMP1=&quot;Angebote2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sAngebote2_TEMP2(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)
+	sAngebote2_TEMP2=&quot;Angebote2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sAuftragsbestaetigungen2_TEMP1(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)-1
+	sAuftragsbestaetigungen2_TEMP1=&quot;Auftragsbestaetigungen2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sAuftragsbestaetigungen2_TEMP2(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)
+	sAuftragsbestaetigungen2_TEMP2=&quot;Auftragsbestaetigungen2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sLieferscheine2_TEMP1(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)-1
+	sLieferscheine2_TEMP1=&quot;Lieferscheine2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sLieferscheine2_TEMP2(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)
+	sLieferscheine2_TEMP2=&quot;Lieferscheine2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sAufmasze2_TEMP1(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)-1
+	sAufmasze2_TEMP1=&quot;Aufmasze2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sAufmasze2_TEMP2(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)
+	sAufmasze2_TEMP2=&quot;Aufmasze2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sRechnungen2_TEMP1(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)-1
+	sRechnungen2_TEMP1=&quot;Rechnungen2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sRechnungen2_TEMP2(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)
+	sRechnungen2_TEMP2=&quot;Rechnungen2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sGutschriften2_TEMP1(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)-1
+	sGutschriften2_TEMP1=&quot;Gutschriften2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sGutschriften2_TEMP2(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)
+	sGutschriften2_TEMP2=&quot;Gutschriften2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sPreisanfragen2_TEMP1(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)-1
+	sPreisanfragen2_TEMP1=&quot;Preisanfragen2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sPreisanfragen2_TEMP2(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)
+	sPreisanfragen2_TEMP2=&quot;Preisanfragen2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sBestellungen2_TEMP1(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)-1
+	sBestellungen2_TEMP1=&quot;Bestellungen2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sBestellungen2_TEMP2(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=(iUserID_lokal*2)
+	sBestellungen2_TEMP2=&quot;Bestellungen2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sDrucker_TEMP(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=iUserID_lokal
+	sDrucker_TEMP=&quot;Drucker_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sDrucker1_TEMP(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=iUserID_lokal
+	sDrucker1_TEMP=&quot;Drucker1_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+Function sDrucker2_TEMP(iUserID_lokal as Integer) as String
+	Dim iTableNumber as Integer
+	iTableNumber=iUserID_lokal
+	sDrucker2_TEMP=&quot;Drucker2_TEMP&quot;&amp; CStr(iTableNumber)
+end  Function
+
+</script:module>

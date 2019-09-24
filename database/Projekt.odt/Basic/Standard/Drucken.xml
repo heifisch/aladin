@@ -1,0 +1,633 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Drucken" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oDialogPrint AS Object, oDialogPrintModel as Object
+
+Sub DruckSchreibschutz()
+	Dim oOption_Print as Object,oOption_Fax as Object,oOption_Mail as Object
+	Dim oOption_Zusammenstellung as Object,oBox_LogoDrucken as Object,oBox_BestEP as Object
+	Dim oBox_Leistungsbeschreibung as Object,oBox_Leistungsbezeichnung as Object
+	Dim oBox_LiefuLeist as Object,oBox_Bestellnummer as Object
+	Dim oOption_Pos_drucken as Object,oOption_LV_Pos_drucken as Object,oOption_Bestellnummer_drucken as Object
+	Dim sSQL2 as String,oRecord2 as Object,sifLV_Pos as String
+
+	oOption_Print = oDialogPrintModel.getByName(&quot;Button_Druck&quot;)
+	oOption_Fax = oDialogPrintModel.getByName(&quot;Button_Fax&quot;)
+	oOption_Mail = oDialogPrintModel.getByName(&quot;Button_Mail&quot;)
+	oOption_Zusammenstellung = oDialogPrintModel.getByName(&quot;Button_Zusammenstellung&quot;)
+	oBox_LogoDrucken = oDialogPrintModel.getByName(&quot;CheckBox_Logo_drucken&quot;)
+	oBox_Bestellnummer = oDialogPrintModel.getByName(&quot;CheckBox_Bestellnummer&quot;)
+	oBox_Leistungsbezeichnung = oDialogPrintModel.getByName(&quot;CheckBox_Leistungsbezeichnung&quot;)
+	oBox_Leistungsbeschreibung = oDialogPrintModel.getByName(&quot;CheckBox_Leistungsbeschreibung&quot;)
+	oBox_LiefuLeist = oDialogPrintModel.getByName(&quot;CheckBox_LiefuLeist&quot;)
+	oBox_BestEP = oDialogPrintModel.getByName(&quot;CheckBox_BestEP&quot;)
+	oOption_Pos_drucken = oDialogPrintModel.getByName(&quot;Option_Pos_drucken&quot;)
+	oOption_LV_Pos_drucken = oDialogPrintModel.getByName(&quot;Option_LV_Pos_drucken&quot;)
+	oOption_Bestellnummer_drucken = oDialogPrintModel.getByName(&quot;Option_Bestellnummer_drucken&quot;)
+
+	if oOption_Fax.State=1 OR oOption_Mail.State=1 then
+		oBox_LogoDrucken.Enabled=0
+	elseif oOption_Print.State=1 then
+		oBox_LogoDrucken.Enabled=1
+		if ifPrintLogoDefault(iUserID_lokal) = 0 then
+			oBox_LogoDrucken.State = 0
+		elseif ifPrintLogoDefault(iUserID_lokal) = 1 then
+			oBox_LogoDrucken.State = 1
+		End if
+	End If
+	if 	oOption_Zusammenstellung.State=1 then
+		oBox_Bestellnummer.Enabled=0
+		oBox_Leistungsbezeichnung.Enabled=0
+		oBox_Leistungsbeschreibung.Enabled=0
+		oBox_LiefuLeist.Enabled=0
+		oBox_BestEP.Enabled=0
+		oOption_Pos_drucken.Enabled=0
+		oOption_LV_Pos_drucken.Enabled=0
+		oOption_Bestellnummer_drucken.Enabled=0
+	else
+		SELECT case iDocTypID 
+			case 1
+				oOption_Zusammenstellung.Enabled = 1
+				oBox_LiefuLeist.Enabled = 1
+				oBox_BestEP.Enabled = 0
+			case 2, 5, 6
+				oOption_Zusammenstellung.Enabled = 0
+				oBox_LiefuLeist.Enabled = 1
+				oBox_BestEP.Enabled = 0
+			case 3, 4
+				oOption_Zusammenstellung.Enabled = 0
+				oBox_LiefuLeist.Enabled = 0
+				oBox_BestEP.Enabled = 0
+			case 7
+				oOption_Zusammenstellung.Enabled = 0
+				oBox_LiefuLeist.Enabled = 0
+				oBox_BestEP.Enabled = 0
+			case 8
+				oOption_Zusammenstellung.Enabled = 0
+				oBox_LiefuLeist.Enabled = 0
+				oBox_BestEP.Enabled = 1
+		end SELECT
+		oBox_Bestellnummer.Enabled=1
+		oBox_Leistungsbezeichnung.Enabled=1
+		oBox_Leistungsbeschreibung.Enabled=1
+		
+		sSQL2=&quot;SELECT LV_Pos FROM &quot;&amp; sArbeitstabelle &amp;&quot; ORDER BY LV_Pos ASC limit 1&quot;
+		oRecord2=oResult(sSQL2)
+		While oRecord2.next()
+			sifLV_Pos = oRecord2.getString(1)
+		Wend
+		oOption_Pos_drucken.Enabled=1
+		oOption_Pos_drucken.State=1
+		oOption_Bestellnummer_drucken.Enabled=1
+		
+		if sifLV_Pos = &quot;&quot; then
+			oOption_LV_Pos_drucken.Enabled = 0
+		else
+			oOption_LV_Pos_drucken.Enabled = 1
+		End if
+&apos;		if ifPrintBestellnummerDefault(iUserID_lokal) = 0 then
+&apos;			oOption_Bestellnummer_drucken.State = 0
+&apos;		elseif ifPrintBestellnummerDefault(iUserID_lokal) = 1 then
+&apos;			oOption_Bestellnummer_drucken.State = 1
+&apos;		End if
+&apos;		if ifPrintLeistungsbezeichnungDefault(iUserID_lokal) = 0 then
+&apos;			oBox_Leistungsbezeichnung.State = 0
+&apos;		elseif ifPrintLeistungsbezeichnungDefault(iUserID_lokal) = 1 then
+&apos;			oBox_Leistungsbezeichnung.State = 1
+&apos;		End if
+&apos;		if ifPrintLeistungsbeschreibungDefault(iUserID_lokal) = 0 then
+&apos;			oBox_Leistungsbeschreibung.State = 0
+&apos;		elseif ifPrintLeistungsbeschreibungDefault(iUserID_lokal) = 1 then
+&apos;			oBox_Leistungsbeschreibung.State = 1
+&apos;		End if
+	End If	
+End Sub
+
+Sub Druck_vorbereiten()
+	Dim vStatus as Variant
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String
+	Dim oRecord1 as Object,oRecord2 as Object
+	Dim oOption_Print as Object,oOption_Fax as Object,oOption_Mail as Object
+	Dim oOption_Zusammenstellung as Object,oBox_LogoDrucken as Object,oBox_BestEP as Object
+	Dim oBox_Leistungsbeschreibung as Object,oBox_Leistungsbezeichnung as Object
+	Dim oBox_LiefuLeist as Object,oBox_Bestellnummer as Object
+	Dim oOption_Pos_drucken as Object,oOption_LV_Pos_drucken as Object,oOption_Bestellnummer_drucken as Object
+	Dim ifFax as integer,ifPrint as integer,ifMail as integer,ifBestEP as integer,ifZusammenstellung as Integer
+	Dim ifLeistungsbezeichnung as integer,ifLeistungsbeschreibung as integer
+	Dim ifLiefuLeist as integer,ifLV_Pos as integer,sifLV_Pos as String
+	Dim ifLogoDrucken as Integer,ifBestellnummer as Integer,ifPos as Integer,ifPosBestellnummer as Integer
+	
+	Dim iPrint_Typ as Integer,iDocument_TypID as Integer,iDoc_Typ as integer,iAZ as Integer
+	Dim sSchlusstext as String,sAnschrift as String,sPraefix as String
+	Dim sAnrede as String,sTitel as String,sVorname as String,sName1 as String
+	Dim sName2 as String,sName3 as String,sName4 as String
+	Dim sLand as String,sLand_Eigen as String,sPLZ as String,sOrt as String
+	Dim sStrasse as String,sHausnummer as String,sTelefon as String
+	Dim sFunktelefon as String,sFax as String,sEMail as String,sUrl as String
+	Dim sReferenzID as String,sOrdner as String,sMindestangaben as String
+	Dim sAnrede_Ansprechpartner as String,sTitel_Ansprechpartner as String
+	Dim sVorname_Ansprechpartner as String,sName_Ansprechpartner as String
+	Dim sFunktelefon_Ansprechpartner as String,sFax_Ansprechpartner as String
+	Dim sEMail_Ansprechpartner as String,sTelefon_Ansprechpartner as String
+	Dim sAbteilung_Ansprechpartner as String
+	Dim sMwSt_Satz as String,sSkonto_Satz as String
+	Dim sRabatt_Satz as String,sKorrektur_Satz as String
+	Dim sSumme_ohne_MwSt as String,sMwSt as String,cMwSt as Currency
+	Dim sRabatt as String,sSumme_nach_Rabatt as String
+	Dim sKorrektur_Vorzeichen as String,sKorrektur as String,sSumme_nach_Korrektur as String,sSumme_mit_MwSt as String
+	Dim cSumme_nach_Korrektur as Currency,cSumme_mit_MwSt as Currency
+	Dim sSkonto as String
+	Dim cAZ_ohne_MwSt as Currency,cAZ_MwSt as Currency,cAZ_mit_MwSt as Currency
+	Dim cZahlbetrag_ohne_MwSt as Currency,cZahlbetrag_MwSt as Currency,cZahlbetrag_mit_MwSt as Currency
+	Dim sRechnungsbetrag as String,sAbschlagszahlungen as String,sRestbetrag as String
+	Dim iSkonto_Tage as integer,iFaellig_Tage as integer
+	Dim sPos as String,sIfKontaktID as String,sIfReferenzID as String
+	Dim sEP as String,sGP as String,sProjektName as String,sDocumentName as String
+	Dim sNummern as String,s13bText as String
+	Dim sErstellungsdatum as String,sGueltigBis as String,sSkontoBis as String
+	
+	if check_AZ = 6 then
+		if lDocumentID &lt;&gt; 0 then
+			if lKontaktID &gt; 0 then
+				Drucktabellen_leeren(iUserID_lokal)
+			
+				GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+				oDialogPrint = LoadDialog_Projekt(&quot;Standard&quot;, &quot;Drucken&quot;)
+			
+				Pos_neu()
+				Document_berechnen()
+			
+				oDialogPrintModel = oDialogPrint.Model
+				oOption_Print = oDialogPrintModel.getByName(&quot;Button_Druck&quot;)
+				oOption_Fax = oDialogPrintModel.getByName(&quot;Button_Fax&quot;)
+				oOption_Mail = oDialogPrintModel.getByName(&quot;Button_Mail&quot;)
+				oOption_Zusammenstellung = oDialogPrintModel.getByName(&quot;Button_Zusammenstellung&quot;)
+				oBox_LogoDrucken = oDialogPrintModel.getByName(&quot;CheckBox_Logo_drucken&quot;)
+				oBox_Bestellnummer = oDialogPrintModel.getByName(&quot;CheckBox_Bestellnummer&quot;)
+				oBox_Leistungsbezeichnung = oDialogPrintModel.getByName(&quot;CheckBox_Leistungsbezeichnung&quot;)
+				oBox_Leistungsbeschreibung = oDialogPrintModel.getByName(&quot;CheckBox_Leistungsbeschreibung&quot;)
+				oBox_LiefuLeist = oDialogPrintModel.getByName(&quot;CheckBox_LiefuLeist&quot;)
+				oBox_BestEP = oDialogPrintModel.getByName(&quot;CheckBox_BestEP&quot;)
+				oOption_Pos_drucken = oDialogPrintModel.getByName(&quot;Option_Pos_drucken&quot;)
+				oOption_LV_Pos_drucken = oDialogPrintModel.getByName(&quot;Option_LV_Pos_drucken&quot;)
+				oOption_Bestellnummer_drucken = oDialogPrintModel.getByName(&quot;Option_Bestellnummer_drucken&quot;)
+	
+				oDialogPrint.Title=sTitle_lokal &amp;&quot; - Druck vorbereiten&quot;
+				
+				iAZ=0
+	
+				sSQL1=&quot;SELECT distinct t1.Anrede,t1.Name1,t1.Titel,t1.Vorname,t1.Name2,t1.Name3,t1.Name4,t1.Land,&quot;&amp;_
+					&quot;t1.PLZ,t1.Ort,t1.Strasse,t1.Hausnummer,t1.Mindestangaben,t1.Fax,t1.EMail,&quot;&amp;_
+					&quot;t2.Abteilung,t2.Anrede,t2.Titel,t2.Vorname,t2.Name,t2.Fax,t2.EMail,&quot;&amp;_
+					&quot;t3.Document_TypID,t3.Skonto_Tage,t3.Skonto_Satz,t3.Rabatt_Satz,t3.Korrektur_Satz,t3.MwSt_Satz,&quot;&amp;_
+					&quot;t3.Summe_ohne_MwSt,t3.Rabatt,t3.Summe_nach_Rabatt,t3.Korrektur_Vorzeichen,t3.Korrektur,t3.Summe_nach_Korrektur,t3.MwSt,t3.Summe_mit_MwSt,&quot;&amp;_
+					&quot;t3.AZ_ohne_MwSt,t3.AZ_MwSt,t3.AZ_mit_MwSt,t3.Zahlbetrag_ohne_MwSt,t3.Zahlbetrag_MwSt,t3.Zahlbetrag_mit_MwSt,t3.Skonto,&quot;&amp;_
+					&quot;t3.Erstellungsdatum,t3.gueltig_bis,t3.Skonto_bis,t3.KontaktID,t1.ReferenzID,t4.Land,t5.Projekt_Name,t3.Document_Name&quot;
+					
+				if iDocTypID &lt; 7 then
+					sSQL1=sSQL1 &amp;&quot;,t3.13bText AS Text&quot;
+				end if
+				
+				if iDocTypID = 5 then
+					sSQL1=sSQL1 &amp;&quot;,t3.AZ&quot;
+				end if
+				
+				sSQL1=sSQL1 &amp;&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t3 &quot;&amp;_
+					&quot;LEFT OUTER JOIN &quot;&amp; sAnsprechpartner &amp;&quot; as t2 &quot;&amp;_
+					&quot;ON t2.AnsprechpartnerID=t3.AnsprechpartnerID,&quot;&amp;_
+					sKontakte &amp;&quot; as t1,&quot;&amp;_
+					&quot;Einstellungen as t4,&quot;&amp;_
+					sProjekte &amp;&quot; as t5&quot;&amp;_
+					&quot; WHERE t3.DocumentID=&quot;&amp; lDocumentID &amp;_
+					&quot; AND t1.KontaktID=t3.KontaktID&quot;&amp;_
+					&quot; AND t4.EinstellungsID= &quot;&amp; iEinstellungsID_lokal &amp;_
+					&quot; AND t5.ProjektID=t3.ProjektID&quot;
+					
+				oRecord1=oResult(sSQL1)
+				While oRecord1.next()
+					sAnrede=oRecord1.getString(1)
+					sName1=oRecord1.getString(2)
+					sTitel=oRecord1.getString(3)
+					sVorname=oRecord1.getString(4)
+					sName2=oRecord1.getString(5)
+					sName3=oRecord1.getString(6)
+					sName4=oRecord1.getString(7)
+					sLand=oRecord1.getString(8)
+					sPLZ=oRecord1.getString(9)
+					sOrt=oRecord1.getString(10)
+					sStrasse=oRecord1.getString(11)
+					sHausnummer=oRecord1.getString(12)
+					sMindestangaben=oRecord1.getString(13)
+					sFax=oRecord1.getString(14)
+					sEMail=oRecord1.getString(15)
+					sAbteilung_Ansprechpartner=oRecord1.getString(16)
+					sAnrede_Ansprechpartner=oRecord1.getString(17)
+					sTitel_Ansprechpartner=oRecord1.getString(18)
+					sVorname_Ansprechpartner=oRecord1.getString(19)
+					sName_Ansprechpartner=oRecord1.getString(20)
+					sFax_Ansprechpartner=oRecord1.getString(21)
+					sEMail_Ansprechpartner=oRecord1.getString(22)
+					iDocument_TypID=oRecord1.getInt(23)
+					iSkonto_Tage=oRecord1.getInt(24)
+					sSkonto_Satz=oRecord1.getString(25)
+					sRabatt_Satz=oRecord1.getString(26)
+					sKorrektur_Satz=oRecord1.getString(27)
+					sMwSt_Satz=oRecord1.getString(28)
+					sSumme_ohne_MwSt=oRecord1.getString(29)
+					sRabatt=oRecord1.getString(30)
+					sSumme_nach_Rabatt=oRecord1.getString(31)
+					sKorrektur_Vorzeichen=oRecord1.getString(32)
+					sKorrektur=oRecord1.getString(33)
+					cSumme_nach_Korrektur=oRecord1.getString(34)
+					cMwSt=oRecord1.getString(35)
+					cSumme_mit_MwSt=oRecord1.getString(36)
+					cAZ_ohne_MwSt=oRecord1.getString(37)
+					cAZ_Mwst=oRecord1.getString(38)
+					cAZ_mit_MwSt=oRecord1.getString(39)
+					cZahlbetrag_ohne_MwSt=oRecord1.getString(40)
+					cZahlbetrag_Mwst=oRecord1.getString(41)
+					cZahlbetrag_mit_Mwst=oRecord1.getString(42)
+					sSkonto=oRecord1.getString(43)
+					sErstellungsdatum=oRecord1.getString(44)
+					sGueltigBis=oRecord1.getString(45)
+					sSkontoBis=oRecord1.getString(46)
+					sIfKontaktID=oRecord1.getString(47)
+					sIfReferenzID=oRecord1.getString(48)
+					sLand_Eigen=oRecord1.getString(49)
+					sProjektName=oRecord1.getString(50)
+					sDocumentName=oRecord1.getString(51)
+					if iDocTypID &lt; 7 then
+						s13bText=oRecord1.getString(52)
+					else
+						s13bText=&quot;&quot;
+					end if		
+					if iDocTypID = 5 then
+						iAZ=oRecord1.getLong(53)
+					end if		
+				Wend
+			
+				SELECT case iDocument_TypID 
+					case 1
+						oOption_Zusammenstellung.Enabled = 1
+						oBox_LiefuLeist.Enabled = 1
+						oBox_BestEP.Enabled = 0
+						sEP = &quot;t1.EP&quot;
+						sGP = &quot;t1.GP&quot;
+			
+					case 2, 5, 6
+						oOption_Zusammenstellung.Enabled = 0
+						oBox_LiefuLeist.Enabled = 1
+						oBox_BestEP.Enabled = 0
+						sEP = &quot;t1.EP&quot;
+						sGP = &quot;t1.GP&quot;
+			
+					case 3, 4
+						oOption_Zusammenstellung.Enabled = 0
+						oBox_LiefuLeist.Enabled = 0
+						oBox_BestEP.Enabled = 0
+						sEP = &quot;t1.EP&quot;
+						sGP = &quot;t1.GP&quot;
+			
+					case 7
+						oOption_Zusammenstellung.Enabled = 0
+						oBox_LiefuLeist.Enabled = 0
+						oBox_BestEP.Enabled = 0
+						sEP = &quot;t1.EP&quot;
+						sGP = &quot;NULL&quot;
+			
+					case 8
+						oOption_Zusammenstellung.Enabled = 0
+						oBox_LiefuLeist.Enabled = 0
+						oBox_BestEP.Enabled = 1
+				End SELECT
+			
+				sSQL2=&quot;SELECT LV_Pos FROM &quot;&amp; sArbeitstabelle &amp;&quot; ORDER BY LV_Pos ASC limit 1&quot;
+				oRecord2=oResult(sSQL2)
+				While oRecord2.next()
+					sifLV_Pos = oRecord2.getString(1)
+				Wend
+				
+				if sifLV_Pos = &quot;&quot; then
+					oOption_LV_Pos_drucken.Enabled = 0
+				else
+					oOption_LV_Pos_drucken.Enabled = 1
+				End if
+				if ifPrintLogoDefault(iUserID_lokal) = 0 then
+					oBox_LogoDrucken.State = 0
+				elseif ifPrintLogoDefault(iUserID_lokal) = 1 then
+					oBox_LogoDrucken.State = 1
+				End if
+				if ifPrintBestellnummerDefault(iUserID_lokal) = 0 then
+					oOption_Bestellnummer_drucken.State = 0
+				elseif ifPrintBestellnummerDefault(iUserID_lokal) = 1 then
+					oOption_Bestellnummer_drucken.State = 1
+				End if
+				if ifPrintLeistungsbezeichnungDefault(iUserID_lokal) = 0 then
+					oBox_Leistungsbezeichnung.State = 0
+				elseif ifPrintLeistungsbezeichnungDefault(iUserID_lokal) = 1 then
+					oBox_Leistungsbezeichnung.State = 1
+				End if
+				if ifPrintLeistungsbeschreibungDefault(iUserID_lokal) = 0 then
+					oBox_Leistungsbeschreibung.State = 0
+				elseif ifPrintLeistungsbeschreibungDefault(iUserID_lokal) = 1 then
+					oBox_Leistungsbeschreibung.State = 1
+				End if
+				
+				vStatus = oDialogPrint.Execute()
+				if vStatus = 0 then
+					exit sub
+				end if
+				
+				ifPrint = oOption_Print.State
+				ifFax = oOption_Fax.State
+				ifMail = oOption_Mail.State
+				ifZusammenstellung = oOption_Zusammenstellung.State
+				ifBestellnummer = oBox_Bestellnummer.State
+				ifLeistungsbezeichnung = oBox_Leistungsbezeichnung.State
+				ifLeistungsbeschreibung = oBox_Leistungsbeschreibung.State
+				ifLiefuLeist = oBox_LiefuLeist.State
+				ifBestEP = oBox_BestEP.State
+				ifPos = oOption_Pos_drucken.State
+				ifLV_Pos = oOption_LV_Pos_drucken.State
+				ifPosBestellnummer = oOption_Bestellnummer_drucken.State	
+			
+				if ifPrint = 1 then
+					iPrint_Typ=0
+					ifLogoDrucken=oBox_LogoDrucken.State
+				elseif ifFax = 1 then
+					iPrint_Typ=1
+					ifLogoDrucken=0
+				elseif ifMail = 1 then
+					iPrint_Typ=2
+					ifLogoDrucken=0
+				end if
+			
+				if iDocument_TypID = 8 then
+					if ifBestEP = 1 then
+						sEP = &quot;t1.Einkaufspreis&quot;
+						sGP = &quot;t1.Einkaufspreis&quot;
+					else
+						sEP = &quot;NULL&quot;
+						sGP = &quot;NULL&quot;
+					End if
+				End if
+				
+				if iDocument_TypID = 1 then
+					sSchlusstext = &quot;t2.Schluss_Text1,&apos; &quot;&amp; fConvDatum(sGueltigBis) &amp;&quot; &apos;,t2.Schluss_Text2&quot;
+				elseif iDocument_TypID = 5 then
+					if iSkonto_Tage &gt; 0 AND sSkonto_Satz &gt; &quot;0.0&quot; then
+						sSchlusstext = &quot;t2.Schluss_Text1,&apos;\nZahlbar bis zum &quot;&amp; fConvDatum(sSkontoBis) &amp;&quot; mit &apos;,&apos;&quot;&amp; fZahlMitPunkt(sSkonto_Satz) &amp;_
+						&quot;% Skonto aus &apos;,&apos;&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cZahlbetrag_mit_MwSt))) &amp;_
+						&quot; €&apos;,&apos; = &apos;,&apos;&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sSkonto)) &amp;&quot; €&apos;,&apos;\nsonst bis &quot;&amp; fConvDatum(sGueltigBis) &amp;&quot; ohne Abzug&apos;&quot;							
+					elseif iSkonto_Tage = 0 OR sSkonto_Satz = &quot;0.0&quot; then
+						sSchlusstext = &quot;t2.Schluss_Text1,&apos;\nZahlbar bis zum &quot;&amp; fConvDatum(sGueltigBis) &amp;&quot; ohne Abzug&apos;&quot;
+					End if
+				else 
+					sSchlusstext = &quot;t2.Schluss_Text1&quot;
+				End if
+			
+				if sFax_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sFax = sFax_Ansprechpartner
+				End if
+				if sEMail_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sEMail = sEMail_Ansprechpartner
+				End if
+				
+			&apos;	if sAnrede &lt;&gt; &quot;&quot; then
+			&apos;		sAnschrift = sAnschrift + sAnrede + &quot;\n&quot;
+			&apos;	End if
+				if sTitel &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sTitel + &quot; &quot;
+				End if
+				if sVorname &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + fsConvertString(sVorname) + &quot; &quot;
+				End if
+				if sName1 &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + fsConvertString(sName1) + &quot;\n&quot;
+				End if
+				if sName2 &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + fsConvertString(sName2) + &quot;\n&quot;
+				End if
+				if sName3 &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + fsConvertString(sName3) + &quot;\n&quot;
+				End if
+				if sName4 &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + fsConvertString(sName4) + &quot;\n&quot;
+				End if
+				if sAbteilung_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sAbteilung_Ansprechpartner + &quot;\n&quot;
+				End if
+				if sAnrede_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sAnrede_Ansprechpartner + &quot; &quot;
+				End if
+				if sTitel_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sTitel_Ansprechpartner + &quot; &quot;
+				End if
+				if sVorname_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sVorname_Ansprechpartner + &quot; &quot;
+				End if
+				if sName_Ansprechpartner &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sName_Ansprechpartner + &quot;\n&quot;
+				End if
+				if sStrasse &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sStrasse + &quot; &quot;
+				End if
+				if sHausnummer &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sHausnummer + &quot;\n&quot;
+				else
+					sAnschrift = sAnschrift + &quot;\n&quot;
+				End if
+				if sPLZ &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sPLZ + &quot; &quot;
+				End if
+				if sOrt &lt;&gt; &quot;&quot; then
+					sAnschrift = sAnschrift + sOrt
+				End if
+				if sLand &lt;&gt; &quot;&quot; AND UCASE(sLand) &lt;&gt; UCASE(sLand_Eigen) then
+					sAnschrift = sAnschrift + &quot;\n&quot; + UCASE(sLand)
+				End if
+			
+			&apos;	if iPrint_Typ = 0 then						&apos;drucken
+			&apos;		sNummern = &quot;&apos;\n\n&apos;&quot;
+			&apos;	elseif iPrint_Typ = 1 then					&apos;faxen
+			&apos;		if sFax = &quot;&quot; then
+			&apos;			sNummern = &quot;&apos;\n\n&apos;&quot;
+			&apos;		else
+			&apos;			sNummern = &quot;&apos;\tan Fax:\t&quot; + sFax + &quot;\n\n&apos;&quot;
+			&apos;		End if
+			&apos;	elseif iPrint_Typ = 2 then					&apos;mailen
+			&apos;		if sEMail = &quot;&quot; then
+			&apos;			sNummern = &quot;&apos;\n\n&apos;&quot;
+			&apos;		else
+			&apos;			sNummern = &quot;&apos;\tan E-Mail:\t&quot; + sEMail+ &quot;\n\n&apos;&quot;
+			&apos;			sNummern = &quot;&apos;&quot; + sEMail+ &quot;\n\n&apos;&quot;
+			&apos;		End if
+			&apos;	End if
+			
+				if iPrint_Typ = 0 then						&apos;drucken
+					sAnschrift = sAnschrift
+				elseif iPrint_Typ = 1 then					&apos;faxen
+					if sFax = &quot;&quot; then
+						sAnschrift = sAnschrift
+					else
+						sAnschrift = sAnschrift &amp; &quot;\n\nan Fax: &quot; &amp; sFax
+					End if
+				elseif iPrint_Typ = 2 then					&apos;mailen
+					if sEMail = &quot;&quot; then
+						sAnschrift = sAnschrift
+					else
+						sAnschrift = sAnschrift &amp; &quot;\n\nan E-Mail: &quot; &amp; sEMail
+					End if
+				End if
+			
+			&apos;	sNummern = &quot;&apos;\n,&apos;&quot;
+				sNummern =  sNummern &amp; &quot;&apos;\tDatum:\t&quot;&amp; fConvDatum(sErstellungsdatum) &amp;&quot;\n\t&apos;,t2.DocumentID,&apos;\t&apos;,&quot;
+	
+				if iDocument_TypID = 1 then
+					sPraefix=&quot;AN&quot;
+				elseif iDocument_TypID = 2 then
+					sPraefix=&quot;AB&quot;
+				elseif iDocument_TypID = 3 then
+					sPraefix=&quot;LI&quot;
+				elseif iDocument_TypID = 4 then
+					sPraefix=&quot;AU&quot;
+				elseif iDocument_TypID = 5 then
+					if iAZ = 1 then
+						sPraefix=&quot;AZ&quot;
+					else
+						sPraefix=&quot;RE&quot;
+					End if
+				elseif iDocument_TypID = 6 then
+					sPraefix=&quot;GU&quot;
+				elseif iDocument_TypID = 7 then
+					sPraefix=&quot;PA&quot;
+				elseif iDocument_TypID = 8 then
+					sPraefix=&quot;BE&quot;
+				End if
+			
+				sNummern =  sNummern &amp;&quot;&apos;&quot;&amp; sPraefix &amp;&quot; &apos;,t1.DocumentID&quot;
+		
+				if InStr(sKontakte,&quot;Kunden&quot;) &gt; 0 then
+					if sIfKontaktID = &quot;&quot; then
+						sNummern =  sNummern
+					else	
+						sNummern =  sNummern + &quot;,&apos;\n\t&apos;,t2.KontaktID,&apos;\t&apos;,t1.KontaktID&quot;
+					End if
+					if sIfReferenzID = &quot;&quot; then
+						sNummern =  sNummern
+					else
+						sNummern =  sNummern + &quot;,&apos;\n\t&apos;,&apos;Lieferantennummer:&apos;,&apos;\t&apos;,t3.ReferenzID&quot;
+					End if
+				elseif InStr(sKontakte,&quot;Lieferanten&quot;) &gt; 0 then
+					if sIfReferenzID = &quot;&quot; then
+						sNummern =  sNummern
+					else
+						sNummern =  sNummern + &quot;,&apos;\n\t&apos;,t2.KontaktID,&apos;\t&apos;,t3.ReferenzID&quot;
+					End if
+				End if
+					
+				if sRabatt_Satz = &quot;0.0&quot; then
+					sRabatt = &quot;&quot;
+					sSumme_nach_Rabatt = &quot;&quot;
+				else
+			 		sRabatt = &quot;abzüglich &quot;&amp; fZahlMitPunkt(sRabatt_Satz) &amp;&quot;% Rabatt\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sRabatt)) &amp;&quot; €&quot;
+					sSumme_nach_Rabatt = fTausenderpunkt(fZahlMitPunkt(sSumme_nach_Rabatt)) &amp;&quot; €&quot;
+				End if
+				
+				if sKorrektur_Satz = &quot;0.00&quot; then
+					sKorrektur = &quot;&quot;
+				else
+					if sKorrektur_Vorzeichen=&quot;-&quot; then
+						sKorrektur = &quot;abzüglich &quot;&amp; fZahlMitPunkt(sKorrektur_Satz) &amp;&quot;% &apos;,t1.Korrektur_Anlass,&apos;\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sKorrektur)) &amp;&quot; €&quot;
+					elseif sKorrektur_Vorzeichen=&quot;+&quot; then
+						sKorrektur = &quot;zuzüglich &quot;&amp; fZahlMitPunkt(sKorrektur_Satz) &amp;&quot;% &apos;,t1.Korrektur_Anlass,&apos;\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sKorrektur)) &amp;&quot; €&quot;
+					End if
+				End if
+				sSumme_nach_Korrektur = fTausenderpunkt(fZahlMitPunkt(CStr(cSumme_nach_Korrektur))) &amp;&quot; €&quot;
+		
+				if cAZ_mit_MwSt = 0 then
+					sRechnungsbetrag = &quot;&quot;
+					sAbschlagszahlungen = &quot;&quot;
+					sRestbetrag = &quot;&quot;
+					sMwSt = &quot;concat(&apos;+&quot;&amp; fsReplace(sMwSt_Satz,&quot;.&quot;,&quot;,&quot;) &amp;&quot;% gesetzliche MwSt\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cMwSt))) &amp;&quot; €&apos;)&quot;
+					sSumme_mit_MwSt = &quot;concat(t2.Summe_mit_MwSt,&apos;\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cSumme_mit_MwSt))) &amp;&quot; €&apos;)&quot;
+				else
+				
+					sRechnungsbetrag = &quot;Rechnungssumme\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cSumme_nach_Korrektur))) &amp;&quot; €\t&quot;&amp;_
+														fTausenderpunkt(fZahlMitPunkt(CStr(cMwSt))) &amp;&quot; €\t&quot;&amp;_
+														fTausenderpunkt(fZahlMitPunkt(CStr(cSumme_mit_MwSt))) &amp;&quot; €&quot;
+		
+					sAbschlagszahlungen = &quot;./. Abschlagszahlungen\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cAZ_ohne_MwSt))) &amp;&quot; €\t&quot;&amp;_
+														fTausenderpunkt(fZahlMitPunkt(CStr(cAZ_MwSt))) &amp;&quot; €\t&quot;&amp;_
+														fTausenderpunkt(fZahlMitPunkt(CStr(cAZ_mit_MwSt))) &amp;&quot; €&quot;
+														
+					sRestbetrag = &quot;verbleibende Restzahlung\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cZahlbetrag_ohne_MwSt))) &amp;&quot; €\t&quot;&amp;_
+														fTausenderpunkt(fZahlMitPunkt(CStr(cZahlbetrag_MwSt))) &amp;&quot; €&quot;
+														
+					sMwSt = &quot;concat(&apos;\tohne MwSt\t+&quot;&amp; fsReplace(sMwSt_Satz,&quot;.&quot;,&quot;,&quot;) &amp;&quot;% MwSt\tmit MwSt&apos;)&quot;
+					sSumme_mit_MwSt = &quot;concat(&apos;&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cZahlbetrag_mit_MwSt))) &amp;&quot; €&apos;)&quot;
+				End if
+			
+				if lProjektID &gt; 0 AND fsConvertString(sDocumentName) &lt;&gt; fsConvertString(sProjektName) then
+					sDocumentName=&quot;concat(&apos;&quot;&amp; sProjektName &amp;&quot;&apos;,&apos; \n&apos;,t1.Document_Name)&quot;
+				else
+					sDocumentName=&quot;t1.Document_Name&quot;
+				end if
+			
+				sSQL3=&quot;INSERT INTO &quot;&amp; sDrucker1_TEMP(iUserID_lokal) &amp;_
+					&quot;(DocumentID,EinstellungsID,UserID,Document_TypID,Document_Typ,Print_Typ,LV_Pos,Bestellnummer,&quot;&amp;_
+					&quot;Leistungsbezeichnung,Leistungsbeschreibung,LiefuLeist,Document_Name,Betreff,Nummern,EMail,Fax,&quot;&amp;_
+					&quot;Summe_ohne_MwSt,Rabatt,Summe_nach_Rabatt,Korrektur,Summe_nach_Korrektur,MwSt,Summe_mit_MwSt,Rechnungsbetrag,Abschlagszahlungen,Restbetrag,&quot;&amp;_
+					&quot;Bemerkung,Schluss_Text,Anschrift,Mindestangaben,Leistungsempfaenger,Lieferbemerkung,Leerzeilen,Print_Logo,13bText,AZ)&quot;&amp;_
+					&quot; SELECT distinct &quot;&amp;_
+					&quot;t1.DocumentID,&apos;&quot;&amp; iEinstellungsID_lokal &amp;&quot;&apos;,&apos;&quot;&amp; iUserID_lokal &amp;&quot;&apos;,t1.Document_TypID,t1.Document_Typ,&quot;&amp;_
+					&quot;&apos;&quot;&amp; iPrint_Typ &amp;&quot;&apos;,&apos;&quot;&amp; ifLV_Pos &amp;&quot;&apos;,&apos;&quot;&amp; ifBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp; ifLeistungsbezeichnung &amp;&quot;&apos;,&apos;&quot;&amp; ifLeistungsbeschreibung &amp;&quot;&apos;,&quot;&amp;_
+					&quot;&apos;&quot;&amp; ifLiefuLeist &amp;&quot;&apos;,&quot;&amp; sDocumentName &amp;&quot;,t1.Document_Name,concat(&quot;&amp; sNummern &amp;&quot;),&apos;&quot;&amp; sEMail &amp;&quot;&apos;,&apos;&quot;&amp; sFax &amp;&quot;&apos;,&quot;&amp;_
+					&quot;concat(&apos;Zwischensumme Leistungen\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sSumme_ohne_MwSt)) &amp;&quot; €&apos;),&quot;&amp;_
+					&quot;&apos;&quot;&amp; sRabatt &amp;&quot;&apos;,concat(&apos;\t&apos;,&apos;&quot;&amp; sSumme_nach_Rabatt &amp;&quot;&apos;),concat(&apos;&quot;&amp; sKorrektur &amp;&quot;&apos;),&quot;&amp;_
+					&quot;concat(t2.Summe_ohne_MwSt,&apos;\t&quot;&amp; sSumme_nach_Korrektur &amp;&quot;&apos;),&quot;&amp; sMwSt &amp;&quot;,&quot;&amp; sSumme_mit_MwSt &amp;&quot;,&quot;&amp;_
+					&quot;concat(&apos;&quot;&amp; sRechnungsbetrag &amp;&quot;&apos;),concat(&apos;&quot;&amp; sAbschlagszahlungen &amp;&quot;&apos;),concat(&apos;&quot;&amp; sRestbetrag &amp;&quot;&apos;),&quot;&amp;_
+					&quot;t1.Bemerkung,concat(&quot;&amp; sSchlusstext &amp;&quot;),&quot;&amp;_
+					&quot;concat(&apos;&quot;&amp; sAnschrift &amp;&quot;&apos;),&apos;&quot;&amp; fsConvertApostroph(sMindestangaben) &amp;&quot;&apos;,t1.Leistungsempfaenger,t1.Lieferbemerkung,&quot;&amp;_
+					&quot;t1.Leerzeilen,&apos;&quot;&amp; ifLogoDrucken &amp;&quot;&apos;,&apos;&quot;&amp; s13bText &amp;&quot;&apos;,&apos;&quot; &amp; iAZ &amp;&quot;&apos;&quot;&amp;_
+					&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t1,Document_Typ as t2,&quot;&amp; sKontakte &amp;&quot; as t3&quot;&amp;_
+					&quot; WHERE t1.DocumentID=&quot;&amp; lDocumentID &amp;_
+					&quot; AND t2.Document_TypID=t1.Document_TypID&quot;&amp;_
+					&quot; AND t3.KontaktID=t1.KontaktID&quot;
+				SQL_execute(sSQL3)
+			
+				if ifPos = 1 then
+					sPos=&quot;Pos&quot;
+				elseif ifLV_Pos = 1 then
+					sPos=&quot;LV_Pos&quot;
+				elseif ifPosBestellnummer = 1 then
+					sPos=&quot;Bestellnummer&quot;
+				End if
+				if ifZusammenstellung = 0 Then
+					sSQL4=&quot;INSERT INTO &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; (PosID,Pos,Pos_TypID,DocumentID,LeistungsID,Bestellnummer,&quot;&amp;_
+						&quot;Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,Lieferung,Leistung,EP,GP) &quot;&amp;_
+						&quot;SELECT distinct t1.Pos,t1.&quot;&amp; sPos &amp;&quot;,t1.Pos_TypID,t1.DocumentID,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
+						&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,&quot;&amp;_
+						&quot;t1.Lieferung,t1.Leistung,&quot;&amp; sEP &amp;&quot;,&quot;&amp; sGP &amp;_
+						&quot; FROM &quot;&amp; sArbeitstabelle &amp;&quot; as t1 ORDER BY Pos ASC&quot;
+					SQL_execute(sSQL4)
+				End if
+				SetUserID(iUserID_lokal)
+				ProjectPrint()
+			else
+				MsgBox(&quot;Sie haben noch keinen &quot;&amp; sKontakte &amp;&quot; ausgewählt!&quot;,16,sTitle_lokal)
+			End if
+		else
+			MsgBox(&quot;Sie haben noch keine Document ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+		End if
+	End if
+End sub
+
+
+</script:module>

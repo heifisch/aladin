@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="SQL_Anweisungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option explicit
+
+Sub SQL_Reset_AutoIncrement(sTable as String)
+	Dim sSQL1 as String
+	sSQL1=&quot;ALTER TABLE &quot;&amp; sTable &amp;&quot; AUTO_INCREMENT=0&quot;
+	SQL_execute(sSQL1)
+end Sub
+
+Sub SQL_Status_skontofaehig(iUserID_lokal as Integer)
+	Dim sSQL1 as String,sEingangsrechnungen as String,iEinstellungsID_lokal as Integer
+	iEinstellungsID_lokal=iEinstellungsID(iUserID_lokal)
+	if iEinstellungsID_lokal=1 _ 
+		OR InStr(fsTableList,&quot;;Eingangsrechnungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+	then
+		sEingangsrechnungen=&quot;Eingangsrechnungen&quot;
+	else
+		sEingangsrechnungen=&quot;Eingangsrechnungen_&quot; &amp; iEinstellungsID_lokal
+	end if
+	sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET Status=&apos;skontofähig&apos; &quot;&amp;_
+		&quot;WHERE Status IS NULL OR (Status != &apos;Einzug&apos; AND &quot;&amp;_
+		&quot;Status != &apos;bezahlt&apos; AND Status != &apos;nicht eintreibbar&apos;) AND (TO_DAYS(skonto_bis))&gt;=(TO_DAYS(NOW()))&quot;
+	SQL_execute(sSQL1)
+end Sub
+	
+Sub SQL_Status_berechnet(iUserID_lokal as Integer)
+	Dim sSQL1 as String,sEingangsrechnungen as String,iEinstellungsID_lokal as Integer
+	iEinstellungsID_lokal=iEinstellungsID(iUserID_lokal)
+	if iEinstellungsID_lokal=1 _ 
+		OR InStr(fsTableList,&quot;;Eingangsrechnungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+	then
+		sEingangsrechnungen=&quot;Eingangsrechnungen&quot;
+	else
+		sEingangsrechnungen=&quot;Eingangsrechnungen_&quot; &amp; iEinstellungsID_lokal
+	end if
+	sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET Status=&apos;berechnet&apos; &quot;&amp;_
+		&quot;WHERE Status IS NULL OR (Status != &apos;Einzug&apos; AND &quot;&amp;_
+		&quot;Status != &apos;bezahlt&apos; AND Status != &apos;nicht eintreibbar&apos;) AND (skonto_bis IS NULL OR &quot;&amp;_
+		&quot;(TO_DAYS(skonto_bis))&lt;(TO_DAYS(NOW()))) AND (TO_DAYS(faellig))&gt;=(TO_DAYS(NOW())) &quot;
+	SQL_execute(sSQL1)
+end Sub
+
+Sub SQL_Status_faellig(iUserID_lokal as Integer)
+	Dim sSQL1 as String,sEingangsrechnungen as String,iEinstellungsID_lokal as Integer
+	iEinstellungsID_lokal=iEinstellungsID(iUserID_lokal)
+	if iEinstellungsID_lokal=1 _ 
+		OR InStr(fsTableList,&quot;;Eingangsrechnungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+	then
+		sEingangsrechnungen=&quot;Eingangsrechnungen&quot;
+	else
+		sEingangsrechnungen=&quot;Eingangsrechnungen_&quot; &amp; iEinstellungsID_lokal
+	end if
+	sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET Status=&apos;fällig&apos; &quot;&amp;_
+		&quot;WHERE Status IS NULL OR (Status != &apos;Einzug&apos; AND &quot;&amp;_
+		&quot;Status != &apos;bezahlt&apos; AND Status != &apos;nicht eintreibbar&apos;) AND (TO_DAYS(faellig))&lt;(TO_DAYS(NOW()))&quot;
+	SQL_execute(sSQL1)
+end Sub
+
+Sub SQL_Status_faellig_Ausgangsrechnung(iUserID_lokal as Integer)
+	Dim sSQL1 as String,sRechnungen1 as String,iEinstellungsID_lokal as Integer
+	iEinstellungsID_lokal=iEinstellungsID(iUserID_lokal)
+	if iEinstellungsID_lokal=1 _ 
+		OR InStr(fsTableList,&quot;;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+	then
+		sRechnungen1=&quot;Rechnungen1&quot;
+	else
+		sRechnungen1=&quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal
+	end if
+	sSQL1=&quot;UPDATE &quot;&amp; sRechnungen1 &amp;_
+		&quot; SET Status=&apos;fällig&apos; &quot;&amp;_
+		&quot; WHERE (Status IS NULL OR Status=&apos;berechnet&apos; OR Status=&apos;skontofähig&apos;) &quot;&amp;_
+		&quot; AND (TO_DAYS(NOW()))&gt;(TO_DAYS(gueltig_bis))&quot;
+	SQL_execute(sSQL1)
+end Sub
+
+Sub SQL_Status_ueberfaellig_Ausgangsrechnung(iUserID_lokal as Integer)
+	Dim sSQL1 as String,sRechnungen1 as String,iEinstellungsID_lokal as Integer
+	iEinstellungsID_lokal=iEinstellungsID(iUserID_lokal)
+	if iEinstellungsID_lokal=1 _ 
+		OR InStr(fsTableList,&quot;;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+	then
+		sRechnungen1=&quot;Rechnungen1&quot;
+	else
+		sRechnungen1=&quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal
+	end if
+	sSQL1=&quot;UPDATE &quot;&amp; sRechnungen1 &amp;_
+		&quot; SET Status=&apos;überfällig&apos; &quot;&amp;_
+		&quot; WHERE Status=&apos;erinnert&apos; &quot;&amp;_
+		&quot; AND (TO_DAYS(NOW()))&gt;(TO_DAYS(erinnert_bis))&quot;
+	SQL_execute(sSQL1)
+end Sub
+
+Sub SQL_Status_ueberueberfaellig_Ausgangsrechnung(iUserID_lokal as Integer)
+	Dim sSQL1 as String,sRechnungen1 as String,iEinstellungsID_lokal as Integer
+	iEinstellungsID_lokal=iEinstellungsID(iUserID_lokal)
+	if iEinstellungsID_lokal=1 _ 
+		OR InStr(fsTableList,&quot;;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+	then
+		sRechnungen1=&quot;Rechnungen1&quot;
+	else
+		sRechnungen1=&quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal
+	end if
+	sSQL1=&quot;UPDATE &quot;&amp; sRechnungen1 &amp;_
+		&quot; SET Status=&apos;überüberfällig&apos; &quot;&amp;_
+		&quot; WHERE Status=&apos;gemahnt&apos; &quot;&amp;_
+		&quot; AND (TO_DAYS(NOW()))&gt;(TO_DAYS(gemahnt_bis))&quot;
+	SQL_execute(sSQL1)
+end Sub
+</script:module>

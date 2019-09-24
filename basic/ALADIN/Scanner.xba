@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Scanner" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option explicit
+
+PRIVATE oDialogScanner as Object
+PRIVATE oDialogScannerModel as Object
+PRIVATE oButtonLoeschen as Object
+
+PUBLIC sDocumentID_Scanner as String
+
+PRIVATE oTRX
+Global sPathToPdfEingangsRechnung as String
+
+Sub StorePathToPdfEingangsRechnungToClipBoard()
+	Dim null As Object
+	Dim sClipName As String 
+	Dim oClip as Object,oClipContents as Variant
+
+&apos;	sPathToPdfEingangsRechnung=sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp;&quot;/&quot;&amp; sDocumentID_Scanner &amp;&quot;.pdf&quot;
+	sPathToPdfEingangsRechnung=sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp;&quot;/&quot;&amp; sDocumentID_Scanner
+	
+	sClipName = &quot;com.sun.star.datatransfer.clipboard.SystemClipboard&quot;
+	oClip = createUnoService(sClipName)
+	oTRX = createUnoListener(&quot;TR_&quot;, &quot;com.sun.star.datatransfer.XTransferable&quot;)
+	oClipContents = oClip.setContents(oTRX, null)
+End Sub
+
+Function TR_getTransferData(aFlavor As com.sun.star.datatransfer.DataFlavor) As Any
+	If (aFlavor.MimeType = &quot;text/plain;charset=utf-16&quot;) Then
+		TR_getTransferData = sPathToPdfEingangsRechnung
+	EndIf
+End Function
+ 
+Function TR_getTransferDataFlavors() As Any
+	Dim aF As New com.sun.star.datatransfer.DataFlavor
+	aF.MimeType =    &quot;text/plain;charset=utf-16&quot;
+	aF.HumanPresentableName = &quot;Unicode-Text&quot;
+	TR_getTransferDataFlavors = Array(aF)
+End Function
+ 
+Function TR_isDataFlavorSupported( aFlavor As com.sun.star.datatransfer.DataFlavor ) As Boolean
+	TR_isDataFlavorSupported = (aFlavor.MimeType = &quot;text/plain;charset=utf-16&quot;)
+End Function
+
+Sub Dialog_Scanner()
+	Dim oProgressBarScannen as Object
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogScanner = LoadDialog(&quot;ALADIN&quot;, &quot;Scanner&quot;)
+	oDialogScannerModel = oDialogScanner.Model
+	oButtonLoeschen = oDialogScannerModel.getByName(&quot;Button_Loeschen&quot;)
+	oProgressBarScannen = oDialogScannerModel.getByName(&quot;Progress_Scanner&quot;)
+
+	if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp;&quot;/&quot;&amp; sDocumentID_Scanner &amp;&quot;.pdf&quot;) _
+		OR FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp;&quot;/&quot;&amp; sDocumentID_Scanner &amp;&quot;.djvu&quot;) _
+	then
+		oButtonLoeschen.Enabled=1
+	else
+		oButtonLoeschen.Enabled=0
+	End if
+
+	oProgressBarScannen.EnableVisible=0
+
+	oDialogScanner.Execute()
+End Sub
+
+Sub Scannen()
+	Dim vStatus as Variant,oShell as Object
+	Dim oOptionColor as Object,oOptionGrayscale as Object,oOptionLineart as Object
+	Dim oOptionFront as Object,oOptionDuplex as Object,oOptionBack as Object
+	Dim oOptionA4 as Object,oOptionA5 as Object,oOptionA6 as Object,oOptionCustom as Object
+	Dim oFieldResolution as Object,oFieldWidth as Object,oFieldHeigth as Object,oFieldStatus as Object
+	Dim oButtonScannen as Object,oButtonExit as Object,oProgressBarScannen as Object
+	Dim sResuolution as String,sWidth as String,sHeigth as String
+	Dim iProgress as Integer 
+	Dim sCommand as String
+
+&apos;	oDialogScannerModel = oDialogScanner.Model
+
+	oOptionColor = oDialogScannerModel.getByName(&quot;Option_Color&quot;)
+	oOptionGrayscale = oDialogScannerModel.getByName(&quot;Option_Grayscale&quot;)
+	oOptionLineart = oDialogScannerModel.getByName(&quot;Option_Lineart&quot;)
+	oOptionFront = oDialogScannerModel.getByName(&quot;Option_Front&quot;)
+	oOptionDuplex = oDialogScannerModel.getByName(&quot;Option_Duplex&quot;)
+	oOptionBack = oDialogScannerModel.getByName(&quot;Option_Back&quot;)
+	oOptionA4 = oDialogScannerModel.getByName(&quot;Option_A4&quot;)
+	oOptionA5 = oDialogScannerModel.getByName(&quot;Option_A5&quot;)
+	oOptionA6 = oDialogScannerModel.getByName(&quot;Option_A6&quot;)
+	oOptionCustom = oDialogScannerModel.getByName(&quot;Option_Custom&quot;)
+	oButtonScannen = oDialogScannerModel.getByName(&quot;Button_Scannen&quot;)
+	oButtonExit = oDialogScannerModel.getByName(&quot;Button_Exit&quot;)
+	oProgressBarScannen = oDialogScannerModel.getByName(&quot;Progress_Scanner&quot;)
+
+	oFieldResolution = oDialogScannerModel.getByName(&quot;Field_Resolution&quot;)
+	oFieldWidth = oDialogScannerModel.getByName(&quot;Field_Width&quot;)
+	oFieldHeigth = oDialogScannerModel.getByName(&quot;Field_Heigth&quot;)
+	oFieldStatus = oDialogScannerModel.getByName(&quot;Field_Status&quot;)
+
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+&apos;	WritedbgInfo(oFieldStatus)
+
+	oButtonScannen.Enabled=0
+	oButtonExit.Enabled=0
+	
+	iProgress=0
+	oProgressBarScannen.ProgressValue=iProgress
+	oProgressBarScannen.EnableVisible=1
+	
+	oFieldStatus.Label=&quot;&quot;
+	
+	sResuolution = oFieldResolution.Value
+	sWidth = oFieldWidth.Value
+	sHeigth = oFieldHeigth.Value
+		
+	sCommand=&quot; -b&quot;
+	
+	if oOptionColor.State=1 then
+		sCommand=sCommand &amp; &quot; --color&quot;
+	elseif oOptionGrayscale.State=1 then
+		sCommand=sCommand &amp; &quot; --grayscale&quot;
+	elseif oOptionLineart.State=1 then
+		sCommand=sCommand &amp; &quot; --lineart&quot;
+	End If
+
+	if oOptionFront.State=1 then
+		sCommand=sCommand &amp; &quot; --source &quot;&amp; Chr(34) &amp;&quot;ADF Front&quot;&amp; Chr(34)
+	elseif oOptionDuplex.State=1 then
+		sCommand=sCommand &amp; &quot; --source &quot;&amp; Chr(34) &amp;&quot;ADF Duplex&quot;&amp; Chr(34)
+	elseif oOptionBack.State=1 then
+		sCommand=sCommand &amp; &quot; --source &quot;&amp; Chr(34) &amp;&quot;ADF Back&quot;&amp; Chr(34)
+	End If
+
+	if oOptionA4.State=1 then
+		sCommand=sCommand &amp; &quot; --width 210 --height 298&quot;
+	elseif oOptionA5.State=1 then
+		sCommand=sCommand &amp; &quot; --width 149 --height 210&quot;
+	elseif oOptionA6.State=1 then
+		sCommand=sCommand &amp; &quot; --width 149 --height 105&quot;
+	elseif oOptionCustom.State=1 then
+		sCommand=sCommand &amp; &quot; --width &quot;&amp; sWidth &amp;&quot; --height &quot; &amp; sHeigth
+	End if
+
+	sCommand=sCommand &amp; &quot; --resolution &quot;&amp; sResuolution
+	sCommand=sCommand &amp; &quot; --outdir &quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner
+	sCommand=sCommand &amp; &quot; --device &quot;&amp; Chr(34) &amp; sScanDevice &amp; Chr(34)
+
+	Shell (sKonsole &amp;&quot; &quot;&amp; sScannerScript &amp; sCommand,10) 
+
+	oFieldStatus.TextColor=0
+	oFieldStatus.Label=&quot;Initialisierung Scan-Prozess&quot;
+
+	wait 3000
+	
+	if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp; &quot;/scanscript/.scanbusy.txt&quot;) then
+		oFieldStatus.TextColor=65280
+		oFieldStatus.Label=&quot;Scan-Prozess läuft&quot;
+	else
+		oFieldStatus.TextColor=16711680
+		oFieldStatus.Label=&quot;Scan-Prozess fehlgeschlagen :-(&quot;
+		wait 3000
+		if Not FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp; &quot;/scanscript/.scanbusy.txt&quot;) then
+			oButtonScannen.Enabled=1
+			oButtonExit.Enabled=1
+			exit sub
+		End If
+	end if
+	
+	Do While FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp; &quot;/scanscript/.scanbusy.txt&quot;)
+		wait 1000
+		
+		if iProgress &lt; 100 then
+			iProgress=iProgress+10
+		else
+			iProgress=0
+		End if
+		oProgressBarScannen.ProgressValue=iProgress
+	Loop 
+
+	oProgressBarScannen.ProgressValue=0
+	oProgressBarScannen.EnableVisible=0
+	oFieldStatus.Label=&quot;Scan-Prozess abgeschlossen :-)&quot;
+	oFieldStatus.TextColor=65280
+
+&apos;	print sCommand
+
+	if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp;&quot;/&quot;&amp; sDocumentID_Scanner &amp;&quot;.pdf&quot;) _
+		OR FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp;&quot;/&quot;&amp; sDocumentID_Scanner &amp;&quot;.djvu&quot;) _
+	then
+		oButtonLoeschen.Enabled=1
+	else
+		oButtonLoeschen.Enabled=0
+	End if
+
+	oButtonScannen.Enabled=1
+	oButtonExit.Enabled=1
+End Sub
+
+Sub ScanDocument_loeschen()
+	Dim vStatus as Variant
+
+	if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp;&quot;/&quot;&amp; sDocumentID_Scanner &amp;&quot;.pdf&quot;) _
+		OR FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp;&quot;/&quot;&amp; sDocumentID_Scanner &amp;&quot;.djvu&quot;) _
+	then
+		vStatus=MsgBox(&quot;Soll das vorhandene, abgelegte Dokument gelöscht werden?&quot;&amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+			&quot;Wenn &quot;&amp; Chr(34) &amp;&quot;Ja&quot;&amp; Chr(34) &amp;&quot; ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+			&quot;Wollen Sie trotzdem fortfahren?&quot;,36,sTitle)
+		If vStatus=6 then
+			RmDir &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner
+			MkDir &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner
+		End if
+	End If
+	if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp;&quot;/&quot;&amp; sDocumentID_Scanner &amp;&quot;.pdf&quot;) _
+		OR FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; sDocumentID_Scanner &amp;&quot;/&quot;&amp; sDocumentID_Scanner &amp;&quot;.djvu&quot;) _
+	then
+		oButtonLoeschen.Enabled=1
+	else
+		oButtonLoeschen.Enabled=0
+	End if
+End Sub
+
+
+</script:module>

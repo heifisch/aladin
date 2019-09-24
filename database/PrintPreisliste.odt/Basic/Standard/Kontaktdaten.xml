@@ -1,0 +1,318 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Kontaktdaten" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub KontaktDaten()
+	Dim oTables as Object
+	Dim vTable_Summen as Variant
+	Dim vRows_Summen as Variant,oRecord_Kontakt as Object
+	Dim sDocument_Typ as String
+	Dim sName1 as String,sName2 as String,sName3 as String,sName4 as String,sNameKurz as String
+	Dim sLand as String,sPLZ as String,sPlatzhalter as String
+	Dim sOrt as String,sStrasse as String,sHausnummer as String,sTelefon as String,sKontakt as String
+	Dim sFunktelefon as String,sFax as String,sEMail as String,sUrl as String,sKontakt_Bez as String
+	Dim sBank as String,sBIC as String,sIBAN as String,sGeschaeftsfuehrer as String,sGeschaeftsfuehrer_Bez as String
+	Dim sBankverbindung as String,sBankverbindung_Bez as String,sFirmendaten as String,iOptionInhaber as Integer
+	Dim sAmtsgericht as String,sHRB as String,sUmsatzsteuernummer as String,sUmsatzsteuerID as String
+	Dim sLogo_URL as String
+	Dim sGrafik_URL as String,oGraphic as Object,oGraphic1 as Object,vCursor as Variant
+	Dim sAnschrift_Eigen_1 as String,sAnschrift_Eigen_2 as String,sAnschrift_Eigen_3 as String
+	Dim oStyleFamilies as Object,oPageStyles as Object,oPageStyle_1 as Object,oPageStyle_2 as Object
+	Dim oBookmark As Object,oBookmarkAnchor as Object,oRangeCursor as Object
+	Dim oSelections as Object,oSize as Object,vGraphics as Variant,iPrint_Logo as Integer
+	Dim oTable_Logo1 as Object,oTable_Logo2 as Object,oCursorKopf1 as Object,oCursorKopf2 as Object
+	Dim iCount as integer
+	Dim sSQL1 as String
+	Dim iPrint_Typ as Integer
+	Dim lLogoHeight as Long,lLogoWidth as Long,lGrafikHeight as Long,lGrafikWidth as Long
+	Dim	sKundenName1 as String,sKundenName2 as String,sKundenName3 as String,sKundenName4 as String
+	Dim	SKundenVorname as String,sKundenLand as String,sKundenPLZ as String,sKundenOrt as String
+	Dim	sKundenStrasze as String,sKundenHausnummer as String
+	Dim iOption1 as Integer,iOption2 as Integer,iOption3 as Integer,iOption4 as Integer
+	Dim sMaterialaufschlag as String,sStundensatz as String
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+		sSQL1=&quot;select distinct &quot;&amp;_
+		&quot;t2.Name1,t2.Name2,t2.Name3,t2.Name4,t2.NameKurz,t2.Land,t2.PLZ,t2.Ort,t2.Strasse,t2.Hausnummer,t2.Telefon,t2.Funktelefon,t2.Fax,t2.EMail,&quot;&amp;_
+		&quot;t2.Url,t2.Bank,t2.BIC,t2.IBAN,t2.Geschaeftsfuehrer,t2.OptionInhaber,t2.Amtsgericht,t2.HRB,t2.Umsatzsteuernummer,t2.UmsatzsteuerID,&quot;&amp;_
+		&quot;t3.Logo_URL,t3.Grafik_URL,t3.LogoHeight,t3.LogoWidth,t3.GrafikHeight,t3.GrafikWidth,&quot;&amp;_
+		&quot;t1.Suchstring,t4.Name1,t4.Name2,t4.Name3,t4.Name4,t4.Vorname,t4.Land,t4.PLZ,t4.Ort,t4.Strasse,t4.Hausnummer,&quot;&amp;_
+		&quot;t1.Option_1,t1.Option_2,t1.Option_3,t1.Option_4,t1.Materialaufschlagsatz,t1.Stundenverrechnungssatz&quot;&amp;_
+		&quot; from Steuerung as t1,Einstellungen as t2,Users as t3,&quot;&amp; sKunden &amp;&quot; as t4&quot;&amp;_
+		&quot; where t1.ClientID = &quot;&amp; iClientID &amp;_
+		&quot; and t4.KontaktID = t1.KontaktID&quot;&amp;_
+		&quot; and t2.EinstellungsID = &quot;&amp; iEinstellungsID_lokal &amp;_
+		&quot; and t3.UserID = &quot;&amp; iUserID_lokal &amp;_
+		&quot; limit 1&quot;
+		oRecord_Kontakt=oResult(sSQL1)
+		While oRecord_Kontakt.next()
+			sName1=oRecord_Kontakt.getString(1)
+			sName2=oRecord_Kontakt.getString(2)
+			sName3=oRecord_Kontakt.getString(3)
+			sName4=oRecord_Kontakt.getString(4)
+			sNameKurz=oRecord_Kontakt.getString(5)
+			sLand=oRecord_Kontakt.getString(6)
+			sPLZ=oRecord_Kontakt.getString(7)
+			sOrt=oRecord_Kontakt.getString(8)
+			sStrasse=oRecord_Kontakt.getString(9)
+			sHausnummer=oRecord_Kontakt.getString(10)
+			sTelefon=oRecord_Kontakt.getString(11)
+			sFunktelefon=oRecord_Kontakt.getString(12)
+			sFax=oRecord_Kontakt.getString(13)
+			sEMail=oRecord_Kontakt.getString(14)
+			sUrl=oRecord_Kontakt.getString(15)
+			sBank=oRecord_Kontakt.getString(16)
+			sBIC=oRecord_Kontakt.getString(17)
+			sIBAN=oRecord_Kontakt.getString(18)
+			sGeschaeftsfuehrer=oRecord_Kontakt.getString(19)
+			iOptionInhaber=oRecord_Kontakt.getLong(20)
+			sAmtsgericht=oRecord_Kontakt.getString(21)
+			sHRB=oRecord_Kontakt.getString(22)
+			sUmsatzsteuernummer=oRecord_Kontakt.getString(23)
+			sUmsatzsteuerID=oRecord_Kontakt.getString(24)
+			sLogo_URL=oRecord_Kontakt.getString(25)
+			sGrafik_URL=oRecord_Kontakt.getString(26)
+			lLogoHeight=oRecord_Kontakt.getLong(27)
+			lLogoWidth=oRecord_Kontakt.getLong(28)
+			lGrafikHeight=oRecord_Kontakt.getLong(29)
+			lGrafikWidth=oRecord_Kontakt.getLong(30)
+			Feld_fuellen(&quot;Preislistenbezeichnung&quot;,oRecord_Kontakt.getString(31))
+			sKundenName1=oRecord_Kontakt.getString(32)
+			sKundenName2=oRecord_Kontakt.getString(33)
+			sKundenName3=oRecord_Kontakt.getString(34)
+			sKundenName4=oRecord_Kontakt.getString(35)
+			SKundenVorname=oRecord_Kontakt.getString(36)
+			sKundenLand=oRecord_Kontakt.getString(37)
+			sKundenPLZ=oRecord_Kontakt.getString(38)
+			sKundenOrt=oRecord_Kontakt.getString(39)
+			sKundenStrasze=oRecord_Kontakt.getString(40)
+			sKundenHausnummer=oRecord_Kontakt.getString(41)
+			iOption1=oRecord_Kontakt.getInt(42)
+			iOption2=oRecord_Kontakt.getInt(43)
+			iOption3=oRecord_Kontakt.getInt(44)
+			iOption4=oRecord_Kontakt.getInt(45)
+			sMaterialaufschlag=oRecord_Kontakt.getString(46)
+			sStundensatz=oRecord_Kontakt.getString(47)
+		Wend	
+	
+	iPrint_Typ=1
+	iPrint_Logo=1
+	
+	oStyleFamilies= oDoc.getStyleFamilies()
+	oPageStyles = oStyleFamilies.getByName(&quot;PageStyles&quot;)
+	oPageStyle_1 = oPageStyles.getByName(&quot;Erste Seite&quot;)
+	oPageStyle_2 = oPageStyles.getByName(&quot;Standard&quot;)
+	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	oTables = oDoc.getTextTables
+	
+	if iPrint_Typ = 0 and iPrint_Logo = 0 then
+		oPageStyle_1.TopMargin = 3200
+		oPageStyle_2.TopMargin = 3200
+		oPageStyle_1.LeftMargin = 2000
+		oPageStyle_2.LeftMargin = 2000
+		oTables.getByName(&quot;Logo1&quot;).getRows().removeByIndex(0,1)
+		oTables.getByName(&quot;Logo2&quot;).getRows().removeByIndex(0,1)
+	else
+		oPageStyle_1.TopMargin = 640
+		oPageStyle_2.TopMargin = 640
+	
+		oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+		oGraphic.GraphicURL=convertToUrl(sLogo_URL)
+		oGraphic.Height=lLogoHeight
+		oGraphic.Width=lLogoWidth
+		oTable_Logo1 = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+		oTable_Logo1 = oTables.getByName(&quot;Logo1&quot;).getCellByName(&quot;A1&quot;)
+		oTable_Logo1.insertTextContent(oTable_Logo1, oGraphic, false)
+	
+		if sGrafik_URL &lt;&gt; &quot;&quot; then
+			oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+			oGraphic.GraphicURL=convertToUrl(sGrafik_URL)
+			oGraphic.AnchorType=1
+			oGraphic.VertOrient=5
+			oGraphic.Height=lGrafikHeight
+			oGraphic.Width=lGrafikWidth
+			oTable_Logo1= createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+			oTable_Logo1= oTables.getByName(&quot;Logo1&quot;).getCellByName(&quot;A1&quot;)
+			oCursorKopf1 = oTable_Logo1.createTextCursor()
+			oCursorKopf1.gotoEnd(False)
+			oTable_Logo1.insertTextContent(oCursorKopf1, oGraphic, False)
+		End if
+		
+		oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+		oGraphic.GraphicURL=convertToUrl(sLogo_URL)
+		oGraphic.Height=lLogoHeight
+		oGraphic.Width=lLogoWidth
+		oTable_Logo2 = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+		oTable_Logo2 = oTables.getByName(&quot;Logo2&quot;).getCellByName(&quot;A1&quot;)
+		oTable_Logo2.insertTextContent(oTable_Logo2, oGraphic, false)
+	
+		if sGrafik_URL &lt;&gt; &quot;&quot; then
+			oGraphic = oDoc.createInstance(&quot;com.sun.star.text.GraphicObject&quot;)
+			oGraphic.GraphicURL=convertToUrl(sGrafik_URL)
+			oGraphic.AnchorType=1
+			oGraphic.VertOrient=5
+			oGraphic.Height=lGrafikHeight
+			oGraphic.Width=lGrafikWidth
+			oTable_Logo2= createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+			oTable_Logo2= oTables.getByName(&quot;Logo2&quot;).getCellByName(&quot;A1&quot;)
+			oCursorKopf2 = oTable_Logo2.createTextCursor()
+			oCursorKopf2.gotoEnd(False)
+			oTable_Logo2.insertTextContent(oCursorKopf2, oGraphic, False)
+		End if
+	End if
+		
+	sAnschrift_Eigen_1 = sStrasse &amp; &quot; &quot; &amp; sHausnummer &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sPLZ &amp; &quot; &quot; &amp; sOrt
+	sAnschrift_Eigen_2 =  sNameKurz &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sStrasse &amp; &quot; &quot; &amp; sHausnummer &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sPLZ &amp; &quot; &quot; &amp; sOrt
+	sAnschrift_Eigen_3 =  sName1 &amp; Chr(10) &amp; sName2 &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sStrasse &amp; &quot; &quot; &amp; sHausnummer &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sPLZ &amp; &quot; &quot; &amp; sOrt
+	
+	if sKundenName1 &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;KundenName1&quot;,sKundenName1)
+	else
+		Feld_loeschen(&quot;KundenName1&quot;)
+	End if
+	if sKundenName2 &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;KundenName2&quot;,sKundenName2)
+	else
+		Feld_loeschen(&quot;KundenName2&quot;)
+	End if
+	if sKundenName3 &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;KundenName3&quot;,sKundenName3)
+	else
+		Feld_loeschen(&quot;KundenName3&quot;)
+	End if
+	if sKundenName4 &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;KundenName4&quot;,sKundenName4)
+	else
+		Feld_loeschen(&quot;KundenName4&quot;)
+	End if
+
+	if sTelefon &lt;&gt; &quot;&quot; then
+		sKontakt_Bez = &quot;Telefon:&quot;
+		sKontakt = sTelefon
+	End if
+	if sFax &lt;&gt; &quot;&quot; then
+		if sKontakt_Bez &lt;&gt; &quot;&quot; then
+			sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;Fax:&quot;
+			sKontakt = sKontakt &amp; Chr(10) &amp; sFax 
+		else
+			sKontakt_Bez = &quot;Fax:&quot;
+			sKontakt = sFax
+		end if
+	End if
+	if sFunktelefon &lt;&gt; &quot;&quot; then
+		if sKontakt_Bez &lt;&gt; &quot;&quot; then
+			sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;Mobil:&quot;
+			sKontakt = sKontakt &amp; Chr(10) &amp; sFunktelefon 
+		else
+			sKontakt_Bez = &quot;Mobil:&quot;
+			sKontakt = sFunktelefon
+		end if
+	End if
+	if sUrl &lt;&gt; &quot;&quot; then
+		if sKontakt_Bez &lt;&gt; &quot;&quot; then
+			sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;Url:&quot;
+			sKontakt = sKontakt &amp; Chr(10) &amp; sUrl 
+		else
+			sKontakt_Bez = &quot;Url:&quot;
+			sKontakt = sUrl
+		end if
+	End if
+	if sEMail &lt;&gt; &quot;&quot; then
+		if sKontakt_Bez &lt;&gt; &quot;&quot; then
+			sKontakt_Bez = sKontakt_Bez &amp; Chr(10) &amp; &quot;e-Mail:&quot;
+			sKontakt = sKontakt &amp; Chr(10) &amp; sEMail 
+		else
+			sKontakt_Bez = &quot;e-Mail:&quot;
+			sKontakt = sEMail
+		end if
+	End if
+	
+	if sBank &lt;&gt; &quot;&quot; then
+		sBankverbindung_Bez = &quot;Bankverbindung:&quot; &amp; Chr(10)
+		sBankverbindung = sBank &amp; Chr(10) &amp; &quot;IBAN: &quot; &amp; sIBAN &amp; Chr(10) &amp; &quot;BIC: &quot; &amp; sBIC
+	else
+		sBankverbindung_Bez = &quot;&quot;
+		sBankverbindung = &quot;&quot;
+	End if
+	
+	if sGeschaeftsfuehrer &lt;&gt; &quot;&quot; then
+		if iOptionInhaber = 0 then
+			sGeschaeftsfuehrer_Bez = &quot;Geschäftsführer:&quot; &amp; Chr(10)
+		elseif iOptionInhaber = 1 then
+			sGeschaeftsfuehrer_Bez = &quot;Inhaber:&quot; &amp; Chr(10)
+		End if
+		sFirmendaten = sGeschaeftsfuehrer
+		if sUmsatzsteuerID = &quot;&quot; or sUmsatzsteuernummer = &quot;&quot; then
+			sFirmendaten = sFirmendaten &amp; Chr(10)
+		End if
+	else
+		sGeschaeftsfuehrer_Bez = &quot;&quot;
+		sFirmendaten = &quot;&quot;
+	End if
+	if sAmtsgericht &lt;&gt; &quot;&quot; then
+		if sFirmendaten &lt;&gt; &quot;&quot; then
+			sFirmendaten = sFirmendaten &amp; Chr(10) &amp; sAmtsgericht &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sHRB
+		else
+			sFirmendaten = sAmtsgericht &amp; &quot; &quot; &amp; Chr(8226) &amp; &quot; &quot; &amp; sHRB
+		end if
+	End if
+	if sUmsatzsteuerID &lt;&gt; &quot;&quot; then
+		if sFirmendaten &lt;&gt; &quot;&quot; then
+			sFirmendaten = sFirmendaten &amp; Chr(10) &amp; &quot;UmsatzsteuerID: &quot; &amp; sUmsatzsteuerID 
+		else
+			sFirmendaten = &quot;UmsatzsteuerID: &quot; &amp; sUmsatzsteuerID 
+		end if
+	else
+		sFirmendaten = sFirmendaten &amp; Chr(10)
+	End if
+	if sUmsatzsteuernummer &lt;&gt; &quot;&quot; then
+		if sFirmendaten &lt;&gt; &quot;&quot; then
+			sFirmendaten = sFirmendaten &amp; Chr(10) &amp; &quot;Umsatzsteuernummer: &quot; &amp; sUmsatzsteuernummer
+		else
+			sFirmendaten = &quot;Umsatzsteuernummer: &quot; &amp; sUmsatzsteuernummer
+		end if
+	End if
+
+	if sName1 &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;Name1&quot;,sName1)
+	else
+		Feld_loeschen(&quot;Name1&quot;)
+	End if
+	if sName2 &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;Name2&quot;,sName2)
+	else
+		Feld_loeschen(&quot;Name2&quot;)
+	End if
+	if sName3 &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;Name3&quot;,sName3)
+	else
+		Feld_loeschen(&quot;Name3&quot;)
+	End if
+	if sName4 &lt;&gt; &quot;&quot; then
+		Feld_fuellen(&quot;Name4&quot;,sName4)
+	else
+		Feld_loeschen(&quot;Name4&quot;)
+	End if
+	
+	Feld_fuellen(&quot;Anschrift_Eigen_1&quot;,sAnschrift_Eigen_1)
+	Feld_fuellen(&quot;Anschrift_Eigen_2&quot;,sAnschrift_Eigen_2)
+	Feld_fuellen(&quot;Anschrift_Eigen_3&quot;,sAnschrift_Eigen_3)
+	Feld_fuellen(&quot;Kontakt_Bez&quot;,sKontakt_Bez)
+	Feld_fuellen(&quot;Kontakt&quot;,sKontakt)
+	Feld_fuellen(&quot;Bankverbindung_Bez&quot;,sBankverbindung_Bez)
+	Feld_fuellen(&quot;Bankverbindung&quot;,sBankverbindung)
+	Feld_fuellen(&quot;Geschaeftsfuehrer_Bez&quot;,sGeschaeftsfuehrer_Bez)
+	Feld_fuellen(&quot;Firmendaten&quot;,sFirmendaten)
+	oDoc.getTextFields().refresh()
+	
+	Leistungen.Leistungen(iOption1,iOption2,iOption3,iOption4,sMaterialaufschlag,sStundensatz)
+
+End Sub
+
+
+</script:module>

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="SQL_Anweisungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub SQL_Steuerung_reset()
+	sSQL1=&quot;update Steuerung set &quot;&amp;_
+		&quot;KundenID=Null,Jahr=Null,Status=Null,Suchstring=NULL &quot;&amp;_
+		&quot;where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Steuerung_ProjektID_last()
+	sSQL1=&quot;update Steuerung set ProjektID=&quot;&amp; flProjektID_import &amp;&quot; where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_leerer_Datensatz_entfernen()
+	sSQL1=&quot;delete from &quot;&amp; sProjekte &amp;&quot; where KontaktID=&apos;*&apos;&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_ProjektID_entfernen()
+	sSQL1=&quot;update Steuerung set ProjektID=NULL,KontaktID=NULL where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_KontaktID_uebernehmen()
+	sSQL1=&quot;update Steuerung set KontaktID=&quot;&amp; lKontaktID &amp;&quot; where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+</script:module>

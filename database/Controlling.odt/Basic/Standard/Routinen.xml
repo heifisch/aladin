@@ -1,0 +1,563 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Status_setzen_abgerechnet()
+	Dim sSQL1 AS String
+	sSQL1=&quot;UPDATE &quot;&amp; sControlling &amp;&quot; SET Abgerechnet=2 &quot;&amp; sSQL_WHERE
+	SQL_execute(sSQL1)
+	oForm_Tabellendaten.reload()
+	oForm_Tabellendaten.reset()
+	Schreibschutz_setzen()
+End Sub
+
+Sub Status_setzen_nicht_abgerechnet()
+	Dim sSQL1 AS String
+	sSQL1=&quot;UPDATE &quot;&amp; sControlling &amp;&quot; SET Abgerechnet=1 &quot;&amp; sSQL_WHERE
+	SQL_execute(sSQL1)
+	oForm_Tabellendaten.reload()
+	oForm_Tabellendaten.reset()
+	Schreibschutz_setzen()
+End Sub
+
+Sub Blanko_Datensatz()
+	Dim sJahr AS String,sMonat AS String,sWoche AS String,sDatum AS String,sPersonalID AS String,sProjektID AS String
+	Dim ifLokation AS String,ifLeistungsTyp AS Integer,ifStatus AS Integer,iCountUpdate AS String
+	Dim ifJahr AS String,ifMonat AS String,ifWoche AS String,ifOption_Datum AS Long
+	Dim oRecord1 AS Object,sLokation AS String,sIstZeit AS String,sWert AS String,sWert_2 AS String,sMenge AS String
+	Dim iMenge_eingeben AS Integer,iIstZeit_eingeben AS Integer,iLokation_eingeben AS Integer
+	Dim sSQL1 AS String,sSQL2 AS String,vStatus AS Variant,sLeistungsbezeichnung AS String
+
+	sSQL1=&quot;SELECT Datum,PersonalID,ProjektID,Lokation,LeistungsTyp,Status,Jahr,Monat,Woche,Option_5&quot;&amp;_
+		&quot; FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sDatum=oRecord1.getString(1)
+		sPersonalID=oRecord1.getString(2)
+		sProjektID=oRecord1.getString(3)
+		ifLokation=oRecord1.getString(4)
+		ifLeistungsTyp=oRecord1.getInt(5)
+		ifStatus=oRecord1.getInt(6)
+		ifJahr=oRecord1.getString(7)
+		ifMonat=oRecord1.getString(8)
+		ifWoche=oRecord1.getString(9)
+		ifOption_Datum=oRecord1.getLong(10)
+	Wend
+	if sDatum = &quot;&quot; then
+		MsgBox(&quot;Sie haben noch kein Datum ausgewählt!&quot;,16,sTitle_lokal)
+		Exit Sub
+	else
+		if ifOption_Datum &gt; 0 then
+			MsgBox(&quot;Bitte wählen Sie vorher als Datums-Option &quot;&amp; Chr(34) &amp;&quot;am&quot;&amp; Chr(34)&amp;&quot; !&quot;,16,sTitle_lokal)
+			Exit Sub
+		else
+			if sPersonalID = &quot;&quot; then
+				MsgBox(&quot;Sie haben noch keinen Mitarbeiter ausgewählt!&quot;,16,sTitle_lokal)
+				Exit Sub
+			else
+				if sProjektID = &quot;&quot; then
+					MsgBox(&quot;Sie haben noch kein Projekt ausgewählt!&quot;,16,sTitle_lokal)
+					Exit Sub
+				else
+	
+				iCountUpdate=0
+	&apos;			if ifLokation &lt;&gt; &quot;&quot; then
+	&apos;				iCountUpdate=iCountUpdate+1
+	&apos;			End if
+				if ifLeistungsTyp &lt;&gt; 0 then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifStatus &lt;&gt; 0 then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifJahr &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifMonat &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifWoche &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+	
+			nochmal:
+				sLeistungsbezeichnung=InputBox(&quot;Geben Sie bitte eine neue Leistungsbezeichnung ein!&quot;&amp;_
+				 Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal &amp; &quot; Blanko&quot;)
+				if sLeistungsbezeichnung = &quot;&quot; then
+					vStatus=MsgBox(&quot;Sie haben noch keine Leistungsnummer eingegeben!&quot;,37,sTitle_lokal)
+					if vStatus=4 then
+						goto nochmal
+					elseif vStatus=2 then
+						exit sub
+					End if
+				End if
+					iMenge_eingeben=fMenge_eingeben(0)			
+					if iMenge_eingeben=1 then
+						sWert=InputBox(&quot;Bitte geben Sie einen Wert für die Menge ein!&quot;)
+						sMenge=fZahlMitKomma(sWert)
+					else
+						sMenge=0
+					End if
+					iIstZeit_eingeben=fIstZeit_eingeben(0)			
+					if iIstZeit_eingeben=1 then
+						sWert_2=InputBox(&quot;Bitte geben Sie einen Wert für die Ist-Zeit in Stunden ein!&quot;)
+						sIstZeit=fZahlMitKomma(sWert_2)
+					End if
+					iLokation_eingeben=fLokation_eingeben(0)			
+					if iLokation_eingeben=1 then
+						sLokation=InputBox(&quot;Bitte geben Sie einen Lokation für die Leistung ein!&quot;)
+					else
+						sLokation=ifLokation
+					End if
+					sSQL2=&quot;INSERT INTO  &quot;&amp; sControlling &amp;_
+						&quot; (ProjektID,PersonalID,Erstellungsdatum,&quot;&amp;_
+						&quot;Leistungsbezeichnung,Menge,Einkaufspreis,Materialaufschlagsatz,Bauzeit,Minutenverrechnungssatz,IstZeit,Lokation)&quot;&amp;_
+						&quot; SELECT DISTINCT &apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&quot;&amp;_
+						&quot;&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp; sMenge &amp;_
+						&quot;&apos;,&apos;0&apos;,t1.Materialaufschlagsatz,&apos;0&apos;,t1.Stundenverrechnungssatz/60*t1.Verrechnungs_Faktor,&quot;&amp;_
+						&quot;&apos;&quot;&amp; sIstZeit &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;&quot;&amp;_
+						&quot; FROM Steuerung AS t1,&quot;&amp; sProjekte &amp;&quot; AS t2&quot;&amp;_
+						&quot; WHERE t1.ClientID=&quot;&amp; iClientID &amp;_
+						&quot; AND t2.ProjektID=t1.ProjektID&quot;
+					SQL_execute(sSQL2)
+					if iLokation_eingeben=1	AND ifLokation &lt;&gt; sLokation	then
+						SQL_Steuerung_reset_1()
+						init_Form_Tabellendaten()
+					else
+						if iCountUpdate &gt; 0 then
+							SQL_Steuerung_reset_2()
+							init_Form_Tabellendaten()
+						End if
+					End if
+					oForm_Tabellendaten.reload()
+					Summen_refresh()
+				End if
+			End if
+		End if
+	End if			
+End Sub
+
+Sub Leistung_uebernehmen()
+	Dim sJahr AS String,sMonat AS String,sWoche AS String,sDatum AS String,sPersonalID AS String,sProjektID AS String
+	Dim ifLokation AS String,ifLeistungsTyp AS Integer,ifStatus AS Integer,iCountUpdate AS String
+	Dim ifJahr AS String,ifMonat AS String,ifWoche AS String,ifOption_Datum AS Long
+	Dim oRecord1 AS Object,sLokation AS String,sIstZeit AS String,sWert AS String,sWert_2 AS String,sMenge AS String
+	Dim iMenge_eingeben AS Integer,iIstZeit_eingeben AS Integer,iLokation_eingeben AS Integer
+	Dim sSQL1 AS String,sSQL2 AS String,sGruppenname AS String
+	
+	List_Leistungen_commit()
+	
+	sSQL1=&quot;SELECT t1.Datum,t1.PersonalID,t1.ProjektID,t1.Lokation,t1.LeistungsTyp,t1.Status,t1.Jahr,t1.Monat,t1.Woche,t1.Option_5,t2.Gruppenname&quot;&amp;_
+		&quot; FROM Steuerung AS t1 LEFT JOIN &quot;&amp; sLeistungsgruppen &amp;&quot; AS t2 ON t2.GruppenID=t1.GruppenID WHERE ClientID=&quot;&amp; iClientID &amp;&quot;&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sDatum=oRecord1.getString(1)
+		sPersonalID=oRecord1.getString(2)
+		sProjektID=oRecord1.getString(3)
+		ifLokation=oRecord1.getString(4)
+		ifLeistungsTyp=oRecord1.getInt(5)
+		ifStatus=oRecord1.getInt(6)
+		ifJahr=oRecord1.getString(7)
+		ifMonat=oRecord1.getString(8)
+		ifWoche=oRecord1.getString(9)
+		ifOption_Datum=oRecord1.getLong(10)
+		sGruppenname=oRecord1.getString(11)
+	Wend
+
+	if sDatum = &quot;&quot; then
+		MsgBox(&quot;Sie haben noch kein Datum ausgewählt!&quot;,16,sTitle_lokal)
+		Exit Sub
+	else
+		if ifOption_Datum &gt; 0 then
+			MsgBox(&quot;Bitte wählen Sie vorher als Datums-Option &quot;&amp; Chr(34) &amp;&quot;am&quot;&amp; Chr(34)&amp;&quot; !&quot;,16,sTitle_lokal)
+			Exit Sub
+		else
+			if sPersonalID = &quot;&quot; then
+				MsgBox(&quot;Sie haben noch keinen Mitarbeiter ausgewählt!&quot;,16,sTitle_lokal)
+				Exit Sub
+			else
+				if sProjektID = &quot;&quot; then
+					MsgBox(&quot;Sie haben noch kein Projekt ausgewählt!&quot;,16,sTitle_lokal)
+					Exit Sub
+				else
+	
+				iCountUpdate=0
+	&apos;			if ifLokation &lt;&gt; &quot;&quot; then
+	&apos;				iCountUpdate=iCountUpdate+1
+	&apos;			End if
+				if ifLeistungsTyp &lt;&gt; 0 then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifStatus &lt;&gt; 0 then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifJahr &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifMonat &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifWoche &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+	
+					if fSelected_Item(oList_Leistungsauswahl) &lt;&gt; &quot;&quot; then
+						iMenge_eingeben=fMenge_eingeben(0)			
+						if iMenge_eingeben=1 then
+							sWert=InputBox(&quot;Bitte geben Sie einen Wert für die Menge ein!&quot;)
+							sMenge=fZahlMitKomma(sWert)
+						End if
+						iIstZeit_eingeben=fIstZeit_eingeben(0)			
+						if iIstZeit_eingeben=1 then
+							sWert_2=InputBox(&quot;Bitte geben Sie einen Wert für die Ist-Zeit in Stunden ein!&quot;)
+							sIstZeit=fZahlMitKomma(sWert_2)
+						End if
+						if iGroup2Lokation=0 then
+						iLokation_eingeben=fLokation_eingeben(0)			
+							if iLokation_eingeben=1 then
+								sLokation=InputBox(&quot;Bitte geben Sie einen Lokation für die Leistung ein!&quot;)
+							else
+								sLokation=ifLokation
+							End if
+						elseif iGroup2Lokation=1 then
+							sLokation=sGruppenname
+						end if
+						sSQL2=&quot;INSERT INTO  &quot;&amp; sControlling &amp;_
+							&quot; (ProjektID,PersonalID,Erstellungsdatum,LeistungsID,Bestellnummer,&quot;&amp;_
+							&quot;Leistungsbezeichnung,Leistungsbeschreibung,Einheit,&quot;&amp;_
+							&quot;Menge,Einkaufspreis,Materialaufschlagsatz,Bauzeit,Minutenverrechnungssatz,IstZeit,Lokation)&quot;&amp;_
+							&quot; SELECT DISTINCT &apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&quot;&amp;_
+							&quot;t1.LeistungsID,t2.Bestellnummer,t2.Leistungsbezeichnung,t2.Leistungsbeschreibung,t2.Einheit,&apos;&quot;&amp; sMenge &amp;&quot;&apos;,&quot;&amp;_
+							&quot;t2.&quot;&amp; sKalulationsPreis &amp;&quot;,t1.Materialaufschlagsatz,t2.Bauzeit,t1.Stundenverrechnungssatz/60*t1.Verrechnungs_Faktor,&quot;&amp;_
+							&quot;&apos;&quot;&amp; sIstZeit &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;&quot;&amp;_
+							&quot; FROM Steuerung AS t1,&quot;&amp; sLeistungsstamm &amp;&quot; AS t2,&quot;&amp; sProjekte &amp;&quot; AS t3,&quot;&amp; sKunden &amp;&quot; AS t4&quot;&amp;_
+							&quot; WHERE t1.ClientID=&quot;&amp; iClientID &amp;_
+							&quot; AND t2.LeistungsID=t1.LeistungsID&quot;&amp;_
+							&quot; AND t3.ProjektID=t1.ProjektID&quot;
+						SQL_execute(sSQL2)
+						if iLokation_eingeben=1	AND ifLokation &lt;&gt; sLokation	then
+							SQL_Steuerung_reset_1()
+							init_Form_Tabellendaten()
+							ifOption_Datum=oRecord1.getLong(4)
+						else
+							if iCountUpdate &gt; 0 then
+								SQL_Steuerung_reset_2()
+								init_Form_Tabellendaten()
+							End if
+						End if
+						oForm_Tabellendaten.reload()
+						Summen_refresh()
+					End if
+				End if
+			End if
+		End if
+	End if			
+End Sub
+
+Sub Leistung_Auftrag_uebernehmen()
+	Dim sJahr AS String,sMonat AS String,sWoche AS String,sDatum AS String,sPersonalID AS String,sProjektID AS String
+	Dim ifLokation AS String,ifLeistungsTyp AS Integer,ifStatus AS Integer,iCountUpdate AS String
+	Dim ifJahr AS String,ifMonat AS String,ifWoche AS String,ifOption_Datum AS Long
+	Dim oRecord1 AS Object,sLokation AS String,sIstZeit AS String,sWert AS String,sWert_2 AS String,sMenge AS String
+	Dim iMenge_eingeben AS Integer,iIstZeit_eingeben AS Integer,iLokation_eingeben AS Integer
+	Dim sSQL1 AS String,sSQL2 AS String
+
+	List_Leistungen_Auftrag_commit()
+
+	sSQL1=&quot;SELECT Datum,PersonalID,ProjektID,Lokation,LeistungsTyp,Status,Jahr,Monat,Woche,Option_5&quot;&amp;_
+		&quot; FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sDatum=oRecord1.getString(1)
+		sPersonalID=oRecord1.getString(2)
+		sProjektID=oRecord1.getString(3)
+		ifLokation=oRecord1.getString(4)
+		ifLeistungsTyp=oRecord1.getInt(5)
+		ifStatus=oRecord1.getInt(6)
+		ifJahr=oRecord1.getString(7)
+		ifMonat=oRecord1.getString(8)
+		ifWoche=oRecord1.getString(9)
+		ifOption_Datum=oRecord1.getLong(10)
+	Wend
+	if sDatum = &quot;&quot; then
+		MsgBox(&quot;Sie haben noch kein Datum ausgewählt!&quot;,16,sTitle_lokal)
+		Exit Sub
+	else
+		if ifOption_Datum &gt; 0 then
+			MsgBox(&quot;Bitte wählen Sie vorher als Datums-Option &quot;&amp; Chr(34) &amp;&quot;am&quot;&amp; Chr(34)&amp;&quot; !&quot;,16,sTitle_lokal)
+			Exit Sub
+		else
+			if sPersonalID = &quot;&quot; then
+				MsgBox(&quot;Sie haben noch keinen Mitarbeiter ausgewählt!&quot;,16,sTitle_lokal)
+				Exit Sub
+			else
+				if sProjektID = &quot;&quot; then
+					MsgBox(&quot;Sie haben noch kein Projekt ausgewählt!&quot;,16,sTitle_lokal)
+					Exit Sub
+				else
+	
+				iCountUpdate=0
+	&apos;			if ifLokation &lt;&gt; &quot;&quot; then
+	&apos;				iCountUpdate=iCountUpdate+1
+	&apos;			End if
+				if ifLeistungsTyp &lt;&gt; 0 then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifStatus &lt;&gt; 0 then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifJahr &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifMonat &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifWoche &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+	
+					if fSelected_Item(oList_Leistungsauswahl_Auftrag) &lt;&gt; &quot;&quot; then
+						iMenge_eingeben=fMenge_eingeben(0)			
+						if iMenge_eingeben=1 then
+							sWert=InputBox(&quot;Bitte geben Sie einen Wert für die Menge ein!&quot;)
+							sMenge=fZahlMitKomma(sWert)
+						End if
+						iIstZeit_eingeben=fIstZeit_eingeben(0)			
+						if iIstZeit_eingeben=1 then
+							sWert_2=InputBox(&quot;Bitte geben Sie einen Wert für die Ist-Zeit in Stunden ein!&quot;)
+							sIstZeit=fZahlMitKomma(sWert_2)
+						End if
+						iLokation_eingeben=fLokation_eingeben(0)			
+						if iLokation_eingeben=1 then
+							sLokation=InputBox(&quot;Bitte geben Sie einen Lokation für die Leistung ein!&quot;)
+						else
+							sLokation=ifLokation
+						End if
+						sSQL2=&quot;INSERT INTO  &quot;&amp; sControlling &amp;_
+							&quot; (ProjektID,PersonalID,Erstellungsdatum,LeistungsID,Bestellnummer,&quot;&amp;_
+							&quot;Leistungsbezeichnung,Leistungsbeschreibung,LV_Pos,Einheit,Menge,Einkaufspreis,Materialaufschlagsatz,Bauzeit,Minutenverrechnungssatz,IstZeit,Lokation)&quot;&amp;_
+							&quot; SELECT DISTINCT &apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&quot;&amp;_
+							&quot;t2.LeistungsID,t2.Bestellnummer,t2.Leistungsbezeichnung,t2.Leistungsbeschreibung,t2.LV_Pos,t2.Einheit,&apos;&quot;&amp; sMenge &amp;&quot;&apos;,&quot;&amp;_
+							&quot;t2.Einkaufspreis,t2.Materialaufschlagsatz,t2.Bauzeit,t2.Minutenverrechnungssatz,&apos;&quot;&amp; sIstZeit &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;&quot;&amp;_
+							&quot; FROM Steuerung AS t1,&quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; AS t2 WHERE t1.ClientID=&quot;&amp; iClientID &amp;_
+							&quot; AND t1.PositionsID=t2.PositionsID&quot;
+						SQL_execute(sSQL2)
+						if iLokation_eingeben=1 AND ifLokation &lt;&gt; sLokation then
+							SQL_Steuerung_reset_1()
+							init_Form_Tabellendaten()
+						else
+							if iCountUpdate &gt; 0 then
+								SQL_Steuerung_reset_2()
+								init_Form_Tabellendaten()
+							End if
+						End if
+						oForm_Tabellendaten.reload()
+						Summen_refresh()
+					End if
+				End if
+			End if
+		End if
+	End if			
+End Sub
+
+Sub Leistung_Projekt_uebernehmen()
+	Dim sJahr AS String,sMonat AS String,sWoche AS String,sDatum AS String,sPersonalID AS String,sProjektID AS String
+	Dim ifLokation AS String,ifLeistungsTyp AS Integer,ifStatus AS Integer,iCountUpdate AS String
+	Dim ifJahr AS String,ifMonat AS String,ifWoche AS String,ifOption_Datum AS Long
+	Dim oRecord1 AS Object,sLokation AS String,sIstZeit AS String,sWert AS String,sWert_2 AS String,sMenge AS String
+	Dim iMenge_eingeben AS Integer,iIstZeit_eingeben AS Integer,iLokation_eingeben AS Integer
+	Dim sSQL1 AS String,sSQL2 AS String
+
+	List_Leistungen_Projekt_commit()
+
+	sSQL1=&quot;SELECT Datum,PersonalID,ProjektID,Lokation,LeistungsTyp,Status,Jahr,Monat,Woche,Option_5&quot;&amp;_
+		&quot; FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sDatum=oRecord1.getString(1)
+		sPersonalID=oRecord1.getString(2)
+		sProjektID=oRecord1.getString(3)
+		ifLokation=oRecord1.getString(4)
+		ifLeistungsTyp=oRecord1.getInt(5)
+		ifStatus=oRecord1.getInt(6)
+		ifJahr=oRecord1.getString(7)
+		ifMonat=oRecord1.getString(8)
+		ifWoche=oRecord1.getString(9)
+		ifOption_Datum=oRecord1.getLong(10)
+	Wend
+	if sDatum = &quot;&quot; then
+		MsgBox(&quot;Sie haben noch kein Datum ausgewählt!&quot;,16,sTitle_lokal)
+		Exit Sub
+	else
+		if ifOption_Datum &gt; 0 then
+			MsgBox(&quot;Bitte wählen Sie vorher als Datums-Option &quot;&amp; Chr(34) &amp;&quot;am&quot;&amp; Chr(34)&amp;&quot; !&quot;,16,sTitle_lokal)
+			Exit Sub
+		else
+			if sPersonalID = &quot;&quot; then
+				MsgBox(&quot;Sie haben noch keinen Mitarbeiter ausgewählt!&quot;,16,sTitle_lokal)
+				Exit Sub
+			else
+				if sProjektID = &quot;&quot; then
+					MsgBox(&quot;Sie haben noch kein Projekt ausgewählt!&quot;,16,sTitle_lokal)
+					Exit Sub
+				else
+	
+				iCountUpdate=0
+	&apos;			if ifLokation &lt;&gt; &quot;&quot; then
+	&apos;				iCountUpdate=iCountUpdate+1
+	&apos;			End if
+				if ifLeistungsTyp &lt;&gt; 0 then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifStatus &lt;&gt; 0 then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifJahr &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifMonat &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+				if ifWoche &lt;&gt; &quot;&quot; then
+					iCountUpdate=iCountUpdate+1
+				End if
+	
+					if fSelected_Item(oList_Leistungsauswahl_Projekt) &lt;&gt; &quot;&quot; then
+						iMenge_eingeben=fMenge_eingeben(0)			
+						if iMenge_eingeben=1 then
+							sWert=InputBox(&quot;Bitte geben Sie einen Wert für die Menge ein!&quot;)
+							sMenge=fZahlMitKomma(sWert)
+						End if
+						iIstZeit_eingeben=fIstZeit_eingeben(0)			
+						if iIstZeit_eingeben=1 then
+							sWert_2=InputBox(&quot;Bitte geben Sie einen Wert für die Ist-Zeit in Stunden ein!&quot;)
+							sIstZeit=fZahlMitKomma(sWert_2)
+						End if
+						iLokation_eingeben=fLokation_eingeben(0)			
+						if iLokation_eingeben=1 then
+							sLokation=InputBox(&quot;Bitte geben Sie einen Lokation für die Leistung ein!&quot;)
+						else
+							sLokation=ifLokation
+						End if
+						sSQL2=&quot;INSERT INTO  &quot;&amp; sControlling &amp;_
+							&quot; (ProjektID,PersonalID,Erstellungsdatum,LeistungsID,Bestellnummer,&quot;&amp;_
+							&quot;Leistungsbezeichnung,Leistungsbeschreibung,LV_Pos,Einheit,Menge,Einkaufspreis,Materialaufschlagsatz,Bauzeit,Minutenverrechnungssatz,IstZeit,Lokation)&quot;&amp;_
+							&quot; SELECT DISTINCT &apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&quot;&amp;_
+							&quot;t2.LeistungsID,t2.Bestellnummer,t2.Leistungsbezeichnung,t2.Leistungsbeschreibung,t2.LV_Pos,t2.Einheit,&apos;&quot;&amp; sMenge &amp;&quot;&apos;,&quot;&amp;_
+							&quot;t2.Einkaufspreis,t2.Materialaufschlagsatz,t2.Bauzeit,t2.Minutenverrechnungssatz,&apos;&quot;&amp; sIstZeit &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;&quot;&amp;_
+							&quot; FROM Steuerung AS t1,&quot;&amp; sControlling &amp;&quot; AS t2 WHERE t1.ClientID=&quot;&amp; iClientID &amp;_
+							&quot; AND t2.PositionsID=t1.PositionsID2&quot;
+						SQL_execute(sSQL2)
+						if iLokation_eingeben=1 AND ifLokation &lt;&gt; sLokation then
+							SQL_Steuerung_reset_1()
+							init_Form_Tabellendaten()
+						else
+							if iCountUpdate &gt; 0 then
+								SQL_Steuerung_reset_2()
+								init_Form_Tabellendaten()
+							End if
+						End if
+						oForm_Tabellendaten.reload()
+						Summen_refresh()
+					End if
+				End if
+			End if
+		End if
+	End if			
+End Sub
+
+Sub Menge_eingeben_einstellen()
+	fMenge_eingeben(1)
+End Sub
+
+Sub Istzeit_eingeben_einstellen()
+	fIstZeit_eingeben(1)
+End Sub
+
+Sub Lokation_eingeben_einstellen()
+	fLokation_eingeben(1)
+End Sub
+
+Sub Leistung_duplizieren()
+	Dim vStatus AS Variant,iCount AS Integer
+	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+	Dim sLeistungsID AS String,sBestellnummer AS String
+	Dim sLeistungsbezeichnung AS string,sLeistungsbeschreibung AS String,sEinheit AS String
+	Dim sLeistungsgruppe AS String,sBauzeit AS String,sEinkaufspreis AS String,sListenpreis AS String,sLeistungsID_old AS String
+	Dim sLieferant_1 AS String,sLieferant_2 AS String,sLieferant_3 AS String
+
+	List_Leistungen_commit()
+
+	if fSelected_Item(oList_Leistungsauswahl) &lt;&gt; &quot;&quot; then
+		sSQL1=&quot;SELECT LeistungsID,Bestellnummer,Leistungsgruppe,Leistungsbezeichnung,&quot;&amp;_
+			&quot;Einheit,Bauzeit,Einkaufspreis,Listenpreis,Lieferant_1,Lieferant_2,Lieferant_3,&quot;&amp;_
+			&quot;Leistungsbeschreibung FROM &quot;&amp; sLeistungsstamm &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sLeistungsID_old=oRecord1.getString(1)
+			sBestellnummer=oRecord1.getString(2)
+			sLeistungsgruppe=oRecord1.getString(3)
+			sLeistungsbezeichnung=oRecord1.getString(4)
+			sEinheit=oRecord1.getString(5)
+			sBauzeit=oRecord1.getString(6)
+			sEinkaufspreis=oRecord1.getString(7)
+			sListenpreis=oRecord1.getString(8)
+			sLieferant_1=oRecord1.getString(9)
+			sLieferant_2=oRecord1.getString(10)
+			sLieferant_3=oRecord1.getString(11)
+			sLeistungsbeschreibung=oRecord1.getString(12)
+		Wend
+		nochmal:
+		sLeistungsID=InputBox(&quot;Geben Sie bitte eine neue Leistungsnummer ein,&quot;&amp;_
+			&quot; für das Duplikat der Leistung mit der Nummer:   &quot;&amp; sLeistungsID_old,sTitle_lokal,sLeistungsID_old)
+		if sLeistungsID = &quot;&quot; then
+			vStatus=MsgBox(&quot;Sie haben noch keine Leistungsnummer eingegeben!&quot;,37,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal
+			elseif vStatus=2 then
+				exit sub
+			End if
+		End if
+		sSQL2=&quot;SELECT COUNT(LeistungsID) FROM &quot;&amp; sLeistungsstamm &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL2)
+		While oRecord1.next()
+			iCount=oRecord1.getInt(1)
+		Wend
+		if iCount = 1 then
+			MsgBox(&quot;Diese Nummer ist schon vergeben.&quot; +Chr$(13)+Chr$(13)+_
+				&quot;Bitte benutzen Sie eine neue Leistungsnummer!&quot;,48,sTitle_lokal)
+			goto nochmal
+		elseif iCount = 0 then
+			nocheinmal:
+			sLeistungsbezeichnung=InputBox(&quot;Geben Sie bitte die neue Leistungsbezeichnung&quot;&amp;_
+				&quot; für die zu kopierende Leistung ein!&quot;&amp; Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal,sLeistungsbezeichnung)
+		if sLeistungsbezeichnung = &quot;&quot; then
+			vStatus=MsgBox(&quot;Sie haben noch keine Leistungsbezeichnung eingegeben!&quot;,37,sTitle_lokal)
+			if vStatus=4 then
+				goto nocheinmal
+			elseif vStatus=2 then
+				exit sub
+			End if
+		End if
+		sBestellnummer=InputBox(&quot;Geben Sie bitte die neue Bestellnummer&quot;&amp;_
+			&quot; für die zu kopierende Leistung ein!&quot;,sTitle_lokal,sBestellnummer)
+
+			sSQL3=&quot;INSERT INTO  &quot;&amp; sLeistungsstamm &amp;&quot; (LeistungsID,Bestellnummer,Leistungsgruppe,Leistungsbezeichnung,Einheit,Bauzeit,&quot;&amp;_
+				&quot;Einkaufspreis,Listenpreis,Lieferant_1,Lieferant_2,Lieferant_3,Leistungsbeschreibung) VALUES (&apos;&quot;&amp; sLeistungsID &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp; sLeistungsgruppe &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sBauzeit &amp;&quot;&apos;,&apos;&quot;&amp; sEinkaufspreis &amp;&quot;&apos;,&apos;&quot;&amp; sListenpreis &amp;&quot;&apos;,&apos;&quot;&amp; sLieferant_1 &amp;&quot;&apos;,&apos;&quot;&amp; sLieferant_2 &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sLieferant_3 &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
+			wait 1
+		End if
+		SQL_execute(sSQL3)
+	else
+		MsgBox(&quot;Sie haben noch keine Leistung ausgewählt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+</script:module>

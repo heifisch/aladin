@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement as Object
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as string
+Dim oRecord1 as Object,oRecord2 as Object
+Dim vStatus as Variant
+Dim lNewID as long,iCount as integer,sLeistungsgruppenname as string
+Dim sHauptgruppennummer as String,sHauptgruppenname as string
+
+Sub Start_Preislisten()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	
+	if oDoc.isReadOnly then
+		Dim oFrame as Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+		
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Preislisten&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 36)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Hauptgruppen_&quot;&amp; iEinstellungsID_lokal &amp;&quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Leistungsgruppen_&quot;&amp; iEinstellungsID_lokal &amp;&quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Leistungsstamm_&quot;&amp; iEinstellungsID_lokal &amp;&quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm&quot;)
+		else
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen_&quot;&amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen_&quot;&amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm_&quot;&amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden&quot;)
+		else
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+		end if
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Preislisten&quot;)
+		
+		sSQL1=&quot;update Steuerung set Gesperrt=1 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		Formular_init()				&apos;Initialisierung für Mehrplatzlösung
+		oForm_Steuerung.reload()
+
+	 	StatusBar(False)
+		ToolBar(False)
+	End if
+	FormSize()
+End Sub
+
+Sub CheckBox_Leistungsbezeichnung_commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub CheckBox_Leistungsbeschreibung_commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub Kontaktauswahl_refresh()
+	oList_Kontaktauswahl.refresh()
+End Sub
+
+Sub Kontakt_uebernehmen()
+	oList_Kontaktauswahl.commit()
+	oForm_Steuerung.updateRow()
+	sSQL1=&quot;update Steuerung set Materialaufschlagsatz=&quot;&amp; sMaterialaufschlag &amp;_
+			&quot; ,Stundenverrechnungssatz=&quot;&amp; sStundensatz &amp;_
+			&quot; where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)	
+	oForm_Steuerung.reload()
+End sub
+
+Sub List_Hauptgruppen_refresh()
+	oList_Hauptgruppen.refresh()
+End Sub
+
+Sub Hauptgruppenauswahl_ruecksetzen()
+	sSQL1=&quot;update Steuerung set HauptgruppenID = NULL where ClientID=&quot;&amp; iClientID 
+	SQL_execute(sSQL1)
+	oForm_Steuerung.reload()
+	sSQL1=&quot;update Steuerung set HauptgruppenID = &apos;%&apos; where ClientID=&quot;&amp; iClientID 
+	SQL_execute(sSQL1)
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Hauptgruppe_uebernehmen()
+	oList_Hauptgruppen.commit()
+	oForm_Steuerung.updateRow()
+	oForm_Leistungsgruppen.reload()
+End Sub
+
+Sub Steuerung_updateRow()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub Preislistenbezeichnung_uebernehmen()
+	oField_Preislistenbezeichnung.commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub Materialaufschlag_uebernehmen()
+	oField_Materialaufschlag.commit()
+	oForm_Steuerung.updateRow()	
+End Sub
+
+Sub StundenSatz_uebernehmen()
+	oField_Stundensatz.commit()
+	oForm_Steuerung.updateRow()	
+End Sub
+
+Sub Preislisten_alle()
+	sSQL1=&quot;update &quot;&amp; sLeistungsgruppen &amp;&quot; set PrintPreisliste=1 where HauptgruppenID like &apos;&quot;&amp; sHauptGruppenID &amp;&quot;&apos;&quot;
+	SQL_execute(sSQL1)
+	oForm_Leistungsgruppen.reload()
+End Sub
+
+Sub Preislisten_keine()
+	sSQL1=&quot;update &quot;&amp; sLeistungsgruppen &amp;&quot; set PrintPreisliste=0 where HauptgruppenID like &apos;&quot;&amp; sHauptGruppenID &amp;&quot;&apos;&quot;&amp;_
+		&quot; OR PrintPreisliste=1&quot;
+	SQL_execute(sSQL1)
+	oForm_Leistungsgruppen.reload()
+End Sub
+
+Sub Maske_schlieszen()
+	if oDoc.isReadOnly then
+		Hauptgruppenauswahl_ruecksetzen()
+		sSQL1=&quot;update Steuerung set Gesperrt=0 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+	End if
+	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+Sub PrintPreisliste()
+	SetUserID(iUserID_lokal)
+	PreislistePrint()
+End Sub
+</script:module>

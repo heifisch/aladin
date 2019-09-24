@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Start" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Start()
+	Dim sSQL1 as String,sSQL2 as String
+	Dim oRecord1 as Object
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	
+	if oDoc.isReadOnly then
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Korrespondenz&quot;))
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+		sSQL1=&quot;select Startoption,Unloaded,Export from Start where StartID=&quot;&amp; iUserID_lokal
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			SetDocUserProperty(&quot;oStartoption&quot;, oRecord1.getInt(1))
+			SetDocUserProperty(&quot;oUnloaded&quot;, oRecord1.getInt(2))
+			SetDocUserProperty(&quot;oExport&quot;, oRecord1.getInt(3))
+		Wend
+		
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+		
+		Betriebsart_aendern(iStartoption)
+		sSQL2=&quot;update Start set Startoption=0,Unloaded=1,Startlock=0,Export=0 where StartID=&quot;&amp; iUserID_lokal
+		SQL_execute(sSQL2)
+
+	 	StatusBar(False)
+		ToolBar(False)
+	End if
+	FormSize()
+End Sub
+
+</script:module>

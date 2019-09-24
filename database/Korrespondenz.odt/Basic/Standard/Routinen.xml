@@ -1,0 +1,463 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+Dim oRecord1 as Object,oRecord2 as Object
+Dim sKontaktID as String,sAnsprechpartnerID as String
+Dim sReferenz as String,sDocument_Name as String,sBody as String
+Dim sAnrede as String,sProjektID as String
+Dim iOptionSerienbrief as Integer,iOptionSignum as Integer
+Dim sSignumURL as String,sSignumHeight as String,sSignumWidth as String
+Dim sGruszformel as String,sAbsender as String
+Dim sLeerzeilen as String
+Dim iCount as integer,iCount_Max as integer
+Dim iAnzData as integer,iMaxData as integer
+Dim iMaxPos as integer,iMaxPos_1 as integer,iPos_neu as integer
+Dim iReset as integer,iGesperrt as integer
+Dim vStatus as Variant
+Dim sFormular as String,sNutzer as String,sMessage as String
+
+Sub Serienbriefliste_speichern()
+	Dim sListen_Name as String
+	if fAnzahlSerienbriefe &gt; 0 then
+nochmal:
+		sListen_Name=InputBox(&quot;Geben Sie bitte einen eindeutigen Namen für die&quot;&amp; Chr(10) &amp;&quot;Serienbrief-Verteiler-Liste ein!&quot;,sTitle_lokal)
+		if sListen_Name = &quot;&quot; then
+			vStatus=MsgBox(&quot;Sie haben noch keinen Listennamen eingegeben!&quot;,37,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal
+			elseif vStatus=2 then
+				exit sub
+			End if
+		End if
+		sSQL1=&quot;insert into &quot;&amp; sSerienbrief_Listen &amp;&quot;(Listenname,KontaktTyp,ListenMitglieder) &quot;&amp;_
+			&quot;value(&apos;&quot;&amp; sListen_Name &amp;&quot;&apos;,&apos;&quot;&amp; sKontakte &amp;&quot;&apos;,&apos;&quot;&amp; fstoreSerienbriefKontaktID &amp;&quot;&apos;)&quot;
+		SQL_execute(sSQL1)
+		oList_Serienbrief_Verteilerlisten.refresh()
+	End if
+End Sub
+
+Sub Serienbriefliste_loeschen()
+	oList_Serienbrief_Verteilerlisten.commit()
+	oForm_Steuerung.updateRow()
+	if lSerBrieListenID &gt; 0 then
+		vStatus=MsgBox(&quot;Soll die aktuelle Verteiler-Liste gelöscht werden?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sSQL1=&quot;delete from &quot;&amp; sSerienbrief_Listen &amp;&quot; where ListenID=&quot;&amp; lSerBrieListenID
+			SQL_execute(sSQL1)
+			sSQL2=&quot;update Steuerung set SerBrieListenID=NULL where ClientID=&quot;&amp; iClientID
+			SQL_execute(sSQL2)
+			oList_Serienbrief_Verteilerlisten.refresh()
+			SQL_Reset_AutoIncrement(sSerienbrief_Listen)
+		End if
+	End if
+End Sub
+
+Sub Serienbriefliste_laden()
+	Dim sSerBrieKontaktIDs as String
+	oList_Serienbrief_Verteilerlisten.commit()
+	oForm_Steuerung.updateRow()
+	if lSerBrieListenID &gt; 0 then 
+		sSQL1=&quot;select replace(ListenMitglieder,&apos;,&apos;,&apos; OR KontaktID=&apos;)&quot;&amp;_
+			&quot; from &quot;&amp; sSerienbrief_Listen &amp;&quot; where ListenID=&quot;&amp; lSerBrieListenID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sSerBrieKontaktIDs=oRecord1.getString(1)
+		Wend
+		if Len(TRIM(sSerBrieKontaktIDs)) &gt; 0 then
+			SQL_update_Serienbrief_Kontakte_keine() 
+			sSQL2=&quot;update Serienbrief_Kontakte set Serienbrief=1&quot;&amp;_
+				&quot; where ClientID=&quot; &amp; iClientID &amp;_
+				&quot; and (KontaktID=&quot;&amp; sSerBrieKontaktIDs &amp;&quot;)&quot; 
+			SQL_execute(sSQL2)
+		End if
+		oForm_Serienbrief.reload()
+	End if
+End Sub
+
+Sub DokumentName_bearbeiten()
+	if lDocumentID &lt;&gt; 0 then
+		Dim vStatus as Variant
+		Dim sSQL1 as String,sSQL2 as String
+		Dim oRecordText as Object
+		Dim oDialogTextModel as Object
+		Dim oFieldText as Object
+		Dim sFieldText as String
+		
+		GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+		oDialogText = LoadDialog(&quot;ALADIN&quot;, &quot;Text&quot;)
+		oDialogTextModel = oDialogText.Model
+		oFieldText = oDialogTextModel.getByName(&quot;Field_Text&quot;)
+
+		oField_Document_Name.commit()
+		oForm_Document.updateRow()
+
+		oDialogTextModel.Title=&quot;Dokument Name bearbeiten:&quot;
+		oFieldText.Text=oField_Document_Name.BoundField.String
+
+		vStatus = oDialogText.Execute()
+		if vStatus = 0 then
+			exit sub
+		End if
+	
+		sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;&quot; set Document_Name=&apos;&quot;&amp; fsConvertApostroph(oFieldText.Text) &amp;_
+				&quot;&apos; where DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oList_Documentauswahl.refresh()
+		oForm_Steuerung.reload()
+		oForm_Document.reload()
+	End If
+End Sub
+
+Sub Document_kopieren()
+	if lDocumentID &gt; 0 then
+		vStatus=MsgBox(&quot;Soll das aktuelle Dokument mit der Nummer &quot;&amp; lDocumentID &amp;&quot; kopiert werden?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sBezeichnung=oTextField_Document_Name.Label &amp;&quot;n&quot;
+			SetDocUserProperty(&quot;oDocumentID_old&quot;, lDocumentID)
+			SQL_update_Document1_Gesperrt_0(sKorrespondenz,lDocumentID)
+			sSQL1=&quot;select t1.Referenz,t1.Document_Name,t1.KontaktID,t1.AnsprechpartnerID,&quot;&amp;_
+				&quot;t1.Body,t1.Anrede,t1.Option_Serienbrief,t1.Option_Signum,&quot;&amp;_
+				&quot;t3.Signum_URL,t3.SignumHeight,t3.SignumWidth,t3.Standard_Gruszformel,t3.Standard_Absender,t1.Leerzeilen,t1.ProjektID&quot;&amp;_
+				&quot; FROM &quot;&amp; sKorrespondenz &amp;&quot; AS t1&quot;&amp;_
+				&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+				&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;&quot;,&quot;&amp;_
+				&quot; Users AS t3&quot;&amp;_
+				&quot; WHERE t1.DocumentID=t2.DocumentID&quot;&amp;_
+				&quot; AND t3.UserID=&quot;&amp; iUserID_lokal
+			oRecord1=oResult(sSQL1)
+			While oRecord1.next()
+				sReferenz=oRecord1.getString(1)
+				sDocument_Name=oRecord1.getString(2)
+				sKontaktID=oRecord1.getString(3)
+				sAnsprechpartnerID=oRecord1.getString(4)
+				sBody=oRecord1.getString(5)
+				sAnrede=oRecord1.getString(6)
+				iOptionSerienbrief=oRecord1.getInt(7)
+				iOptionSignum=oRecord1.getInt(8)
+				sSignumURL=oRecord1.getString(9)
+				sSignumHeight=oRecord1.getString(10)
+				sSignumWidth=oRecord1.getString(11)
+				sGruszformel=oRecord1.getString(12)
+				sAbsender=oRecord1.getString(13)
+				sLeerzeilen=oRecord1.getString(14)
+				sProjektID=oRecord1.getString(15)
+			Wend
+nochmal:
+			sDocument_Name=InputBox(&quot;Geben Sie bitte den Dokumentnamen&quot;&amp;_
+				&quot; für das kopierte Dokument ein!&quot;&amp; Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal,oField_Document_Name.BoundField.string)
+			if sDocument_Name = &quot;&quot; then
+				vStatus=MsgBox(&quot;Sie haben noch keinen Dokumentnamen eingegeben!&quot;,37,sTitle_lokal)
+				if vStatus=4 then
+					goto nochmal
+				elseif vStatus=2 then
+					exit sub
+				End if
+			End if
+			sSQL2=&quot;insert into &quot;&amp; sKorrespondenz &amp;_
+				&quot;(Document_Name,KontaktID,AnsprechpartnerID,Body,Anrede,Option_Serienbrief,Option_Signum,&quot;&amp;_
+				&quot;Signum_URL,SignumHeight,SignumWidth,Gruszformel,Absender,Leerzeilen,ProjektID)&quot;&amp;_
+				&quot; values(&apos;&quot;&amp; fsConvertApostroph(sDocument_Name) &amp;&quot;&apos;,&apos;&quot;&amp; sKontaktID &amp;&quot;&apos;,&apos;&quot;&amp; sAnsprechpartnerID &amp;_
+				&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sBody) &amp;&quot;&apos;,&apos;&quot;&amp; sAnrede &amp;&quot;&apos;,&apos;&quot;&amp; iOptionSerienbrief &amp;&quot;&apos;,&apos;&quot;&amp; iOptionSignum &amp;_
+				&quot;&apos;,&apos;&quot;&amp; fsConvertBackSlash(sSignumURL) &amp;&quot;&apos;,&apos;&quot;&amp; sSignumHeight &amp;&quot;&apos;,&apos;&quot;&amp; sSignumWidth &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sGruszformel &amp;&quot;&apos;,&apos;&quot;&amp; sAbsender &amp;&quot;&apos;,&apos;&quot;&amp; sLeerzeilen &amp;&quot;&apos;,&apos;&quot;&amp; sProjektID &amp;&quot;&apos;)&quot;
+			SQL_execute(sSQL2)
+			SQL_update_Tabelle1_DocumentID(1)
+			SQL_update_Steuerung_DocumentID(0)
+			oForm_Steuerung.reload()
+			wait 1
+			SQL_update_Document1_Gesperrt_1(sKorrespondenz,lDocumentID)
+			SQL_Datum_setzen		
+			Schreibschutz_setzen()
+		End if
+	End if
+End Sub
+
+Sub Document_loeschen()
+	if lDocumentID &gt; 0 then
+		if Msg_Schreibschutz=1 then
+	 		exit Sub
+	 	else
+			vStatus=MsgBox(&quot;Soll das aktuelle Dokument mit der Nummer &quot;&amp; lDocumentID &amp;&quot;, gelöscht werden?&quot;+Chr$(13)+Chr$(13)+Chr$(13)+_
+				&quot;Wenn Ja ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;+Chr$(13)+Chr$(13)+_
+				&quot;Wollen Sie trotzdem fortfahren?&quot;,36,sTitle_lokal)
+			if vStatus=6 then
+				SQL_Document_loeschen_Tabelle3()
+				SQL_DocumentID_entfernen()
+				oForm_Steuerung.reload()
+				oForm_Steuerung.reset()
+			End if
+		End if
+	End if
+End Sub
+
+Sub Document_schliessen()
+	if oDoc.isReadOnly then 
+		Dim iJahr as Integer
+		sSQL1=&quot;select max(year(Erstellungsdatum)) from &quot;&amp; sKorrespondenz
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iJahr=oRecord1.getInt(1)
+		Wend
+		SQL_update_Document1_Gesperrt_0(sKorrespondenz,lDocumentID)
+		SQL_DocumentID_entfernen()
+		sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;&quot; set KontaktID=0 where KontaktID IS NULL&quot;
+		SQL_execute(sSQL1)
+		sSQL2=&quot;update &quot;&amp; sKorrespondenz &amp;&quot; set ProjektID=0 where ProjektID IS NULL&quot;
+		SQL_execute(sSQL2)
+		sSQL3=&quot;update Steuerung set ProjektID = NULL,KontaktID = NULL,Suchstring = NULL,Jahr=&apos;&quot;&amp; iJahr &amp;_
+			&quot;&apos;,Gesperrt=0 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL3)
+		SQL_delete_Serienbrief_Kontakte()
+		SQL_Reset_AutoIncrement(&quot;Serienbrief_Kontakte&quot;)
+	End if
+	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+Sub Kontaktdaten_uebernehmen()
+	if lDocumentID &gt; 0 then
+		oList_Kontaktauswahl.commit()
+		if lKontaktID_old &gt; 0 then
+			if lKontaktID_old &lt;&gt; oList_Kontaktauswahl.BoundField.long then
+				vStatus=MsgBox(&quot;Wollen Sie den aktuellen &quot;&amp; sKontakte &amp;&quot; überschreiben?&quot;,36,sTitle_lokal)
+				if vStatus=7 then
+					oList_Kontaktauswahl.BoundField.value = lKontaktID_old
+					oForm_Document.updateRow()
+					oForm_Document.reload()
+					exit sub
+				End if
+			else
+				exit sub
+			End if
+		End if
+		oForm_Document.updateRow()
+		Kontaktdaten_setzen()
+		oList_Ansprechpartner.refresh()
+	else
+		MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+Sub Kontaktdaten_setzen()
+	if lDocumentID &lt;&gt; 0 then
+		Dim sAnrede as String,sAnrede_Kontakt as String,sTitel as String
+		sSQL1=&quot;select Anrede,Name1,Titel from &quot;&amp; sKontakte &amp;&quot; where KontaktID=&quot;&amp; lKontaktID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sAnrede_Kontakt=oRecord1.getString(1)
+			sName1=oRecord1.getString(2)
+			sTitel=oRecord1.getString(3)
+		Wend
+	
+		If sTitel &lt;&gt; &quot;&quot;	then
+			sTitel=sTitel &amp; &quot; &quot;
+		End If
+	
+		if InStr(1,sAnrede_Kontakt,&quot;Herr&quot;,1) &gt; 0 then
+			sAnrede=&quot;Sehr geehrter Herr &quot;&amp; sTitel &amp; sName1 &amp;&quot;,&quot;
+		elseif InStr(1,sAnrede_Kontakt,&quot;Frau&quot;,1) &gt; 0 then
+			sAnrede=&quot;Sehr geehrte Frau &quot;&amp; sTitel &amp; sName1 &amp;&quot;,&quot;
+		else
+			sAnrede=&quot;Sehr geehrte Damen und Herren,&quot;
+		End if
+		sSQL2=&quot;update &quot;&amp; sKorrespondenz &amp;_
+			&quot; set Option_Serienbrief=0,AnsprechpartnerID=NULL,Erstellungsdatum=(date_add(now(),interval 0 month)),Anrede=&apos;&quot;&amp; sAnrede &amp;_
+			&quot;&apos; where DocumentID=&quot;&amp; lDocumentID	
+		SQL_execute(sSQL2)
+		oForm_Document.reload()
+		if iOption_Serienbrief=1 then
+			oButton_SerienBriefVerteiler_anzeigen.Enabled=True
+		else
+			oButton_SerienBriefVerteiler_anzeigen.Enabled=False
+		end if
+	End if
+End Sub
+
+Sub Document_speichern()
+	if oDoc.isReadOnly then 
+		if lDocumentID &gt; 0 then
+			if iOption_Schreibschutz = 0 then
+				SQL_update_Document1_SerBrieKontakte(sKorrespondenz,lDocumentID)
+			End if
+			SQL_update_Document1_Gesperrt_0(sKorrespondenz,lDocumentID)
+			SQL_DocumentID_entfernen()
+			oForm_Steuerung.reload()
+			oForm_Steuerung.reset()
+		End if
+	End if
+End Sub
+
+Sub Document_bearbeiten()
+	oList_Documentauswahl.commit()
+	if lDocumentID_Auswahl &gt; 0 then
+		sSQL1=&quot;SELECT t1.Gesperrt,t2.Formular,t2.Nutzer&quot;&amp;_
+			&quot; FROM &quot;&amp; sKorrespondenz &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+			&quot; ON t2.ClientID=t1.Gesperrt&quot;&amp;_
+			&quot; WHERE t1.DocumentID=&quot;&amp; lDocumentID_Auswahl
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iGesperrt=oRecord1.getInt(1)
+			sFormular=oRecord1.getString(2)
+			sNutzer=oRecord1.getString(3)
+		Wend
+		if iGesperrt = iClientID then
+			exit Sub
+		elseif iGesperrt &lt;&gt; 0 and iGesperrt &lt;&gt; iClientID then
+			sMessage=&quot;Dieses Dokument wird gerade&quot;
+			if sNutzer &lt;&gt; &quot;&quot; then
+				sMessage = sMessage &amp; &quot; durch den Nutzer&quot; &amp;_
+					Chr(13) &amp; Chr(13) &amp; Chr(9) &amp; Chr(9) &amp; Chr(9) &amp; &quot;&gt;&gt;   &quot;&amp; sNutzer &amp;&quot;   &lt;&lt;&quot;&amp; Chr(13) &amp; Chr(13)
+			End if
+			if sFormular &lt;&gt; &quot;&quot; then
+				sMessage = sMessage &amp; &quot; mit dem Formular&quot; &amp;_
+					Chr(13) &amp; Chr(13) &amp; Chr(9) &amp; Chr(9) &amp; Chr(9) &amp; &quot;&gt;&gt;   &quot;&amp; sFormular &amp;&quot;   &lt;&lt;&quot;&amp; Chr(13) &amp; Chr(13)
+			End if
+			if sNutzer = &quot;&quot; and sFormular = &quot;&quot; then
+				sMessage = sMessage &amp; &quot; durch den Client mit der ID&quot; &amp;_
+					Chr(13) &amp; Chr(13) &amp; Chr(9) &amp; Chr(9) &amp; Chr(9) &amp; &quot;&gt;&gt;   &quot;&amp; iGesperrt &amp;&quot;   &lt;&lt;&quot;&amp; Chr(13) &amp; Chr(13)
+			End if
+			sMessage= sMessage &amp; &quot; bearbeitet!&quot;
+			MsgBox (sMessage,16,sTitle_lokal)
+			oForm_Steuerung.reload()
+		else
+			if lDocumentID &gt; 0 then
+				if iOption_Schreibschutz = 0 then
+					SQL_update_Document1_SerBrieKontakte(sKorrespondenz,lDocumentID)
+				End if
+				SQL_update_Document1_Gesperrt_0(sKorrespondenz,lDocumentID)
+			End if
+			oForm_Steuerung.updateRow()
+			SQL_update_DocumentID()
+			oList_Ansprechpartner.refresh()
+			oForm_Steuerung.reload()
+			SQL_update_Document1_Schreibschutz_1(sKorrespondenz,lDocumentID)
+			oForm_Document.reload()
+			SQL_update_Document1_Gesperrt_1(sKorrespondenz,lDocumentID)
+			SQL_update_Serienbrief_Kontakte(sKorrespondenz,lDocumentID)
+			oForm_Serienbrief.reload()
+			Schreibschutz_setzen()
+		End if
+	End if
+End Sub
+
+Sub Jahr_zuruecksetzen(iParameter as integer)
+	Dim iJahr as Integer
+	sSQL1=&quot;select max(year(Erstellungsdatum)) from &quot;&amp; sKorrespondenz
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iJahr=oRecord1.getInt(1)
+	Wend
+	if iParameter=0 then
+		sSQL2=&quot;update Steuerung set Jahr=&apos;&quot;&amp; iJahr &amp;&quot;&apos; where ClientID=&quot;&amp; iClientID
+	else
+		sSQL2=&quot;update Steuerung set Jahr = NULL where ClientID=&quot;&amp; iClientID
+	End if
+	SQL_execute(sSQL2)
+	oForm_Steuerung.reload()
+End Sub
+
+Sub neues_Document()
+	if oDoc.isReadOnly then 
+		Dim sSignum_URL as String,sStandard_Gruszformel as String,sStandard_Absender as String
+		Document_speichern
+		sSQL1=&quot;select Signum_URL,SignumHeight,SignumWidth,Standard_Gruszformel,Standard_Absender &quot;&amp;_
+			&quot;from Users where UserID=&quot;&amp; iUserID_lokal
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sSignum_URL=oRecord1.getString(1)
+			sSignumHeight=oRecord1.getString(2)
+			sSignumWidth=oRecord1.getString(3)
+			sStandard_Gruszformel=oRecord1.getString(4)
+			sStandard_Absender=oRecord1.getString(5)
+		Wend
+nochmal:
+		sBezeichnung=oTextField_Document_Name.Label &amp;&quot;n&quot;
+		sDocument_Name=InputBox(&quot;Geben Sie bitte den &quot;&amp; sBezeichnung &amp;&quot; ein!&quot;&amp;_
+								 Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal)
+		if sDocument_Name = &quot;&quot; then
+			vStatus=MsgBox(&quot;Sie haben noch keinen &quot;&amp; sBezeichnung &amp;&quot; eingegeben!&quot;,37,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal
+			elseif vStatus=2 then
+				exit sub
+			End if
+		End if
+		SQL_neues_Document(fsConvertApostroph(sDocument_Name),sSignum_URL,sSignumHeight,sSignumWidth,sStandard_Gruszformel,sStandard_Absender)
+		SQL_update_Tabelle1_DocumentID(1,sKorrespondenz)
+		SQL_update_Steuerung_DocumentID(0,sKorrespondenz)
+		oForm_Steuerung.reload()
+		oForm_Document.reload()
+		SQL_update_Document1_Gesperrt_1(sKorrespondenz,lDocumentID)	
+		SQL_Datum_setzen
+		oForm_Steuerung.reload()
+		Schreibschutz_setzen()
+	End if
+End Sub
+
+Sub Standard_setzen()
+	if oDoc.isReadOnly then 
+		if lDocumentID &lt;&gt; 0 then
+			Dim sSignum_URL as String,sStandard_Gruszformel as String,sStandard_Absender as String
+			sSQL1=&quot;select Signum_URL,SignumHeight,SignumWidth,Standard_Gruszformel,Standard_Absender &quot;&amp;_
+				&quot;from Users where UserID=&quot;&amp; iUserID_lokal
+			oRecord1=oResult(sSQL1)
+			While oRecord1.next()
+				sSignum_URL=oRecord1.getString(1)
+				sSignumHeight=oRecord1.getString(2)
+				sSignumWidth=oRecord1.getString(3)
+				sStandard_Gruszformel=oRecord1.getString(4)
+				sStandard_Absender=oRecord1.getString(5)
+			Wend
+			SQL_Standard_setzen(sSignum_URL,sSignumHeight,sSignumWidth,sStandard_Gruszformel,sStandard_Absender)
+			oForm_Document.reload()
+		End if
+	End if
+End Sub
+
+Sub Document_Name_aendern()
+	if oDoc.isReadOnly then 
+		if lDocumentID &lt;&gt; 0 then
+			if Msg_Schreibschutz=1 then
+		 		exit Sub
+		 	else
+nochmal:
+				sBezeichnung=oTextField_Document_Name.Label &amp;&quot;n&quot;
+				sDocument_Name=InputBox(&quot;Geben Sie bitte den &quot;&amp; sBezeichnung &amp;&quot; ein!&quot;&amp;_
+					Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal,oField_Document_Name.BoundField.string)
+				if sDocument_Name = &quot;&quot; then
+					vStatus=MsgBox(&quot;Sie haben noch keinen &quot;&amp; sBezeichnung &amp;&quot; eingegeben!&quot;,37,sTitle_lokal)
+					if vStatus=4 then
+						goto nochmal
+					elseif vStatus=2 then
+						exit sub
+					End if
+				End if
+				SQL_Document_Name_aendern(fsConvertApostroph(sDocument_Name))
+				oForm_Document.reload()
+			End if
+		End if
+	End if
+End Sub
+
+Sub Rechtschreibtest()
+	if lDocumentID &lt;&gt; 0 then
+		if oList_Projektauswahl.BoundField.Long &gt; 0 then
+			if fbSpellCheck(ThisComponent.CurrentController.GetControl(oList_Projektauswahl).SelectedItem,&quot;Projekt Name&quot;) = False then exit sub
+		End if
+		if fbSpellCheck(oField_Document_Name.BoundField.String,&quot;Dokument Name&quot;) = False then exit sub
+		if fbSpellCheck(oField_Anrede.BoundField.String,&quot;Anrede&quot;) = False then exit sub
+		if fbSpellCheck(oField_Body.BoundField.String,&quot;Dokument Text&quot;) = False then exit sub
+		if fbSpellCheck(oField_Gruszformel.BoundField.String,&quot;Grußformel&quot;) = False then exit sub
+		if fbSpellCheck(oField_Absender.BoundField.String,&quot;Absender&quot;) = False then exit sub
+	End if
+End Sub
+
+</script:module>

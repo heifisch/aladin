@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc as Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_Import as Object
+	oForm_Import=oForm_Steuerung.getByName(&quot;Form_Import&quot;)
+End Function
+
+Function oForm_Steuerung as Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oGrid_Import as Object
+	oGrid_Import=oForm_Import.getByName(&quot;Grid_Import&quot;)
+End Function
+
+Function oList_Hauptgruppenauswahl as Object
+	oList_Hauptgruppenauswahl=oForm_Steuerung.getByName(&quot;List_Hauptgruppenauswahl&quot;)
+End Function
+
+Function oList_Gruppenauswahl as Object
+	oList_Gruppenauswahl=oForm_Steuerung.getByName(&quot;List_Gruppenauswahl&quot;)
+End Function
+
+Function lGruppenID as Long
+	lGruppenID=oList_Gruppenauswahl.BoundField.double
+End Function
+
+Function oField_LeistungsID_nach as Object
+	oField_LeistungsID_nach=oForm_Steuerung.getByName(&quot;Field_LeistungsID_nach&quot;)
+End Function
+
+Function oField_Zeilenumbruch_vor as Object
+	oField_Zeilenumbruch_vor=oForm_Steuerung.getByName(&quot;Field_Zeilenumbruch_vor&quot;)
+End Function
+
+Function oField_Bestellnummer_nach as Object
+	oField_Bestellnummer_nach=oForm_Steuerung.getByName(&quot;Field_Bestellnummer_nach&quot;)
+End Function
+
+Function oField_Kuerzel_vor_LeistungsID as Object
+	oField_Kuerzel_vor_LeistungsID=oForm_Steuerung.getByName(&quot;Field_Kuerzel_vor_LeistungsID&quot;)
+End Function
+
+Function oField_Zeile_auslassen_1 as Object
+	oField_Zeile_auslassen_1=oForm_Steuerung.getByName(&quot;Field_Zeile_auslassen_1&quot;)
+End Function
+
+Function oField_Zeile_auslassen_2 as Object
+	oField_Zeile_auslassen_2=oForm_Steuerung.getByName(&quot;Field_Zeile_auslassen_2&quot;)
+End Function
+
+Function oField_Zeile_auslassen_3 as Object
+	oField_Zeile_auslassen_3=oForm_Steuerung.getByName(&quot;Field_Zeile_auslassen_3&quot;)
+End Function
+
+Function oField_Einheit_Ist as Object
+	oField_Einheit_Ist=oForm_Steuerung.getByName(&quot;Field_Einheit_Ist&quot;)
+End Function
+
+Function oField_Einheit_Soll as Object
+	oField_Einheit_Soll=oForm_Steuerung.getByName(&quot;Field_Einheit_Soll&quot;)
+End Function
+
+Function oField_Leistungsbeschreibung as Object
+	oField_Leistungsbeschreibung=oForm_Import.getByName(&quot;Field_Leistungsbeschreibung&quot;)
+End Function
+
+Function oList_Encoding as Object
+	oList_Encoding=oForm_Steuerung.getByName(&quot;List_Encoding&quot;)
+End Function
+
+Function oCheckBox_Feld_Tauschen as Object
+	oCheckBox_Feld_Tauschen=oForm_Steuerung.getByName(&quot;CheckBox_Feld_Tauschen&quot;)
+End Function
+
+Function oCheckBox_Kuerzel_vor_Bezeichnung as Object
+	oCheckBox_Kuerzel_vor_Bezeichnung=oForm_Steuerung.getByName(&quot;CheckBox_Kuerzel_vor_Bezeichnung&quot;)
+End Function
+
+Function oCheckBox_BestellNr_vor_Bezeichnung as Object
+	oCheckBox_BestellNr_vor_Bezeichnung=oForm_Steuerung.getByName(&quot;CheckBox_BestellNr_vor_Bezeichnung&quot;)
+End Function
+
+Function oCheckBox_BestellNr_nach_Bezeichnung as Object
+	oCheckBox_BestellNr_nach_Bezeichnung=oForm_Steuerung.getByName(&quot;CheckBox_BestellNr_nach_Bezeichnung&quot;)
+End Function
+
+Function sField_LeistungsID_nach as String
+	sField_LeistungsID_nach=oField_LeistungsID_nach.BoundField.String
+End Function
+
+Function sFieldZeilenumbruch_vor as String
+	sFieldZeilenumbruch_vor=oFieldZeilenumbruch_vor.BoundField.String
+End Function
+
+Function sField_Bestellnummer_nach as String
+	sField_Bestellnummer_nach=oField_Bestellnummer_nach.BoundField.String
+End Function
+
+Function sField_Kuerzel_vor_LeistungsID as String
+	sField_Kuerzel_vor_LeistungsID=oField_Kuerzel_vor_LeistungsID.BoundField.String
+End Function
+
+Function sField_Zeile_auslassen_1 as String
+	sField_Zeile_auslassen_1=oField_Zeile_auslassen_1.BoundField.String
+End Function
+
+Function sField_Zeile_auslassen_2 as String
+	sField_Zeile_auslassen_2=oField_Zeile_auslassen_2.BoundField.String
+End Function
+
+Function sField_Zeile_auslassen_3 as String
+	sField_Zeile_auslassen_3=oField_Zeile_auslassen_3.BoundField.String
+End Function
+
+Function sField_Einheit_Ist as String
+	sField_Einheit_Ist=oField_Einheit_Ist.BoundField.String
+End Function
+
+Function sField_Einheit_Soll as String
+	sField_Einheit_Soll=oField_Einheit_Soll.BoundField.String
+End Function
+
+Function sList_Encoding as String
+	sList_Encoding=oList_Encoding.BoundField.Value
+End Function
+
+Function iCheckBox_Feld_Tauschen as Integer
+	iCheckBox_Feld_Tauschen=oCheckBox_Feld_Tauschen.BoundField.Long
+End Function
+
+Function iCheckBox_Kuerzel_vor_Bezeichnung as Integer
+	iCheckBox_Kuerzel_vor_Bezeichnung=oCheckBox_Kuerzel_vor_Bezeichnung.BoundField.Long
+End Function
+
+Function iCheckBox_BestellNr_vor_Bezeichnung as Integer
+	iCheckBox_BestellNr_vor_Bezeichnung=oCheckBox_BestellNr_vor_Bezeichnung.BoundField.Long
+End Function
+
+Function iCheckBox_BestellNr_nach_Bezeichnung as Integer
+	iCheckBox_BestellNr_nach_Bezeichnung=oCheckBox_BestellNr_nach_Bezeichnung.BoundField.Long
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

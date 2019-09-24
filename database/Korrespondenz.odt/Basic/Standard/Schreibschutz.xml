@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Schreibschutz" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Schreibschutz_setzen()
+	oForm_Document.updateRow()
+	if iOption_Serienbrief=1 then
+		oButton_SerienBriefVerteiler_anzeigen.Enabled=True
+	else
+		oButton_SerienBriefVerteiler_anzeigen.Enabled=False
+	end if
+	if iOption_Schreibschutz = 1 then
+		oList_Projektauswahl.Enabled=False
+		oField_ProjektID.Enabled=False
+		oList_Kontaktauswahl.Enabled=False
+		oList_Ansprechpartner.Enabled=False
+		oButton_Projekt_ruecksetzen.Enabled=False
+		oButton_Ansprechpartner_ruecksetzen.Enabled=False
+		oButton_DokumentName_bearbeiten.Enabled=False
+		oList_Leerzeilen.Enabled=False
+		oOption_Serienbrief.Enabled=False
+		oOption_Signum.Enabled=False
+		oField_DocumentID.Enabled=False
+		oField_Erstellungsdatum.Enabled=False
+		oField_Document_Name.Enabled=False
+		oField_Anrede.Enabled=False
+		oField_Gruszformel.Enabled=False
+		oField_Body.Enabled=False
+		oField_Absender.Enabled=False
+		oField_Signum_URL.Enabled=False
+		oField_Signum_Hoehe.Enabled=False
+		oField_Signum_Breite.Enabled=False
+		oField_Referenz.Enabled=False
+		oFileControl_Signum.Enabled=False
+		oForm_Document.reload()
+	else
+		oList_Projektauswahl.Enabled=True
+		oField_ProjektID.Enabled=True
+		oList_Kontaktauswahl.Enabled=True
+		oList_Ansprechpartner.Enabled=True
+		oButton_Projekt_ruecksetzen.Enabled=True
+		oButton_Ansprechpartner_ruecksetzen.Enabled=True
+		oButton_DokumentName_bearbeiten.Enabled=True
+		oList_Leerzeilen.Enabled=True
+		oOption_Serienbrief.Enabled=True
+		oOption_Signum.Enabled=True
+		oField_DocumentID.Enabled=True
+		oField_Anrede.Enabled=True
+		oField_Gruszformel.Enabled=True
+		oField_Erstellungsdatum.Enabled=True
+		oField_Document_Name.Enabled=True
+		oField_Body.Enabled=True
+		oField_Absender.Enabled=True
+		oField_Signum_URL.Enabled=True
+		oField_Signum_Hoehe.Enabled=True
+		oField_Signum_Breite.Enabled=True
+		oField_Referenz.Enabled=True
+		oFileControl_Signum.Enabled=True
+		oForm_Document.reload()
+	End if
+End Sub
+
+Function Msg_Schreibschutz as integer
+Dim vStatus as Variant,sSQL1 as String
+	if iOption_Schreibschutz = 1 then
+		Msg_Schreibschutz=0
+		vStatus=MsgBox(&quot;Der Schreibschutz für dieses Dokument ist gesetzt!&quot; +Chr$(13)+Chr$(13)+_
+			&quot;Wollen Sie diesen jetzt entfernen?&quot;,36,sTitle_lokal)
+		if vStatus = 6 then
+			sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;&quot; set Schreibschutz=0 where DocumentID=&quot;&amp; lDocumentID
+			SQL_execute(sSQL1)
+			oForm_Document.reload()
+			Schreibschutz_setzen()
+		elseif vStatus = 7 then
+			Msg_Schreibschutz=1
+		End if
+	End if
+End Function
+
+</script:module>

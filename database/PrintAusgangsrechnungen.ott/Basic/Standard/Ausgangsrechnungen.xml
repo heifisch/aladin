@@ -1,0 +1,553 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Ausgangsrechnungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Ausgangsrechnungen()
+	Dim vTables as Object
+	Dim vTableAusgangsrechnungen as Variant,vRowsAusgangsrechnungen as Variant
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String,sSQL5 as String
+	Dim iAnzahlAusgangsrechnungen as integer,iCountAusgangsrechnungen
+	Dim oRecordAusgangsrechnungen as Object,oRecordCountAusgangsrechnungen as Object
+	Dim iAnzahlGutschriften as integer,iCountGutschriften as Integer
+	Dim oRecordGutschriften as Object,oRecordCountGutschriften as Object
+	Dim oRecordStartOption as Object
+	Dim iCountDatensaetze as Integer,iAnzahlDatensaetze as Integer
+	Dim vViewCursor as Variant
+	Dim document as Object
+	Dim dispatcher as Object
+	Dim iCount as Integer,iStartoption as Integer
+	
+	Dim sDocumentID as String,sKundennummer as String,sRechnungen1 as String,sGutschriften1 as String
+	Dim sKundenname1 as String,sKundenname2 as String,sRechnungsname as String,sKunden as String
+	Dim sKontaktID as String,sRechnungsnummer as String,sBetragMitMwSt as String,sFaellig as String
+	Dim sBetragNachSkonto as String,sSkontoBis as String,sBetragBezahlt as String,sBezahltAm as String
+	Dim sBank as String,sBLZ as String,sKonto as String,sStatus as String,sProjekte as String
+	Dim cBetragMitMwSt as String,cBetragNachSkonto as String
+	Dim oFrame as Object,oWin as Object
+
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+	SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;PrintAusgangsrechnungen&quot;))
+	SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+	SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 33)
+	
+	oFrame = StarDesktop.getCurrentFrame()
+	oFrame.setTitle(sTitle(iUserID_lokal) &amp;&quot; - Druck: Ausgangsrechnungen&quot;)
+
+	StatusBar(True)
+	ToolBar(True)
+
+	FormSizePrint()
+		
+	vTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	vTables = oDoc.getTextTables
+	vTableAusgangsrechnungen = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTableAusgangsrechnungen = vTables.getByName(&quot;Ausgangsrechnungen&quot;)
+	vRowsAusgangsrechnungen = vTableAusgangsrechnungen.getRows()
+	vViewCursor = oDoc.CurrentController.getViewCursor()
+	
+	sSQL1=&quot;select Startoption from Start where StartID=&quot;&amp; iUserID_lokal
+	oRecordStartOption=oResult(sSQL1)
+	While oRecordStartOption.next()
+		iStartoption=oRecordStartOption.getInt(1)
+	Wend
+	
+	sSQL2=&quot;update Start set Startoption=0,Startlock=0 where StartID=&quot;&amp; iUserID_lokal
+	SQL_execute(sSQL2)
+
+	if iEinstellungsID_lokal=1 _ 
+		OR InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+	then
+		sKunden=&quot;Kunden&quot;
+	else
+		sKunden=&quot;Kunden_&quot; &amp; iEinstellungsID_lokal
+	end if
+	
+	if iEinstellungsID_lokal=1 _ 
+		OR InStr(fsTableList,&quot;;Projekte_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+	then
+		sProjekte=&quot;Projekte&quot;
+	else
+		sProjekte=&quot;Projekte_&quot; &amp; iEinstellungsID_lokal
+	end if
+
+	if iEinstellungsID_lokal=1 _ 
+		OR InStr(fsTableList,&quot;;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		OR InStr(fsTableList,&quot;;Gutschriften1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+	then
+		sRechnungen1=&quot;Rechnungen1&quot;
+		sGutschriften1=&quot;Gutschriften1&quot;
+	else
+		sRechnungen1=&quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal
+		sGutschriften1=&quot;Gutschriften1_&quot; &amp; iEinstellungsID_lokal
+	end if
+	
+	if iStartoption = 0 then
+	
+		SQL_Status_faellig_Ausgangsrechnung(iUserID_lokal)
+		SQL_Status_ueberfaellig_Ausgangsrechnung(iUserID_lokal)
+		SQL_Status_ueberueberfaellig_Ausgangsrechnung(iUserID_lokal)
+		
+		sSQL3=&quot;SELECT COUNT(*)&quot;&amp;_
+			&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE ( t1.Status LIKE &apos;fällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;erinnert&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überfällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;gemahnt&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überüberfällig&apos; )&quot;&amp;_
+			&quot; AND (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;
+		
+		sSQL4=&quot;SELECT COUNT(*)&quot;&amp;_
+			&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE ( t1.Status LIKE &apos;fällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;erinnert&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überfällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;gemahnt&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überüberfällig&apos; )&quot;&amp;_
+			&quot; AND (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;
+			
+		sSQL5=&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.DocumentID,t1.KontaktID,&quot;&amp;_
+			&quot;IF( t4.ProjektID &gt; 0 AND t4.Projekt_Name &lt;&gt; t1.Document_Name, CONCAT( t4.Projekt_Name, &apos;\n&apos;, t1.Document_Name ), t1.Document_Name),&quot;&amp;_
+			&quot;concat( t2.Name1,&apos; &apos;, t2.Vorname ) AS Name1,t2.Name2,&quot;&amp;_
+			&quot;t1.Zahlbetrag_mit_MwSt,t1.gueltig_bis,&quot;&amp;_
+			&quot;t1.Summe_nach_Skonto,t1.Skonto_bis,&quot;&amp;_
+			&quot;t1.Summe_bezahlt,t1.bezahlt_am,t1.Status&quot;&amp;_
+			&quot; FROM ((&quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; LEFT JOIN &quot;&amp; sProjekte &amp;&quot; as t4&quot;&amp;_
+			&quot; ON t4.ProjektID = t1.ProjektID)&quot;&amp;_
+			&quot; INNER JOIN &quot;&amp; sKunden &amp;&quot; as t2&quot;&amp;_
+			&quot; ON t2.KontaktID = t1.KontaktID)&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3 &quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE ( t1.Status LIKE &apos;fällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;erinnert&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überfällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;gemahnt&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überüberfällig&apos; )&quot;&amp;_
+			&quot; AND (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;&amp;_
+			&quot; UNION &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.DocumentID,t1.KontaktID,&quot;&amp;_
+			&quot;concat(&apos;**** Gutschrift!! ****\n&apos;,IF( t4.ProjektID &gt; 0 AND t4.Projekt_Name &lt;&gt; t1.Document_Name, CONCAT( t4.Projekt_Name, &apos;\n&apos;, t1.Document_Name ), t1.Document_Name)),&quot;&amp;_
+			&quot;concat( t2.Name1,&apos; &apos;, t2.Vorname ) AS Name1,t2.Name2,&quot;&amp;_
+			&quot;t1.Zahlbetrag_mit_MwSt,t1.gueltig_bis,&quot;&amp;_
+			&quot;t1.Summe_nach_Skonto,t1.Skonto_bis,&quot;&amp;_
+			&quot;t1.Summe_bezahlt,t1.bezahlt_am,t1.Status &quot;&amp;_
+			&quot; FROM ((&quot;&amp; sGutschriften1 &amp;&quot; as t1&quot;&amp;_
+			&quot; LEFT JOIN &quot;&amp; sProjekte &amp;&quot; as t4&quot;&amp;_
+			&quot; ON t4.ProjektID = t1.ProjektID)&quot;&amp;_
+			&quot; INNER JOIN &quot;&amp; sKunden &amp;&quot; as t2&quot;&amp;_
+			&quot; ON t2.KontaktID = t1.KontaktID)&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3 &quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE ( t1.Status LIKE &apos;fällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;erinnert&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überfällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;gemahnt&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überüberfällig&apos; )&quot;&amp;_
+			&quot; AND (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;&amp;_
+			&quot; ORDER BY DocumentID ASC&quot;
+	
+	elseif iStartoption = 1 then
+
+		sSQL3=&quot;SELECT COUNT(*)&quot;&amp;_
+			&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Status=t3.Status AND t3.Status IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Status like &apos;%&apos; AND t3.Status IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;
+		
+		sSQL4=&quot;SELECT COUNT(*)&quot;&amp;_
+			&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Status=t3.Status AND t3.Status IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Status like &apos;%&apos; AND t3.Status IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;
+		
+		sSQL5=&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.DocumentID,t1.KontaktID,&quot;&amp;_
+			&quot;IF( t4.ProjektID &gt; 0 AND t4.Projekt_Name &lt;&gt; t1.Document_Name, CONCAT( t4.Projekt_Name, &apos;\n&apos;, t1.Document_Name ), t1.Document_Name),&quot;&amp;_
+			&quot;concat( t2.Name1,&apos; &apos;, t2.Vorname ) AS Name1,t2.Name2,&quot;&amp;_
+			&quot;t1.Zahlbetrag_mit_MwSt,t1.gueltig_bis,&quot;&amp;_
+			&quot;t1.Summe_nach_Skonto,t1.Skonto_bis,&quot;&amp;_
+			&quot;t1.Summe_bezahlt,t1.bezahlt_am,t1.Status &quot;&amp;_
+			&quot; FROM ((&quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; LEFT JOIN &quot;&amp; sProjekte &amp;&quot; as t4&quot;&amp;_
+			&quot; ON t4.ProjektID = t1.ProjektID)&quot;&amp;_
+			&quot; INNER JOIN &quot;&amp; sKunden &amp;&quot; as t2&quot;&amp;_
+			&quot; ON t2.KontaktID = t1.KontaktID)&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3 &quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Status=t3.Status AND t3.Status IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Status like &apos;%&apos; AND t3.Status IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;&amp;_
+			&quot; UNION &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.DocumentID,t1.KontaktID,&quot;&amp;_
+			&quot;concat(&apos;**** Gutschrift!! ****\n&apos;,IF( t4.ProjektID &gt; 0 AND t4.Projekt_Name &lt;&gt; t1.Document_Name, CONCAT( t4.Projekt_Name, &apos;\n&apos;, t1.Document_Name ), t1.Document_Name)),&quot;&amp;_
+			&quot;concat( t2.Name1,&apos; &apos;, t2.Vorname ) AS Name1,t2.Name2,&quot;&amp;_
+			&quot;t1.Zahlbetrag_mit_MwSt,t1.gueltig_bis,&quot;&amp;_
+			&quot;t1.Summe_nach_Skonto,t1.Skonto_bis,&quot;&amp;_
+			&quot;t1.Summe_bezahlt,t1.bezahlt_am,t1.Status &quot;&amp;_
+			&quot; FROM ((&quot;&amp; sGutschriften1 &amp;&quot; as t1&quot;&amp;_
+			&quot; LEFT JOIN &quot;&amp; sProjekte &amp;&quot; as t4&quot;&amp;_
+			&quot; ON t4.ProjektID = t1.ProjektID)&quot;&amp;_
+			&quot; INNER JOIN &quot;&amp; sKunden &amp;&quot; as t2&quot;&amp;_
+			&quot; ON t2.KontaktID = t1.KontaktID)&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3 &quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Status=t3.Status AND t3.Status IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Status like &apos;%&apos; AND t3.Status IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;&amp;_
+			&quot; ORDER BY DocumentID ASC&quot;
+
+	elseif iStartoption = 2 then
+
+		sSQL3=&quot;SELECT COUNT(*)&quot;&amp;_
+			&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE (t1.Status LIKE &apos;fällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;skontofähig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;berechnet&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;erinnert&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überfällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;gemahnt&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überüberfällig&apos; )&quot;&amp;_
+			&quot; AND (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;
+		
+		sSQL4=&quot;SELECT COUNT(*)&quot;&amp;_
+			&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE (t1.Status LIKE &apos;fällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;skontofähig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;berechnet&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;erinnert&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überfällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;gemahnt&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überüberfällig&apos; )&quot;&amp;_
+			&quot; AND (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;
+			
+		sSQL5=&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.DocumentID,t1.KontaktID,&quot;&amp;_
+			&quot;IF( t4.ProjektID &gt; 0 AND t4.Projekt_Name &lt;&gt; t1.Document_Name, CONCAT( t4.Projekt_Name, &apos;\n&apos;, t1.Document_Name ), t1.Document_Name),&quot;&amp;_
+			&quot;concat( t2.Name1,&apos; &apos;, t2.Vorname ) AS Name1,t2.Name2,&quot;&amp;_
+			&quot;t1.Zahlbetrag_mit_MwSt,t1.gueltig_bis,&quot;&amp;_
+			&quot;t1.Summe_nach_Skonto,t1.Skonto_bis,&quot;&amp;_
+			&quot;t1.Summe_bezahlt,t1.bezahlt_am,t1.Status &quot;&amp;_
+			&quot; FROM ((&quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; LEFT JOIN &quot;&amp; sProjekte &amp;&quot; as t4&quot;&amp;_
+			&quot; ON t4.ProjektID = t1.ProjektID)&quot;&amp;_
+			&quot; INNER JOIN &quot;&amp; sKunden &amp;&quot; as t2&quot;&amp;_
+			&quot; ON t2.KontaktID = t1.KontaktID)&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3 &quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE ( t1.Status LIKE &apos;fällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;skontofähig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;berechnet&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;erinnert&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überfällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;gemahnt&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überüberfällig&apos; )&quot;&amp;_
+			&quot; AND (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;&amp;_
+			&quot; UNION &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.DocumentID,t1.KontaktID,&quot;&amp;_
+			&quot;concat(&apos;**** Gutschrift!! ****\n&apos;,IF( t4.ProjektID &gt; 0 AND t4.Projekt_Name &lt;&gt; t1.Document_Name, CONCAT( t4.Projekt_Name, &apos;\n&apos;, t1.Document_Name ), t1.Document_Name)),&quot;&amp;_
+			&quot;concat( t2.Name1,&apos; &apos;, t2.Vorname ) AS Name1,t2.Name2,&quot;&amp;_
+			&quot;t1.Zahlbetrag_mit_MwSt,t1.gueltig_bis,&quot;&amp;_
+			&quot;t1.Summe_nach_Skonto,t1.Skonto_bis,&quot;&amp;_
+			&quot;t1.Summe_bezahlt,t1.bezahlt_am,t1.Status &quot;&amp;_
+			&quot; FROM ((&quot;&amp; sGutschriften1 &amp;&quot; as t1&quot;&amp;_
+			&quot; LEFT JOIN &quot;&amp; sProjekte &amp;&quot; as t4&quot;&amp;_
+			&quot; ON t4.ProjektID = t1.ProjektID)&quot;&amp;_
+			&quot; INNER JOIN &quot;&amp; sKunden &amp;&quot; as t2&quot;&amp;_
+			&quot; ON t2.KontaktID = t1.KontaktID)&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3 &quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE ( t1.Status LIKE &apos;fällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;skontofähig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;berechnet&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;erinnert&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überfällig&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;gemahnt&apos; &quot;&amp;_
+			&quot; OR t1.Status LIKE &apos;überüberfällig&apos; )&quot;&amp;_
+			&quot; AND (((YEAR(t1.Erstellungsdatum)=t3.Jahr AND t3.Jahr IS NOT NULL)&quot;&amp;_
+			&quot; OR (YEAR(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Jahr IS NULL))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Erstellungsdatum)=t3.Monat AND t3.Monat IS NOT NULL)&quot;&amp;_
+			&quot; OR (MONTH(t1.Erstellungsdatum) like &apos;%&apos; AND t3.Monat IS NULL))&quot;&amp;_
+			&quot; AND ((t1.Document_Name like concat(&apos;%&apos;,t3.Suchstring,&apos;%&apos;) AND t3.Suchstring IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.Document_Name like &apos;%&apos; AND t3.Suchstring IS NULL))&quot;&amp;_
+			&quot; AND ((t1.ProjektID=t3.ProjektID AND LENGTH(t3.ProjektID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.ProjektID) IS NULL OR LENGTH(t3.ProjektID)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t3.KundenID AND t3.KundenID IS NOT NULL)&quot;&amp;_
+			&quot; OR (t1.KontaktID like &apos;%&apos; AND t3.KundenID IS NULL)))&quot;&amp;_
+			&quot; ORDER BY DocumentID ASC&quot;
+
+	elseif iStartoption = 3 then
+	
+		sSQL3=&quot;SELECT COUNT(*)&quot;&amp;_
+			&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+			&quot; INNER JOIN (&quot;&amp;_
+				&quot; SELECT ProjektID,AZ&quot;&amp;_
+				&quot; FROM &quot;&amp; sRechnungen1 &amp;_
+				&quot; GROUP BY ProjektID&quot;&amp;_
+				&quot; Having AZ = MIN(AZ) AND AZ=1&quot;&amp;_
+				&quot; ORDER BY AZ ASC) AS t2&quot;&amp;_
+			&quot; ON t1.ProjektID = t2.ProjektID&quot;
+
+		sSQL4=&quot;SELECT 0&quot;
+		
+		sSQL5=&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.DocumentID,t1.KontaktID,&quot;&amp;_
+			&quot;IF( t4.ProjektID &gt; 0, CONCAT( t4.Projekt_Name, &apos;\n&apos;, t1.Document_Name ), t1.Document_Name),&quot;&amp;_
+			&quot;concat( t2.Name1,&apos; &apos;, t2.Vorname ) AS Name1,t2.Name2,&quot;&amp;_
+			&quot;t1.Zahlbetrag_mit_MwSt,t1.gueltig_bis,&quot;&amp;_
+			&quot;t1.Summe_nach_Skonto,t1.Skonto_bis,&quot;&amp;_
+			&quot;t1.Summe_bezahlt,t1.bezahlt_am,t1.Status &quot;&amp;_
+			&quot; FROM (((&quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN (&quot;&amp;_
+				&quot; SELECT ProjektID,AZ&quot;&amp;_
+				&quot; FROM &quot;&amp; sRechnungen1 &amp;_
+				&quot; GROUP BY ProjektID&quot;&amp;_
+				&quot; Having AZ = MIN(AZ) AND AZ=1&quot;&amp;_
+				&quot; ORDER BY AZ ASC) AS t2&quot;&amp;_
+			&quot; ON t1.ProjektID = t2.ProjektID)&quot;&amp;_
+			&quot; LEFT JOIN &quot;&amp; sProjekte &amp;&quot; as t4&quot;&amp;_
+			&quot; ON t4.ProjektID = t1.ProjektID)&quot;&amp;_
+			&quot; INNER JOIN &quot;&amp; sKunden &amp;&quot; as t2&quot;&amp;_
+			&quot; ON t2.KontaktID = t1.KontaktID)&quot;&amp;_
+			&quot; ORDER BY t1.ProjektID ASC,t1.DocumentID ASC&quot;	
+
+	elseif iStartoption = 4 then
+	
+		sSQL3=&quot;SELECT COUNT(*)&quot;&amp;_
+			&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+			&quot; INNER JOIN (&quot;&amp;_
+				&quot; SELECT ProjektID,AZ,Erstellungsdatum&quot;&amp;_
+				&quot; FROM &quot;&amp; sRechnungen1 &amp;_
+				&quot; WHERE (YEAR(Erstellungsdatum) &lt; YEAR(CURDATE()))&quot;&amp;_
+				&quot; GROUP BY ProjektID&quot;&amp;_
+				&quot; Having (AZ = 1 AND AZ = MIN(AZ))&quot;&amp;_
+				&quot; ORDER BY AZ ASC) AS t2&quot;&amp;_
+			&quot; ON t1.ProjektID = t2.ProjektID&quot;&amp;_
+			&quot; WHERE t1.AZ = 1&quot;
+
+		sSQL4=&quot;SELECT 0&quot;
+		
+		sSQL5=&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.DocumentID,t1.KontaktID,&quot;&amp;_
+			&quot;IF( t4.ProjektID &gt; 0, CONCAT( t4.Projekt_Name, &apos;\n&apos;, t1.Document_Name ), t1.Document_Name),&quot;&amp;_
+			&quot;concat( t2.Name1,&apos; &apos;, t2.Vorname ) AS Name1,t2.Name2,&quot;&amp;_
+			&quot;t1.Zahlbetrag_mit_MwSt,t1.gueltig_bis,&quot;&amp;_
+			&quot;t1.Summe_nach_Skonto,t1.Skonto_bis,&quot;&amp;_
+			&quot;t1.Summe_bezahlt,t1.bezahlt_am,t1.Status &quot;&amp;_
+			&quot; FROM (((&quot;&amp; sRechnungen1 &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN (&quot;&amp;_
+				&quot; SELECT ProjektID,AZ,Erstellungsdatum&quot;&amp;_
+				&quot; FROM &quot;&amp; sRechnungen1 &amp;_
+				&quot; WHERE (YEAR(Erstellungsdatum) &lt; YEAR(CURDATE()))&quot;&amp;_
+				&quot; GROUP BY ProjektID&quot;&amp;_
+				&quot; Having (AZ = 1 AND AZ = MIN(AZ))&quot;&amp;_
+				&quot; ORDER BY AZ ASC) AS t2&quot;&amp;_
+			&quot; ON t1.ProjektID = t2.ProjektID)&quot;&amp;_
+			&quot; LEFT JOIN &quot;&amp; sProjekte &amp;&quot; as t4&quot;&amp;_
+			&quot; ON t4.ProjektID = t1.ProjektID)&quot;&amp;_
+			&quot; INNER JOIN &quot;&amp; sKunden &amp;&quot; as t2&quot;&amp;_
+			&quot; ON t2.KontaktID = t1.KontaktID)&quot;&amp;_
+			&quot; WHERE t1.AZ = 1&quot;&amp;_
+			&quot; ORDER BY t1.ProjektID ASC,t1.DocumentID ASC&quot;	
+
+	End if
+	
+	oRecordCountAusgangsrechnungen=oResult(sSQL3)
+	While oRecordCountAusgangsrechnungen.next()
+		iAnzahlAusgangsrechnungen=CInt(oRecordCountAusgangsrechnungen.getString(1))
+	Wend
+	oRecordCountGutschriften=oResult(sSQL4)
+	While oRecordCountGutschriften.next()
+		iAnzahlGutschriften=CInt(oRecordCountGutschriften.getString(1))
+	Wend
+	iAnzahlDatensaetze=iAnzahlAusgangsrechnungen+iAnzahlGutschriften
+	
+		vViewCursor.jumpToEndOfPage()
+		vViewCursor.goUp(1, False)
+	
+		If NOT IsEmpty(vViewCursor.Cell) Then
+			For iCount=1 to iAnzahlDatensaetze-1
+				document = ThisComponent.CurrentController.Frame
+				dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+				dispatcher.executeDispatch(document, &quot;.uno:InsertRows&quot;, &quot;&quot;, 0, Array())
+			Next
+		End If
+	
+	iCountDatensaetze=1
+	
+	Do While iAnzahlDatensaetze &gt;= iCountDatensaetze
+		oRecordAusgangsrechnungen=oResult_Scroll(sSQL5)
+		oRecordAusgangsrechnungen.absolute(iCountDatensaetze)
+		sDocumentID=oRecordAusgangsrechnungen.getString(1)
+		sKontaktID=oRecordAusgangsrechnungen.getString(2)
+		sRechnungsname=oRecordAusgangsrechnungen.getString(3)
+		sKundenname1=oRecordAusgangsrechnungen.getString(4)
+		sKundenname2=oRecordAusgangsrechnungen.getString(5)
+		sBetragMitMwSt=oRecordAusgangsrechnungen.getString(6)
+		sFaellig=oRecordAusgangsrechnungen.getString(7)
+		sBetragNachSkonto=oRecordAusgangsrechnungen.getString(8)
+		sSkontoBis=oRecordAusgangsrechnungen.getString(9)
+		sBetragBezahlt=oRecordAusgangsrechnungen.getString(10)
+		sBezahltAm=oRecordAusgangsrechnungen.getString(11)
+		sStatus=oRecordAusgangsrechnungen.getString(12)
+	
+		iCountDatensaetze=iCountDatensaetze + 1
+	
+		vTableAusgangsrechnungen.getCellByName(&quot;A&quot; &amp; iCountDatensaetze ).String=sDocumentID
+		vTableAusgangsrechnungen.getCellByName(&quot;B&quot; &amp; iCountDatensaetze ).String=sRechnungsname
+		vTableAusgangsrechnungen.getCellByName(&quot;C&quot; &amp; iCountDatensaetze ).String=sKontaktID
+		vTableAusgangsrechnungen.getCellByName(&quot;D&quot; &amp; iCountDatensaetze &amp; &quot;.1.1&quot;).String=sKundenname1
+		vTableAusgangsrechnungen.getCellByName(&quot;D&quot; &amp; iCountDatensaetze &amp; &quot;.1.2&quot;).String=sKundenname2
+		vTableAusgangsrechnungen.getCellByName(&quot;E&quot; &amp; iCountDatensaetze &amp; &quot;.1.1&quot;).String=fTausenderpunkt(fZahlMitPunkt(sBetragMitMwSt))
+		vTableAusgangsrechnungen.getCellByName(&quot;E&quot; &amp; iCountDatensaetze &amp; &quot;.1.2&quot;).String=fConvDatum(sFaellig)
+		if sBetragNachSkonto &lt;&gt; &quot;&quot; then
+			vTableAusgangsrechnungen.getCellByName(&quot;F&quot; &amp; iCountDatensaetze &amp; &quot;.1.1&quot;).String=fTausenderpunkt(fZahlMitPunkt(sBetragNachSkonto))
+		End if
+		vTableAusgangsrechnungen.getCellByName(&quot;F&quot; &amp; iCountDatensaetze &amp; &quot;.1.2&quot;).String=fConvDatum(sSkontoBis)
+		if sBetragBezahlt &lt;&gt; &quot;&quot; then
+			vTableAusgangsrechnungen.getCellByName(&quot;G&quot; &amp; iCountDatensaetze &amp; &quot;.1.1&quot;).String=fTausenderpunkt(fZahlMitPunkt(sBetragBezahlt))
+		End if
+		vTableAusgangsrechnungen.getCellByName(&quot;G&quot; &amp; iCountDatensaetze &amp; &quot;.1.2&quot;).String=fConvDatum(sBezahltAm)
+		vTableAusgangsrechnungen.getCellByName(&quot;H&quot; &amp; iCountDatensaetze).String=sStatus
+	Loop
+
+End Sub
+
+Function oDoc as Object
+	oDoc=thiscomponent
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+
+
+</script:module>

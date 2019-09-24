@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc as Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_Warenbestand as Object
+	oForm_Warenbestand=oDoc.DrawPage.Forms.getByName(&quot;Form_Warenbestand&quot;)
+End Function
+
+Function oForm_Steuerung as Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oGrid_Warenbestand as Object
+	oGrid_Warenbestand=oForm_Warenbestand.getByName(&quot;Grid_Warenbestand&quot;)
+End Function
+
+Function oColumn_LeistungsID as Object
+	oColumn_LeistungsID=oGrid_Warenbestand.getByName(&quot;LeistungsID&quot;)
+End Function
+
+Function oColumn_Warenbestand as Object
+	oColumn_Warenbestand=oGrid_Warenbestand.getByName(&quot;Warenbestand&quot;)
+End Function
+
+Function oList_Leistungsauswahl as Object
+	oList_Leistungsauswahl=oForm_Steuerung.getByName(&quot;List_Leistungsauswahl&quot;)
+End Function
+
+Function oList_Hauptgruppenauswahl as Object
+	oList_Hauptgruppenauswahl=oForm_Steuerung.getByName(&quot;List_Hauptgruppenauswahl&quot;)
+End Function
+
+Function oList_Gruppenauswahl as Object
+	oList_Gruppenauswahl=oForm_Steuerung.getByName(&quot;List_Gruppenauswahl&quot;)
+End Function
+
+Function oField_Suchstring as Object
+	oField_Suchstring=oForm_Steuerung.getByName(&quot;Field_Suchstring&quot;)
+End Function
+
+Function oList_Inventurwert as Object
+	oList_Inventurwert=oForm_Warenbestand.getByName(&quot;List_Inventurwert&quot;)
+End Function
+
+Function oTabelle_Bestandsdaten as Object
+	oTabelle_Bestandsdaten=oForm_Warenbestand.getByName(&quot;Tabelle_Bestandsdaten&quot;)
+End Function
+
+Function fsWarenbestand as String
+	fsWarenbestand=oColumn_Warenbestand.BoundField.value
+End Function
+
+Function fsLeistungsID as String
+	fsLeistungsID=oColumn_LeistungsID.BoundField.value
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

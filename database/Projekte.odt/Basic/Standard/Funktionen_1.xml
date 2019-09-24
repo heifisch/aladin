@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc as Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_Projekt as Object
+	oForm_Projekt=oForm_Steuerung.getByName(&quot;Form_Projekt&quot;)
+End Function
+
+Function oForm_Dokumente as Object
+	oForm_Dokumente=oForm_Steuerung.getByName(&quot;Form_Dokumente&quot;)
+End Function
+
+Function oForm_Steuerung as Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oField_ProjektID as Object
+	oField_ProjektID=oForm_Projekt.getByName(&quot;Field_ProjektID&quot;)
+End Function
+
+Function oField_ProjektName as Object
+	oField_ProjektName=oForm_Projekt.getByName(&quot;Field_ProjektName&quot;)
+End Function
+
+Function oField_Erstellungsdatum as Object
+	oField_Erstellungsdatum=oForm_Projekt.getByName(&quot;Field_Erstellungsdatum&quot;)
+End Function
+
+Function oField_Baubeginn as Object
+	oField_Baubeginn=oForm_Projekt.getByName(&quot;Field_Baubeginn&quot;)
+End Function
+
+Function oField_KontaktID as Object
+	oField_KontaktID=oForm_Projekt.getByName(&quot;Field_KontaktID&quot;)
+End Function
+
+Function oField_Summe_ohne_MwSt as Object
+	oField_Summe_ohne_MwSt=oForm_Projekt.getByName(&quot;Field_Betrag_ohne_MwSt&quot;)
+End Function
+
+Function oField_Summe_mit_MwSt as Object
+	oField_Summe_mit_MwSt=oForm_Projekt.getByName(&quot;Field_Betrag_mit_MwSt&quot;)
+End Function
+
+Function oField_MwSt_Satz as Object
+	oField_MwSt_Satz=oForm_Projekt.getByName(&quot;Field_MwSt_Satz&quot;)
+End Function
+
+Function oField_MwSt as Object
+	oField_MwSt=oForm_Projekt.getByName(&quot;Field_MwSt&quot;)
+End Function
+
+Function oField_Suchstring as Object
+	oField_Suchstring=oForm_Steuerung.getByName(&quot;Field_Suchstring&quot;)
+End Function
+
+Function oList_Projektauswahl as Object
+	oList_Projektauswahl=oForm_Steuerung.getByName(&quot;List_Projektauswahl&quot;)
+End Function
+
+Function oList_Kunden as Object
+	oList_Kunden=oForm_Projekt.getByName(&quot;List_Kunden&quot;)
+End Function
+
+Function oList_Filter_Jahr as Object
+	oList_Filter_Jahr=oForm_Steuerung.getByName(&quot;List_Filter_Jahr&quot;)
+End Function
+
+Function oList_Filter_Status as Object
+	oList_Filter_Status=oForm_Steuerung.getByName(&quot;List_Filter_Status&quot;)
+End Function
+
+Function oList_Filter_Kunde as Object
+	oList_Filter_Kunde=oForm_Steuerung.getByName(&quot;List_Filter_Kunde&quot;)
+End Function
+
+Function oList_Status as Object
+	oList_Status=oForm_Projekt.getByName(&quot;List_Status&quot;)
+End Function
+
+Function lProjektID AS long
+	sSQL1=&quot;SELECT COALESCE(ProjektID,0) FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lProjektID=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function lKontaktID as long
+	lKontaktID=oField_KontaktID.BoundField.value
+End Function
+
+Function sField_Baubeginn as string
+	sField_Baubeginn=oField_Baubeginn.BoundField.string
+End Function
+
+Function sField_Erstellungsdatum as string
+	sField_Erstellungsdatum=oField_Erstellungsdatum.BoundField.string
+End Function
+
+Function sField_ProjektName as string
+	sField_ProjektName=oField_ProjektName.BoundField.string
+End Function
+
+Function fAnzahlDatensaetzeProjekte(sTabelle as String,lProjektID as Long) as integer
+	Dim oRecord1 as Object
+	Dim sSQL1 as String
+	sSQL1=&quot;SELECT count(*) from &quot;&amp; sTabelle &amp;&quot; where ProjektID=&quot;&amp; lProjektID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fAnzahlDatensaetzeProjekte=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function flProjektID_import as long
+	sSQL1=&quot;SELECT Max(ProjektID) from &quot;&amp; sProjekte
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		flProjektID_import=oRecord1.getString(1)
+	Wend
+End Function
+
+Function flMax_Datensatz(sTabelle as String,sCol as String) as long
+	sSQL1=&quot;SELECT Max(&quot;&amp; sCol &amp;&quot;) from &quot;&amp; sTabelle
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		flMax_Datensatz=oRecord1.getInt(1)
+	Wend	
+End Function
+
+Function flProjektID_import_auto(iRefresh as integer) as string
+	STATIC lProjektID_2 as String
+	Dim sProjektID_1 as String,sProjektID_2 as String
+	Dim sJahr as String,sJahr_1 as String,sJahr_2 as String
+	Dim sMonat as String,sMonat_1 as String,sMonat_2 as String
+	Dim iMonat as integer
+	Dim sNummer_1 as String,sNummer_2 as String
+	if iRefresh = 1 then	
+		sProjektID_1=flMax_Datensatz(sProjekte,&quot;ProjektID&quot;)
+		sJahr_1=Mid(sProjektID_1,1,4)
+		sMonat_1=Mid(sProjektID_1,5,2)
+		sNummer_1=Mid(sProjektID_1,7)
+		sJahr=Year(Now)
+		sMonat=Month(Now)
+		iMonat=Month(Now)
+		if iMonat&lt;10 then
+			sMonat= &quot;0&quot; &amp; Month(Now)
+		End if
+		if sJahr_1=sJahr then
+			sJahr_2=sJahr_1
+			sNummer_2=sNummer_1
+		else
+			sJahr_2=sJahr
+			sNummer_2=&quot;0001&quot;
+		End if
+		if sMonat_1=sMonat then
+			sMonat_2=sMonat_1
+		else
+			sMonat_2=sMonat
+		End if
+		sProjektID_2=sJahr_2 &amp; sMonat_2 &amp; sNummer_2
+		lProjektID_2=sProjektID_2
+	End if
+	flProjektID_import=lProjektID_2
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

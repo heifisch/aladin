@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="create_6" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+Sub SQL_create_Rechnungen1
+	sSQL=&quot;create table Rechnungen1 &quot;&amp;_
+		&quot;(DocumentID int(11)not null auto_increment,Document_TypID int(2) not null default 5,ProjektID int(10),&quot;&amp;_
+		&quot;Document_Typ varchar(100) default &apos;Rechnung&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
+		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),&quot;&amp;_
+		&quot;AnsprechpartnerID int(10),Erstellungsdatum date not null default 0,gueltig_bis date not null default 0,Skonto_bis date,&quot;&amp;_
+		&quot;Minutenverrechnungssatz decimal(7,4),Materialaufschlagsatz decimal(5,2),MwSt_Satz decimal(4,1) not null default 0,&quot;&amp;_
+		&quot;Rabatt_Satz decimal(4,1) not null default 0,Skonto_Satz decimal(4,1),&quot;&amp;_
+		&quot;Korrektur_Vorzeichen char(1) not null default &apos;-&apos;,Korrektur_Satz decimal(5,2) not null default 0,Korrektur_Anlass varchar(255),&quot;&amp;_
+		&quot;Summe_ohne_MwSt decimal(11,2),Rabatt decimal(11,2),Summe_nach_Rabatt decimal(11,2),Korrektur decimal(11,2),&quot;&amp;_
+		&quot;Summe_nach_Korrektur decimal(11,2),MwSt decimal(11,2),Summe_mit_MwSt decimal(11,2),&quot;&amp;_
+		&quot;AZ_ohne_MwSt decimal(11,2),AZ_MwSt decimal(11,2),AZ_mit_MwSt decimal(11,2),&quot;&amp;_
+		&quot;Zahlbetrag_ohne_MwSt decimal(11,2),Zahlbetrag_MwSt decimal(11,2),Zahlbetrag_mit_MwSt decimal(11,2),Skonto decimal(11,2),&quot;&amp;_
+		&quot;Summe_nach_Skonto decimal(11,2),Bemerkung varchar(2000),Status varchar(20)not null default &apos;berechnet&apos;,&quot;&amp;_
+		&quot;Pos_Format varchar(10) default &apos;1&apos;,Gesperrt int(2)not null default 0,Schreibschutz int(1) not null default 0,AZ int(1) not null default 0,Materialeinsatz decimal(11,2),&quot;&amp;_
+		&quot;Bauzeit_Tage decimal(11,2),Bauzeit_Stunden decimal(11,2),Skonto_Tage int(3),Faellig_Tage int(3),Leerzeilen varchar(50),&quot;&amp;_
+		&quot;erinnert_am date,erinnert_bis date,gemahnt_am date,gemahnt_bis date,bezahlt_am date,Summe_bezahlt decimal(11,2) not null default 0,&quot;&amp;_
+		&quot;Sicherheitseinbehalt decimal(11,2) not null default 0,Kasse int (1)not null default 0,gebucht int(1) not null default 0,&quot;&amp;_
+		&quot;Autor int(3) not null default 0,Geaendert_durch int(3) not null default 0,Geaendert_am date,Rechte int(1) not null default 0,&quot;&amp;_
+		&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Rechnungen2
+	sSQL=&quot;create table Rechnungen2 &quot;&amp;_
+		&quot;(PositionsID int(11)not null auto_increment,DocumentID int(10)not null default 0,Pos int(6),LV_Pos varchar(10),Pos_TypID int(1),&quot;&amp;_
+		&quot;LeistungsID varchar(25) not null default &apos;&apos;,Bestellnummer varchar(25) not null default &apos;&apos;,Leistungsbezeichnung varchar(255),Leistungsbeschreibung varchar(10000) not null,&quot;&amp;_
+		&quot;Einheit varchar(10),Menge decimal(9,2) not null default 0,&quot;&amp;_
+		&quot;Einkaufspreis decimal(11,2) not null default 0,Materialaufschlagsatz decimal(5,2),Bauzeit decimal(9,2) not null default 0,&quot;&amp;_
+		&quot;Minutenverrechnungssatz decimal(7,4),Lieferung decimal(11,2) not null default 0,Leistung decimal(11,2) not null default 0,&quot;&amp;_
+		&quot;EP decimal(11,2) not null default 0,GP decimal(11,2) not null default 0,GZ decimal(11,2) not null default 0,primary key(PositionsID))&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;CREATE INDEX Index_DocumentID on Rechnungen2(DocumentID)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Gutschriften1
+	sSQL=&quot;create table Gutschriften1 &quot;&amp;_
+		&quot;(DocumentID int(11)not null auto_increment,Document_TypID int(2) not null default 6,ProjektID int(10),&quot;&amp;_
+		&quot;Document_Typ varchar(100) default &apos;Gutschrift&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
+		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),&quot;&amp;_
+		&quot;AnsprechpartnerID int(10),Erstellungsdatum date not null default 0,gueltig_bis date not null default 0,Skonto_bis date,&quot;&amp;_
+		&quot;Minutenverrechnungssatz decimal(7,4),Materialaufschlagsatz decimal(5,2),MwSt_Satz decimal(4,1) not null default 0,&quot;&amp;_
+		&quot;Rabatt_Satz decimal(4,1) not null default 0,Skonto_Satz decimal(4,1),&quot;&amp;_
+		&quot;Korrektur_Vorzeichen char(1) not null default &apos;-&apos;,Korrektur_Satz decimal(5,2) not null default 0,Korrektur_Anlass varchar(255),&quot;&amp;_
+		&quot;Summe_ohne_MwSt decimal(11,2),Rabatt decimal(11,2),Summe_nach_Rabatt decimal(11,2),Korrektur decimal(11,2),&quot;&amp;_
+		&quot;Summe_nach_Korrektur decimal(11,2),MwSt decimal(11,2),Summe_mit_MwSt decimal(11,2),&quot;&amp;_
+		&quot;AZ_ohne_MwSt decimal(11,2),AZ_MwSt decimal(11,2),AZ_mit_MwSt decimal(11,2),&quot;&amp;_
+		&quot;Zahlbetrag_ohne_MwSt decimal(11,2),Zahlbetrag_MwSt decimal(11,2),Zahlbetrag_mit_MwSt decimal(11,2),Skonto decimal(11,2),&quot;&amp;_
+		&quot;Summe_nach_Skonto decimal(11,2),Bemerkung varchar(2000),Status varchar(20)not null default &apos;berechnet&apos;,&quot;&amp;_
+		&quot;Pos_Format varchar(10) default &apos;1&apos;,Gesperrt int(2)not null default 0,Schreibschutz int(1) not null default 0,AZ int(1) not null default 0,Materialeinsatz decimal(11,2),&quot;&amp;_
+		&quot;Bauzeit_Tage decimal(11,2),Bauzeit_Stunden decimal(11,2),Skonto_Tage int(3),Faellig_Tage int(3),Leerzeilen varchar(50),&quot;&amp;_
+		&quot;erinnert_am date,erinnert_bis date,gemahnt_am date,gemahnt_bis date,bezahlt_am date,Summe_bezahlt decimal(11,2),&quot;&amp;_
+		&quot;Sicherheitseinbehalt decimal(11,2) not null default 0,Kasse int (1)not null default 0,gebucht int(1) not null default 0,&quot;&amp;_
+		&quot;Autor int(3)not null default 0,Geaendert_durch int(3)not null default 0,Geaendert_am date,Rechte int (1)not null default 0,&quot;&amp;_
+		&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Gutschriften2
+	sSQL=&quot;create table Gutschriften2 &quot;&amp;_
+		&quot;(PositionsID int(11)not null auto_increment,DocumentID int(10)not null default 0,Pos int(6),LV_Pos varchar(10),Pos_TypID int(1),&quot;&amp;_
+		&quot;LeistungsID varchar(25) not null default &apos;&apos;,Bestellnummer varchar(25) not null default &apos;&apos;,Leistungsbezeichnung varchar(255),Leistungsbeschreibung varchar(10000) not null,&quot;&amp;_
+		&quot;Einheit varchar(10),Menge decimal(9,2) not null default 0,&quot;&amp;_
+		&quot;Einkaufspreis decimal(11,2) not null default 0,Materialaufschlagsatz decimal(5,2),Bauzeit decimal(9,2) not null default 0,&quot;&amp;_
+		&quot;Minutenverrechnungssatz decimal(7,4),Lieferung decimal(11,2) not null default 0,Leistung decimal(11,2) not null default 0,&quot;&amp;_
+		&quot;EP decimal(11,2) not null default 0,GP decimal(11,2) not null default 0,GZ decimal(11,2) not null default 0,primary key(PositionsID))&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;CREATE INDEX Index_DocumentID on Gutschriften2(DocumentID)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Preisanfragen1
+	sSQL=&quot;create table Preisanfragen1 &quot;&amp;_
+		&quot;(DocumentID int(10)not null auto_increment,Document_TypID int(2) not null default 7,ProjektID int(10),&quot;&amp;_
+		&quot;Document_Typ varchar(100) default &apos;Preisanfrage&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
+		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),&quot;&amp;_
+		&quot;AnsprechpartnerID int(10),Erstellungsdatum date not null default 0,gueltig_bis date not null default 0,Skonto_bis date,&quot;&amp;_
+		&quot;Minutenverrechnungssatz decimal(7,4),Materialaufschlagsatz decimal(5,2),MwSt_Satz decimal(4,1) not null default 0,&quot;&amp;_
+		&quot;Rabatt_Satz decimal(4,1) not null default 0,Skonto_Satz decimal(4,1),&quot;&amp;_
+		&quot;Korrektur_Vorzeichen char(1) not null default &apos;-&apos;,Korrektur_Satz decimal(5,2) not null default 0,Korrektur_Anlass varchar(255),&quot;&amp;_
+		&quot;Summe_ohne_MwSt decimal(11,2),Rabatt decimal(11,2),Summe_nach_Rabatt decimal(11,2),Korrektur decimal(11,2),&quot;&amp;_
+		&quot;Summe_nach_Korrektur decimal(11,2),MwSt decimal(11,2),Summe_mit_MwSt decimal(11,2),&quot;&amp;_
+		&quot;AZ_ohne_MwSt decimal(11,2),AZ_MwSt decimal(11,2),AZ_mit_MwSt decimal(11,2),&quot;&amp;_
+		&quot;Zahlbetrag_ohne_MwSt decimal(11,2),Zahlbetrag_MwSt decimal(11,2),Zahlbetrag_mit_MwSt decimal(11,2),Skonto decimal(11,2),&quot;&amp;_
+		&quot;Summe_nach_Skonto decimal(11,2),Bemerkung varchar(2000),Status varchar(20)not null default &apos;offen&apos;,&quot;&amp;_
+		&quot;Pos_Format varchar(10) default &apos;1&apos;,Gesperrt int(2)not null default 0,Schreibschutz int(1) not null default 0,Materialeinsatz decimal(11,2),&quot;&amp;_
+		&quot;Bauzeit_Tage decimal(11,2),Bauzeit_Stunden decimal(11,2),Skonto_Tage int(3),Faellig_Tage int(3),Leerzeilen varchar(50),&quot;&amp;_
+		&quot;Autor int(3)not null default 0,Geaendert_durch int(3)not null default 0,Geaendert_am date,Rechte int (1)not null default 0,&quot;&amp;_
+		&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Preisanfragen2
+	sSQL=&quot;create table Preisanfragen2 &quot;&amp;_
+		&quot;(PositionsID int(11)not null auto_increment,DocumentID int(10)not null default 0,Pos int(6),LV_Pos varchar(10),Pos_TypID int(1),&quot;&amp;_
+		&quot;LeistungsID varchar(25) not null default &apos;&apos;,Bestellnummer varchar(25) not null default &apos;&apos;,Leistungsbezeichnung varchar(255),Leistungsbeschreibung varchar(10000) not null,&quot;&amp;_
+		&quot;Einheit varchar(10),Menge decimal(9,2) not null default 0,&quot;&amp;_
+		&quot;Einkaufspreis decimal(11,2) not null default 0,Materialaufschlagsatz decimal(5,2),Bauzeit decimal(9,2) not null default 0,&quot;&amp;_
+		&quot;Minutenverrechnungssatz decimal(7,4),Lieferung decimal(11,2) not null default 0,Leistung decimal(11,2) not null default 0,&quot;&amp;_
+		&quot;EP decimal(11,2) not null default 0,GP decimal(11,2) not null default 0,GZ decimal(11,2) not null default 0,primary key(PositionsID))&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;CREATE INDEX Index_DocumentID on Preisanfragen2(DocumentID)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Bestellungen1
+	sSQL=&quot;create table Bestellungen1 &quot;&amp;_
+		&quot;(DocumentID int(10)not null auto_increment,Document_TypID int(2) not null default 8,ProjektID int(10),&quot;&amp;_
+		&quot;Document_Typ varchar(100) default &apos;Bestellung&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
+		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),&quot;&amp;_
+		&quot;AnsprechpartnerID int(10),Erstellungsdatum date not null default 0,gueltig_bis date not null default 0,Skonto_bis date,&quot;&amp;_
+		&quot;Minutenverrechnungssatz decimal(7,4),Materialaufschlagsatz decimal(5,2),MwSt_Satz decimal(4,1) not null default 0,&quot;&amp;_
+		&quot;Rabatt_Satz decimal(4,1) not null default 0,Skonto_Satz decimal(4,1),&quot;&amp;_
+		&quot;Korrektur_Vorzeichen char(1) not null default &apos;-&apos;,Korrektur_Satz decimal(5,2) not null default 0,Korrektur_Anlass varchar(255),&quot;&amp;_
+		&quot;Summe_ohne_MwSt decimal(11,2),Rabatt decimal(11,2),Summe_nach_Rabatt decimal(11,2),Korrektur decimal(11,2),&quot;&amp;_
+		&quot;Summe_nach_Korrektur decimal(11,2),MwSt decimal(11,2),Summe_mit_MwSt decimal(11,2),&quot;&amp;_
+		&quot;AZ_ohne_MwSt decimal(11,2),AZ_MwSt decimal(11,2),AZ_mit_MwSt decimal(11,2),&quot;&amp;_
+		&quot;Zahlbetrag_ohne_MwSt decimal(11,2),Zahlbetrag_MwSt decimal(11,2),Zahlbetrag_mit_MwSt decimal(11,2),Skonto decimal(11,2),&quot;&amp;_
+		&quot;Summe_nach_Skonto decimal(11,2),Bemerkung varchar(2000),Status varchar(20)not null default &apos;offen&apos;,&quot;&amp;_
+		&quot;Pos_Format varchar(10) default &apos;1&apos;,Gesperrt int(2)not null default 0,Schreibschutz int(1) not null default 0,Materialeinsatz decimal(11,2),&quot;&amp;_
+		&quot;Bauzeit_Tage decimal(11,2),Bauzeit_Stunden decimal(11,2),Skonto_Tage int(3),Faellig_Tage int(3),Leerzeilen varchar(50),&quot;&amp;_
+		&quot;Autor int(3)not null default 0,Geaendert_durch int(3)not null default 0,Geaendert_am date,Rechte int(1)not null default 0,&quot;&amp;_
+		&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Bestellungen2
+	sSQL=&quot;create table Bestellungen2 &quot;&amp;_
+		&quot;(PositionsID int(11)not null auto_increment,DocumentID int(10)not null default 0,Pos int(6),LV_Pos varchar(10),Pos_TypID int(1),&quot;&amp;_
+		&quot;LeistungsID varchar(25) not null default &apos;&apos;,Bestellnummer varchar(25) not null default &apos;&apos;,Leistungsbezeichnung varchar(255),Leistungsbeschreibung varchar(10000) not null,&quot;&amp;_
+		&quot;Einheit varchar(10),Menge decimal(9,2) not null default 0,&quot;&amp;_
+		&quot;Einkaufspreis decimal(11,2) not null default 0,Materialaufschlagsatz decimal(5,2),Bauzeit decimal(9,2) not null default 0,&quot;&amp;_
+		&quot;Minutenverrechnungssatz decimal(7,4),Lieferung decimal(11,2) not null default 0,Leistung decimal(11,2) not null default 0,&quot;&amp;_
+		&quot;EP decimal(11,2) not null default 0,GP decimal(11,2) not null default 0,GZ decimal(11,2) not null default 0,primary key(PositionsID))&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;CREATE INDEX Index_DocumentID on Bestellungen2(DocumentID)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+</script:module>

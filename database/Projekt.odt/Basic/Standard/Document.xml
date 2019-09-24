@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Document" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String
+Dim oRecord1 as Object,oRecord2 as Object
+Dim sKontaktID as String,sMinutenverrechnungssatz as String,sAnsprechpartnerID as String
+Dim sMaterialaufschlagsatz as String,sSumme_ohne_MwSt as String,sNummern as String
+Dim sMwSt as String,sSumme_mit_MwSt as String,sRabatt_Satz as String,sSkonto_Satz as String
+Dim sRabatt as String,sSkonto as String,sSumme_nach_Rabatt as String,sKorrektur_Satz as String
+Dim sKorrektur as String,sSumme_nach_Korrektur as String,sKorrektur_Anlass as String,sSumme_nach_Skonto as String
+Dim sLV_Pos_alt as String,sLV_Pos_neu as String,sLeerzeilen as String,sMwSt_Satz_aktuell as String
+Dim sLeistungsgruppe as String,sBauzeit as String,sEinkaufspreis as String,sLeistungsID_old as String
+Dim sLieferant_1 as String,sLieferant_2 as String,sLieferant_3 as String
+Dim cRabatt_Satz as currency,cSkonto_Satz as currency,cMwSt_Satz as currency
+Dim cStundenverrechnungssatz as currency
+Dim cMinutenverechnungssatz as currency,cMaterialaufschlagsatz as currency
+Dim iCount as Long,iCount_MAX as Long,iGesperrt as integer
+Dim sMwSt_Satz as String,sProjektID as String
+Dim sLeistungsID as string,sDocument_Name as String
+Dim sLeistungsbezeichnung as string,sLeistungsbeschreibung as String,sEinheit as String
+Dim sWert as String,sFaktor as String,sLeistungsempfaenger as String,sLieferbemerkung as String
+Dim sMenge as String,iMenge_eingeben as Integer
+Dim iEinfuegen_abfragen as Integer,i13b as Integer,s13bText as String
+Dim iPos as integer,iPos_alt as integer
+Dim iPos_TypID as integer
+Dim sBezeichnung as String,sBemerkung as String
+Dim iAnzData as integer,iMaxData as integer
+Dim iMaxPos as integer,iMaxPos_1 as integer,iPos_neu as integer
+Dim iReset as integer
+Dim vStatus as Variant
+Dim iSkonto_Tage as integer,iFaellig_Tage as integer
+Dim sFormular as String,sNutzer as String,sMessage as String
+
+Sub Document_kopieren()
+	if lDocumentID &gt; 0 then
+		vStatus=MsgBox(&quot;Soll das aktuelle Dokument mit der Nummer &quot;&amp; lDocumentID &amp;&quot; kopiert werden?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			oField_Bemerkung.commit()
+			oField_Document_Name.commit()
+			oForm_Document.updateRow()
+			sBezeichnung=oTextField_Document_Name.Label &amp;&quot;n&quot;
+			SetDocUserProperty(&quot;oDocumentID_old&quot;, lDocumentID)
+			SQL_Datensaetze_Tabelle2_entfernen
+			SQL_Datensaetze_Tabelle2_einfuegen
+			SQL_Update_Document1_Gesperrt_0(sTabelle1,lDocumentID)
+			sSQL1=&quot;SELECT t1.Document_Name,t1.ProjektID,t1.KontaktID,t1.AnsprechpartnerID,&quot;&amp;_
+				&quot;t1.Leistungsempfaenger,t1.Lieferbemerkung,&quot;&amp;_
+				&quot;t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz,&quot;&amp;_
+				&quot;t1.Summe_ohne_MwSt,t1.MwSt_Satz,t1.MwSt,t1.Summe_mit_MwSt,&quot;&amp;_
+				&quot;t1.Rabatt_Satz,t1.Skonto_Satz,t1.Korrektur_Satz,&quot;&amp;_
+				&quot;t1.Rabatt,t1.Skonto,t1.Korrektur,t1.Korrektur_Anlass,t1.Summe_nach_Rabatt,&quot;&amp;_
+				&quot;t1.Summe_nach_Korrektur,t1.Summe_nach_Skonto,t1.Faellig_Tage,&quot;&amp;_
+				&quot;t1.Skonto_Tage,t1.Bemerkung,t1.Leerzeilen,t3.MwSt_Satz&quot;
+			if iDocTypID &lt; 7 then
+				sSQL1=sSQL1 &amp; &quot;,t1.13b,t1.13bText&quot;
+			End if
+			sSQL1=sSQL1 &amp; &quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t1,Steuerung as t2,Einstellungen as t3 &quot;&amp;_
+				&quot;WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+				&quot; AND t1.DocumentID=t2.DocumentID&quot;&amp;_
+				&quot; AND t3.EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+			oRecord1=oResult(sSQL1)
+			While oRecord1.next()
+				sDocument_Name=oRecord1.getString(1)
+				sProjektID=oRecord1.getString(2)
+				sKontaktID=oRecord1.getString(3)
+				sAnsprechpartnerID=oRecord1.getString(4)
+				sLeistungsempfaenger=oRecord1.getString(5)
+				sLieferbemerkung=oRecord1.getString(6)
+				sMinutenverrechnungssatz=oRecord1.getString(7)
+				sMaterialaufschlagsatz=oRecord1.getString(8)
+				sSumme_ohne_MwSt=oRecord1.getString(9)
+				sMwSt_Satz=oRecord1.getString(10)
+				sMwSt=oRecord1.getString(11)
+				sSumme_mit_MwSt=oRecord1.getString(12)
+				sRabatt_Satz=oRecord1.getString(13)
+				sSkonto_Satz=oRecord1.getString(14)
+				sKorrektur_Satz=oRecord1.getString(15)
+				sRabatt=oRecord1.getString(16)
+				sSkonto=oRecord1.getString(17)
+				sKorrektur=oRecord1.getString(18)
+				sKorrektur_Anlass=oRecord1.getString(19)
+				sSumme_nach_Rabatt=oRecord1.getString(20)
+				sSumme_nach_Korrektur=oRecord1.getString(21)
+				sSumme_nach_Skonto=oRecord1.getString(22)
+				iFaellig_Tage=oRecord1.getInt(23)
+				iSkonto_Tage=oRecord1.getInt(24)
+				sBemerkung=oRecord1.getString(25)
+				sLeerzeilen=oRecord1.getString(26)
+				sMwSt_Satz_aktuell=oRecord1.getString(27)
+				if iDocTypID &lt; 7 then
+					i13b=oRecord1.getInt(28)
+					s13bText=oRecord1.getString(29)
+				End if
+			Wend
+nochmal:
+			sDocument_Name=InputBox(&quot;Geben Sie bitte den &quot;&amp; sBezeichnung &amp;_
+			&quot; für das kopierte Dokument ein!&quot;&amp; Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal,oField_Document_Name.BoundField.string)
+			if sDocument_Name = &quot;&quot; then
+				vStatus=MsgBox(&quot;Sie haben noch keinen &quot;&amp; sBezeichnung &amp;&quot; eingegeben!&quot;,37,sTitle_lokal)
+				if vStatus=4 then
+					goto nochmal
+				elseif vStatus=2 then
+					exit sub
+				End if
+			End if
+			
+			if i13b = 1 then
+				sMwSt_Satz_aktuell=sMwSt_Satz
+			End if
+			
+			if iDocTypID &lt; 7 then
+				if sMwSt_Satz &lt;&gt; sMwSt_Satz_aktuell then
+					vStatus=MsgBox(&quot;Der im zu kopierenden Dokument eingetragene MwSt-Satz von &quot;&amp;_
+						fZahlMitPunkt(sMwSt_Satz) &amp;&quot;% entspricht nicht der Voreinstellung!&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
+						&quot;Soll der MwSt-Satz von &quot;&amp; fZahlMitPunkt(sMwSt_Satz) &amp;&quot;% in diesem Dokument durch die Voreinstellung von &quot;&amp;_
+						fZahlMitPunkt(sMwSt_Satz_aktuell) &amp;&quot;% ersetzt werden?&quot;,36,sTitle_lokal)
+					if vStatus=6 then
+						sMwSt_Satz = sMwSt_Satz_aktuell
+					End if
+				End if
+			End if
+			
+			sSQL2=&quot;INSERT INTO &quot;&amp; sTabelle1 &amp;_
+				&quot;(Document_Name,ProjektID,KontaktID,AnsprechpartnerID,Leistungsempfaenger,Lieferbemerkung,&quot;&amp;_
+				&quot;Minutenverrechnungssatz,Materialaufschlagsatz,Summe_ohne_MwSt,MwSt_Satz,&quot;&amp;_
+				&quot;MwSt,Summe_mit_MwSt,Rabatt_Satz,Korrektur_Satz,Skonto_Satz,Rabatt,Korrektur,Korrektur_Anlass,Skonto,&quot;&amp;_
+				&quot;Summe_nach_Rabatt,Summe_nach_Korrektur,Summe_nach_Skonto,Faellig_Tage,Skonto_Tage,Bemerkung,Leerzeilen&quot;
+			if iDocTypID &lt; 7 then
+				sSQL2=sSQL2 &amp; &quot;,13b,13bText&quot;
+			End if
+			sSQL2=sSQL2 &amp; &quot;) VALUES(&apos;&quot;&amp; fsConvertApostroph(sDocument_Name) &amp;&quot;&apos;,&apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sKontaktID &amp;&quot;&apos;,&apos;&quot;&amp; sAnsprechpartnerID &amp;_
+				&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsempfaenger) &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLieferbemerkung) &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sMinutenverrechnungssatz &amp;&quot;&apos;,&apos;&quot;&amp; sMaterialaufschlagsatz &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_ohne_MwSt &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sMwSt_Satz &amp;&quot;&apos;,&apos;&quot;&amp; sMwSt &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_mit_MwSt &amp;&quot;&apos;,&apos;&quot;&amp; sRabatt_Satz &amp;&quot;&apos;,&apos;&quot;&amp; sKorrektur_Satz &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sSkonto_Satz &amp;&quot;&apos;,&apos;&quot;&amp; sRabatt &amp;&quot;&apos;,&apos;&quot;&amp; sKorrektur &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sKorrektur_Anlass) &amp;&quot;&apos;,&apos;&quot;&amp; sSkonto &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sSumme_nach_Rabatt &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_nach_Korrektur &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_nach_Skonto &amp;_
+				&quot;&apos;,&apos;&quot;&amp; iFaellig_Tage &amp;&quot;&apos;,&apos;&quot;&amp; iSkonto_Tage &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sBemerkung) &amp;&quot;&apos;,&apos;&quot;&amp; sLeerzeilen &amp;&quot;&apos;&quot;
+			if iDocTypID &lt; 7 then
+				sSQL2=sSQL2 &amp; &quot;,&quot;&amp; i13b &amp;&quot;,&apos;&quot;&amp; s13bText &amp;&quot;&apos;&quot;
+			End if
+			SQL_execute(sSQL2 &amp; &quot;)&quot;)
+			SQL_Update_Tabelle1_DocumentID(1)
+			SQL_Update_Steuerung_DocumentID(0)
+			SQL_Update_Arbeitstabelle_DocumentID()
+			oForm_Steuerung.reload()
+			wait 1
+			Document_kopieren_Zwischensummen()
+			Document_kopieren_Bemerkungen()
+			SQL_Update_Document1_Gesperrt_1(sTabelle1,lDocumentID)
+			SQL_Datum_setzen()
+			Zahlungsziel_commit()
+			Skontoziel_commit()
+			Korrektur_Vorzeichen_refresh()
+			Schreibschutz_setzen()
+		End if
+	End if
+End Sub
+
+Sub Document_kopieren_Zwischensummen()
+	iCount_MAX=fAnzahl_Datensaetze(sZwischensummen,lDocumentID_old)
+	if iCount_MAX=0 then 
+		exit Sub
+	else
+		Dim cZwischensumme as currency
+		sSQL1=&quot;SELECT Pos,ZwiSuName,Zwischensumme FROM &quot;&amp; sZwischensummen &amp;_
+			&quot; WHERE DocumentID=&quot;&amp; lDocumentID_old &amp;&quot; ORDER BY Pos ASC&quot;
+	End if	
+	if iCount_MAX=1 then 
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iPos=oRecord1.getInt(1)
+			sBezeichnung=oRecord1.getString(2)
+			cZwischensumme=oRecord1.getString(3)
+		Wend
+		sSQL2=&quot;INSERT INTO &quot;&amp; sZwischensummen &amp;&quot;(DocumentID,Pos,ZwiSuName,Zwischensumme)&quot;&amp;_
+			&quot; VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; iPos &amp;&quot;,&apos;&quot;&amp; fsConvertApostroph(sBezeichnung) &amp;&quot;&apos;,&quot;&amp; cZwischensumme &amp;&quot;)&quot;
+		SQL_execute(sSQL2)
+	elseif iCount_MAX&gt;1 then 
+		For iCount = 1 to iCount_MAX
+			oRecord1=oResult_Scroll(sSQL1)
+			oRecord1.absolute(iCount)
+			iPos=oRecord1.getInt(1)
+			sBezeichnung=oRecord1.getString(2)
+			cZwischensumme=oRecord1.getString(3)
+			sSQL2=&quot;INSERT INTO &quot;&amp; sZwischensummen &amp;&quot;(DocumentID,Pos,ZwiSuName,Zwischensumme)&quot;&amp;_
+				&quot; VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; iPos &amp;&quot;,&apos;&quot;&amp; fsConvertApostroph(sBezeichnung) &amp;&quot;&apos;,&quot;&amp; cZwischensumme &amp;&quot;)&quot;
+			SQL_execute(sSQL2)
+		Next iCount
+	End if
+	oForm_Zwischensummen.reload()
+End Sub
+
+Sub Document_kopieren_Bemerkungen()
+	iCount_MAX=fAnzahl_Datensaetze(sBemerkungen,lDocumentID_old)
+	if iCount_MAX=0 then 
+		exit Sub
+	else
+		sSQL1=&quot;SELECT Pos,Bemerkung FROM &quot;&amp; sBemerkungen &amp;_
+			&quot; WHERE DocumentID=&quot;&amp; lDocumentID_old &amp;_
+			&quot; ORDER BY Pos ASC,ZwiBemID ASC&quot;
+	End if	
+	if iCount_MAX=1 then 
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iPos=oRecord1.getInt(1)
+			sBemerkung=oRecord1.getString(2)
+		Wend
+		sSQL2=&quot;INSERT INTO &quot;&amp; sBemerkungen &amp;&quot;(DocumentID,Pos,Bemerkung)&quot;&amp;_
+			&quot; VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; iPos &amp;&quot;,&apos;&quot;&amp; fsConvertApostroph(sBemerkung) &amp;&quot;&apos;)&quot;
+		SQL_execute(sSQL2)
+	elseif iCount_MAX&gt;1 then 
+		For iCount = 1 to iCount_MAX
+			oRecord1=oResult_Scroll(sSQL1)
+			oRecord1.absolute(iCount)
+			iPos=oRecord1.getInt(1)
+			sBemerkung=oRecord1.getString(2)
+			sSQL2=&quot;INSERT INTO &quot;&amp; sBemerkungen &amp;&quot;(DocumentID,Pos,Bemerkung)&quot;&amp;_
+				&quot; VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; iPos &amp;&quot;,&apos;&quot;&amp; fsConvertApostroph(sBemerkung) &amp;&quot;&apos;)&quot;
+			SQL_execute(sSQL2)
+		Next iCount
+	End if
+	oForm_Bemerkungen.reload()
+End Sub
+
+Sub Document_loeschen()
+if lDocumentID &gt; 0 then
+	if Msg_Schreibschutz=1 then
+ 		exit Sub
+ 	else
+ 		vStatus=MsgBox(&quot;Soll das aktuelle Dokument mit der Nummer &quot;&amp; lDocumentID &amp;_
+			&quot;, gelöscht werden?&quot;+Chr$(13)+Chr$(13)+Chr$(13)+_
+			&quot;Wenn Ja ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;+Chr$(13)+Chr$(13)+_
+			&quot;Wollen Sie trotzdem fortfahren?&quot;,292,sTitle_lokal)
+		if vStatus=6 then
+			SQL_Document_loeschen_Tabelle3()
+			SQL_Document_loeschen_Tabelle4()
+			SQL_Reset_AutoIncrement(sTabelle1)
+			SQL_Reset_AutoIncrement(sTabelle2)
+			SQL_Document_loeschen_Arbeitstabelle()
+			SQL_Reset_AutoIncrement(sArbeitstabelle)
+			SQL_Document_loeschen_Zwischensumme()
+			SQL_Document_loeschen_Bemerkungen()
+			SQL_DocumentID_entfernen()
+			oList_Documentauswahl.refresh()
+			oForm_Steuerung.reload()
+			oForm_Steuerung.reset()
+		End if
+	End if
+End if
+End Sub
+
+Sub Document_schliessen()
+	if oDoc.isReadOnly then 
+		oField_Bemerkung.commit()
+		oField_Document_Name.commit()
+		oForm_Document.updateRow()
+		Tabelle_commit()
+		if iAnzahl_Datensaetze(sArbeitstabelle) &gt; 0 then
+			SQL_Datensaetze_Tabelle2_entfernen()
+		else
+			wait 1
+		End if
+		Dim iJahr as Integer
+		sSQL1=&quot;SELECT MAX(YEAR(Erstellungsdatum)) FROM &quot;&amp; sTabelle1
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iJahr=oRecord1.getInt(1)
+		Wend
+		SQL_Datensaetze_Tabelle2_einfuegen()
+		SQL_Arbeitstabelle_leeren()
+		SQL_Reset_AutoIncrement(sArbeitstabelle)
+		SQL_Update_Document1_Gesperrt_0(sTabelle1,lDocumentID)
+		SQL_DocumentID_entfernen()
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET KontaktID=0 WHERE KontaktID IS NULL&quot;
+		SQL_execute(sSQL2)
+		sSQL3=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET ProjektID=0 WHERE ProjektID IS NULL&quot;
+		SQL_execute(sSQL3)
+		sSQL4=&quot;UPDATE Steuerung SET ProjektID = NULL,KontaktID = NULL,Suchstring_2 = NULL,Jahr=&apos;&quot;&amp; iJahr &amp;_
+			&quot;&apos;,Gesperrt=0,Stundenverrechnungssatz = NULL WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL4)
+	End if	
+	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+Sub Document_berechnen()
+	if lDocumentID &gt; 0 then
+		Dim sErgebnis as String
+		Dim sBauzeit_Stunden as String
+		Dim sBauzeit_Tage as String
+		Dim sMaterialeinsatz as String
+		Dim i13b as Integer
+		Dim sAZ_ohne_MwSt as String,sAZ_MwSt as String,sAZ_mit_MwSt as String,sSkonto_Satz as String
+		Dim sMwSt_Satz as string,sMwSt_Satz_aktuell as string,sMwSt_Satz_Msg as String,sKorrektur_Vorzeichen as String
+		Dim iPos as integer,iRowNumber as Integer
+
+		iPos=fPos_neu()
+		iRowNumber=oForm_Tabellendaten.getRow()
+		iMaxPos=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+		
+		oField_Bemerkung.commit()
+		oField_Document_Name.commit()
+		oForm_Document.updateRow()
+		Tabelle_commit()
+		SQL_Leistung_berechnen()
+		sSQL1=&quot;SELECT SUM(GP) as Ergebnis,&quot;&amp;_
+			&quot;SUM(Bauzeit * Menge / 60) as Bauzeit_Stunden,&quot;&amp;_
+			&quot;SUM(Bauzeit * Menge / 480)as Bauzeit_Tage,&quot;&amp;_
+			&quot;SUM(Einkaufspreis * Menge)as Materialeinsatz &quot;&amp;_
+			&quot;FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos_TypID = 1&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sErgebnis=oRecord1.getString(1)
+			sBauzeit_Stunden=oRecord1.getString(2)
+			sBauzeit_Tage=oRecord1.getString(3)
+			sMaterialeinsatz=oRecord1.getString(4)	
+		Wend
+		sSQL3=&quot;SELECT t1.Skonto_Satz,t1.Skonto_Tage,t1.MwSt_Satz,t2.MwSt_Satz,t1.Korrektur_Vorzeichen&quot;
+		if iDocTypID &lt; 7 then
+			sSQL3=sSQL3 &amp;&quot;,t1.13b&quot;
+		end if
+		sSQL3=sSQL3 &amp;&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t1,Einstellungen as t2 &quot;&amp;_
+				&quot; WHERE t1.DocumentID=&quot;&amp; lDocumentID &amp;_
+				&quot; AND t2.EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+
+		oRecord2=oResult(sSQL3)
+		While oRecord2.next()
+			sSkonto_Satz=oRecord2.getString(1)
+			iSkonto_Tage=oRecord2.getInt(2)
+			sMwSt_Satz=oRecord2.getString(3)
+			sMwSt_Satz_aktuell=oRecord2.getString(4)
+			sKorrektur_Vorzeichen=oRecord2.getString(5)
+			if iDocTypID &lt; 7 then
+				i13b=oRecord2.getInt(6)
+			else
+				i13b=0
+			end if
+		Wend
+
+		if i13b=1 then
+			sMwSt_Satz_aktuell=&quot;0.0&quot;
+			sMwSt_Satz_Msg=fZahlMitPunkt(sMwSt_Satz_aktuell) &amp;&quot;% gemäß §13b&quot;
+		else
+			sMwSt_Satz_Msg=fZahlMitPunkt(sMwSt_Satz_aktuell) &amp;&quot;%&quot;
+		end if
+		if iDocTypID &lt; 7 then
+			if CCur(sMwSt_Satz) &lt;&gt; CCur(sMwSt_Satz_aktuell) then
+				vStatus=MsgBox(&quot;Der im zu berechnenden Dokument eingetragene MwSt-Satz von &quot;&amp;_
+					fZahlMitPunkt(sMwSt_Satz) &amp;&quot;% entspricht nicht der Voreinstellung!&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
+					&quot;Soll der MwSt-Satz von &quot;&amp; fZahlMitPunkt(sMwSt_Satz) &amp;&quot;% in diesem Dokument durch die Voreinstellung von &quot;&amp;_
+					sMwSt_Satz_Msg &amp;&quot; ersetzt werden?&quot;,36,sTitle_lokal)
+				if vStatus=6 then
+					sMwSt_Satz = sMwSt_Satz_aktuell
+				End if
+			End if
+		end if		
+		SQL_AZ_berechnen(sMwSt_Satz)
+		sSQL2=&quot;SELECT SUM(EP),SUM(Leistung),SUM(GP) &quot;&amp;_
+			&quot;FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos_TypID = 4 GROUP BY Pos_TypID&quot;
+		oRecord1=oResult(sSQL2)
+		While oRecord1.next()
+			sAZ_ohne_MwSt=oRecord1.getString(1)
+			sAZ_MwSt=oRecord1.getString(2)
+			sAZ_mit_MwSt=oRecord1.getString(3)
+		Wend
+
+		if (sSkonto_Satz = &quot;0&quot; OR iSkonto_Tage = 0) then
+			sSQL4=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Summe_ohne_MwSt=&apos;&quot;&amp; sErgebnis &amp;_
+				&quot;&apos;,AZ_ohne_MwSt=&apos;&quot;&amp; sAZ_ohne_MwSt &amp;_
+				&quot;&apos;,AZ_MwSt=&apos;&quot;&amp; sAZ_MwSt &amp;_
+				&quot;&apos;,AZ_mit_MwSt=&apos;&quot;&amp; sAZ_mit_MwSt &amp;_
+				&quot;&apos;,Bauzeit_Stunden=&apos;&quot;&amp; sBauzeit_Stunden &amp;_
+				&quot;&apos;,Bauzeit_Tage=&apos;&quot;&amp; sBauzeit_Tage &amp;_
+				&quot;&apos;,Materialeinsatz=&apos;&quot;&amp; sMaterialeinsatz &amp;_
+				&quot;&apos;,MwSt_Satz=&apos;&quot;&amp; sMwSt_Satz &amp;_
+				&quot;&apos;,Rabatt=Summe_ohne_MwSt*Rabatt_Satz/100,&quot;&amp;_
+				&quot;Summe_nach_Rabatt=Summe_ohne_MwSt-Rabatt,&quot;&amp;_
+				&quot;Korrektur=Summe_nach_Rabatt*Korrektur_Satz/100,&quot;&amp;_
+				&quot;Summe_nach_Korrektur=Summe_nach_Rabatt&quot;&amp; sKorrektur_Vorzeichen &amp;&quot;Korrektur,&quot;&amp;_
+				&quot;MwSt=Summe_nach_Korrektur*MwSt_Satz/100,&quot;&amp;_
+				&quot;Summe_mit_MwSt=Summe_nach_Korrektur+MwSt,&quot;&amp;_
+				&quot;Zahlbetrag_ohne_MwSt=Summe_nach_Korrektur-AZ_ohne_MwSt,&quot;&amp;_
+				&quot;Zahlbetrag_MwSt=MwSt-AZ_MwSt,&quot;&amp;_
+				&quot;Zahlbetrag_mit_MwSt=Summe_mit_MwSt-AZ_mit_MwSt,&quot;&amp;_
+				&quot;Skonto=NULL,Summe_nach_Skonto=NULL &quot;&amp;_
+				&quot;WHERE DocumentID=&quot;&amp; lDocumentID
+		else
+			sSQL4=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Summe_ohne_MwSt=&apos;&quot;&amp; sErgebnis &amp;_
+				&quot;&apos;,AZ_ohne_MwSt=&apos;&quot;&amp; sAZ_ohne_MwSt &amp;_
+				&quot;&apos;,AZ_MwSt=&apos;&quot;&amp; sAZ_MwSt &amp;_
+				&quot;&apos;,AZ_mit_MwSt=&apos;&quot;&amp; sAZ_mit_MwSt &amp;_
+				&quot;&apos;,Bauzeit_Stunden=&apos;&quot;&amp; sBauzeit_Stunden &amp;_
+				&quot;&apos;,Bauzeit_Tage=&apos;&quot;&amp; sBauzeit_Tage &amp;_
+				&quot;&apos;,Materialeinsatz=&apos;&quot;&amp; sMaterialeinsatz &amp;_
+				&quot;&apos;,MwSt_Satz=&apos;&quot;&amp; sMwSt_Satz &amp;_
+				&quot;&apos;,Rabatt=Summe_ohne_MwSt*Rabatt_Satz/100,&quot;&amp;_
+				&quot;Summe_nach_Rabatt=Summe_ohne_MwSt-Rabatt,&quot;&amp;_
+				&quot;Korrektur=Summe_nach_Rabatt*Korrektur_Satz/100,&quot;&amp;_
+				&quot;Summe_nach_Korrektur=Summe_nach_Rabatt&quot;&amp; sKorrektur_Vorzeichen &amp;&quot;Korrektur,&quot;&amp;_
+				&quot;MwSt=Summe_nach_Korrektur*MwSt_Satz/100,&quot;&amp;_
+				&quot;Summe_mit_MwSt=Summe_nach_Korrektur+MwSt,&quot;&amp;_
+				&quot;Zahlbetrag_ohne_MwSt=Summe_nach_Korrektur-AZ_ohne_MwSt,&quot;&amp;_
+				&quot;Zahlbetrag_MwSt=MwSt-AZ_MwSt,&quot;&amp;_
+				&quot;Zahlbetrag_mit_MwSt=Summe_mit_MwSt-AZ_mit_MwSt,&quot;&amp;_
+				&quot;Skonto=Zahlbetrag_mit_MwSt*Skonto_Satz/100,&quot;&amp;_
+				&quot;Summe_nach_Skonto=Zahlbetrag_mit_MwSt-Skonto,&quot;&amp;_
+				&quot;Skonto_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iSkonto_Tage &amp;&quot; day)) &quot;&amp;_
+				&quot;WHERE DocumentID=&quot;&amp; lDocumentID
+		End if
+		SQL_execute(sSQL4)
+		Zwischensummen_berechnen()
+		oList_Documentauswahl.refresh()
+		oList_Korrektur_Vorzeichen.refresh()
+		oForm_Steuerung.reload()
+		Wait 1
+		oForm_Tabellendaten.last()
+		if iPos &lt; iMaxPos then
+			oForm_Tabellendaten.first()
+			oForm_Tabellendaten.absolute(iRowNumber)
+		End if
+	else
+		MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub Document_speichern()
+	if oDoc.isReadOnly then 
+		if lDocumentID &gt; 0 then
+			oField_Bemerkung.commit()
+			oField_Document_Name.commit()
+			oForm_Document.updateRow()
+			Tabelle_commit()
+			if iAnzahl_Datensaetze(sArbeitstabelle) &gt; 0 then
+				SQL_Datensaetze_Tabelle2_entfernen()
+			End if
+			SQL_Datensaetze_Tabelle2_einfuegen()
+			SQL_Arbeitstabelle_leeren()
+			SQL_Reset_AutoIncrement(sArbeitstabelle)
+			sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET KontaktID=0 WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; AND KontaktID IS NULL&quot;
+			SQL_execute(sSQL1)
+			sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET ProjektID=0 WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; AND ProjektID IS NULL&quot;
+			SQL_execute(sSQL2)
+			SQL_Update_Document1_Gesperrt_0(sTabelle1,lDocumentID)
+			SQL_DocumentID_entfernen()
+			oForm_Steuerung.reload()
+			oForm_Document.reset()
+		End if
+	End if
+End Sub
+
+Sub Document_bearbeiten()	
+	oList_Documentauswahl.commit()
+&apos;print lDocumentID_Auswahl
+	if lDocumentID_Auswahl &gt; 0 then
+		sSQL1=&quot;SELECT t1.Gesperrt,t2.Formular,t2.Nutzer &quot;&amp;_
+			&quot;FROM &quot;&amp; sTabelle1 &amp;&quot; as t1,Steuerung as t2 &quot;&amp;_
+			&quot;WHERE t1.DocumentID=&quot;&amp; lDocumentID_Auswahl &amp;_
+			&quot; AND t2.ClientID=t1.Gesperrt&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iGesperrt=oRecord1.getInt(1)
+			sFormular=oRecord1.getString(2)
+			sNutzer=oRecord1.getString(3)
+		Wend
+		if iGesperrt = iClientID then
+			exit Sub
+		elseif iGesperrt &lt;&gt; 0 AND iGesperrt &lt;&gt; iClientID then
+			sMessage=&quot;Dieses Dokument wird gerade&quot;
+			if sNutzer &lt;&gt; &quot;&quot; then
+				sMessage = sMessage &amp; &quot; durch den Nutzer&quot; &amp;_
+					Chr(13) &amp; Chr(13) &amp; Chr(9) &amp; Chr(9) &amp; Chr(9) &amp; &quot;&gt;&gt;   &quot;&amp; sNutzer &amp;&quot;   &lt;&lt; &quot;&amp; Chr(13) &amp; Chr(13)
+			End if
+			if sFormular &lt;&gt; &quot;&quot; then
+				sMessage = sMessage &amp; &quot; mit dem Formular&quot; &amp;_
+					Chr(13) &amp; Chr(13) &amp; Chr(9) &amp; Chr(9) &amp; Chr(9) &amp; &quot;&gt;&gt;   &quot;&amp; sFormular &amp;&quot;   &lt;&lt;&quot;&amp; Chr(13) &amp; Chr(13)
+			End if
+			if sNutzer = &quot;&quot; AND sFormular = &quot;&quot; then
+				sMessage = sMessage &amp; &quot; durch den Client mit der ID&quot; &amp;_
+					Chr(13) &amp; Chr(13) &amp; Chr(9) &amp; Chr(9) &amp; Chr(9) &amp; &quot;&gt;&gt;   &quot;&amp; iGesperrt &amp;&quot;   &lt;&lt;&quot;&amp; Chr(13) &amp; Chr(13)
+			End if
+			sMessage= sMessage &amp; &quot; bearbeitet!&quot;
+			MsgBox (sMessage,16,sTitle_lokal)
+		elseif iGesperrt = 0 then
+			if lDocumentID &gt; 0 then
+				SQL_Datensaetze_Tabelle2_entfernen()
+				SQL_Datensaetze_Tabelle2_einfuegen()
+				SQL_Arbeitstabelle_leeren()
+				SQL_Update_Document1_Gesperrt_0(sTabelle1,lDocumentID)
+			End if
+			oForm_Steuerung.updateRow()
+			SQL_Update_DocumentID()
+			SQL_Reset_AutoIncrement(sArbeitstabelle)
+			SQL_Arbeitstabelle_fuellen()
+			oList_Ansprechpartner.refresh()
+			oForm_Steuerung.reload()
+			SQL_Update_Document1_Gesperrt_1(sTabelle1,lDocumentID)
+			Korrektur_Vorzeichen_refresh()
+			Schreibschutz_setzen()
+		End if
+	End if
+End Sub
+
+Sub neues_Document()
+	if oDoc.isReadOnly then 
+		Document_speichern()
+nochmal:
+		sBezeichnung=oTextField_Document_Name.Label &amp;&quot;n&quot;
+		sDocument_Name=InputBox(&quot;Geben Sie bitte den &quot;&amp; sBezeichnung &amp;&quot; ein!&quot;&amp;_
+								 Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal)
+		if sDocument_Name = &quot;&quot; then
+			vStatus=MsgBox(&quot;Sie haben noch keinen &quot;&amp; sBezeichnung &amp;&quot; eingegeben!&quot;,37,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal
+			elseif vStatus=2 then
+				exit sub
+			End if
+		End if
+		SQL_Reset_AutoIncrement(sArbeitstabelle)
+		SQL_neues_Document(fsConvertApostroph(sDocument_Name))
+		SQL_Update_Tabelle1_DocumentID(1,sTabelle1)
+		SQL_Update_Steuerung_DocumentID(0,sTabelle1)
+		SQL_Update_Arbeitstabelle_DocumentID()
+		oForm_Steuerung.reload()
+		SQL_Update_Document1_Gesperrt_1(sTabelle1,lDocumentID)	
+		SQL_Datum_setzen()
+		Korrektur_Vorzeichen_refresh()
+		Schreibschutz_setzen()	
+	End if
+End Sub
+
+Sub Document_Name_aendern()
+	if lDocumentID &lt;&gt; 0 then
+		if oDoc.isReadOnly then 
+			if Msg_Schreibschutz=1 then
+		 		exit Sub
+		 	else
+		nochmal:
+				sBezeichnung=oTextField_Document_Name.Label &amp;&quot;n&quot;
+				sDocument_Name=InputBox(&quot;Geben Sie bitte den &quot;&amp; sBezeichnung &amp;&quot; ein!&quot;&amp;_
+					Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal,oField_Document_Name.BoundField.string)
+				if sDocument_Name = &quot;&quot; then
+					vStatus=MsgBox(&quot;Sie haben noch keinen &quot;&amp; sBezeichnung &amp;&quot; eingegeben!&quot;,37,sTitle_lokal)
+					if vStatus=4 then
+						goto nochmal
+					elseif vStatus=2 then
+						exit sub
+					End if
+				End if
+				SQL_Document_Name_aendern(fsConvertApostroph(sDocument_Name))
+				oForm_Document.reload()
+			End if
+		End if
+	End if
+End Sub
+
+</script:module>

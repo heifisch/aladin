@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement as Object
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+Dim oRecord1 as Object,oRecord2 as Object
+Dim vStatus as Variant
+Dim cSkonto_Satz as currency,iSkonto_Tage as integer,iFaellig_Tage as integer
+Dim sProjektname as String,cMwSt_Satz as currency,sDate as string,sDatum as string
+Dim sDay as String, sMonth as String, sYear as String, iProjektID as long
+Dim sZahlungsweise as String,sMindestangaben as String
+Dim sAnrede as String,sTitel as String,sVorname as String
+Dim sName1 as String,sName2 as String,sName3 as String,sName4 as String
+Dim sLand as String,sPLZ as String,sOrt as String
+Dim sStrasse as String,sHausnummer as String,sTelefon as String
+Dim sFunktelefon as String,sFax as String,sEMail as String,sUrl as String
+Dim sReferenzID as String,sBemerkung as String,sOrdner as String
+
+Sub Start_Projekte()
+	Dim sSQL1 as String
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+	if oDoc.isReadOnly then
+		Dim oFrame as Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+		
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Projekte&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 23)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Kunden_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden&quot;)
+		else
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden_&quot;&amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Projekte_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oProjekte&quot;, &quot;Projekte&quot;)
+		else
+			SetDocUserProperty(&quot;oProjekte&quot;, &quot;Projekte_&quot;&amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _
+			or InStr(fsTableList,&quot;;Controlling_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+		then
+			SetDocUserProperty(&quot;oControlling&quot;, &quot;Controlling&quot;)
+		else
+			SetDocUserProperty(&quot;oControlling&quot;, &quot;Controlling_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _
+			or InStr(fsTableList,&quot;;Angebote1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Angebote2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Rechnungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oAngebote1&quot;, &quot;Angebote1&quot;)
+			SetDocUserProperty(&quot;oAngebote2&quot;, &quot;Angebote2&quot;)
+			SetDocUserProperty(&quot;oAuftragsbestaetigungen1&quot;, &quot;Auftragsbestaetigungen1&quot;)
+			SetDocUserProperty(&quot;oAuftragsbestaetigungen2&quot;, &quot;Auftragsbestaetigungen2&quot;)
+			SetDocUserProperty(&quot;oRechnungen1&quot;, &quot;Rechnungen1&quot;)
+			SetDocUserProperty(&quot;oRechnungen2&quot;, &quot;Rechnungen2&quot;)
+		else
+			SetDocUserProperty(&quot;oAngebote1&quot;, &quot;Angebote1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oAngebote2&quot;, &quot;Angebote2_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oAuftragsbestaetigungen1&quot;, &quot;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oAuftragsbestaetigungen2&quot;, &quot;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oRechnungen1&quot;, &quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oRechnungen2&quot;, &quot;Rechnungen2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+		
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Projektverwaltung&quot;)
+		
+		sSQL1=&quot;update Steuerung set Gesperrt=1 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, sAngebote1)
+		Formular_init()				&apos;Initialisierung für Mehrplatzlösung
+		oForm_Steuerung.reload()
+		set_Tabelle_Dokumente()
+		Daten_uebernehmen()
+		
+	 	StatusBar(False)
+		ToolBar(False)
+	End if
+	FormSize()
+End Sub
+
+Sub set_Tabelle_Dokumente()
+	Dim iOption_1 as Integer
+	oForm_Steuerung.updateRow()
+	sSQL1=&quot;SELECT Option_1 from Steuerung where ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iOption_1=oRecord1.getLong(1)
+	Wend
+	SELECT case iOption_1
+	case 1
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Angebote1_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+		then
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Angebote1&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Angebote1_&quot;&amp; iEinstellungsID_lokal)
+		end if
+	case 2
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Auftragsbestaetigungen1_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+		then
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Auftragsbestaetigungen1&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Auftragsbestaetigungen1_&quot;&amp; iEinstellungsID_lokal)
+		end if
+	case 3
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Lieferscheine1_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+		then
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Lieferscheine1&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Lieferscheine1_&quot;&amp; iEinstellungsID_lokal)
+		end if
+	case 4
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Aufmasze1_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+		then
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Aufmasze1&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Aufmasze1_&quot;&amp; iEinstellungsID_lokal)
+		end if
+	case 5
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Rechnungen1_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+		then
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Rechnungen1&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Rechnungen1_&quot;&amp; iEinstellungsID_lokal)
+		end if
+	case 6
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Gutschriften1_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+		then
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Gutschriften1&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle_Dokumente&quot;, &quot;Gutschriften1_&quot;&amp; iEinstellungsID_lokal)
+		end if
+	End SELECT
+	init_Form_Dokumente()
+	oForm_Dokumente.reload()
+	oForm_Dokumente.reset()
+End Sub
+
+Sub Kundendaten_anzeigen()
+	Dim sKontaktdaten as String
+	if lKontaktID &lt;&gt; 0 then
+		sSQL1=&quot;SELECT distinct Anrede,Titel,Vorname,Name1,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,&quot;&amp;_
+			&quot;Hausnummer,Mindestangaben,Telefon,Funktelefon,Fax,EMail,Url,ReferenzID,Bemerkungen,Ordner&quot;&amp;_
+			&quot; from &quot;&amp; sKunden &amp;&quot; where KontaktID=&quot;&amp; lKontaktID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sAnrede=oRecord1.getString(1)
+			sTitel=oRecord1.getString(2)
+			sVorname=oRecord1.getString(3)
+			sName1=oRecord1.getString(4)
+			sName2=oRecord1.getString(5)
+			sName3=oRecord1.getString(6)
+			sName4=oRecord1.getString(7)
+			sLand=oRecord1.getString(8)
+			sPLZ=oRecord1.getString(9)
+			sOrt=oRecord1.getString(10)
+			sStrasse=oRecord1.getString(11)
+			sHausnummer=oRecord1.getString(12)
+			sMindestangaben=oRecord1.getString(13)
+			sTelefon=oRecord1.getString(14)
+			sFunktelefon=oRecord1.getString(15)
+			sFax=oRecord1.getString(16)
+			sEMail=oRecord1.getString(17)
+			sUrl=oRecord1.getString(18)
+			sReferenzID=oRecord1.getString(19)
+			sBemerkung=oRecord1.getString(20)
+			sOrdner=oRecord1.getString(21)
+		Wend
+		sKontaktdaten=&quot;    Kontaktnummer:&quot;&amp; Chr$(9) &amp; lKontaktID &amp; Chr$(13) &amp; Chr$(13)
+		if sReferenzID &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp;&quot;   Referenznummer:&quot;&amp; Chr$(9) &amp; sReferenzID &amp; Chr$(13) &amp; Chr$(13)
+		End if
+		if sAnrede &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sAnrede &amp; Chr$(13)
+		End if
+		sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)
+		if sTitel &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sTitel &amp; &quot; &quot;
+		End if
+		if sVorname &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sVorname &amp; &quot; &quot;
+		End if
+		if sName1 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sName1 &amp; Chr$(13)
+		End if
+		if sName2 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sName2 &amp; Chr$(13)
+		End if
+		if sName3 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sName3 &amp; Chr$(13)
+		End if
+		if sName4 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sName4 &amp; Chr$(13)
+		End if
+		if sPLZ &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sPLZ &amp; &quot; &quot;
+		End if
+		if sOrt &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sOrt &amp; Chr$(13)
+		End if
+		if sLand &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sLand &amp; Chr$(13)
+		End if
+		if sStrasse &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sStrasse &amp;&quot; &quot;&amp; sHausnummer &amp;Chr$(13)&amp;Chr$(13)
+		End if
+		if sMindestangaben &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sMindestangaben &amp; Chr$(13)&amp;Chr$(13)
+		End if
+		if sTelefon &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp;  &quot;Telefon:&quot;&amp;Chr$(9)&amp; sTelefon &amp;Chr$(13)
+		End if
+		if sFax &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;      Fax:&quot;&amp;Chr$(9)&amp; sFax &amp;Chr$(13)
+		End if
+		if sFunktelefon &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;   Mobil:&quot;&amp;Chr$(9)&amp; sFunktelefon &amp;Chr$(13)
+		End if
+		if sEMail &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;   Email:&quot;&amp;Chr$(9)&amp; sEMail &amp;Chr$(13)
+		End if
+		if sUrl &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;       Url:&quot;&amp;Chr$(9)&amp; sUrl &amp;Chr$(13)&amp;Chr$(13)
+		End if
+		if sBemerkung &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;Bemerkungen:&quot; &amp;Chr$(13) &amp; sBemerkung &amp;Chr$(13)&amp;Chr$(13)
+		End if
+		if sOrdner &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;Ordner:&quot;&amp;Chr$(9)&amp; sOrdner &amp;Chr$(13)&amp;Chr$(13)
+		End if
+		MsgBox(sKontaktdaten,64,sTitle_lokal &amp;&quot; Kundendaten&quot;)
+	End if
+End Sub
+
+Sub Projekt_loeschen()
+	if lProjektID = 0 then
+		MsgBox(&quot;Sie haben noch keine Projekt ausgewählt!&quot;,16,sTitle_lokal)
+	else
+		vStatus=MsgBox(&quot;Soll das aktuelle Projekt:&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;&gt;&gt; &quot;&amp; sField_ProjektName &amp;&quot; &lt;&lt;&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+			&quot;gelöscht werden?&quot;&amp; Chr$(13) &amp; Chr$(13) &amp; Chr$(13) &amp;_
+			&quot;Wenn Ja ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+			&quot;Wollen Sie trotzdem fortfahren?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sSQL1=&quot;delete from &quot;&amp; sProjekte &amp;&quot; where ProjektID= &apos;&quot;&amp; lProjektID &amp;&quot;&apos;&quot;
+			SQL_execute(sSQL1)
+			SQL_ProjektID_entfernen()
+			wait 10
+			oList_Projektauswahl.refresh()
+			oForm_Steuerung.reload()
+			oForm_Steuerung.reset()
+			ListAuswahlEnabled()
+		End if
+	End if
+End Sub
+
+Sub Kunden_refresh()
+	oList_Kunden.refresh()
+End Sub
+
+Sub ListAuswahlEnabled()
+	if lProjektID = 0 then
+		oList_Projektauswahl.Enabled=True
+	else
+		oList_Projektauswahl.Enabled=False
+	End if
+End Sub
+
+Sub Projekt_uebernehmen()
+	oList_Projektauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Projektauswahl.refresh()
+	oForm_Steuerung.reload()
+	SQL_KontaktID_uebernehmen()
+	Auswertung_refresh()
+	ListAuswahlEnabled()
+End sub
+
+Sub Filter_reset()
+	SQL_Steuerung_reset()
+	oList_Filter_Jahr.refresh()
+	oList_Filter_Status.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Projektauswahl.refresh()
+	oForm_Steuerung.reload()
+	oForm_Steuerung.reset()
+End Sub
+
+Sub Filter_Jahr_setzen()
+	oList_Filter_Jahr.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Filter_Status.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Projektauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_Status_setzen()
+	oList_Filter_Status.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Filter_Status.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Projektauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_Kunde_setzen()
+	oList_Filter_Kunde.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Filter_Kunde.refresh()
+	oList_Projektauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub List_Filter_Jahr_refresh()
+	oList_Filter_Jahr.refresh()
+End Sub
+
+Sub List_Filter_Status_refresh()
+	oList_Filter_Status.refresh()
+End Sub
+
+Sub List_Filter_Kunde_refresh()
+	oList_Filter_Kunde.refresh()
+End Sub
+
+Sub List_Projektauswahl_refresh
+	oList_Projektauswahl.refresh()
+End Sub
+
+Sub Form_Kundendaten_reload()
+	Dim sSQL1 as String,sSQL2 as String
+	oList_Kunden.commit()
+	oForm_Projekt.updateRow()
+	sSQL1=&quot;update &quot;&amp; sProjekte &amp;&quot; as t1,&quot;&amp; sKunden &amp;&quot; as t2 &quot;&amp;_
+		&quot;Set t1.Stundenverrechnungssatz=t2.Stundenverrechnungssatz &quot;&amp;_
+		&quot;where t1.ProjektID=&quot;&amp; lProjektID &amp;_
+			&quot; and t2.KontaktID = t1.KontaktID&quot;&amp;_
+			&quot; and (t1.Stundenverrechnungssatz=0 or t1.Stundenverrechnungssatz is Null)&quot;
+	SQL_execute(sSQL1)
+	sSQL2=&quot;update &quot;&amp; sProjekte &amp;&quot; as t1,&quot;&amp; sKunden &amp;&quot; as t2 &quot;&amp;_
+		&quot;Set t1.Materialaufschlagsatz=t2.Materialaufschlagsatz &quot;&amp;_
+		&quot;where t1.ProjektID=&quot;&amp; lProjektID &amp;_
+			&quot; and t2.KontaktID = t1.KontaktID&quot;&amp;_
+			&quot; and (t1.Materialaufschlagsatz=0 or t1.Materialaufschlagsatz is Null)&quot;
+	SQL_execute(sSQL2)
+	oForm_Projekt.refreshRow()
+End Sub
+
+Sub Datum_bezahlt_setzen()
+	oField_bezahlt_am.commit()
+	oForm_Projekt.updateRow()
+End Sub
+
+Sub Status_setzen()
+	oList_Status.commit()
+	oForm_Projekt.updateRow()
+End Sub
+
+Sub Daten_uebernehmen()
+&apos;	On Error Goto ErrorHandle
+&apos;print lProjektID
+	if lProjektID &lt;&gt; 0 then
+		nochmal:
+		if lKontaktID = 0 then
+			MsgBox(&quot;Sie haben noch keinen Kunden ausgewählt!&quot;,16,sTitle_lokal)
+			stop
+		End if	
+		if sField_Erstellungsdatum = &quot;&quot; then
+			sDate=InputBox(&quot;Geben Sie bitte das Erstellungsdatum ein!&quot;,sTitle_lokal)
+			if sDate = &quot;&quot; then
+				ErrorHandle:
+				vStatus=MsgBox(&quot;Sie haben immer noch kein gültiges Datum eingegeben!&quot;,37,sTitle_lokal)
+				if vStatus=4 then
+					goto nochmal
+				elseif vStatus=2 then
+					stop
+				End if
+			End if
+			sYear=year(DateValue(sDate))
+			sMonth=month(DateValue(sDate))
+			sDay=day(DateValue(sDate))
+			if len(sMonth) &lt; 2 then
+				sMonth=&quot;0&quot; &amp; month(DateValue(sDate))
+			End if
+			if len(sDay) &lt; 2 then
+				sDay=&quot;0&quot; &amp; day(DateValue(sDate))
+			End if
+			sDatum = sYear &amp; sMonth &amp; sDay
+			oField_Erstellungsdatum.date=sDatum
+			oField_Erstellungsdatum.commit()
+			wait 300
+		End if
+		oForm_Projekt.updateRow()
+		SQL_ProjektID_entfernen()
+		wait 10
+		oList_Projektauswahl.refresh()
+		oForm_Steuerung.reload()
+		oForm_Projekt.reset()
+		ListAuswahlEnabled()
+		Auswertung_refresh()
+	End if
+End Sub
+
+Sub Maske_schliessen()
+	if oDoc.isReadOnly then
+		Dim sSQL1 as String
+		Daten_uebernehmen()
+		sSQL1=&quot;update Steuerung set Gesperrt=0 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SQL_Steuerung_reset()
+		SQL_leerer_Datensatz_entfernen()
+	End if
+	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+Sub neues_Projekt()
+	if lProjektID &lt;&gt; 0 then
+		vStatus=MsgBox(&quot;Sie haben das vorhanden Projekt noch nicht gespeichert!&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+			&quot;Wollen Sie dies jetzt tun?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			Daten_uebernehmen()
+		elseif vStatus=7 then
+			exit sub
+		End if
+	End if	
+nochmal:
+	sProjektname=InputBox(&quot;Geben Sie die Bezeichnung für das Projekt &gt;&gt; &quot;&amp; flProjektID_import + 1 &amp;&quot; &lt;&lt; ein!&quot;,sTitle_lokal)
+	if sProjektname = &quot;&quot; then
+		vStatus=MsgBox(&quot;Sie haben noch keine Bezeichnung eingegeben!&quot;,37,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+
+	sSQL1=&quot;insert into &quot;&amp; sProjekte &amp;&quot; (ProjektID,Projekt_Name,KontaktID,Erstellungsdatum)&quot;&amp;_
+		&quot; SELECT concat(&quot;&amp; flProjektID_import &amp;&quot;+1),concat(&apos;&quot;&amp; fsConvertApostroph(sProjektname) &amp;&quot;&apos;),concat(0),date_add(now(),interval 0 day)&quot;
+	SQL_execute(sSQL1)
+	SQL_update_Steuerung_ProjektID_last
+	oForm_Steuerung.reload()
+	ListAuswahlEnabled()
+	Rechtschreibung()
+End Sub
+
+Sub Betrag_berechnen()
+	oField_Summe_ohne_MwSt.commit()
+	oForm_Projekt.updateRow()
+	sSQL1=&quot;SELECT MwSt_Satz from &quot;&amp; sKunden &amp;&quot; where KontaktID=&quot;&amp; lKontaktID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		cMwSt_Satz=oRecord1.getString(1)
+	Wend
+	sSQL1=&quot;update &quot;&amp; sProjekte &amp;_
+		&quot; set MwSt_Satz=&quot;&amp; cMwSt_Satz &amp;&quot;,MwSt=Summe_ohne_MwSt*MwSt_Satz/100,&quot;&amp;_
+		&quot;Summe_mit_MwSt=Summe_ohne_MwSt+MwSt where ProjektID=&quot;&amp; lProjektID
+	SQL_execute(sSQL1)
+	oForm_Projekt.reload()
+End Sub
+
+Sub Betrag_berechnen_MwSt_Satz_update
+	oField_Summe_ohne_MwSt.commit()
+	oField_MwSt_Satz.commit()
+	oForm_Projekt.updateRow()
+	sSQL2=&quot;update &quot;&amp; sProjekte &amp;_
+		&quot; set MwSt=Summe_ohne_MwSt*MwSt_Satz/100,Summe_mit_MwSt=Summe_ohne_MwSt+MwSt where ProjektID=&quot;&amp; lProjektID
+	SQL_execute(sSQL2)
+	oForm_Projekt.reload()
+End Sub
+
+Sub Betrag_berechnen_MwSt_update
+	oField_MwSt.commit()
+	oForm_Projekt.updateRow()
+	sSQL2=&quot;update &quot;&amp; sProjekte &amp;_
+		&quot; set Summe_mit_MwSt=Summe_ohne_MwSt+MwSt where ProjektID=&quot;&amp; lProjektID 
+	SQL_execute(sSQL2)
+	oForm_Projekt.reload()
+End Sub
+
+Sub Datum_setzen()
+	oField_Baubeginn.commit()
+	oForm_Projekt.updateRow()
+End Sub
+
+Sub Filter_Suchstring_setzen()
+	oField_Suchstring.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Projektauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Auswertung_refresh()
+	oListAngNetto.refresh()
+	oListAngMateinsatz.refresh()
+	oListAngLieferung.refresh()
+	oListAngSollZeit.refresh()
+	oListAngSollLeistung.refresh()
+	oListAuftrNetto.refresh()
+	oListAuftrMateinsatz.refresh()
+	oListAuftrLieferung.refresh()
+	oListAuftrSollZeit.refresh()
+	oListAuftrSollLeistung.refresh()
+	oListGeleistetNetto.refresh()
+	oListGeleistetMateinsatz.refresh()
+	oListGeleistetLieferung.refresh()
+	oListGeleistetSollZeit.refresh()
+	oListGeleistetSollLeistung.refresh()
+	oListGeleistetIstZeit.refresh()
+	oListGeleistetIstLeistung.refresh()
+	oListGeleistetIstNetto.refresh()
+	oListRechnungNetto.refresh()
+	oListRechnungMateinsatz.refresh()
+	oListRechnungLieferung.refresh()
+	oListRechnungSollZeit.refresh()
+	oListRechnungSollLeistung.refresh()
+	oListStandardNetto.refresh()
+	oListStandardMateinsatz.refresh()
+	oListStandardLieferung.refresh()
+	oListStandardSollZeit.refresh()
+	oListStandardSollLeistung.refresh()
+	oListStandardIstZeit.refresh()
+	oListStandardIstLeistung.refresh()
+	oListStandardIstNetto.refresh()
+	oListNachtragNetto.refresh()
+	oListNachtragMateinsatz.refresh()
+	oListNachtragLieferung.refresh()
+	oListNachtragSollZeit.refresh()
+	oListNachtragSollLeistung.refresh()
+	oListNachtragIstZeit.refresh()
+	oListNachtragIstLeistung.refresh()
+	oListNachtragIstNetto.refresh()
+	oListNebenLeistNetto.refresh()
+	oListNebenLeistMateinsatz.refresh()
+	oListNebenLeistLieferung.refresh()
+	oListNebenLeistSollZeit.refresh()
+	oListNebenLeistSollLeistung.refresh()
+End Sub
+
+Sub Rechtschreibung()
+	if lProjektID &lt;&gt; 0 then
+		if fbSpellCheck(oField_ProjektName.BoundField.String,&quot;Projektname&quot;) = False then exit sub
+	End if
+End Sub
+</script:module>

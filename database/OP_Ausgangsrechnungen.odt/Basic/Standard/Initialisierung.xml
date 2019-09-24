@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Initialisierung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sSQL1 AS String,sSQL2 AS String
+Dim vSQLArray AS Variant
+
+Sub Formular_init()
+	reset_Summen()
+	init_Form_Document()
+	init_Form_Kundendaten()
+	init_Form_Steuerung()
+	init_List_Filter_Jahr()
+	init_List_Filter_Monat()
+	init_List_Filter_Status()
+	init_List_Filter_Kunde()
+	init_List_Filter_Projekte()
+	init_List_Documentauswahl()
+	init_List_Monat()
+	init_List_Kalenderjahr()
+End Sub
+
+Sub init_Form_Document()
+	sSQL1=&quot;SELECT * FROM &quot;&amp; sTabelle &amp;&quot; WHERE DocumentID=:c&quot;
+	oForm_Document.DataSourceName=sDataSource
+	oForm_Document.NavigationBarMode=0
+	oForm_Document.CommandType=2
+	oForm_Document.Command=sSQL1
+	oForm_Document.Cycle=1
+	oForm_Document.AllowInserts=false
+End Sub
+
+Sub init_Form_Steuerung()
+	sSQL1=&quot;SELECT * FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oForm_Steuerung.DataSourceName=sDataSource
+	oForm_Steuerung.NavigationBarMode=0
+	oForm_Steuerung.CommandType=2
+	oForm_Steuerung.Command=sSQL1
+	oForm_Steuerung.Cycle=1
+	oForm_Steuerung.AllowInserts=false
+End Sub
+
+Sub init_Form_Kundendaten()
+	sSQL1=&quot;SELECT * FROM &quot;&amp; sKunden &amp;&quot; WHERE KontaktID=:a&quot;
+	oForm_Kundendaten.DataSourceName=sDataSource
+	oForm_Kundendaten.NavigationBarMode=0
+	oForm_Kundendaten.CommandType=2
+	oForm_Kundendaten.Command=sSQL1
+	oForm_Kundendaten.Cycle=1
+	oForm_Kundendaten.AllowInserts=false
+End Sub
+
+Sub init_List_Documentauswahl()
+	vSQLArray=Array(&quot;SELECT DISTINCT CONCAT(t1.DocumentID,&apos;: &apos;,t3.Name1,&apos;  --&gt;  &apos;,t1.Document_Name) AS Name,t1.DocumentID&quot;&amp;_
+		&quot; FROM (&quot;&amp; sTabelle &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sKunden &amp;&quot; AS t3&quot;&amp;_
+		&quot; ON t3.KontaktID=t1.KontaktID)&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE ((((YEAR(t1.Erstellungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR (YEAR(t1.Erstellungsdatum) LIKE &apos;%&apos; AND (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((MONTH(t1.Erstellungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+		&quot; OR (MONTH(t1.Erstellungsdatum) LIKE &apos;%&apos; AND (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0)))&quot;&amp;_
+		&quot; AND ((t1.Status=t2.Status AND LENGTH(t2.Status) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.Status LIKE &apos;%&apos; AND (LENGTH(t2.Status) IS NULL OR LENGTH(t2.Status)=0)))&quot;&amp;_
+		&quot; AND ((t1.Document_Name LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;) AND LENGTH(t2.Suchstring) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.Document_Name LIKE &apos;%&apos; AND (LENGTH(t2.Suchstring) IS NULL OR LENGTH(t2.Suchstring)=0)))&quot;&amp;_
+		&quot; AND ((t1.KontaktID=t2.KundenID AND LENGTH(t2.KundenID) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.KontaktID LIKE &apos;%&apos; AND (LENGTH(t2.KundenID) IS NULL OR LENGTH(t2.KundenID)=0))))&quot;&amp;_
+		&quot; AND ((t1.ProjektID=t2.ProjektID AND LENGTH(t2.ProjektID) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t2.ProjektID) IS NULL OR LENGTH(t2.ProjektID)=0)))&quot;&amp;_
+		&quot; OR t1.DocumentID=t2.DocumentID)&quot;&amp;_
+		&quot; ORDER BY t1.DocumentID DESC&quot;)
+	oList_Documentauswahl.ListSourceType=4
+	oList_Documentauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Jahr()
+	vSQLArray=Array(&quot;SELECT DISTINCT YEAR(Erstellungsdatum),YEAR(Erstellungsdatum) AS Jahr&quot;&amp;_
+			&quot; FROM &quot;&amp; sTabelle &amp;&quot; ORDER BY Jahr DESC&quot;)
+	oList_Filter_Jahr.ListSourceType=4
+	oList_Filter_Jahr.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Monat()
+	vSQLArray=Array(&quot;SELECT DISTINCT t1.Monat,t1.MonatID&quot;&amp;_
+		&quot; FROM (Monate AS t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sTabelle &amp;&quot; AS t2&quot;&amp;_
+		&quot; ON t1.MonatID = MONTH(t2.Erstellungsdatum))&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((YEAR(t2.Erstellungsdatum)=t3.Jahr AND LENGTH(t3.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR (YEAR(t2.Erstellungsdatum) LIKE &apos;%&apos; AND (LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0)))&quot;&amp;_
+		&quot; OR t1.MonatID=t3.Monat)&quot;&amp;_
+		&quot; ORDER BY t1.MonatID+0 ASC&quot;)
+	oList_Filter_Monat.ListSourceType=4
+	oList_Filter_Monat.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Status()
+	vSQLArray=Array(&quot;SELECT DISTINCT t1.Status,t1.Status AS Stat&quot;&amp;_
+		&quot; FROM &quot;&amp; sTabelle &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((YEAR(t1.Erstellungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR (YEAR(t1.Erstellungsdatum) LIKE &apos;%&apos; AND (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((MONTH(t1.Erstellungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+		&quot; OR (MONTH(t1.Erstellungsdatum) LIKE &apos;%&apos; AND (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0)))&quot;&amp;_
+		&quot; OR t1.Status=t2.Status)&quot;&amp;_
+		&quot; UNION&quot;&amp;_
+		&quot; SELECT DISTINCT t2.Status,t2.Status AS Stat&quot;&amp;_
+		&quot; FROM &quot;&amp; sTabelle &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE t2.Status&lt;&gt;t1.Status&quot;)
+	oList_Filter_Status.ListSourceType=4
+	oList_Filter_Status.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Kunde()
+	vSQLArray=Array(&quot;SELECT DISTINCT &quot;&amp;_
+		&quot;CONCAT(t3.Name1,&apos; &apos;,t3.Vorname,&apos; &apos;,t3.Name2,&apos;  --&gt;  &apos;,t3.Ort) AS Name,t1.KontaktID&quot;&amp;_
+		&quot; FROM (&quot;&amp; sTabelle &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sKunden &amp;&quot; AS t3&quot;&amp;_
+		&quot; ON t3.KontaktID=t1.KontaktID)&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((YEAR(t1.Erstellungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR (YEAR(t1.Erstellungsdatum) LIKE &apos;%&apos; AND (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((MONTH(t1.Erstellungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+		&quot; OR (MONTH(t1.Erstellungsdatum) LIKE &apos;%&apos; AND (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0)))&quot;&amp;_
+		&quot; AND ((t1.Status=t2.Status AND LENGTH(t2.Status) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.Status LIKE &apos;%&apos; AND (LENGTH(t2.Status) IS NULL OR LENGTH(t2.Status)=0)))&quot;&amp;_
+		&quot; OR t1.KontaktID=t2.KundenID)&quot;&amp;_
+		&quot; ORDER BY t3.Name1 ASC&quot;)
+	oList_Filter_Kunde.ListSourceType=4
+	oList_Filter_Kunde.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Projekte()
+	vSQLArray=Array(&quot;SELECT distinct t1.Projekt_Name,t1.ProjektID &quot;&amp;_
+		&quot; FROM &quot;&amp; sProjekte &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sTabelle &amp;&quot; as t2&quot;&amp;_
+		&quot; ON t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE ((((YEAR(t2.Erstellungsdatum)=t3.Jahr AND LENGTH(t3.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((t2.KontaktID=t3.KundenID  AND LENGTH(t3.KundenID) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.KundenID) IS NULL OR LENGTH(t3.KundenID)=0)))&quot;&amp;_
+		&quot; OR t1.ProjektID=t3.ProjektID)&quot;&amp;_
+		&quot; ORDER BY t1.Projekt_Name ASC&quot;)
+	oList_Filter_Projekte.ListSourceType=4
+	oList_Filter_Projekte.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Kalenderjahr()
+	vSQLArray=Array(&quot;SELECT DISTINCT YEAR(t1.Erstellungsdatum),YEAR(t1.Erstellungsdatum) AS Jahr&quot;&amp;_
+		&quot; FROM &quot;&amp; sTabelle &amp;&quot; AS t1 ORDER BY Jahr DESC&quot;)
+	oList_Kalenderjahr.ListSourceType=4
+	oList_Kalenderjahr.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Monat()
+	vSQLArray=Array(&quot;SELECT DISTINCT Monat,MonatID FROM Monate ORDER BY MonatID+0&quot;)
+	oList_Monat.ListSourceType=4
+	oList_Monat.ListSource=vSQLArray
+End Sub
+
+</script:module>

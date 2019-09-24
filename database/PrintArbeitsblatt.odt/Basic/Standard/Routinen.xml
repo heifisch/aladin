@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub createRepord()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	StatusBar(True)
+	ToolBar(True)
+	FormSizePrint()
+	if oDoc.isReadOnly then
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;PrintArbeitsblatt&quot;))
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+
+		Dim oFrame as Object
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Arbeitsblatt&quot;)
+		
+		Kontaktdaten()
+		Leistungen()
+		Drucktabellen_leeren(iUserID_lokal)
+	End if
+End Sub
+
+Sub KontaktDaten()
+	Dim oRecord_Kontakt as Object
+	Dim Projekt_Name as String,sProjektID as String
+	Dim sAnschrift as String
+	Dim sSQL1 as String
+
+	sSQL1=&quot;select distinct &quot;&amp;_
+		&quot;t1.DocumentID,t1.Document_TypID,t1.Document_Name,t1.Nummern,t1.Anschrift &quot;&amp;_
+		&quot;from &quot;&amp; sDrucker1_TEMP(iUserID_lokal) &amp;&quot; as t1&quot;
+	oRecord_Kontakt=oResult(sSQL1)
+	While oRecord_Kontakt.next()
+		SetDocUserProperty(&quot;oDocumentID&quot;,oRecord_Kontakt.getString(1))
+		SetDocUserProperty(&quot;oDocument_TypID&quot;,oRecord_Kontakt.getInt(2))
+		Feld_fuellen(&quot;Projekt_Name&quot;,oRecord_Kontakt.getString(3))
+		Feld_fuellen(&quot;ProjektID&quot;,oRecord_Kontakt.getString(4))
+		Feld_fuellen(&quot;Anschrift&quot;,oRecord_Kontakt.getString(5))
+	Wend	
+	oDoc.getTextFields().refresh()
+End Sub
+
+Sub Leistungen()
+	Dim sPos as String
+	Dim sLeistungsbezeichnung as String
+	Dim iPosLeistung as Integer,iPosZwiBem as Integer,iPosZwiSum as Integer
+	Dim lCountLeistung as Long,lCountZwiBem as Long,lCountZwiSum as Long,lCountInsert as Long
+	Dim iSelectLeistung as Integer,iSelectZwiBem as Integer,iSelectZwiSum as Integer
+	Dim sLeistungstext as String,sBemerkung as String,sZwiSumName as String,sZwiSumBauzeit as String
+	Dim oCursorZwiBem as Object,oCursorZwiSum as Object
+	Dim oCursorDocTyp1 as Object,oCursorDocTyp2 as Object
+	Dim oRangeAltPos as Object
+	Dim vColumns as Variant,vColumnPos as Variant
+	Dim iPageCountNew as Integer,iPageCount as Integer,iPageNumber as Integer
+	Dim vTables as Object
+	Dim vTableLeistungen as Variant,vRowsLeistungen as Variant
+	Dim vTableKopf2 as Variant
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String
+	Dim sTabZwiBem as String,sTabZwiSum as String
+	Dim lAnzahlLeistungen as Long,lAnzahlZwiBem as Long,lAnzahlZwiSum as Long,lAnzahlAltPos as Long
+	Dim oRecordLeistungen as Object,oRecordZwiBem as Object,oRecordZwiSum as Object
+	Dim vViewCursor as Variant
+	Dim iMenge_drucken as Integer,sMenge as String,sMengeVerbaut as String
+	Dim iBauzeit_drucken as Integer,sBauzeit as String,sBauzeit_Spalte as String
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	vTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	vTables = oDoc.getTextTables
+	vTableLeistungen = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTableLeistungen = vTables.getByName(&quot;Leistungen&quot;)
+	vRowsLeistungen = vTableLeistungen.getRows()
+	vViewCursor = oDoc.CurrentController.getViewCursor()
+	
+	vTableKopf2 = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTableKopf2 = vTables.getByName(&quot;Kopf&quot;)
+	
+	if lDocumentID = 99999999 then
+		iMenge_drucken = 6
+		vTableKopf2.getCellByName(&quot;D1.1.2&quot;).String=&quot;verbaute Menge&quot;
+		sBauzeit_Spalte = &quot;E&quot;
+	else
+		sBauzeit_Spalte = &quot;D&quot;
+		iMenge_drucken = MsgBox(&quot;Sollen die Mengenvorgaben mit gedruckt werden?&quot;,36,sTitle_lokal)
+	End If
+	
+	if iMenge_drucken = 6 then
+		vTableKopf2.getCellByName(&quot;C1.1.2&quot;).String=&quot;angebotene Menge&quot;
+
+		iBauzeit_drucken = MsgBox(&quot;Sollen die Bauzeiten mit gedruckt werden?&quot;,36,sTitle_lokal)
+
+		if iBauzeit_drucken = 6 then
+			vTableKopf2.getCellByName(sBauzeit_Spalte &amp; &quot;1.1.2&quot;).String=&quot;geplante Bauzeit [h]&quot;
+		End if
+	End if
+	
+	select case iDocument_TypID
+		case 1
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemAngebote_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiSuAngebote_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemAngebote&quot;
+				sTabZwiSum = &quot;ZwiSuAngebote&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemAngebote_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiSum = &quot;ZwiSuAngebote_&quot;&amp; iEinstellungsID_lokal
+			end if
+		case 2
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemAuftragsbestaetigungen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiSuAuftragsbestaetigungen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemAuftragsbestaetigungen&quot;
+				sTabZwiSum = &quot;ZwiSuAuftragsbestaetigungen&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemAuftragsbestaetigungen_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiSum = &quot;ZwiSuAuftragsbestaetigungen_&quot;&amp; iEinstellungsID_lokal
+			end if
+		case 3
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemLieferscheine_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiSuLieferscheine_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemLieferscheine&quot;
+				sTabZwiSum = &quot;ZwiSuLieferscheine&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemLieferscheine_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiSum = &quot;ZwiSuLieferscheine_&quot;&amp; iEinstellungsID_lokal
+			end if
+		case 4
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemAufmasze_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiSuAufmasze_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemAufmasze&quot;
+				sTabZwiSum = &quot;ZwiSuAufmasze&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemAufmasze_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiSum = &quot;ZwiSuAufmasze_&quot;&amp; iEinstellungsID_lokal
+			end if
+		case 5
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemRechnungen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiSuRechnungen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemRechnungen&quot;
+				sTabZwiSum = &quot;ZwiSuRechnungen&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemRechnungen_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiSum = &quot;ZwiSuRechnungen_&quot;&amp; iEinstellungsID_lokal
+			end if
+		case 6
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemGutschriften_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiSuGutschriften_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemGutschriften&quot;
+				sTabZwiSum = &quot;ZwiSuGutschriften&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemGutschriften_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiSum = &quot;ZwiSuGutschriften_&quot;&amp; iEinstellungsID_lokal
+			end if
+		case 7
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemPreisanfragen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiSuPreisanfragen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemPreisanfragen&quot;
+				sTabZwiSum = &quot;ZwiSuPreisanfragen&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemPreisanfragen_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiSum = &quot;ZwiSuPreisanfragen_&quot;&amp; iEinstellungsID_lokal
+			end if
+		case 8
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemBestellungen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiSuBestellungen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemBestellungen&quot;
+				sTabZwiSum = &quot;ZwiSuBestellungen&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemBestellungen_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiSum = &quot;ZwiSuBestellungen_&quot;&amp; iEinstellungsID_lokal
+			end if
+	End Select
+	
+	lAnzahlLeistungen = fAnzahlDatensaetze(sDrucker2_TEMP(iUserID_lokal),lDocumentID)
+	lAnzahlZwiBem = fAnzahlDatensaetze(sTabZwiBem,lDocumentID)
+	lAnzahlZwiSum = fAnzahlDatensaetze(sTabZwiSum,lDocumentID)
+	
+	if lAnzahlLeistungen &gt; 0 then
+		sSQL1=&quot;select distinct t1.PosID,t1.Pos,t1.Leistungsbezeichnung,t1.Menge,t1.Lieferung,t1.GZ&quot;&amp;_
+			&quot; from &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; as t1&quot;&amp;_
+			&quot; order by t1.PosID ASC&quot;
+	End if
+	
+	if lAnzahlZwiBem &gt; 0 then
+		sSQL3=&quot;select distinct Pos,Bemerkung &quot;&amp;_
+			&quot;from &quot;&amp; sTabZwiBem &amp;&quot; where DocumentID=&quot;&amp; lDocumentID &amp;&quot; order by Pos ASC&quot;
+	End if
+	
+	if lAnzahlZwiSum &gt; 0 then
+		sSQL4=&quot;select distinct Pos,ZwiSuName,Bauzeit_Stunden &quot;&amp;_
+			&quot;from &quot;&amp; sTabZwiSum &amp;&quot; where DocumentID=&quot;&amp; lDocumentID &amp;&quot; order by Pos ASC&quot;
+	End if
+	
+	lCountZwiBem = 1
+	lCountLeistung = 1
+	lCountZwiSum = 1
+	lCountInsert = 1
+	iSelectZwiBem = 1
+	iSelectLeistung = 1
+	iSelectZwiSum = 1
+	iPageCount = 1
+	
+	Do While lAnzahlZwiBem &gt;= lCountZwiBem _
+		or lAnzahlLeistungen &gt;= lCountLeistung _
+		or (lAnzahlZwiSum &gt;= lCountZwiSum and iBauzeit_drucken = 6)
+	
+		if iSelectZwiBem = 1 then
+			if lAnzahlZwiBem &gt;= lCountZwiBem then
+				oRecordZwiBem=oResult_ZwiBem(sSQL3)
+				oRecordZwiBem.absolute(lCountZwiBem)
+				iPosZwiBem = oRecordZwiBem.getLong(1)
+				sBemerkung = oRecordZwiBem.getString(2)
+				iSelectZwiBem = 0
+			else
+				iSelectZwiBem = 0
+				iPosZwiBem = 9999
+			End if
+		End if
+	
+		if iSelectLeistung = 1 then
+			if lAnzahlLeistungen &gt;= lCountLeistung then
+				oRecordLeistungen=oResult_Leistungen(sSQL1)
+				oRecordLeistungen.absolute(lCountLeistung)
+				iPosLeistung = oRecordLeistungen.getLong(1)
+				sPos = oRecordLeistungen.getString(2)
+				sLeistungsbezeichnung = oRecordLeistungen.getString(3)
+				sMenge = oRecordLeistungen.getString(4)
+				sMengeVerbaut = oRecordLeistungen.getString(5)
+				sBauzeit = oRecordLeistungen.getString(6)
+				iSelectLeistung = 0
+			else
+				iSelectLeistung = 0
+				iPosLeistung = 9999
+			End if	
+		End if
+		
+		if iSelectZwiSum = 1 then
+			if lAnzahlZwiSum &gt;= lCountZwiSum then
+				oRecordZwiSum=oResult_ZwiSum(sSQL4)
+				oRecordZwiSum.absolute(lCountZwiSum)
+				iPosZwiSum = oRecordZwiSum.getLong(1)
+				sZwiSumName = oRecordZwiSum.getString(2)
+				sZwiSumBauzeit = oRecordZwiSum.getString(3)
+				iSelectZwiSum = 0
+			else
+				iSelectZwiSum = 0
+				iPosZwiSum = 9999
+			End if
+		End if
+			
+		if iPosZwiBem &gt; 0 and iPosZwiBem &lt;= iPosLeistung _
+			and (iPosZwiBem &lt;= iPosZwiSum or iBauzeit_drucken &lt;&gt; 6) then
+			vRowsLeistungen.insertByIndex(lCountInsert,1)
+			vRowsLeistungen.getByIndex(lCountInsert-1).IsAutoHeight = True
+			oCursorZwiBem=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; lCountInsert)
+			oCursorZwiBem.CharWeight=com.sun.star.awt.FontWeight.BOLD
+			vTableLeistungen.getCellByName(&quot;B&quot; &amp; lCountInsert).String=sBemerkung
+			vTableLeistungen.getCellByName(&quot;B&quot; &amp; lCountInsert).TopBorderDistance=200
+			lCountInsert=lCountInsert + 1
+			iSelectZwiBem = 1
+			lCountZwiBem=lCountZwiBem + 1
+		elseif iPosZwiBem = 0 then
+			lCountZwiBem=lCountZwiBem + 1
+			iSelectZwiBem = 1
+		elseif iPosLeistung &gt; 0 and iPosLeistung &lt; iPosZwiBem _ 
+			and (iPosLeistung &lt;= iPosZwiSum or iBauzeit_drucken &lt;&gt; 6) then
+			sLeistungstext = sLeistungsbezeichnung
+			vRowsLeistungen.insertByIndex(lCountInsert,1)
+			vRowsLeistungen.getByIndex(lCountInsert-1).IsAutoHeight = True
+			vTableLeistungen.getCellByName(&quot;A&quot; &amp; lCountInsert).String=sPos
+			vTableLeistungen.getCellByName(&quot;B&quot; &amp; lCountInsert).String=sLeistungstext
+			if iMenge_drucken = 6 then
+				Dim strMenge as String
+				strMenge=fZahlMitPunkt(sMenge)
+				if Right(strMenge,2) = &quot;00&quot; then
+					vTableLeistungen.getCellByName(&quot;C&quot; &amp; lCountInsert).String=Left(strMenge,Len(strMenge)-3)
+				else
+					vTableLeistungen.getCellByName(&quot;C&quot; &amp; lCountInsert).String=strMenge
+				End if
+			End if
+			if lDocumentID = 99999999 then
+				Dim strMengeVerbaut as String
+				strMengeVerbaut=fZahlMitPunkt(sMengeVerbaut)
+				if Right(strMengeVerbaut,2) = &quot;00&quot; then
+					vTableLeistungen.getCellByName(&quot;D&quot; &amp; lCountInsert).String=Left(strMengeVerbaut,Len(strMengeVerbaut)-3)
+				else
+					vTableLeistungen.getCellByName(&quot;D&quot; &amp; lCountInsert).String=strMengeVerbaut
+				End if
+			End if
+			if iBauzeit_drucken = 6 then
+				Dim strBauzeit as String
+				strBauzeit=fZahlMitPunkt(sBauzeit)
+				if Right(strBauzeit,2) = &quot;00&quot; then
+					vTableLeistungen.getCellByName(sBauzeit_Spalte &amp; lCountInsert).String=Left(strBauzeit,Len(strBauzeit)-3)
+				else
+					vTableLeistungen.getCellByName(sBauzeit_Spalte &amp; lCountInsert).String=strBauzeit
+				End if
+			End if
+			lCountInsert=lCountInsert + 1
+			iSelectLeistung = 1
+			lCountLeistung=lCountLeistung + 1
+
+		elseif iPosZwiSum &gt; 0 and iPosZwiSum &lt;= iPosLeistung _
+			and (iPosZwiSum &lt;= iPosZwiBem or iPosZwiBem = 9999) _
+			and iBauzeit_drucken = 6 then
+			
+			vRowsLeistungen.insertByIndex(lCountInsert,1)
+			vRowsLeistungen.getByIndex(lCountInsert-1).IsAutoHeight = True
+			oCursorZwiSum=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; lCountInsert)
+			oCursorZwiSum.CharWeight=com.sun.star.awt.FontWeight.BOLD
+			vTableLeistungen.getCellByName(&quot;B&quot; &amp; lCountInsert).String=&quot;Stunden: &quot; &amp; sZwiSumName
+			vTableLeistungen.getCellByName(&quot;B&quot; &amp; lCountInsert).TopBorderDistance=100
+			vTableLeistungen.getCellByName(&quot;B&quot; &amp; lCountInsert).BottomBorderDistance=200
+			oCursorZwiSum=vTableLeistungen.createCursorByCellName(sBauzeit_Spalte &amp; lCountInsert)
+			oCursorZwiSum.CharWeight=com.sun.star.awt.FontWeight.BOLD
+
+			Dim strZwiSumBauzeit as String
+			strZwiSumBauzeit=fZahlMitPunkt(sZwiSumBauzeit)
+			if Right(strZwiSumBauzeit,2) = &quot;00&quot; then
+				vTableLeistungen.getCellByName(sBauzeit_Spalte &amp; lCountInsert).String=Left(strZwiSumBauzeit,Len(strZwiSumBauzeit)-3)
+			else
+				vTableLeistungen.getCellByName(sBauzeit_Spalte &amp; lCountInsert).String=strZwiSumBauzeit
+			End if
+			vTableLeistungen.getCellByName(sBauzeit_Spalte &amp; lCountInsert).TopBorderDistance=100
+			vTableLeistungen.getCellByName(sBauzeit_Spalte &amp; lCountInsert).BottomBorderDistance=200
+			lCountInsert=lCountInsert + 1
+			iSelectZwiSum = 1
+			lCountZwiSum=lCountZwiSum + 1
+		elseif iPosZwiSum = 0 and iBauzeit_drucken = 6 then
+			lCountZwiSum=lCountZwiSum + 1
+			iSelectZwiSum = 1
+		End if
+	Loop
+
+	oDoc.refresh()
+	vViewCursor = oDoc.CurrentController.getViewCursor()
+	vViewCursor.jumpToLastPage()
+    iPageCount=vViewCursor.getPage()
+
+	Do Until iPageCount &lt; vViewCursor.getPage()
+		vRowsLeistungen.insertByIndex(lCountInsert,1)
+		lCountInsert=lCountInsert + 1
+		wait 1
+		vViewCursor.jumpToLastPage()
+	Loop
+	vRowsLeistungen.removeByIndex(lCountInsert,1)
+End Sub
+
+Function oDoc as Object
+	oDoc = thisComponent 
+End Function
+
+Function lDocumentID as Long
+	lDocumentID = GetDocUserProperty(&quot;oDocumentID&quot;)
+End Function
+
+Function iDocument_TypID as Long
+	iDocument_TypID = GetDocUserProperty(&quot;oDocument_TypID&quot;)
+End Function
+
+Function iEinstellungsID_lokal as Integer
+	iEinstellungsID_lokal=GetDocUserProperty(&quot;oEinstellungsID_lokal&quot;)
+End Function
+
+Function iUserID_lokal as Integer
+	iUserID_lokal=GetDocUserProperty(&quot;oUserID_lokal&quot;)
+End Function
+
+Function sTitle_lokal as String
+	 sTitle_lokal=GetDocUserProperty(&quot;oTitle_lokal&quot;)
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+Function FieldContent(sField as string) as String
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
+	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName) 
+	FieldContent = vFieldMaster.Content       
+End Function
+
+Sub Feld_fuellen(sField as string,sInhalt as string )
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
+	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName) 
+	vFieldMaster.Content = sInhalt        
+End Sub
+ 
+Sub Feld_loeschen(sField as string)
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	Dim bFound as boolean
+	vField = oDoc.createInstance(&quot;com.sun.star.text.TextField.User&quot;) 
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField
+	bFound = oDoc.getTextFieldMasters.hasbyname(sFieldName)
+	if bFound Then 
+		vFieldMaster =  oDoc.getTextFieldMasters.getByName(sFieldName) 
+		vFieldMaster.Content = &quot;&quot;    
+		vFieldMaster.dispose() 
+	End If 
+End Sub 
+
+Function ifPageCount as Integer
+	Dim oDocument As Object,oTextfield As Object,oCurElement As Object
+	Dim iElementCount as integer
+	oDocument = oDoc.CurrentController.Model
+	oTextfield = oDocument.getTextfields.CreateEnumeration
+	iElementCount=0
+	While oTextField.hasmoreElements
+		oCurElement = oTextField.NextElement
+		if oCurElement.SupportsService(&quot;com.sun.star.text.TextField.PageCount&quot;) and iElementCount=0 then
+			ifPageCount=oCurElement.getPresentation(False)
+			iElementCount=1
+		end if
+	Wend
+End Function
+
+</script:module>

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="commit" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub store_ProjektID_old
+	SetDocUserProperty(&quot;oProjektID_old&quot;, lProjektID)
+End Sub
+
+Sub set_ProjektID_new
+	Dim vStatus as Variant
+	Dim sSQL1 as String,sSQL2 as String
+On Error Goto ErrorHandler
+	oField_ProjektID.commit()
+	if lProjektID &gt; 0 and lProjektID &lt;&gt; lProjektID_old then
+&apos;		if fAnzahlDatensaetzeProjekte(sProjekte,lProjektID) = 0 then
+			sSQL1=&quot;update &quot;&amp; sProjekte &amp;&quot; set ProjektID=&quot;&amp; lProjektID &amp;&quot; where ProjektID=&quot;&amp; lProjektID_old
+			SQL_execute(sSQL1)
+			sSQL2=&quot;update Steuerung set ProjektID=&quot;&amp; lProjektID &amp;&quot; where ClientID=&quot;&amp; iClientID
+			SQL_execute(sSQL2)
+&apos;		else
+&apos;			MsgBox(&quot;Die laufende Nummer ist schon vergeben! Wählen sie bitte eine Neue!&quot;,16,sTitle_lokal)
+&apos;		End if
+		oList_Projektauswahl.refresh()
+		oForm_Steuerung.reload()
+	End if
+	ListAuswahlEnabled()
+	Exit Sub
+ErrorHandler:
+	MsgBox(&quot;Die laufende Nummer ist schon vergeben! Wählen sie bitte eine Neue!&quot;,16,sTitle_lokal)
+	oList_Projektauswahl.refresh()
+	oForm_Steuerung.reload()
+	ListAuswahlEnabled()
+End Sub
+
+</script:module>

@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Serienbriefverteiler" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub SerienBriefVerteiler()
+	Dim oTables as Object
+	Dim oRecord_Kontakt as Object,oRecord1 as Object,sVorname as String
+	Dim sDocumentID_mit_Praefix as String,sNummern as String,sKontakte as String,sAnrede as String
+	Dim sName as String,sName1 as String,sName2 as String,sName3 as String,sName4 as String
+	Dim sTelefon as String,sFunktelefon as String,sFax as String,sEMail as String,sTitel as String
+	Dim iCount as integer,sSerienBriefVerteiler as String,sSerienBriefVerteilerOld as String,sKorrespondenzTyp as String
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,iCountSerienbrief as Integer,sEmpfaenger as String,sEmpfaengerNr as String
+	Dim vStatus as Variant
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	sSerienBriefVerteiler=&quot;Datum: &quot;&amp; date
+	iCountSerienbrief=1
+
+	sSQL1=&quot;select KontaktTyp,KorrespondenzTyp from &quot;&amp; sDrucker_TEMP(iUserID_lokal) 
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sKontakte=oRecord1.getString(1)
+		sKorrespondenzTyp=oRecord1.getString(2)
+	Wend
+
+	sSQL2=&quot;select distinct &quot;&amp;_
+		&quot;t1.Document_Name,t1.DocumentID,t1.Anrede,t1.Body,t2.Name1,t2.Name2,&quot;&amp;_
+		&quot;t2.Name3,t2.Name4,t2.Vorname,t2.Titel,t2.Anrede,t2.EMail,t2.Telefon,t2.Funktelefon,t2.Fax,t1.Erstellungsdatum,t3.NameKurz,t4.Serienbriefverteiler&quot;&amp;_
+		&quot; from &quot;&amp; sDrucker_TEMP(iUserID_lokal) &amp;&quot; as t1,&quot;&amp; sKontakte &amp;&quot; as t2,Einstellungen as t3,&quot;&amp; sKorrespondenzTyp &amp;&quot; as t4&quot;&amp;_
+		&quot; where t2.KontaktID = t1.KontaktID&quot;&amp;_
+		&quot; AND t4.DocumentID=t1.DocumentID&quot;&amp;_
+		&quot; AND t3.EinstellungsID = t1.EinstellungsID&quot;
+
+	oRecord_Kontakt=oResult_Scroll(sSQL2)
+	oRecord_Kontakt.absolute(iCountSerienbrief)
+
+
+	Do While fAnzahlSerienbriefe &gt;= iCountSerienbrief
+		oRecord_Kontakt=oResult_Scroll(sSQL2)
+		oRecord_Kontakt.absolute(iCountSerienbrief)
+		
+		sDocumentID_mit_Praefix=oRecord_Kontakt.getString(2)
+		sName1=oRecord_Kontakt.getString(5)
+		sName2=oRecord_Kontakt.getString(6)
+		sName3=oRecord_Kontakt.getString(7)
+		sName4=oRecord_Kontakt.getString(8)
+		sVorname=oRecord_Kontakt.getString(9)
+		sTitel=oRecord_Kontakt.getString(10)
+		sAnrede=oRecord_Kontakt.getString(11)
+		sEMail=oRecord_Kontakt.getString(12)
+		sTelefon=oRecord_Kontakt.getString(13)
+		sFunktelefon=oRecord_Kontakt.getString(14)
+		sFax=oRecord_Kontakt.getString(15)
+		sSerienBriefVerteilerOld=oRecord_Kontakt.getString(18)
+		
+		sName=&quot;&quot;
+		sEmpfaenger=&quot;&quot;
+		sEmpfaengerNr=&quot;&quot;
+		if sAnrede &lt;&gt; &quot;&quot; then
+			sName = sName + sAnrede + &quot; &quot;
+		End if
+		if sTitel &lt;&gt; &quot;&quot; then
+			sName = sName + sTitel + &quot; &quot;
+		End if
+		if sVorname &lt;&gt; &quot;&quot; then
+			sName = sName + fsConvertString(sVorname) &amp; &quot; &quot;
+		End if
+		if sName1 &lt;&gt; &quot;&quot; then
+			sName = sName &amp; fsConvertString(sName1)
+		End if
+		if sName2 &lt;&gt; &quot;&quot; then
+			sName = sName &amp; &quot;, &quot; &amp; fsConvertString(sName2)
+		End if
+		if sName3 &lt;&gt; &quot;&quot; then
+			sName = sName &amp; &quot;, &quot; &amp; fsConvertString(sName3)
+		End if
+		if sName4 &lt;&gt; &quot;&quot; then
+			sName = sName &amp; &quot;, &quot; &amp; fsConvertString(sName4)
+		End if
+		
+		sEmpfaenger=sName
+
+		if sTelefon &lt;&gt; &quot;&quot; then
+			if Len(sEmpfaenger &amp;&quot; | Telefon: &quot;&amp; sTelefon) &gt; 60 then
+				sEmpfaengerNr=&quot;   Telefon: &quot;&amp; sTelefon
+			else
+				sEmpfaenger=sEmpfaenger &amp;&quot; | Telefon: &quot;&amp; sTelefon
+			End if
+		End if
+		
+		if sFunktelefon &lt;&gt; &quot;&quot; then
+			if Len(sEmpfaenger &amp;&quot; | Mobil: &quot;&amp; sFunktelefon) &gt; 60 then
+				if sEmpfaengerNr &lt;&gt; &quot;&quot; then
+					sEmpfaengerNr=sEmpfaengerNr &amp;&quot; | Mobil: &quot;&amp; sFunktelefon
+				else
+					sEmpfaengerNr=&quot;   Mobil: &quot;&amp; sFunktelefon
+				end if
+			else
+				sEmpfaenger=sEmpfaenger &amp;&quot; | Mobil: &quot;&amp; sFunktelefon
+			end if
+		End if
+
+		if sFax &lt;&gt; &quot;&quot; then
+			if Len(sEmpfaenger &amp;&quot; | Fax: &quot;&amp; sFax) &gt; 60 then
+				if sEmpfaengerNr &lt;&gt; &quot;&quot; then
+					sEmpfaengerNr=sEmpfaengerNr &amp;&quot; | Fax: &quot;&amp; sFax
+				else
+					sEmpfaengerNr=&quot;   Fax: &quot;&amp; sFax
+				end if
+			else
+				sEmpfaenger=sEmpfaenger &amp;&quot; | Fax: &quot;&amp; sFax
+			End if
+		End if
+		if sEmpfaengerNr &lt;&gt; &quot;&quot; then
+			sEmpfaenger=sEmpfaenger &amp;&quot;\n&quot;&amp; sEmpfaengerNr
+		end if
+		
+		sSerienBriefVerteiler=sSerienBriefVerteiler &amp;&quot;\n&quot;&amp; sEmpfaenger
+
+		iCountSerienbrief=iCountSerienbrief+1		
+	Loop
+	
+	if sSerienBriefVerteilerOld &lt;&gt; &quot;&quot; then
+		sSerienBriefVerteiler=sSerienBriefVerteilerOld &amp;&quot;\n\n&quot;&amp; sSerienBriefVerteiler
+	End if
+	
+	sSQL3=&quot;update &quot;&amp; sKorrespondenzTyp &amp;&quot; set SerienBriefVerteiler=&apos;&quot;&amp; sSerienBriefVerteiler &amp;&quot;&apos; where DocumentID=&apos;&quot;&amp; sDocumentID_mit_Praefix &amp;&quot;&apos;&quot;
+	SQL_execute(sSQL3)
+End Sub
+
+
+</script:module>

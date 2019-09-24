@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Extras" script:language="StarBasic">REM  *****  BASIC  *****
+
+Sub Korrespondenz_2
+	Use_Aladin
+	SQL_create_Schriftwechsel_Kontakte_2()
+	SQL_create_Schriftwechsel_Kunden_2()
+	SQL_create_Schriftwechsel_Lieferanten_2()
+End Sub
+
+Sub SQL_create_Schriftwechsel_Kunden_2()
+sSQL=&quot;create table Korrespondenz_Kunden_2(DocumentID int(10)not null auto_increment,ProjektID int(10),&quot;&amp;_
+	&quot;Document_TypID int(2) not null default 9,&quot;&amp;_
+	&quot;Referenz varchar(50)not null default &apos;&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),AnsprechpartnerID int(10),&quot;&amp;_
+	&quot;Erstellungsdatum date not null default 0,Body varchar(10000),Anrede varchar(50),Option_Serienbrief int(1) not null default 0,&quot;&amp;_
+	&quot;Option_Signum int(1) not null default 0,Signum_URL varchar(100),Gruszformel varchar(50),Absender varchar(50),&quot;&amp;_
+	&quot;Gesperrt int(2)not null default &apos;1&apos;,Leerzeilen varchar(50),Schreibschutz int(1) not null default 0,&quot;&amp;_
+	&quot;Autor int(3)not null default 0,Geaendert_durch int(3)not null default 0,Geaendert_am date,Rechte int (1)not null default 0,&quot;&amp;_
+	&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Schriftwechsel_Lieferanten_2()
+sSQL=&quot;create table Korrespondenz_Lieferanten_2(DocumentID int(10)not null auto_increment,ProjektID int(10),&quot;&amp;_
+	&quot;Document_TypID int(2) not null default 10,&quot;&amp;_
+	&quot;Referenz varchar(50)not null default &apos;&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),AnsprechpartnerID int(10),&quot;&amp;_
+	&quot;Erstellungsdatum date not null default 0,Body varchar(10000),Anrede varchar(50),Option_Serienbrief int(1) not null default 0,&quot;&amp;_
+	&quot;Option_Signum int(1) not null default 0,Signum_URL varchar(100),Gruszformel varchar(50),Absender varchar(50),&quot;&amp;_
+	&quot;Gesperrt int(2)not null default &apos;1&apos;,Leerzeilen varchar(50),Schreibschutz int(1) not null default 0,&quot;&amp;_
+	&quot;Autor int(3)not null default 0,Geaendert_durch int(3)not null default 0,Geaendert_am date,Rechte int (1)not null default 0,&quot;&amp;_
+	&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Schriftwechsel_Kontakte_2()
+sSQL=&quot;create table Korrespondenz_Kontakte_2(DocumentID int(10)not null auto_increment,ProjektID int(10),&quot;&amp;_
+	&quot;Document_TypID int(2) not null default 11,&quot;&amp;_
+	&quot;Referenz varchar(50)not null default &apos;&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),AnsprechpartnerID int(10),&quot;&amp;_
+	&quot;Erstellungsdatum date not null default 0,Body varchar(10000),Anrede varchar(50),Option_Serienbrief int(1) not null default 0,&quot;&amp;_
+	&quot;Option_Signum int(1) not null default 0,Signum_URL varchar(100),Gruszformel varchar(50),Absender varchar(50),&quot;&amp;_
+	&quot;Gesperrt int(2)not null default &apos;1&apos;,Leerzeilen varchar(50),Schreibschutz int(1) not null default 0,&quot;&amp;_
+	&quot;Autor int(3)not null default 0,Geaendert_durch int(3)not null default 0,Geaendert_am date,Rechte int (1)not null default 0,&quot;&amp;_
+	&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+</script:module>

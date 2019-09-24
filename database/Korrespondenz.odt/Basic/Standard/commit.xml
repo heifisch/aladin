@@ -1,0 +1,379 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="commit" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim vStatus as Variant
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+
+Sub Serienbrief_reload()
+	wait 10
+	oForm_Serienbrief.reload()
+End Sub
+
+Sub Serienbriefe_update()
+	oForm_Serienbrief.updateRow()
+	wait 10
+	oForm_Serienbrief.reload()
+End Sub
+
+Sub Serienbrief_alle()
+	Dim sSuchString as String
+	sSuchString=&quot;&quot;
+	sSQL1=&quot;select Suchstring_2 from Steuerung where ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSuchString=oRecord1.getString(1)
+	Wend
+	sSQL2=&quot;update Serienbrief_Kontakte set Serienbrief=1&quot;&amp;_
+		&quot; where ClientID=&quot; &amp; iClientID &amp;_
+		&quot; and (Bemerkungen like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name1 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name2 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name3 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name4 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Vorname like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Serienbrief=1)&quot;
+	SQL_execute(sSQL2)
+	wait 10
+	oForm_Serienbrief.reload()
+End Sub
+
+Sub Serienbrief_keine()
+	Dim sSuchString as String
+	sSuchString=&quot;&quot;
+	sSQL1=&quot;select Suchstring_2 from Steuerung where ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSuchString=oRecord1.getString(1)
+	Wend
+	sSQL2=&quot;update Serienbrief_Kontakte set Serienbrief=0&quot;&amp;_
+		&quot; where ClientID=&quot; &amp; iClientID &amp;_
+		&quot; and (Bemerkungen like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name1 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name2 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name3 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Name4 like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Vorname like &apos;%&quot;&amp; sSuchString &amp;&quot;%&apos;&quot;&amp;_
+		&quot; or Serienbrief=1)&quot;
+	SQL_execute(sSQL2)
+	wait 10
+	oForm_Serienbrief.reload()
+End Sub
+
+Sub Filter_Serienbrief_setzen()
+	oDoc.lockControllers()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.refreshRow()
+	oDoc.unlockControllers()
+End Sub
+
+Sub Projektvorauswahl_commit()
+	oList_Projektvorauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Absendervorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.refreshRow()
+End Sub
+
+Sub VerteilerListe_commit()
+	oList_Serienbrief_Verteilerlisten.commit()
+	oForm_Steuerung.updateRow()
+End Sub
+
+Sub Projektvorauswahl_reset()
+	sSQL1=&quot;update Steuerung set ProjektID = NULL where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	oList_Absendervorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Absendervorauswahl_commit()
+	oList_Absendervorauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.refreshRow()
+End Sub
+
+Sub Absendervorauswahl_reset()
+	sSQL1=&quot;update Steuerung set Absender = NULL where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	oList_Absendervorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.refreshRow()
+End Sub
+
+Sub Suchstring_commit()
+	oField_Suchstring.commit()
+	oForm_Steuerung.updateRow()
+	wait 15
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.refreshRow()
+End Sub
+
+Sub Suchstring_reset()
+	sSQL1=&quot;update Steuerung set Suchstring = NULL where ClientID = &quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	wait 15
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub SuchString2_commit()
+	oField_Suchstring2.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	init_Form_Serienbrief()
+	oForm_Serienbrief.reload()
+End Sub
+
+Sub SuchString2_reset()
+	sSQL1=&quot;update Steuerung set Suchstring_2 = &apos;&apos; where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	oForm_Steuerung.reload()
+	wait 10
+	init_Form_Serienbrief()
+	oForm_Serienbrief.reload()
+End Sub
+
+Sub Projektauswahl_commit()
+On Error Goto ErrorHandler
+	oList_Projektauswahl.commit()
+	oForm_Document.updateRow()
+	oList_Projektvorauswahl.refresh()
+	oForm_Steuerung.refreshRow()
+exit sub
+ErrorHandler:
+	oForm_Document.refreshRow()
+End Sub
+
+Sub Projektauswahl_reset()
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;&quot; set ProjektID = 0 where DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oList_Projektvorauswahl.refresh()
+		oForm_Steuerung.reload()
+	End if
+End Sub
+
+Sub store_DocumentID_old
+	SetDocUserProperty(&quot;oDocumentID_old&quot;, lDocumentID)
+End Sub
+
+Sub set_DocumentID_new
+	oField_DocumentID.commit()
+	if lDocumentID_old &lt;&gt; 0 then
+		if lDocumentID_old &lt;&gt; lDocumentID then
+			if fAnzahl_Datensaetze(sKorrespondenz,lDocumentID) = 0 then
+				sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;&quot; set DocumentID=&quot;&amp; lDocumentID &amp;&quot; where DocumentID=&quot;&amp; lDocumentID_old
+				SQL_execute(sSQL1)
+				sSQL2=&quot;update Steuerung set DocumentID=&quot;&amp; lDocumentID &amp;&quot; where ClientID=&quot;&amp; iClientID
+				SQL_execute(sSQL2)
+			else
+				MsgBox(&quot;Die DocumentID ist schon vergeben! Wählen sie bitte eine neue ID!&quot;,16,sTitle_lokal)
+			End if
+			oForm_Steuerung.reload()
+		End if
+	End if
+End Sub
+
+Sub Erstellungsdatum_commit()
+	oField_Erstellungsdatum.commit()
+	oForm_Document.updateRow()
+End Sub
+
+Sub Kontaktvorauswahl_commit()
+	oList_Kontaktvorauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Kontaktvorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Kontaktvorauswahl_reset()
+	sSQL1=&quot;update Steuerung set KontaktID=NULL where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Field_Ordner_commit()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &lt;&gt; 0 then
+			oField_Ordner.commit()
+			oForm_Kontaktdaten.updateRow()
+		End if
+	End if
+End Sub
+
+Sub Ansprechpartner_reset()
+	if lDocumentID &lt;&gt; 0 then
+		Dim sAnrede as String,sAnrede_Kontakt as String,sName1 as String,sTitel as String
+		sSQL1=&quot;select Anrede,Name1,Titel from &quot;&amp; sKontakte &amp;&quot; where KontaktID=&quot;&amp; lKontaktID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sAnrede_Kontakt=oRecord1.getString(1)
+			sName1=oRecord1.getString(2)
+			sTitel=oRecord1.getString(3)
+		Wend
+
+	If sTitel &lt;&gt; &quot;&quot;	then
+		sTitel=sTitel &amp; &quot; &quot;
+	End If
+		if InStr(1,sAnrede_Kontakt,&quot;Herr&quot;,1) &gt; 0 then
+			sAnrede=&quot;Sehr geehrter Herr &quot;&amp; sTitel &amp; sName1 &amp;&quot;,&quot;
+		elseif InStr(1,sAnrede_Kontakt,&quot;Frau&quot;,1) &gt; 0  then
+			sAnrede=&quot;Sehr geehrte Frau &quot;&amp; sTitel &amp; sName1 &amp;&quot;,&quot;
+		else
+			sAnrede=&quot;Sehr geehrte Damen und Herren,&quot;
+		End if
+		sSQL2=&quot;update &quot;&amp; sKorrespondenz &amp;_
+			&quot; set AnsprechpartnerID=NULL,Anrede=&apos;&quot;&amp; sAnrede &amp;_
+			&quot;&apos; where DocumentID=&quot;&amp; lDocumentID	
+		SQL_execute(sSQL2)
+		oForm_Document.refreshRow()
+	End if
+End Sub
+
+Sub Document_Name_commit()
+On Error Goto ErrorHandler
+	if lDocumentID &lt;&gt; 0 then
+		oField_Document_Name.commit()
+		oForm_Document.updateRow()
+		sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;&quot; set Document_Name=&apos;&quot;&amp; oField_Document_Name.BoundField.String &amp;_
+			&quot;&apos; where DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oForm_Document.refreshRow()
+	End If
+exit sub
+ErrorHandler:
+	oForm_Document.reload()
+End Sub
+
+Sub Serienbrief_commit()
+	oForm_Document.updateRow()
+	if iOption_Serienbrief=1 then
+		sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;_
+			&quot; set KontaktID = Null,AnsprechpartnerID = NULL,Anrede=&apos;Sehr geehrte Damen und Herren,&apos; where DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oForm_Document.reload()
+		sSQL2=&quot;update &quot;&amp; sKorrespondenz &amp;_
+			&quot; set KontaktID = 0 where DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL2)
+		oButton_SerienBriefVerteiler_anzeigen.Enabled=True
+	else
+		oButton_SerienBriefVerteiler_anzeigen.Enabled=False
+	End if
+End Sub
+
+Sub Body_commit()
+On Error Goto ErrorHandler
+	if lDocumentID &lt;&gt; 0 then
+		oField_Body.commit()
+		oForm_Document.updateRow()
+		sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;&quot; set Body=&apos;&quot;&amp; oField_Body.BoundField.String &amp;_
+				&quot;&apos; where DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oForm_Document.refreshRow()
+	End If
+exit sub
+ErrorHandler:
+	oForm_Document.reload()
+End Sub
+
+Sub Ansprechpartner_commit()
+	if lDocumentID &lt;&gt; 0 then
+		oList_Ansprechpartner.commit()
+		oForm_Document.updateRow()
+		Dim sAnrede as String,sAnrede_Ansprechpartner as String,sName as String,sTitel as String
+		sSQL1=&quot;select Anrede,Name,Titel from &quot;&amp; sAnsprechpartner &amp;&quot; where AnsprechpartnerID=&quot;&amp; lAnsprechpartnerID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sAnrede_Ansprechpartner=oRecord1.getString(1)
+			sName=oRecord1.getString(2)
+			sTitel=oRecord1.getString(3)
+		Wend
+	
+		If sTitel &lt;&gt; &quot;&quot;	then
+			sTitel=sTitel &amp; &quot; &quot;
+		End If
+		
+		if InStr(1,sAnrede_Ansprechpartner,&quot;Herr&quot;,1) &gt; 0 then
+			sAnrede=&quot;Sehr geehrter Herr &quot;&amp; sTitel &amp; sName &amp;&quot;,&quot;
+		elseif InStr(1,sAnrede_Ansprechpartner,&quot;Frau&quot;,1) &gt; 0 then
+			sAnrede=&quot;Sehr geehrte Frau &quot;&amp; sTitel &amp; sName &amp;&quot;,&quot;
+		else
+			sAnrede=&quot;Sehr geehrte Damen und Herren,&quot;
+		End if
+		sSQL2=&quot;update &quot;&amp; sKorrespondenz &amp;_
+			&quot; set Anrede=&apos;&quot;&amp; sAnrede &amp;_
+			&quot;&apos; where DocumentID=&quot;&amp; lDocumentID	
+		SQL_execute(sSQL2)
+		oForm_Document.refreshRow()
+	End If
+End Sub
+
+Sub Referenz_commit()
+	oField_Referenz.commit()
+	oForm_Document.updateRow()
+End Sub
+
+Sub Anrede_commit()
+	oField_Anrede.commit()
+	oForm_Document.updateRow()
+End Sub
+
+Sub Gruszformel_commit()
+	oField_Gruszformel.commit()
+	oForm_Document.updateRow()
+End Sub
+
+Sub Absender_commit()
+	oField_Absender.commit()
+	oForm_Document.updateRow()
+End Sub
+
+Sub Signum_drucken_commit()
+	oForm_Document.updateRow()
+End Sub
+
+Sub Leerzeilen_commit()
+	oList_Leerzeilen.commit()
+	oForm_Document.updateRow()
+End Sub
+
+Sub Jahr_commit()
+	oList_Jahrauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Kontaktvorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Jahr_reset()
+	Jahr_zuruecksetzen(1)
+	oList_Kontaktvorauswahl.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Datei_Signum_uebernehmen()
+	if lDocumentID &lt;&gt; 0 then
+		oForm_Document.updateRow()
+		sSQL1=&quot;update &quot;&amp; sKorrespondenz &amp;&quot; set Signum_URL=&apos;&quot;&amp; fsConvertBackSlash(sFileControl_Signum) &amp;&quot;&apos; where DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oForm_Document.reload()
+	End if
+End Sub
+</script:module>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="refreshs" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim iCount as integer
+Dim oRecord1 as Object
+Dim sSQL1 as String
+
+Sub Kontakt_refresh()
+	SetDocUserProperty(&quot;oKontaktID_old&quot;, lKontaktID)
+	oList_Kontaktauswahl.refresh()
+End Sub
+
+Sub Ansprechpartner_refresh()
+	oList_Ansprechpartner.refresh()
+End Sub
+
+Sub Projekt_refresh()
+	oList_Projektauswahl.refresh()
+End Sub
+
+Sub List_Documente_refresh()
+	oList_Documentauswahl.refresh()
+End Sub
+
+Sub Kontaktvorauswahl_refresh()
+	oList_Kontaktvorauswahl.refresh()
+End Sub
+
+Sub List_Jahrauswahl_refresh()
+	oList_Jahrauswahl.refresh()
+End Sub
+
+Sub Projektvorauswahl_refresh()
+	oList_Projektvorauswahl.refresh()
+End Sub
+
+Sub Absendervorauswahl_refresh()
+	oList_Absendervorauswahl.refresh()
+End Sub
+
+</script:module>

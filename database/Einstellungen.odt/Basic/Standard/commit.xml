@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="commit" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub List_Document_Typ_commit()
+	oList_Document_Typ.commit()
+	oForm_Steuerung.updateRow()
+	oForm_DocumentTyp.reload()
+End Sub
+
+Sub Field_DocumentID_commit()
+	oField_DocumentID.commit()
+	oForm_DocumentTyp.updateRow()
+End Sub
+
+Sub Field_KontaktID_commit()
+	oField_KontaktID.commit()
+	oForm_DocumentTyp.updateRow()
+End Sub
+
+Sub Field_Summe_ohne_MwSt_commit()
+	oField_Summe_ohne_MwSt.commit()
+	oForm_DocumentTyp.updateRow()
+End Sub
+
+Sub Field_Summe_mit_MwSt_commit()
+	oField_Summe_mit_MwSt.commit()
+	oForm_DocumentTyp.updateRow()
+End Sub
+
+Sub Field_Schluss_Text1_commit()
+	oField_Schluss_Text1.commit()
+	oForm_DocumentTyp.updateRow()
+End Sub
+
+Sub Field_Schluss_Text2_commit()
+	oField_Schluss_Text2.commit()
+	oForm_DocumentTyp.updateRow()
+End Sub
+
+Sub Field_Bemerkung_commit()
+	oField_Bemerkung.commit()
+	oForm_DocumentTyp.updateRow()
+End Sub
+
+Sub Option_Inhaber_commit()
+	oForm_Einstellungen.updateRow()
+End Sub
+
+</script:module>

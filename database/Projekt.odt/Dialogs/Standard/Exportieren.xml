@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="2" dlg:id="Exportieren" dlg:left="50" dlg:top="60" dlg:width="181" dlg:height="110" dlg:closeable="true" dlg:moveable="true" dlg:title="Datensätze in folgendes Formular exportieren:">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="1" dlg:look="simple" dlg:font-name="Arial" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="2" dlg:background-color="0x99ccff"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="100" dlg:top="92" dlg:width="51" dlg:height="14" dlg:value="OK" dlg:button-type="ok"/>
+  <dlg:button dlg:style-id="0" dlg:id="neuer Task" dlg:tab-index="0" dlg:left="24" dlg:top="92" dlg:width="47" dlg:height="14" dlg:value="Abbrechen" dlg:button-type="cancel"/>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAngebote1" dlg:tab-index="10" dlg:left="5" dlg:top="7" dlg:width="82" dlg:height="10" dlg:value="Angebote (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAuftrag1" dlg:tab-index="16" dlg:left="5" dlg:top="17" dlg:width="82" dlg:height="10" dlg:value="Auftragsbestätigungen (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionLieferscheine1" dlg:tab-index="11" dlg:left="5" dlg:top="27" dlg:width="82" dlg:height="10" dlg:value="Lieferscheine (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionRechnungen1" dlg:tab-index="12" dlg:left="5" dlg:top="47" dlg:width="82" dlg:height="10" dlg:value="Rechnungen (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionPreisanfragen1" dlg:tab-index="14" dlg:left="5" dlg:top="67" dlg:width="82" dlg:height="10" dlg:value="Preisanfragen (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionBestellungen1" dlg:tab-index="15" dlg:left="5" dlg:top="77" dlg:width="82" dlg:height="10" dlg:value="Bestellungen (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAngebote2" dlg:tab-index="2" dlg:left="91" dlg:top="7" dlg:width="83" dlg:height="10" dlg:value="Angebote (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAuftrag2" dlg:tab-index="8" dlg:left="91" dlg:top="17" dlg:width="83" dlg:height="10" dlg:value="Auftragsbestätigungen (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionLieferscheine2" dlg:tab-index="3" dlg:left="91" dlg:top="27" dlg:width="83" dlg:height="10" dlg:value="Lieferscheine (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAufmasze2" dlg:tab-index="9" dlg:left="91" dlg:top="37" dlg:width="83" dlg:height="10" dlg:value="Aufmaße (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionRechnungen2" dlg:tab-index="4" dlg:left="91" dlg:top="47" dlg:width="83" dlg:height="10" dlg:value="Rechnungen (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionGutschriften2" dlg:tab-index="5" dlg:left="91" dlg:top="57" dlg:width="83" dlg:height="10" dlg:value="Gutschriften (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionPreisanfragen2" dlg:tab-index="6" dlg:left="91" dlg:top="67" dlg:width="83" dlg:height="10" dlg:value="Preisanfragen (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionBestellungen2" dlg:tab-index="7" dlg:left="91" dlg:top="77" dlg:width="83" dlg:height="10" dlg:value="Bestellungen (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAufmasze1" dlg:tab-index="17" dlg:left="5" dlg:top="37" dlg:width="82" dlg:height="10" dlg:value="Aufmaße (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionGutschriften1" dlg:tab-index="13" dlg:left="5" dlg:top="57" dlg:width="82" dlg:height="10" dlg:value="Gutschriften (1)"/>
+  </dlg:radiogroup>
+ </dlg:bulletinboard>
+</dlg:window>

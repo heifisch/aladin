@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Kontaktdaten" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub KontaktDaten()
+	Dim oTables as Object
+	Dim oRecord_Kontakt as Object,oRecord1 as Object,sBody as String,sVorname as String
+	Dim sDocument_Name as String,sNummern as String,sKontakte as String,sAnrede as String
+	Dim sName as String,sName1 as String,sName2 as String,sName3 as String,sName4 as String
+	Dim sTelefon as String,sFunktelefon as String,sFax as String,sEMail as String,sTitel as String
+	Dim oStyleFamilies as Object,oPageStyles as Object,oPageStyle_1 as Object,oPageStyle_2 as Object
+	Dim oBookmark As Object,oBookmarkAnchor as Object,oRangeCursor as Object
+	Dim oSelections as Object,oSize as Object,vGraphics as Variant,iPrint_Logo as Integer
+	Dim oTable_Verteiler as Object,iCount as integer
+	Dim sSQL1 as String,sSQL2 as String,iCountSerienbrief as Integer
+	Dim oCursor as Object,oCursorKopf1 as Object,oCursorKopf2 as Object,oBookmarks as Object,oAnschors as Object
+	Dim vStatus as Variant,vTables as Variant,vTableVerteiler as Variant,vRowsVerteiler as Variant
+	Dim vViewCursor as Variant
+	Dim document as Object
+	Dim dispatcher as Object
+
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	vTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	vTables = oDoc.getTextTables
+	vTableVerteiler = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTableVerteiler = vTables.getByName(&quot;Verteiler&quot;)
+	vRowsVerteiler = vTableVerteiler.getRows()
+	vViewCursor = oDoc.CurrentController.getViewCursor()
+	
+	iCountSerienbrief=1
+
+	sSQL1=&quot;select KontaktTyp from &quot;&amp; sDrucker_TEMP(iUserID_lokal) 
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sKontakte=oRecord1.getString(1)
+	Wend
+
+	sSQL2=&quot;select distinct &quot;&amp;_
+		&quot;t1.Document_Name,t1.DocumentID,t1.Anrede,t1.Body,t2.Name1,t2.Name2,&quot;&amp;_
+		&quot;t2.Name3,t2.Name4,t2.Vorname,t2.Titel,t2.Anrede,t2.EMail,t2.Telefon,t2.Funktelefon,t2.Fax,t1.Erstellungsdatum,t3.NameKurz&quot;&amp;_
+		&quot; from &quot;&amp; sDrucker_TEMP(iUserID_lokal) &amp;&quot; as t1,&quot;&amp; sKontakte &amp;&quot; as t2,Einstellungen as t3&quot;&amp;_
+		&quot; where t2.KontaktID = t1.KontaktID&quot;&amp;_
+		&quot; AND t3.EinstellungsID = t1.EinstellungsID&quot;
+
+	oRecord_Kontakt=oResult_Scroll(sSQL2)
+	oRecord_Kontakt.absolute(iCountSerienbrief)
+	sDocument_Name=oRecord_Kontakt.getString(1)
+	sNummern=oRecord_Kontakt.getString(17) &amp; &quot;   &quot; &amp;_
+				&quot;Dokumentnummer: &quot;&amp; UCase(Left(sKontakte,2))&amp;_
+									 oRecord_Kontakt.getString(2) &amp; &quot;   &quot; &amp;_
+				&quot;Erstellungsdatum: &quot;&amp; fConvDatum(oRecord_Kontakt.getString(16))
+	sAnrede=oRecord_Kontakt.getString(3) &amp; Chr$(13) &amp; Chr$(13)
+	sBody=oRecord_Kontakt.getString(4) &amp; Chr$(13) &amp; Chr$(13)
+
+	Dim oFrame as Object
+	oFrame = StarDesktop.getCurrentFrame()
+	oFrame.setTitle(sTitle_lokal &amp;&quot; - Serienbriefverteiler: &quot;&amp; sDocument_Name)
+
+	Feld_fuellen(&quot;Document_Name&quot;,sDocument_Name)
+	Feld_fuellen(&quot;Nummern&quot;,sNummern)
+
+	vStatus = MsgBox(&quot;Soll der Text-Inhalt des Serienbriefes mit auf dem Verteiler gedruckt werden?&quot;,36,sTitle_lokal)
+	if vStatus = 6 then
+		Feld_fuellen(&quot;Anrede&quot;,sAnrede)
+		Feld_fuellen(&quot;Body&quot;,sBody)
+	else
+		Feld_loeschen(&quot;Anrede&quot;)
+		Feld_loeschen(&quot;Body&quot;)
+	end if
+
+	vViewCursor.jumpToFirstPage()
+	vViewCursor.jumpToEndOfPage()
+	vViewCursor.goUp(1, False)
+	
+	If NOT IsEmpty(vViewCursor.Cell) Then
+		For iCount=1 to fAnzahlSerienbriefe-1
+			document = ThisComponent.CurrentController.Frame
+			dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+			dispatcher.executeDispatch(document, &quot;.uno:InsertRows&quot;, &quot;&quot;, 0, Array())
+		Next
+	End If
+
+	Do While fAnzahlSerienbriefe &gt;= iCountSerienbrief
+		oRecord_Kontakt=oResult_Scroll(sSQL2)
+		oRecord_Kontakt.absolute(iCountSerienbrief)
+
+		sName1=oRecord_Kontakt.getString(5)
+		sName2=oRecord_Kontakt.getString(6)
+		sName3=oRecord_Kontakt.getString(7)
+		sName4=oRecord_Kontakt.getString(8)
+		sVorname=oRecord_Kontakt.getString(9)
+		sTitel=oRecord_Kontakt.getString(10)
+		sAnrede=oRecord_Kontakt.getString(11)
+		sEMail=oRecord_Kontakt.getString(12)
+		sTelefon=oRecord_Kontakt.getString(13)
+		sFunktelefon=oRecord_Kontakt.getString(14)
+		sFax=oRecord_Kontakt.getString(15)
+		
+		sName=&quot;&quot;
+		if sAnrede &lt;&gt; &quot;&quot; then
+			sName = sName + sAnrede + &quot; &quot;
+		End if
+		if sTitel &lt;&gt; &quot;&quot; then
+			sName = sName + sTitel + &quot; &quot;
+		End if
+		if sVorname &lt;&gt; &quot;&quot; then
+			sName = sName + fsConvertString(sVorname) + &quot; &quot;
+		End if
+		if sName1 &lt;&gt; &quot;&quot; then
+			sName = sName + fsConvertString(sName1)
+		End if
+		if sName2 &lt;&gt; &quot;&quot; then
+			sName = sName &amp; Chr(10) &amp; fsConvertString(sName2)
+		End if
+		if sName3 &lt;&gt; &quot;&quot; then
+			sName = sName &amp; Chr(10) &amp; fsConvertString(sName3)
+		End if
+		if sName4 &lt;&gt; &quot;&quot; then
+			sName = sName &amp; Chr(10) &amp; fsConvertString(sName4)
+		End if
+
+		iCountSerienbrief=iCountSerienbrief+1
+		
+		vTableVerteiler.getCellByName(&quot;A&quot; &amp; iCountSerienbrief ).String=iCountSerienbrief-1
+		vTableVerteiler.getCellByName(&quot;B&quot; &amp; iCountSerienbrief &amp; &quot;.1.1&quot;).String=sName
+		vTableVerteiler.getCellByName(&quot;B&quot; &amp; iCountSerienbrief &amp; &quot;.2.1&quot;).String=sEMail
+		vTableVerteiler.getCellByName(&quot;B&quot; &amp; iCountSerienbrief &amp; &quot;.1.2&quot;).String=sTelefon
+		vTableVerteiler.getCellByName(&quot;B&quot; &amp; iCountSerienbrief &amp; &quot;.2.2&quot;).String=sFunktelefon
+		vTableVerteiler.getCellByName(&quot;B&quot; &amp; iCountSerienbrief &amp; &quot;.3.2&quot;).String=sFax
+		
+		oDoc.getTextFields().refresh()
+	Loop
+	Dim Dummy()
+	oDoc.print(Dummy())
+End Sub
+
+
+</script:module>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="import" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+
+Sub SQL_Leistungsstamm_import
+	SQL_use_ALADIN
+	sSQL=&quot;load data local infile &apos;/Daten/Import/Leistungsstamm.txt&apos;&quot;&amp;_
+		&quot; into table aladin.Leistungsstamm_import fields terminated by &apos;$&apos; enclosed by &apos;§&apos;&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+</script:module>

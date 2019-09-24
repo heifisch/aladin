@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Initialisierung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sSQL1 as String,sSQL2 as String
+Dim vSQLArray as Variant
+
+Sub Formular_init()
+init_Form_Leistungsdaten()
+init_Form_Steuerung()
+init_Form_Standard_Artikel()
+init_List_Hauptgruppenauswahl()
+init_List_Gruppenauswahl()
+init_List_Leistungsauswahl()
+init_List_Leistungsgruppe()
+init_List_Einheit()
+init_List_Lieferant_1()
+init_List_Lieferant_2()
+init_List_Lieferant_3()
+End Sub
+
+Sub init_Form_Leistungsdaten()
+	sSQL1=&quot;select * from &quot;&amp; sLeistungsstamm &amp;&quot; where LeistungsID=:c&quot;
+	oForm_Leistungsdaten.DataSourceName=sDataSource
+	oForm_Leistungsdaten.NavigationBarMode=0
+	oForm_Leistungsdaten.CommandType=2
+	oForm_Leistungsdaten.Command=sSQL1
+	oForm_Leistungsdaten.Cycle=1
+	oForm_Leistungsdaten.AllowInserts=false
+End Sub
+
+Sub init_Form_Steuerung()
+	sSQL1=&quot;select * from Steuerung where ClientID=&quot;&amp; iClientID
+	oForm_Steuerung.DataSourceName=sDataSource
+	oForm_Steuerung.NavigationBarMode=0
+	oForm_Steuerung.CommandType=2
+	oForm_Steuerung.Command=sSQL1
+	oForm_Steuerung.Cycle=1
+	oForm_Steuerung.AllowInserts=false
+End Sub
+
+Sub init_Form_Standard_Artikel()
+	sSQL1=&quot;select * from &quot;&amp; sLeistungsstamm &amp;&quot; where Standard=1 order by LeistungsID ASC&quot;
+	oForm_Standard_Artikel.DataSourceName=sDataSource
+	oForm_Standard_Artikel.NavigationBarMode=0
+	oForm_Standard_Artikel.CommandType=2
+	oForm_Standard_Artikel.Command=sSQL1
+	oForm_Standard_Artikel.Cycle=1
+	oForm_Standard_Artikel.AllowInserts=false
+End Sub
+
+Sub init_List_Hauptgruppenauswahl()
+	vSQLArray=Array(&quot;select Hauptgruppenname,HauptgruppenID from &quot;&amp; sHauptgruppen)
+	oList_Hauptgruppenauswahl.ListSourceType=4
+	oList_Hauptgruppenauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Gruppenauswahl()
+	vSQLArray=Array(&quot;select t1.Gruppenname,t1.GruppenID&quot;&amp;_
+		&quot; from &quot;&amp; sLeistungsgruppen &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((t1.HauptgruppenID=t2.HauptgruppenID and t2.HauptgruppenID IS NOT NULL)&quot;&amp;_
+		&quot; or (t1.HauptgruppenID like &apos;%&apos; and t2.HauptgruppenID IS NULL))&quot;&amp;_
+		&quot; or t1.GruppenID=t2.GruppenID)&quot;)
+	oList_Gruppenauswahl.ListSourceType=4
+	oList_Gruppenauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Leistungsauswahl()
+	vSQLArray=Array(&quot;select distinct concat(t1.LeistungsID,&apos; - &apos;,t1.Leistungsbezeichnung),t1.LeistungsID&quot;&amp;_
+		&quot; from &quot;&amp; sLeistungsstamm &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where (((t1.Leistungsgruppe=t2.GruppenID and t2.GruppenID IS NOT NULL)&quot;&amp;_
+		&quot; or (t1.Leistungsgruppe like &apos;%&apos; and t2.GruppenID IS NULL))&quot;&amp;_
+		&quot; and ((concat(t1.LeistungsID,&apos; &apos;,t1.Leistungsbezeichnung,&apos; &apos;,t1.Leistungsbeschreibung)&quot;&amp;_
+		&quot; like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;) and t2.Suchstring IS NOT NULL)&quot;&amp;_
+		&quot; or (concat(t1.LeistungsID,&apos; &apos;,t1.Leistungsbezeichnung,&apos; &apos;,t1.Leistungsbeschreibung) like &apos;%&apos;&quot;&amp;_
+		&quot; and t2.Suchstring IS NULL))&quot;&amp;_
+		&quot; or t1.LeistungsID=t2.LeistungsID)&quot;&amp;_
+		&quot; order by LeistungsID ASC&quot;)
+	oList_Leistungsauswahl.ListSourceType=4
+	oList_Leistungsauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Leistungsgruppe()
+	vSQLArray=Array(&quot;SELECT DISTINCT t1.Gruppenname,t1.GruppenID&quot;&amp;_
+		&quot; FROM &quot;&amp; sLeistungsgruppen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2 &quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; INNER JOIN &quot;&amp; sLeistungsstamm &amp;&quot; AS t3&quot;&amp;_
+		&quot; ON t3.LeistungsID=t2.LeistungsID AND t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where (((t1.HauptgruppenID=t2.HauptgruppenID AND t2.HauptgruppenID IS NOT NULL)&quot;&amp;_
+		&quot; OR (t1.HauptgruppenID like &apos;%&apos; AND t2.HauptgruppenID IS NULL))&quot;&amp;_
+		&quot; OR t1.GruppenID=t2.GruppenID&quot;&amp;_
+		&quot; OR t1.GruppenID=t3.Leistungsgruppe)&quot;&amp;_
+		&quot; ORDER BY t1.GruppenID ASC&quot;)
+	oList_Leistungsgruppe.ListSourceType=4
+	oList_Leistungsgruppe.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Leistungsgruppe_old()
+	vSQLArray=Array(&quot;SELECT DISTINCT t1.Gruppenname,t1.GruppenID&quot;&amp;_
+		&quot; FROM &quot;&amp; sLeistungsgruppen &amp;&quot; AS t1,&quot;&amp;_
+		&quot; Steuerung AS t2 &quot;&amp;_
+		&quot; JOIN &quot;&amp; sLeistungsstamm &amp;&quot; AS t3&quot;&amp;_
+		&quot; ON t3.LeistungsID=t2.LeistungsID AND t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where ((((t1.HauptgruppenID=t2.HauptgruppenID AND t2.HauptgruppenID IS NOT NULL)&quot;&amp;_
+		&quot; OR (t1.HauptgruppenID like &apos;%&apos; AND t2.HauptgruppenID IS NULL))&quot;&amp;_
+		&quot; OR t1.GruppenID=t2.GruppenID&quot;&amp;_
+		&quot; OR t1.GruppenID=t3.Leistungsgruppe)&quot;&amp;_
+		&quot; AND t2.ClientID=&quot;&amp; iClientID &amp;&quot;)&quot;&amp;_
+		&quot; ORDER BY t1.GruppenID ASC&quot;)
+	oList_Leistungsgruppe.ListSourceType=4
+	oList_Leistungsgruppe.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Einheit()
+	sSQL1=(&quot;select distinct Einheit from Einheit order by Einheit ASC&quot;)
+	oList_Einheit.ListSourceType=4
+	oList_Einheit.ListSource=sSQL1
+End Sub
+
+Sub init_List_Lieferant_1()
+	vSQLArray=Array(&quot;select Name1,KontaktID from Lieferanten order by Name1 ASC&quot;)
+	oList_Lieferant_1.ListSourceType=4
+	oList_Lieferant_1.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Lieferant_2()
+	vSQLArray=Array(&quot;select Name1,KontaktID from Lieferanten order by Name1 ASC&quot;)
+	oList_Lieferant_2.ListSourceType=4
+	oList_Lieferant_2.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Lieferant_3()
+	vSQLArray=Array(&quot;select Name1,KontaktID from Lieferanten order by Name1 ASC&quot;)
+	oList_Lieferant_3.ListSourceType=4
+	oList_Lieferant_3.ListSource=vSQLArray
+End Sub
+</script:module>

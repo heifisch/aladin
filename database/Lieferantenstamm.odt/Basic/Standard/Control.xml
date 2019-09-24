@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Control" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option Explicit
+
+Function lKontaktID_old AS Long
+	lKontaktID_old=CLng(GetDocUserProperty(&quot;oKontaktID_old&quot;))
+End Function
+
+Function iEinstellungsID_lokal AS Integer
+	iEinstellungsID_lokal=GetDocUserProperty(&quot;oEinstellungsID_lokal&quot;)
+End Function
+
+Function iUserID_lokal AS Integer
+	iUserID_lokal=GetDocUserProperty(&quot;oUserID_lokal&quot;)
+End Function
+
+Function iClientID AS Integer
+	iClientID=GetDocUserProperty(&quot;oClientID&quot;)
+End Function
+
+Function sKontakte AS String
+	sKontakte=GetDocUserProperty(&quot;oKontakte&quot;)
+End Function
+
+Function sAnsprechpartner_Kontakte AS String
+	sAnsprechpartner_Kontakte=GetDocUserProperty(&quot;oAnsprechpartner_Kontakte&quot;)
+End Function
+
+Function sKunden AS String
+	sKunden=GetDocUserProperty(&quot;oKunden&quot;)
+End Function
+
+Function sAnsprechpartner_Kunden AS String
+	sAnsprechpartner_Kunden=GetDocUserProperty(&quot;oAnsprechpartner_Kunden&quot;)
+End Function
+
+Function sLieferanten AS String
+	sLieferanten=GetDocUserProperty(&quot;oLieferanten&quot;)
+End Function
+
+Function sAnsprechpartner_Lieferanten AS String
+	sAnsprechpartner_Lieferanten=GetDocUserProperty(&quot;oAnsprechpartner_Lieferanten&quot;)
+End Function
+
+Function sEingangsrechnungen AS String
+	sEingangsrechnungen=GetDocUserProperty(&quot;oEingangsrechnungen&quot;)
+End Function
+
+Function sTitle_lokal AS String
+	 sTitle_lokal=GetDocUserProperty(&quot;oTitle_lokal&quot;)
+End Function
+
+</script:module>

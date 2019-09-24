@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Initialisierung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim vSQLArray as Variant
+Dim sSQL1 as String
+
+Sub Start_einst()
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Projekt&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 0)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+
+		oTextField_Betriebsart.Label=&quot;Initialisierung läuft&quot;
+		oTextField_Kontaktvorauswahl.Label=&quot;Filter (Kunden): &quot;
+		oTextField_Kontaktdaten.Label=&quot;Kunde: &quot;
+		oTextField_Document_Name_List.Label=&quot;Angebotsname: &quot;
+		oTextField_Document_Name.Label=&quot;Angebotsname&quot;
+		oTextField_gueltig_bis.Label=&quot;gültig bis: &quot;
+		oTextField_DocumentID.Label=&quot;Angebotsnummer: &quot;
+		oTextField_Erstellungsdatum.Label=&quot;Angebotsdatum: &quot;
+		oButton_Document_berechnen.Label=&quot;berechnen&quot;
+		oForm_Document.Command=&quot;SELECT *  FROM Angebote1 WHERE DocumentID=:c&quot;
+		oForm_Kontaktdaten.Command=&quot;SELECT * FROM Kunden WHERE KontaktID=:a&quot;
+		oForm_Projektdaten.Command=&quot;SELECT * FROM Projekte WHERE ProjektID=:e&quot;
+		oForm_Zwischensummen.Command=&quot;SELECT * FROM ZwiSuAngebote WHERE DocumentID=:b ORDER BY Pos ASC&quot;
+		oForm_Bemerkungen.Command=&quot;SELECT * FROM ZwiBemAngebote WHERE DocumentID=:b ORDER BY Pos ASC,ZwiBemID ASC&quot;
+		oList_Kontaktauswahl.ListSource=Array(&quot;SELECT distinct concat(t1.Name1,&apos;, &apos;,t1.Vorname,&apos; &apos;,t1.Name2,&apos;  --&gt;  &apos;,t1.Ort) as Name,&quot;&amp;_
+			&quot;t1.KontaktID FROM Kunden as t1 ORDER BY t1.Name1 ASC&quot;)
+		oList_Jahrauswahl.ListSource=Array(&quot;SELECT distinct YEAR(Erstellungsdatum),YEAR(Erstellungsdatum) as Jahr FROM &quot;&amp; sTabelle1 &amp;_
+										 &quot; ORDER BY Jahr DESC&quot;)
+		SET_ClientID(1)
+		SET_Tabellen(1)
+		Formular_init_first()
+		Formular_init()
+End Sub
+
+Sub Formular_init()
+	if sTabelle1 &lt;&gt; sTabelle1_old then
+		oForm_Document.Command=&quot;SELECT *  FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=:c&quot;
+	End if
+	
+	oForm_Steuerung.Command=&quot;SELECT * FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oForm_Steuerung_1.Command=&quot;SELECT * FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	
+	if sKontakte &lt;&gt; sKontakte_old then
+		oForm_Kontaktdaten.Command=&quot;SELECT * FROM &quot;&amp; sKontakte &amp;&quot; WHERE KontaktID=:a&quot;
+	End if
+
+	oForm_Projektdaten.Command=&quot;SELECT * FROM &quot;&amp; sProjekte &amp;&quot; WHERE ProjektID=:e&quot;
+	
+	oForm_Tabellendaten.Command=&quot;SELECT * FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE DocumentID=:b&quot;
+	
+	if sZwischensummen &lt;&gt; sZwischensummen_old then
+		oForm_Zwischensummen.Command=&quot;SELECT * FROM &quot;&amp; sZwischensummen &amp;&quot; WHERE DocumentID=:b ORDER BY Pos ASC&quot;
+	End if
+	
+	if sBemerkungen &lt;&gt; sBemerkungen_old then
+		oForm_Bemerkungen.Command=&quot;SELECT * FROM &quot;&amp; sBemerkungen &amp;&quot; WHERE DocumentID=:b ORDER BY Pos ASC,ZwiBemID ASC&quot;
+	End if
+	
+	oList_Gruppenauswahl.ListSource=Array(&quot;SELECT distinct&quot;&amp;_
+		&quot; t1.Gruppenname,t1.GruppenID&quot;&amp;_
+		&quot; FROM &quot;&amp; sLeistungsgruppen &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE ((t1.HauptgruppenID=t2.HauptgruppenID AND t2.HauptgruppenID IS NOT NULL)&quot;&amp;_
+		&quot; OR (t1.GruppenID like &apos;%&apos; AND (LENGTH(t2.HauptgruppenID)IS NULL OR LENGTH(t2.HauptgruppenID)=0)))&quot;&amp;_
+		&quot; OR t1.GruppenID=t2.GruppenID&quot;)
+	
+	oList_Leistungsauswahl.ListSource=Array(&quot;SELECT distinct&quot;&amp;_
+		&quot; t1.Leistungsbezeichnung,t1.LeistungsID&quot;&amp;_
+		&quot; FROM &quot;&amp; sLeistungsstamm &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((((t1.Leistungsgruppe=t2.GruppenID AND LENGTH(t2.GruppenID) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.LeistungsID like &apos;%&apos; AND LENGTH(t2.GruppenID) IS NULL))&quot;&amp;_
+		&quot; AND (((t2.Option_1=1 AND (t1.LeistungsID like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+		&quot; OR t1.Bestellnummer like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)))&quot;&amp;_
+		&quot; OR (t2.Option_2=1 AND t1.Leistungsbezeichnung like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;))&quot;&amp;_
+		&quot; OR (t2.Option_3=1 AND t1.Leistungsbeschreibung like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;))&quot;&amp;_
+		&quot; AND LENGTH(t2.Suchstring) &gt; 0)&quot;&amp;_
+		&quot; OR (((t2.Option_1=0 AND t2.Option_2=0 AND t2.Option_3=0) OR LENGTH(t2.Suchstring) IS NULL)&quot;&amp;_
+		&quot; AND t1.LeistungsID like &apos;%&apos;)))&quot;&amp;_
+		&quot; OR t1.Standard=1 OR t1.LeistungsID=t2.LeistungsID))&quot;&amp;_
+		&quot; ORDER BY LeistungsID ASC LIMIT 5000&quot;)
+	
+	oList_Projektauswahl.ListSource=Array(&quot;SELECT distinct Projekt_Name,ProjektID FROM &quot;&amp; sProjekte &amp;&quot;  ORDER BY Projekt_Name ASC&quot;)
+
+	if sKontakte &lt;&gt; sKontakte_old then
+		oList_Kontaktauswahl.ListSource=Array(&quot;SELECT distinct concat(t1.Name1,&apos;, &apos;,t1.Vorname,&apos; &apos;,t1.Name2,&apos;  --&gt;  &apos;,t1.Ort) as Name,&quot;&amp;_
+			&quot;t1.KontaktID FROM &quot;&amp; sKontakte &amp;&quot; as t1 ORDER BY t1.Name1 ASC&quot;)
+	End if
+
+	oList_Ansprechpartner.ListSource=Array(&quot;SELECT distinct concat(t1.Name,&apos;, &apos;,t1.Vorname) as Name,t1.AnsprechpartnerID&quot;&amp;_
+		&quot; FROM &quot;&amp; sAnsprechpartner &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sTabelle1 &amp;&quot; as t3&quot;&amp;_
+		&quot; ON t1.KontaktID=t3.KontaktID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; AND t3.DocumentID=t2.DocumentID&quot;&amp;_
+		&quot; ORDER BY t1.Name ASC&quot;)
+	
+	oList_Kontaktvorauswahl.ListSource=Array(&quot;SELECT distinct concat(t1.Name1,&apos; &apos;,t1.Vorname,&apos; &apos;,t1.Name2,&apos;  --&gt;  &apos;,t1.Ort) as Name,&quot;&amp;_
+		&quot;t2.KontaktID&quot;&amp;_
+		&quot; FROM (&quot;&amp; sKontakte &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sTabelle1 &amp;&quot; as t2&quot;&amp;_
+		&quot; ON t1.KontaktID=t2.KontaktID)&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE ((((YEAR(t2.Erstellungsdatum)=t3.Jahr AND LENGTH(t3.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR t2.KontaktID like &apos;%&apos; AND (LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0)))&quot;&amp;_
+		&quot; OR t1.KontaktID=t3.KontaktID)&quot;&amp;_
+		&quot; ORDER BY t1.Name1&quot;)
+	
+	oList_Projektvorauswahl.ListSource=Array(&quot;SELECT distinct t1.Projekt_Name,t1.ProjektID &quot;&amp;_
+		&quot; FROM &quot;&amp; sProjekte &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sTabelle1 &amp;&quot; as t2&quot;&amp;_
+		&quot; ON t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE ((((YEAR(t2.Erstellungsdatum)=t3.Jahr AND LENGTH(t3.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((t2.KontaktID=t3.KontaktID  AND LENGTH(t3.KontaktID) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t3.KontaktID) IS NULL OR LENGTH(t3.KontaktID)=0)))&quot;&amp;_
+		&quot; OR t1.ProjektID=t3.ProjektID)&quot;&amp;_
+		&quot; ORDER BY t1.Projekt_Name ASC&quot;)
+	
+&apos;	 oList_Documentauswahl.ListSource=Array(&quot;SELECT DISTINCT t1.Document_Name,t1.DocumentID&quot;&amp;_
+&apos;		&quot; FROM Steuerung AS t2&quot;&amp;_
+&apos;		&quot; LEFT JOIN &quot;&amp; sTabelle2 &amp;&quot; AS t3&quot;&amp;_
+&apos;		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+&apos;		&quot; AND (t3.Leistungsbezeichnung LIKE CONCAT(&apos;%&apos;,t2.Suchstring_2,&apos;%&apos;) AND LENGTH(t2.Suchstring_2) &gt; 0)&quot;&amp;_
+&apos;		&quot; INNER JOIN &quot;&amp; sTabelle1 &amp;&quot; as t1&quot;&amp;_
+&apos;		&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+&apos;		&quot; AND (((YEAR(t1.Erstellungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+&apos;		&quot; OR (t1.DocumentID like &apos;%&apos; AND (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+&apos;		&quot; AND ((t1.KontaktID=t2.KontaktID  AND LENGTH(t2.KontaktID) &gt; 0)&quot;&amp;_
+&apos;		&quot; OR (t1.DocumentID like &apos;%&apos; AND (LENGTH(t2.KontaktID) IS NULL OR LENGTH(t2.KontaktID)=0)))&quot;&amp;_
+&apos;		&quot; AND ((t1.ProjektID=t2.ProjektID AND LENGTH(t2.ProjektID) &gt; 0)&quot;&amp;_
+&apos;		&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t2.ProjektID) IS NULL OR LENGTH(t2.ProjektID)=0)))&quot;&amp;_
+&apos;		&quot; AND (((t1.Document_Name LIKE CONCAT(&apos;%&apos;,t2.Suchstring_2,&apos;%&apos;) AND LENGTH(t2.Suchstring_2) &gt; 0)&quot;&amp;_
+&apos;		&quot; OR (t1.Document_Name like &apos;%&apos; AND (LENGTH(t2.Suchstring_2) IS NULL OR LENGTH(t2.Suchstring_2)=0)))&quot;&amp;_
+&apos;		&quot; OR t1.DocumentID=t3.DocumentID)&quot;&amp;_
+&apos;		&quot; OR t1.DocumentID=t2.DocumentID)&quot;&amp;_
+&apos;		&quot; ORDER BY t1.DocumentID DESC&quot;)
+
+	 oList_Documentauswahl.ListSource=Array(&quot;SELECT DISTINCT t1.Document_Name,t1.DocumentID&quot;&amp;_
+		&quot; FROM Steuerung AS t2,&quot;&amp; sTabelle1 &amp;&quot; as t1&quot;&amp;_
+		&quot; LEFT JOIN &quot;&amp; sTabelle2 &amp;&quot; AS t3&quot;&amp;_
+		&quot; ON t3.DocumentID=t1.DocumentID&quot;&amp;_
+		&quot; AND t3.Leistungsbezeichnung LIKE CONCAT(&apos;%&apos;,(SELECT Suchstring_2 FROM Steuerung WHERE ClientID=&quot;&amp; iClientID &amp;&quot;),&apos;%&apos;)&quot;&amp;_
+		&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; AND (((YEAR(t1.Erstellungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.DocumentID like &apos;%&apos; AND (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((t1.KontaktID=t2.KontaktID  AND LENGTH(t2.KontaktID) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.DocumentID like &apos;%&apos; AND (LENGTH(t2.KontaktID) IS NULL OR LENGTH(t2.KontaktID)=0)))&quot;&amp;_
+		&quot; AND ((t1.ProjektID=t2.ProjektID AND LENGTH(t2.ProjektID) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.ProjektID like &apos;%&apos; AND (LENGTH(t2.ProjektID) IS NULL OR LENGTH(t2.ProjektID)=0)))&quot;&amp;_
+		&quot; AND (((t1.Document_Name LIKE CONCAT(&apos;%&apos;,t2.Suchstring_2,&apos;%&apos;) AND LENGTH(t2.Suchstring_2) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.Document_Name like &apos;%&apos; AND (LENGTH(t2.Suchstring_2) IS NULL OR LENGTH(t2.Suchstring_2)=0)))&quot;&amp;_
+		&quot; OR t1.DocumentID=t3.DocumentID)&quot;&amp;_
+		&quot; OR t1.DocumentID=t2.DocumentID)&quot;&amp;_
+		&quot; ORDER BY t1.DocumentID DESC&quot;)
+
+	
+	if sTabelle1 &lt;&gt; sTabelle1_old then
+		oList_Jahrauswahl.ListSource=Array(&quot;SELECT distinct YEAR(Erstellungsdatum),YEAR(Erstellungsdatum) as Jahr FROM &quot;&amp; sTabelle1 &amp;_
+									 &quot; ORDER BY Jahr DESC&quot;)
+	end if
+End Sub
+
+Sub Formular_init_first()
+	init_Form_Document()
+	init_Form_Kontaktdaten()
+	init_Form_Projektdaten()
+	init_Form_Steuerung()
+	init_Form_Steuerung_1()
+	init_Form_Tabellendaten()
+	init_Form_Zwischensummen()
+	init_Form_Bemerkungen()
+	init_List_Jahresauswahl()
+	init_List_Kontaktauswahl()
+	init_List_Projektauswahl()
+	init_List_Ansprechpartner()
+	init_List_Kontaktvorauswahl()
+	init_List_Projektvorauswahl()
+	init_List_Documentauswahl()
+	init_List_Hauptgruppenauswahl()
+	init_List_Gruppenauswahl()
+	init_List_Leistungsauswahl()
+	init_List_Leerzeilen()
+	init_Column_Einheit()
+	init_Column_Pos_Typ()
+End Sub
+
+Sub init_Form_Document()
+	oForm_Document.DataSourceName=sDataSource
+	oForm_Document.NavigationBarMode=0
+	oForm_Document.CommandType=2
+	oForm_Document.Cycle=1
+	oForm_Document.AllowInserts=false
+	oForm_Document.AllowDeletes=false
+End Sub
+
+Sub init_Form_Steuerung()
+	oForm_Steuerung.DataSourceName=sDataSource
+	oForm_Steuerung.NavigationBarMode=0
+	oForm_Steuerung.CommandType=2
+	oForm_Steuerung.Cycle=1
+	oForm_Steuerung.AllowInserts=false
+	oForm_Steuerung.AllowDeletes=false
+End Sub
+
+Sub init_Form_Steuerung_1()
+	oForm_Steuerung_1.DataSourceName=sDataSource
+	oForm_Steuerung_1.NavigationBarMode=0
+	oForm_Steuerung_1.CommandType=2
+	oForm_Steuerung_1.Cycle=1
+	oForm_Steuerung_1.AllowInserts=false
+	oForm_Steuerung_1.AllowDeletes=false
+End Sub
+
+Sub init_Form_Kontaktdaten()
+	oForm_Kontaktdaten.DataSourceName=sDataSource
+	oForm_Kontaktdaten.NavigationBarMode=0
+	oForm_Kontaktdaten.CommandType=2
+	oForm_Kontaktdaten.Cycle=1
+	oForm_Kontaktdaten.AllowInserts=false
+	oForm_Kontaktdaten.AllowDeletes=false
+End Sub
+
+Sub init_Form_Projektdaten()
+	oForm_Projektdaten.DataSourceName=sDataSource
+	oForm_Projektdaten.NavigationBarMode=0
+	oForm_Projektdaten.CommandType=2
+	oForm_Projektdaten.Cycle=1
+	oForm_Projektdaten.AllowInserts=false
+	oForm_Projektdaten.AllowDeletes=false
+End Sub
+
+Sub init_Form_Tabellendaten()
+	oForm_Tabellendaten.DataSourceName=sDataSource
+	oForm_Tabellendaten.NavigationBarMode=0
+	oForm_Tabellendaten.CommandType=2
+	oForm_Tabellendaten.Cycle=1
+	oForm_Tabellendaten.AllowInserts=false
+	oForm_Tabellendaten.AllowDeletes=true
+End Sub
+
+Sub init_Form_Zwischensummen()
+	oForm_Zwischensummen.DataSourceName=sDataSource
+	oForm_Zwischensummen.NavigationBarMode=0
+	oForm_Zwischensummen.CommandType=2
+	oForm_Zwischensummen.Cycle=1
+	oForm_Zwischensummen.AllowInserts=false
+	oForm_Zwischensummen.AllowDeletes=true
+End Sub
+
+Sub init_Form_Bemerkungen()
+	oForm_Bemerkungen.DataSourceName=sDataSource
+	oForm_Bemerkungen.NavigationBarMode=0
+	oForm_Bemerkungen.CommandType=2
+	oForm_Bemerkungen.Cycle=1
+	oForm_Bemerkungen.AllowInserts=false
+	oForm_Bemerkungen.AllowDeletes=true
+End Sub
+
+Sub init_List_Hauptgruppenauswahl()
+	vSQLArray=Array(&quot;SELECT concat(Hauptgruppenname),HauptgruppenID FROM &quot;&amp; sHauptgruppen)
+	oList_Hauptgruppenauswahl.ListSourceType=4
+	oList_Hauptgruppenauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Gruppenauswahl()
+	oList_Gruppenauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Leistungsauswahl()
+	oList_Leistungsauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Kontaktauswahl()
+	oList_Kontaktauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Ansprechpartner()
+	oList_Ansprechpartner.ListSourceType=4
+End Sub
+
+Sub init_List_Projektauswahl()
+	vSQLArray=Array(&quot;SELECT distinct Projekt_Name,ProjektID FROM &quot;&amp; sProjekte &amp;&quot;  ORDER BY Projekt_Name ASC&quot;)
+	oList_Projektauswahl.ListSourceType=3
+	oList_Projektauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Leerzeilen()
+	vSQLArray=Array(&quot;SELECT AnzahlID,Inhalt FROM Leerzeilen&quot;)
+	oList_Leerzeilen.ListSourceType=4
+	oList_Leerzeilen.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Jahresauswahl()
+	oList_Jahrauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Kontaktvorauswahl()
+	oList_Kontaktvorauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Projektvorauswahl()
+	oList_Projektvorauswahl.ListSourceType=4
+End Sub
+
+Sub init_List_Documentauswahl()
+	oList_Documentauswahl.ListSourceType=4
+End Sub
+
+Sub init_Column_Einheit()
+	sSQL1=&quot;SELECT distinct Einheit FROM Einheit ORDER BY Einheit ASC&quot;
+	oColumn_Einheit.ListSourceType=4
+	oColumn_Einheit.ListSource=sSQL1
+End Sub
+
+Sub init_Column_Pos_Typ()
+	vSQLArray=Array(&quot;SELECT distinct Pos_Typ,Pos_TypID FROM Pos_Typ ORDER BY Pos_TypID ASC&quot;)
+	oColumn_Pos_Typ.ListSourceType=4
+	oColumn_Pos_Typ.ListSource=vSQLArray
+End Sub
+</script:module>

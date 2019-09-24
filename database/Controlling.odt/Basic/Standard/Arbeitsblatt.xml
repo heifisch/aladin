@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Arbeitsblatt" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Arbeitsblatt_drucken()
+	Dim vStatus AS Variant
+	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String,sSQL4 AS String
+	Dim sSQL5 AS String,sSQL6 AS String,sSQL7 AS String,sSQL8 AS String
+	Dim oRecord1 AS Object,oRecord2 AS Object
+	Dim ifLV_Pos AS integer,sifLV_Pos AS String
+	
+	Dim sAnschrift AS String,sProjektID AS String,sProjekt_Name AS String
+	Dim sAnrede AS String,sTitel AS String,sVorname AS String,sName1 AS String
+	Dim sName2 AS String,sName3 AS String,sName4 AS String
+	Dim sLand AS String,sPLZ AS String,sOrt AS String
+	Dim sStrasse AS String,sHausnummer AS String,sPos AS String,sNummern AS String
+	Dim sVerbauteMenge AS String,sAngeboteneMenge AS String
+	
+	Dim sBemerkung AS String,sMenge AS String
+	Dim sLV_Pos AS String,sLeistungsID AS String,sLeistungsbezeichnung AS String,sEinkaufspreis AS String
+	Dim sMaterialaufschlagsatz AS String,sBauzeit AS String,sMinutenverrechnungssatz AS String
+	Dim sBestellnummer AS String,sLeistungsbeschreibung AS String
+	Dim iCountGliederung AS Integer,iAnzahlGliederung AS Integer
+	Dim iCountLeistungen AS Integer,iAnzahlLeistungen AS Integer,iOffsetLeistungen AS Integer
+	Dim oRecordGesperrt AS Object,oRecordGliederung AS Object,oRecordLeistungen AS Object
+	Dim oProgressbar AS Object
+
+	if lProjektID &lt;&gt; 0 then
+		Drucktabellen_leeren(iUserID_lokal)
+	
+		sSQL1=&quot;SELECT t1.Anrede,t1.Name1,t1.Titel,t1.Vorname,t1.Name2,t1.Name3,t1.Name4,t1.Land,&quot;&amp;_
+			&quot;t1.PLZ,t1.Ort,t1.Strasse,t1.Hausnummer,t3.ProjektID,t2.Projekt_Name&quot;&amp;_
+			&quot; FROM (&quot;&amp; sProjekte &amp;&quot; AS t2,&quot;&amp; sKunden &amp;&quot; AS t1)&quot;&amp;_
+			&quot; INNER JOIN Steuerung AS t3&quot;&amp;_
+			&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t2.ProjektID=t3.ProjektID&quot; &amp;_
+			&quot; AND t1.KontaktID=t2.KontaktID&quot;
+	
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sAnrede=oRecord1.getString(1)
+			sName1=oRecord1.getString(2)
+			sTitel=oRecord1.getString(3)
+			sVorname=oRecord1.getString(4)
+			sName2=oRecord1.getString(5)
+			sName3=oRecord1.getString(6)
+			sName4=oRecord1.getString(7)
+			sLand=oRecord1.getString(8)
+			sPLZ=oRecord1.getString(9)
+			sOrt=oRecord1.getString(10)
+			sStrasse=oRecord1.getString(11)
+			sHausnummer=oRecord1.getString(12)
+			sProjektID=oRecord1.getString(13)
+			sProjekt_Name=oRecord1.getString(14)
+		Wend
+	
+		sAnschrift=&quot;&quot;
+		
+		if sTitel &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sTitel + &quot; &quot;
+		End if
+		if sVorname &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sVorname + &quot; &quot;
+		End if
+		if sName1 &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sName1 + &quot;\n&quot;
+		End if
+		if sStrasse &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sStrasse + &quot; &quot;
+		End if
+		if sHausnummer &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sHausnummer + &quot;\n&quot;
+		else
+			sAnschrift = sAnschrift + &quot;\n&quot;
+		End if
+		if sLand &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sLand + &quot;-&quot;
+		End if
+		if sPLZ &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sPLZ + &quot; &quot;
+		End if
+		if sOrt &lt;&gt; &quot;&quot; then
+			sAnschrift = sAnschrift + sOrt
+		End if
+	
+		sSQL3=&quot;INSERT INTO  &quot;&amp; sDrucker1_TEMP(iUserID_lokal) &amp;_
+			&quot; (DocumentID,Document_TypID,Document_Name,Nummern,Anschrift)&quot;&amp;_
+			&quot; VALUES(&apos;99999999&apos;,&apos;2&apos;,&apos;&quot;&amp; fsConvertApostroph(sProjekt_Name) &amp;&quot;&apos;,&apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sAnschrift &amp;&quot;&apos;)&quot;
+		SQL_execute(sSQL3)
+	
+		sSQL4=&quot;SELECT DISTINCT t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung&quot;&amp;_
+			&quot; FROM (&quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; AS t1,&quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; AS t3)&quot;&amp;_
+			&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE (t1.DocumentID=t3.DocumentID&quot;&amp;_
+			&quot; AND t3.ProjektID=t2.ProjektID)&quot;&amp;_
+			&quot; ORDER BY t1.DocumentID ASC,t1.Pos ASC&quot;
+	
+		oRecordLeistungen=oResult_Scroll(sSQL4)
+		iAnzahlLeistungen=0
+		If oRecordLeistungen.First then
+			Do
+				iAnzahlLeistungen=oRecordLeistungen.getRow()
+			Loop While oRecordLeistungen.next
+		End If
+		iCountLeistungen=1
+		
+		oProgressbar = oDoc.GetCurrentController.GetFrame.CreateStatusIndicator
+		oProgressbar.Start(&quot;&quot;, iAnzahlLeistungen)
+	
+		Do While iAnzahlLeistungen &gt;= iCountLeistungen
+			oRecordLeistungen=oResult_Scroll(sSQL4)
+			oRecordLeistungen.absolute(iCountLeistungen)
+			sLV_Pos=oRecordLeistungen.getString(1)
+			sLeistungsID=oRecordLeistungen.getString(2)
+			sBestellnummer=oRecordLeistungen.getString(3)
+			sLeistungsbezeichnung=oRecordLeistungen.getString(4)
+			sLeistungsbeschreibung=oRecordLeistungen.getString(5)
+		
+			oProgressbar.Value = iCountLeistungen
+		
+			sSQL5=&quot;SELECT SUM(t1.Menge)&quot;&amp;_
+				&quot; FROM &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; AS t1,Steuerung AS t2,&quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; AS t3&quot;&amp;_
+				&quot; WHERE (t1.DocumentID=t3.DocumentID&quot;&amp;_
+				&quot; AND t3.ProjektID=t2.ProjektID&quot;&amp;_
+				&quot; AND t2.ClientID=&quot;&amp; iClientID &amp;&quot;)&quot;&amp;_
+				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
+				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
+				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+		
+			if sBestellnummer = &quot;&quot; then
+				sSQL5=sSQL5 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
+			else
+				sSQL5=sSQL5 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
+			End if
+			if sLeistungsbeschreibung = &quot;&quot; then
+				sSQL5=sSQL5 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
+			else
+				sSQL5=sSQL5 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
+			End if
+		
+			oRecord2=oResult(sSQL5)
+			While oRecord2.next()
+				sAngeboteneMenge=oRecord2.getString(1)
+			Wend
+			
+			sSQL6=&quot;SELECT SUM(t1.Menge)&quot;&amp;_
+				&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
+				&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+				&quot; AND t2.ClientID=&quot;&amp; iClientID &amp;&quot;)&quot;&amp;_
+				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
+				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
+				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+		
+			if sBestellnummer = &quot;&quot; then
+				sSQL6=sSQL6 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
+			else
+				sSQL6=sSQL6 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
+			End if
+			if sLeistungsbeschreibung = &quot;&quot; then
+				sSQL6=sSQL6 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
+			else
+				sSQL6=sSQL6 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
+			End if
+		
+			oRecord2=oResult(sSQL6)
+			While oRecord2.next()
+				sVerbauteMenge=oRecord2.getString(1)
+			Wend
+			
+			sSQL7=&quot;INSERT INTO  &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;_
+				&quot; (PosID,Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Menge,Lieferung)&quot;&amp;_
+				&quot; SELECT DISTINCT &apos;&quot;&amp; iCountLeistungen 
+		
+			if sLV_Pos = &quot;&quot; then 
+				sSQL7=sSQL7 &amp;&quot;&apos;,&apos;&quot;&amp; iCountLeistungen &amp;&quot;&apos;&quot;
+			else
+				sSQL7=sSQL7 &amp;&quot;&apos;,t1.LV_Pos&quot;
+			End if	
+		
+			sSQL7=sSQL7 &amp;&quot;,&apos;99999999&apos;,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
+				&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&apos;&quot;&amp; sAngeboteneMenge &amp;&quot;&apos;,&apos;&quot;&amp; sVerbauteMenge &amp;&quot;&apos;&quot;&amp;_
+				&quot; FROM &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; AS t1,Steuerung AS t2,&quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; AS t3&quot;&amp;_
+				&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+				&quot; AND t1.DocumentID=t3.DocumentID&quot;&amp;_
+				&quot; AND t3.ProjektID=t2.ProjektID&quot;&amp;_
+				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
+				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
+				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+		
+			if sBestellnummer = &quot;&quot; then
+				sSQL7=sSQL7 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
+			else
+				sSQL7=sSQL7 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
+			End if
+			if sLeistungsbeschreibung = &quot;&quot; then
+				sSQL7=sSQL7 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
+			else
+				sSQL7=sSQL7 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
+			End if
+		
+			SQL_execute(sSQL7)
+			iCountLeistungen=iCountLeistungen+1
+		Loop
+		oProgressbar.End
+		
+		sSQL7=&quot;INSERT INTO  &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; (PosID,DocumentID,Leistungsbezeichnung)&quot;&amp;_
+			&quot;VALUES(&apos;&quot;&amp; iCountLeistungen &amp;&quot;&apos;,&apos;99999999&apos;,&apos;\n*****************************************************************************\n\nNICHT IM ANGEBOT ERFASSTE LEISTUNGEN:&apos;)&quot;
+		SQL_execute(sSQL7)
+		
+		iOffsetLeistungen=iCountLeistungen+1
+	
+		sSQL4=&quot;SELECT DISTINCT t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung&quot;&amp;_
+			&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
+			&quot; WHERE t1.ProjektID=t2.ProjektID&quot;&amp;_
+			&quot; AND t2.ClientID=&quot;&amp; iClientID 
+	
+		oRecordLeistungen=oResult_Scroll(sSQL4)
+		iAnzahlLeistungen=0
+		If oRecordLeistungen.First then
+			Do
+				iAnzahlLeistungen=oRecordLeistungen.getRow()
+			Loop While oRecordLeistungen.next
+		End If
+	
+		iCountLeistungen=1
+		oProgressbar.Start(&quot;&quot;, iAnzahlLeistungen)
+	
+		Do While iAnzahlLeistungen &gt;= iCountLeistungen
+			oRecordLeistungen=oResult_Scroll(sSQL4)
+			oRecordLeistungen.absolute(iCountLeistungen)
+			sLV_Pos=oRecordLeistungen.getString(1)
+			sLeistungsID=oRecordLeistungen.getString(2)
+			sBestellnummer=oRecordLeistungen.getString(3)
+			sLeistungsbezeichnung=oRecordLeistungen.getString(4)
+			sLeistungsbeschreibung=oRecordLeistungen.getString(5)
+		
+			oProgressbar.Value = iCountLeistungen
+		
+			sSQL5=&quot;SELECT SUM(t1.Menge)&quot;&amp;_
+				&quot; FROM &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; AS t1,Steuerung AS t2,&quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; AS t3&quot;&amp;_
+				&quot; WHERE (t1.DocumentID=t3.DocumentID&quot;&amp;_
+				&quot; AND t3.ProjektID=t2.ProjektID&quot;&amp;_
+				&quot; AND t2.ClientID=&quot;&amp; iClientID &amp;&quot;)&quot;&amp;_
+				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
+				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
+				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+		
+			if sBestellnummer = &quot;&quot; then
+				sSQL5=sSQL5 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
+			else
+				sSQL5=sSQL5 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
+			End if
+			if sLeistungsbeschreibung = &quot;&quot; then
+				sSQL5=sSQL5 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
+			else
+				sSQL5=sSQL5 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
+			End if
+		
+			oRecord2=oResult(sSQL5)
+			While oRecord2.next()
+				sAngeboteneMenge=oRecord2.getLong(1)
+			Wend
+			
+			sSQL6=&quot;SELECT SUM(t1.Menge)&quot;&amp;_
+				&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
+				&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
+				&quot; AND t2.ClientID=&quot;&amp; iClientID &amp;&quot;)&quot;&amp;_
+				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
+				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
+				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+		
+			if sBestellnummer = &quot;&quot; then
+				sSQL6=sSQL6 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
+			else
+				sSQL6=sSQL6 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
+			End if
+			if sLeistungsbeschreibung = &quot;&quot; then
+				sSQL6=sSQL6 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
+			else
+				sSQL6=sSQL6 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
+			End if
+		
+			oRecord2=oResult(sSQL6)
+			While oRecord2.next()
+				sVerbauteMenge=oRecord2.getString(1)
+			Wend
+		
+			if sAngeboteneMenge = &quot;0&quot; then
+			
+				sSQL7=&quot;INSERT INTO  &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;_
+					&quot; (PosID,Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Menge,Lieferung)&quot;&amp;_
+					&quot; SELECT DISTINCT &apos;&quot;&amp; iOffsetLeistungen
+			
+				if sLV_Pos = &quot;&quot; then 
+					sSQL7=sSQL7 &amp;&quot;&apos;,&apos;&quot;&amp; iOffsetLeistungen-1 &amp;&quot;&apos;&quot;
+				else
+					sSQL7=sSQL7 &amp;&quot;&apos;,t1.LV_Pos&quot;
+				End if	
+			
+				sSQL7=sSQL7 &amp;&quot;,&apos;99999999&apos;,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
+					&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&apos;&quot;&amp; sAngeboteneMenge &amp;&quot;&apos;,&apos;&quot;&amp; sVerbauteMenge &amp;&quot;&apos;&quot;&amp;_
+					&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
+					&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+					&quot; AND t1.ProjektID=t2.ProjektID&quot;&amp;_
+					&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
+					&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
+					&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+			
+				if sBestellnummer = &quot;&quot; then
+					sSQL7=sSQL7 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
+				else
+					sSQL7=sSQL7 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
+				End if
+				if sLeistungsbeschreibung = &quot;&quot; then
+					sSQL7=sSQL7 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
+				else
+					sSQL7=sSQL7 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
+				End if
+			
+				SQL_execute(sSQL7)
+				iOffsetLeistungen=iOffsetLeistungen+1
+			End if	
+		
+			iCountLeistungen=iCountLeistungen+1
+		Loop
+	
+		oProgressbar.End
+
+		SetUserID(iUserID_lokal)
+		ArbeitsblattPrint()
+	else
+		MsgBox(&quot;Sie haben noch keine Projekt ausgewählt!&quot;,16,sTitle_lokal)
+	End if
+End sub
+</script:module>

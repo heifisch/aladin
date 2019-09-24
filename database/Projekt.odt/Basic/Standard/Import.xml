@@ -1,0 +1,574 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Import" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Import_d83()
+	Dim oFileAccessService  as Object
+	Dim oFilePicker as Object
+	Dim vStatus as Variant,vStatusFilePicker as Variant
+
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &gt; 0 then
+			if Msg_Schreibschutz=1 then
+				MsgBox(&quot;Sie müssen erst den Schreibschutz entfernen!&quot;,16,sTitle_lokal)
+	 			exit Sub
+	 		else
+nochmal:
+				oFilePicker = createUnoService(&quot;com.sun.star.ui.dialogs.FilePicker&quot;)
+				oFilePicker.MultiSelectionMode=&quot;True&quot;
+				vStatusFilePicker=oFilePicker.execute
+				
+				if vStatusFilePicker=0 then
+					vStatus=MsgBox(&quot;Sie haben noch keine Datei ausgewählt!&quot;,37,sTitle_lokal)
+					if vStatus=4 then
+						goto nochmal
+					elseif vStatus=2 then
+						exit sub
+					End if
+				End if
+				Import_d83_exec(oFilePicker)
+	 		End If
+		else
+			MsgBox(&quot;Sie haben noch keinen &quot;&amp; sKontakte &amp;&quot; ausgewählt!&quot;,16,sTitle_lokal)
+		End if
+	else
+		MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
+	End if
+End sub
+
+Sub Import_d83_exec(oFilePicker as Object)
+
+	Dim oFileAccessService  as Object
+	Dim iAnzahlFiles as Integer,iCountFiles as Integer
+	Dim aFileURL()
+	Dim sFileURL as String
+	Dim sFolderURL as String
+	Dim oInputStream as Object
+	Dim oTextInputStream as Object
+	Dim sDateiTyp as String,sLine as String,iDatensatz as Integer,sTitelName as String,lMaxPos as Long
+	Dim sLeistungsID as String,sLeistungsbezeichnung as String,sEinheit as String,sBestellnummer as String
+	Dim sLeistungsbeschreibung as String,sOrdnungsZahl as String,sString as String
+	Dim cMenge as Currency,sBemerkung as String,iBemerkung as Integer,sZwiSuName as String,iZwiSuName as Integer
+	Dim oRecord1 as Object,iCount as Integer,iCountProgress as Integer,iTitelName as Integer
+	Dim sDelim() As String
+	Dim oProgressbar as Object
+	Dim iUmbruch as Integer,iWortTrennung as Integer,iLeistung as Integer
+	
+	iTitelName = 0
+	iZwiSuName = 0
+	iBemerkung = 0
+	iUmbruch = 0 
+	iWortTrennung = 0
+	iLeistung = 0
+	
+	iCountProgress=0
+	oProgressbar = oDoc.GetCurrentController.GetFrame.CreateStatusIndicator
+
+	aFileURL() = oFilePicker.Files()
+	iAnzahlFiles=UBound(aFileURL())
+	
+	iCountFiles=1
+	Do While iAnzahlFiles+1 &gt; iCountFiles OR (iCountFiles=1 AND iAnzahlFiles=0)
+		oProgressbar.Start(&quot;&quot;, 100)
+		oTextInputStream = CreateUnoService(&quot;com.sun.star.io.TextInputStream&quot;)
+		oFileAccessService = createUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+		sFileURL=aFileURL(0)
+		if iAnzahlFiles &gt; 0 then
+			sFileURL=sFileURL &amp; aFileURL(iCountFiles)
+		End if
+		
+		sDateiTyp=Right(sFileURL,3)
+		
+		If NOT oFileAccessService.exists(sFileURL) then
+			MsgBox &quot;Kann folgende Datei nicht lesen: &quot; &amp; sFileURL
+		 	Exit Sub
+		End If
+		
+		oInputStream = oFileAccessService.openFileRead(sFileURL)	
+		oTextInputStream.setInputStream(oInputStream)
+		
+		oTextInputStream.setEncoding(&quot;IBM850&quot;)
+		if LCase(sDateiTyp)=&quot;d83&quot; then
+			Do While Not oTextInputStream.isEOF
+			
+				sLine=oTextInputStream.readLine
+				if Left(sLine,2) = &quot;11&quot; then
+					iLeistung=0
+					if iBemerkung = 1 then
+						if sBemerkung &lt;&gt; &quot;&quot; then
+							sSQL1=&quot;SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle
+							oRecord1=oResult(sSQL1)
+							While oRecord1.next()
+								lMaxPos=oRecord1.getLong(1)
+							Wend
+							sSQL2=&quot;INSERT INTO &quot;&amp; sBemerkungen &amp;_
+								&quot; (DocumentID,Pos,Bemerkung) VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; lMaxPos+1 &amp;&quot;,&apos;&quot;&amp; fsConvertString(sBemerkung) &amp;&quot;&apos;)&quot;
+							SQL_execute(sSQL2)
+							sBemerkung = &quot;&quot;
+							iBemerkung = 0
+						End if
+					End if
+					
+					if sOrdnungsZahl &lt;&gt; &quot;&quot; then
+						sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+							&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
+							&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+						fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
+						fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+						SQL_execute(sSQL2)
+			
+						sOrdnungsZahl = &quot;&quot;
+						cMenge = &quot;&quot;
+						sEinheit = &quot;&quot;
+						sLeistungsID = &quot;&quot;
+						sBestellnummer = &quot;&quot;
+						sLeistungsbezeichnung = &quot;&quot;
+						sLeistungsbeschreibung = &quot;&quot;
+					end if
+					if sTitelName = &quot;&quot; then
+						if Len(Trim(Mid(sLine,3,8))) &gt; 2 then
+							sTitelName = Trim(Mid(sLine,3,2)) &amp;&quot;.&quot;&amp; Trim(Mid(sLine,5,2))
+							iTitelName = 0
+						else
+							sTitelName = Trim(Mid(sLine,3,4))
+						End if
+					else
+						if Len(Trim(Mid(sLine,3,8))) &gt; 2 then
+							sTitelName = sTitelName &amp;&quot; &quot;&amp; Chr$(13) &amp; Trim(Mid(sLine,3,2)) &amp;&quot;.&quot;&amp; Trim(Mid(sLine,5,2))
+							iTitelName = 0
+						else
+							sTitelName = sTitelName &amp;&quot; &quot;&amp; Chr$(13) &amp; Trim(Mid(sLine,3,4))
+						End if
+					End if
+					if sZwiSuName = &quot;&quot; then
+						if Len(Trim(Mid(sLine,3,8))) &gt; 2 then
+							sZwiSuName = Trim(Mid(sLine,3,2)) &amp;&quot;.&quot;&amp; Trim(Mid(sLine,5,2))
+						End if
+					End if
+				
+				elseif Left(sLine,2) = &quot;12&quot; then
+					iLeistung=0
+				
+					if iBemerkung = 1 then
+						if sBemerkung &lt;&gt; &quot;&quot; then
+							sSQL1=&quot;SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle
+							oRecord1=oResult(sSQL1)
+							While oRecord1.next()
+								lMaxPos=oRecord1.getLong(1)
+							Wend
+							sSQL2=&quot;INSERT INTO &quot;&amp; sBemerkungen &amp;_
+								&quot; (DocumentID,Pos,Bemerkung) VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; lMaxPos+1 &amp;&quot;,&apos;&quot;&amp; fsConvertString(sBemerkung) &amp;&quot;&apos;)&quot;
+							SQL_execute(sSQL2)
+							sBemerkung = &quot;&quot;
+							iBemerkung = 0
+						End if
+					End if
+					
+					if sOrdnungsZahl &lt;&gt; &quot;&quot; then
+						sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+							&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
+							&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+						fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
+						fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+						SQL_execute(sSQL2)
+			
+						sOrdnungsZahl = &quot;&quot;
+						cMenge = &quot;&quot;
+						sEinheit = &quot;&quot;
+						sLeistungsID = &quot;&quot;
+						sBestellnummer = &quot;&quot;
+						sLeistungsbezeichnung = &quot;&quot;
+						sLeistungsbeschreibung = &quot;&quot;
+					end if
+					
+					if sTitelName = &quot;&quot; then
+						sTitelName = Trim(Mid(sLine,3,72))
+						iTitelName = iTitelName + 1
+					else
+						if iTitelName &lt;&gt; 1 then
+							sTitelName = sTitelName &amp;&quot; &quot;&amp; Trim(Mid(sLine,3,72))
+							iTitelName = iTitelName + 1
+						elseif iTitelName = 1 then
+							sTitelName = sTitelName &amp;&quot; &quot;&amp; Chr$(10) &amp; Trim(Mid(sLine,3,72))
+							iTitelName = iTitelName + 1
+						End if
+					End if
+				
+					if iZwiSuName = 0 then
+						if sZwiSuName &lt;&gt; &quot;&quot; then
+							sZwiSuName = sZwiSuName &amp;&quot; &quot;&amp; Trim(Mid(sLine,3,72)
+							iZwiSuName = 1
+						End if
+					End if
+				elseif Left(sLine,2) = &quot;20&quot; or Left(sLine,2) = &quot;42&quot; then
+					iBemerkung = 1
+					iLeistung=0
+
+					if sBemerkung &lt;&gt; &quot;&quot; then
+						sBemerkung = sBemerkung &amp; Chr$(13)
+					End if
+					
+					if sTitelName &lt;&gt; &quot;&quot; then
+						sSQL1=&quot;SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle
+						oRecord1=oResult(sSQL1)
+						While oRecord1.next()
+							lMaxPos=oRecord1.getLong(1)
+						Wend
+						sSQL2=&quot;INSERT INTO &quot;&amp; sBemerkungen &amp;_
+						&quot; (DocumentID,Pos,Bemerkung) VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; lMaxPos+1 &amp;&quot;,&apos;&quot;&amp; fsConvertString(sTitelName) &amp;&quot;&apos;)&quot;
+						SQL_execute(sSQL2)
+						sTitelName = &quot;&quot;
+						iTitelName = 0
+					End if
+					
+					if sOrdnungsZahl &lt;&gt; &quot;&quot; then
+						sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+							&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
+							&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+						fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
+						fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+						SQL_execute(sSQL2)
+			
+						sOrdnungsZahl = &quot;&quot;
+						cMenge = &quot;&quot;
+						sEinheit = &quot;&quot;
+						sLeistungsID = &quot;&quot;
+						sBestellnummer = &quot;&quot;
+						sLeistungsbezeichnung = &quot;&quot;
+						sLeistungsbeschreibung = &quot;&quot;
+					End if
+				elseif Left(sLine,2) = &quot;21&quot; then
+				
+					if iBemerkung=1 then
+						if sBemerkung &lt;&gt; &quot;&quot; then
+							sSQL1=&quot;SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle
+							oRecord1=oResult(sSQL1)
+							While oRecord1.next()
+								lMaxPos=oRecord1.getLong(1)
+							Wend
+							sSQL2=&quot;INSERT INTO &quot;&amp; sBemerkungen &amp;_
+								&quot; (DocumentID,Pos,Bemerkung) VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; lMaxPos+1 &amp;&quot;,&apos;&quot;&amp; fsConvertString(sBemerkung) &amp;&quot;&apos;)&quot;
+							SQL_execute(sSQL2)
+							sBemerkung = &quot;&quot;
+							iBemerkung = 0
+						End if
+					End if
+						
+					if sTitelName &lt;&gt; &quot;&quot; then
+						sSQL1=&quot;SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle
+						oRecord1=oResult(sSQL1)
+						While oRecord1.next()
+							lMaxPos=oRecord1.getLong(1)
+						Wend
+						sSQL2=&quot;INSERT INTO &quot;&amp; sBemerkungen &amp;_
+							&quot; (DocumentID,Pos,Bemerkung) VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; lMaxPos+1 &amp;&quot;,&apos;&quot;&amp; fsConvertString(sTitelName) &amp;&quot;&apos;)&quot;
+						SQL_execute(sSQL2)
+						sTitelName = &quot;&quot;
+						iTitelName = 0
+					End if
+			
+					if sOrdnungsZahl = &quot;&quot; then
+						if Len(Trim(Mid(sLine,3,4))) &gt; 2 then
+							sOrdnungsZahl = Trim(Mid(sLine,3,2) &amp;&quot;.&quot;&amp; Trim(Mid(sLine,5,2) &amp;&quot;.&quot;&amp; Trim(Mid(sLine,7,4)
+						else
+							sOrdnungsZahl = Trim(Mid(sLine,3,2) &amp;&quot;.&quot;&amp; Trim(Mid(sLine,7,4
+						End if
+						cMenge = CCur(RTrim(Mid(sLine,24,8)) &amp;&quot;.&quot;&amp; RTrim(Mid(sLine,32,3)))
+						sEinheit = RTrim(Mid(sLine,35,6))
+						sLeistungsID=sOrdnungsZahl
+						sBestellnummer=sOrdnungsZahl
+					else
+						oProgressbar.Value = iCountProgress
+						if iCountProgress &lt; 100 then
+							iCountProgress=iCountProgress+1
+						else
+							iCountProgress = 0
+						End if
+						
+						sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+							&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
+							&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+							fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
+							fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+						SQL_execute(sSQL2)
+		
+						if Len(Trim(Mid(sLine,3,4))) &gt; 2 then
+							sOrdnungsZahl = Trim(Mid(sLine,3,2) &amp;&quot;.&quot;&amp; Trim(Mid(sLine,5,2) &amp;&quot;.&quot;&amp; Trim(Mid(sLine,7,4)
+						else
+							sOrdnungsZahl = Trim(Mid(sLine,3,2) &amp;&quot;.&quot;&amp; Trim(Mid(sLine,7,4
+						End if
+						cMenge = CCur(RTrim(Mid(sLine,24,8)) &amp;&quot;.&quot;&amp; RTrim(Mid(sLine,32,3)))
+						sEinheit = RTrim(Mid(sLine,35,6))
+						sLeistungsID=sOrdnungsZahl
+						sBestellnummer=sOrdnungsZahl
+						
+						sLeistungsbezeichnung = &quot;&quot;
+						sLeistungsbeschreibung = &quot;&quot;
+					End if
+					
+				elseif Left(sLine,2) = &quot;24&quot; then
+					iLeistung = 1
+					iUmbruch = 0
+					sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Chr$(10) &amp;  Chr$(10) &amp;_
+					fZahlMitPunkt(RTrim(Mid(sLine,6,8)) &amp;&quot;.&quot;&amp; RTrim(Mid(sLine,14,3))) &amp;&quot; &quot;&amp; RTrim(Mid(sLine,17,6))
+	
+				elseif Left(sLine,2) = &quot;25&quot; AND iLeistung = 0 AND iBemerkung = 0 then
+				
+					if sLeistungsbezeichnung = &quot;&quot; then
+						if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+							sLeistungsbezeichnung = Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+							iWortTrennung = 1
+						else
+							sLeistungsbezeichnung = Trim(Mid(sLine,3,72))
+							iWortTrennung = 0
+						End if
+					else
+						if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+							if iWortTrennung = 0 then
+								sLeistungsbezeichnung = sLeistungsbezeichnung &amp; &quot; &quot; &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+							elseif iWortTrennung = 1 then
+								sLeistungsbezeichnung = sLeistungsbezeichnung &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+							end if
+							iWortTrennung = 1
+						else
+							if iWortTrennung = 0 then
+								sLeistungsbezeichnung = sLeistungsbezeichnung &amp; &quot; &quot; &amp; Trim(Mid(sLine,3,72))
+							elseif iWortTrennung = 1 then
+								sLeistungsbezeichnung = sLeistungsbezeichnung &amp; Trim(Mid(sLine,3,72))
+							End if
+							iWortTrennung = 0
+						End if
+					End if
+			
+				elseif Left(sLine,2) = &quot;25&quot; AND iLeistung = 1 AND iBemerkung = 0 then
+					if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+						if iWortTrennung = 0 then
+							sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+						elseif iWortTrennung = 1 then
+							sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+						end if
+						iWortTrennung = 1
+					else
+						if iWortTrennung = 0 then
+							sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; Trim(Mid(sLine,3,72))
+						elseif iWortTrennung = 1 then
+							sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Trim(Mid(sLine,3,72))
+						End if
+						iWortTrennung = 0
+					End if
+
+				elseif Left(sLine,2) = &quot;25&quot; AND iLeistung = 0 AND iBemerkung = 1 then
+					sBemerkung = Trim(Mid(sLine,3,72)) &amp; &quot; &quot;
+					iUmbruch = 1
+					iWortTrennung = 0
+				elseif Left(sLine,2) = &quot;26&quot; AND iBemerkung = 0 then
+					if sLeistungsbeschreibung = &quot;&quot; then
+						if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+							sLeistungsbeschreibung = Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+							iWortTrennung = 1
+						else
+							sLeistungsbeschreibung = Trim(Mid(sLine,3,72))
+							iWortTrennung = 0
+						End if
+					else
+						if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+							if iWortTrennung = 0 then
+								if Instr(sLine,&quot;:&quot;) &gt; 0 OR iUmbruch = 1 then
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Chr$(10) &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+									if Instr(sLine,&quot;:&quot;) &gt; 0 then
+										iUmbruch = 1
+									else
+										iUmbruch = 0
+									End if
+								else
+									SELECT Case Left(Trim(Mid(sLine,3,72)),1)
+									Case &quot;-&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;0&quot;
+										sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Chr$(10) &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+										iUmbruch = 1
+									Case Else
+										sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+										iUmbruch = 0
+									End SELECT
+								End if
+							elseif iWortTrennung = 1 then
+								sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+							end if
+							iWortTrennung = 1
+						else
+							if iWortTrennung = 0 then
+								if Instr(sLine,&quot;:&quot;) &gt; 0 OR iUmbruch = 1	then
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Chr$(10) &amp; Trim(Mid(sLine,3,72))
+									if Instr(sLine,&quot;:&quot;) &gt; 0 then
+										iUmbruch = 1
+									else
+										iUmbruch = 0
+									End if
+								else
+									SELECT Case Left(Trim(Mid(sLine,3,72)),1)
+									Case &quot;-&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;0&quot;
+										sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Chr$(10) &amp; Trim(Mid(sLine,3,72))
+										iUmbruch = 1
+									Case Else
+										sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; Trim(Mid(sLine,3,72))
+										iUmbruch = 0
+									End SELECT
+								End if
+							elseif iWortTrennung = 1 then
+								sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Trim(Mid(sLine,3,72))
+							End if
+							iWortTrennung = 0
+						End if
+					End if
+					iLeistung = 0
+				elseif Left(sLine,2) = &quot;26&quot; AND iBemerkung = 1 then
+				
+					if sBemerkung = &quot;&quot; then
+						if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+							sBemerkung = Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+							iWortTrennung = 1
+						else
+							sBemerkung = Trim(Mid(sLine,3,72))
+							iWortTrennung = 0
+						End if
+					else
+						if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+							if iWortTrennung = 0 then
+								if Instr(sLine,&quot;:&quot;) &gt; 0 OR iUmbruch = 1 then
+									sBemerkung = sBemerkung &amp; Chr$(10) &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+									if Instr(sLine,&quot;:&quot;) &gt; 0 then
+										iUmbruch = 1
+									else
+										iUmbruch = 0
+									End if
+								else
+									SELECT Case Left(Trim(Mid(sLine,3,72)),1)
+									Case &quot;-&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;0&quot;
+										sBemerkung = sBemerkung &amp; Chr$(10) &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+										iUmbruch = 1
+									Case Else
+										sBemerkung = sBemerkung &amp; &quot; &quot; &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+										iUmbruch = 0
+									End SELECT
+								End if
+							elseif iWortTrennung = 1 then
+								sBemerkung = sBemerkung &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+							end if
+							iWortTrennung = 1
+						else
+							if iWortTrennung = 0 then
+								if Instr(sLine,&quot;:&quot;) &gt; 0 OR iUmbruch = 1 then
+									sBemerkung = sBemerkung &amp; Chr$(10) &amp; Trim(Mid(sLine,3,72))
+									if Instr(sLine,&quot;:&quot;) &gt; 0 then
+										iUmbruch = 1
+									else
+										iUmbruch = 0
+									End if
+								else
+									SELECT Case Left(Trim(Mid(sLine,3,72)),1)
+									Case &quot;-&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;0&quot;
+										sBemerkung = sBemerkung &amp; Chr$(10) &amp; Trim(Mid(sLine,3,72))
+										iUmbruch = 1
+									Case Else
+										sBemerkung = sBemerkung &amp; &quot; &quot; &amp; Trim(Mid(sLine,3,72))
+										iUmbruch = 0
+									End SELECT
+								End if
+							elseif iWortTrennung = 1 then
+								sBemerkung = sBemerkung &amp; Trim(Mid(sLine,3,72))
+							End if
+							iWortTrennung = 0
+						End if
+					End if
+				elseif Left(sLine,2) = &quot;31&quot; then
+					iLeistung = 0
+					if iBemerkung=1 then
+						if sBemerkung &lt;&gt; &quot;&quot; then
+							sSQL1=&quot;SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle
+							oRecord1=oResult(sSQL1)
+							While oRecord1.next()
+								lMaxPos=oRecord1.getLong(1)
+							Wend
+							sSQL2=&quot;INSERT INTO &quot;&amp; sBemerkungen &amp;_
+								&quot; (DocumentID,Pos,Bemerkung) VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; lMaxPos+1 &amp;&quot;,&apos;&quot;&amp; fsConvertString(sBemerkung) &amp;&quot;&apos;)&quot;
+							SQL_execute(sSQL2)
+							sBemerkung = &quot;&quot;
+							iBemerkung = 0
+						End if
+					End if
+					
+					if sTitelName &lt;&gt; &quot;&quot; then
+						sSQL1=&quot;SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle
+						oRecord1=oResult(sSQL1)
+						While oRecord1.next()
+							lMaxPos=oRecord1.getLong(1)
+						Wend
+						sSQL2=&quot;INSERT INTO &quot;&amp; sBemerkungen &amp;_
+							&quot; (DocumentID,Pos,Bemerkung) VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; lMaxPos+1 &amp;&quot;,&apos;&quot;&amp; fsConvertString(sTitelName) &amp;&quot;&apos;)&quot;
+						SQL_execute(sSQL2)
+						sTitelName = &quot;&quot;
+						iTitelName = 0
+					End if
+					
+					if sOrdnungsZahl &lt;&gt; &quot;&quot; then
+						sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+							&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
+							&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+							fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
+							fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+						SQL_execute(sSQL2)
+					
+						sOrdnungsZahl = &quot;&quot;
+						cMenge = &quot;&quot;
+						sEinheit = &quot;&quot;
+						sLeistungsID = &quot;&quot;
+						sBestellnummer = &quot;&quot;
+						sLeistungsbezeichnung = &quot;&quot;
+						sLeistungsbeschreibung = &quot;&quot;
+					End if
+					
+					if sZwiSuName &lt;&gt; &quot;&quot; then
+						sSQL1=&quot;SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle
+						oRecord1=oResult(sSQL1)
+						While oRecord1.next()
+							lMaxPos=oRecord1.getLong(1)
+						Wend
+						sSQL2=&quot;INSERT INTO &quot;&amp; sZwischensummen &amp;_
+							&quot; (DocumentID,Pos,ZwiSuName) VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; lMaxPos &amp;&quot;,&apos;&quot;&amp; fsConvertString(sZwiSuName) &amp;&quot;&apos;)&quot;
+						SQL_execute(sSQL2)
+						sZwiSuName = &quot;&quot;
+						iZwiSuName = 0
+					End if
+				End if	
+			Loop
+			oTextInputStream.closeInput()
+		
+&apos;				sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+&apos;						&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
+&apos;						&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+&apos;						fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
+&apos;						fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+&apos;						SQL_execute(sSQL2)
+				
+		End if
+				
+		sOrdnungsZahl = &quot;&quot;
+		sEinheit = &quot;&quot;
+		cMenge = 0
+		sLeistungsbezeichnung = &quot;&quot;
+		sLeistungsbeschreibung = &quot;&quot;
+		
+		iCountFiles=iCountFiles+1
+	Loop
+	oProgressbar.End
+	oForm_Bemerkungen.reload()
+	oForm_Zwischensummen.reload()
+	oForm_Tabellendaten.reload()
+	wait 1
+	oForm_Tabellendaten.last()
+End Sub
+</script:module>

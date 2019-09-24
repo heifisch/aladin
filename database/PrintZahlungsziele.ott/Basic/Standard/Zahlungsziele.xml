@@ -1,0 +1,276 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Zahlungsziele" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Zahlungsziele()
+	Dim vTables as Object
+	Dim vTableZahlungsziele as Variant,vRowsZahlungsziele as Variant
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String,sSQL5 as String
+	Dim iAnzahlZahlungsziele as integer,iCountZahlungsziele
+	Dim oRecordZahlungsziele as Object,oRecordCountZahlungsziele as Object
+	Dim oRecordStartOption as Object,oRecordSUMmeStatus as Object
+	Dim vViewCursor as Variant
+	Dim document as Object
+	Dim dispatcher as Object
+	Dim iCount as Integer,iStartoption as Integer
+	
+	Dim sEingangsrechnungen as String, sLieferanten as String
+	Dim sRechnungsID as String,sKundennummer as String,sLieferantenname as String,sRechnungsname as String
+	Dim sKontaktID as String,sRechnungsnummer as String,sBetragMitMwSt as String,sFaellig as String
+	Dim sBetragNachSkonto as String,sSkontoBis as String,sSUMmeStatus as String,sSUMmeZum as String
+	Dim sBank as String,sBIC as String,sIBAN as String,sStatus as String,sBezahltAm as String
+	Dim cBetragMitMwSt as String,cBetragNachSkonto as String,lKontaktID as Long
+	Dim oFrame as Object,oWin as Object
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+	SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;PrintZahlungsziele&quot;))
+	SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+	SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 32)
+
+	oFrame = StarDesktop.getCurrentFrame()
+	oFrame.setTitle(sTitle(iUserID_lokal) &amp;&quot; - Druck: Zahlungsziele&quot;)
+
+	StatusBar(True)
+	ToolBar(True)
+
+	FormSizePrint()
+
+	vTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	vTables = oDoc.getTextTables
+	vTableZahlungsziele = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTableZahlungsziele = vTables.getByName(&quot;Zahlungsziele&quot;)
+	vRowsZahlungsziele = vTableZahlungsziele.getRows()
+	vViewCursor = oDoc.CurrentController.getViewCursor()
+	
+	sSQL1=&quot;SELECT Startoption from Start where StartID=&quot;&amp; iUserID_lokal
+	oRecordStartOption=oResult(sSQL1)
+	While oRecordStartOption.next()
+		iStartoption=oRecordStartOption.getInt(1)
+	Wend
+	
+	sSQL2=&quot;update Start set Startoption=0,Startlock=0 where StartID=&quot;&amp; iUserID_lokal
+	SQL_execute(sSQL2)
+	
+	if iEinstellungsID_lokal=1 _ 
+		or InStr(fsTableList,&quot;;Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+	then
+		sLieferanten=&quot;Lieferanten&quot;
+	else
+		sLieferanten=&quot;Lieferanten_&quot; &amp; iEinstellungsID_lokal
+	end if
+	if iEinstellungsID_lokal=1 _ 
+		or InStr(fsTableList,&quot;;Eingangsrechnungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+	then
+		sEingangsrechnungen=&quot;Eingangsrechnungen&quot;
+	else
+		sEingangsrechnungen=&quot;Eingangsrechnungen_&quot; &amp; iEinstellungsID_lokal
+	end if
+	
+	if iStartoption = 0 then
+	
+		SQL_Status_skontofaehig(iUserID_lokal)
+		SQL_Status_berechnet(iUserID_lokal)
+		SQL_Status_faellig(iUserID_lokal)
+		
+		sSQL3=&quot;SELECT COUNT(*) &quot;&amp;_
+			&quot;FROM &quot;&amp; sEingangsrechnungen &amp;&quot; as t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3&quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE ( t1.Status = &apos;fällig&apos; &quot;&amp;_
+			&quot; OR t1.Status = &apos;berechnet&apos; &quot;&amp;_
+			&quot; OR t1.Status = &apos;skontofähig&apos; ) &quot;
+		
+		sSQL4=&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.RechnungsID,t1.Rechnungsnummer,t2.ReferenzID,&quot;&amp;_
+			&quot;t1.Rechnungsname,concat(t2.Name1,&apos; &apos;, t2.Vorname,&apos; &apos;,t2.Name2),&quot;&amp;_
+			&quot;t1.faellig,t1.Skonto_bis,t1.bezahlt_am,&quot;&amp;_
+			&quot;t1.Betrag_mit_MwSt,t1.Betrag_nach_Skonto,&quot;&amp;_
+			&quot;t1.Betrag_mit_MwSt,t1.Betrag_nach_Skonto,&quot;&amp;_
+			&quot;t2.Bank,t2.BIC,t2.IBAN,&quot;&amp;_
+			&quot;t1.Status,t1.KontaktID &quot;&amp;_
+			&quot;FROM &quot;&amp; sLieferanten &amp;&quot; as t2&quot;&amp;_
+			&quot; INNER JOIN &quot;&amp; sEingangsrechnungen &amp;&quot; as t1&quot;&amp;_
+			&quot; ON t2.KontaktID = t1.KontaktID&quot;&amp;_
+			&quot; INNER JOIN Steuerung as t3 &quot;&amp;_
+			&quot; ON t3.ClientID = &quot;&amp; iClientID &amp;_
+			&quot; WHERE ( t1.Status = &apos;fällig&apos; &quot;&amp;_
+			&quot; OR t1.Status = &apos;berechnet&apos; &quot;&amp;_
+			&quot; OR t1.Status = &apos;skontofähig&apos; )&quot;&amp;_
+			&quot; ORDER BY t1.faellig ASC,t1.RechnungsID ASC&quot;
+		
+		elseif iStartoption = 1 then
+		
+		sSQL3=&quot;SELECT COUNT(*) &quot;&amp;_
+			&quot; FROM (&quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+			&quot; INNER JOIN &quot;&amp; sLieferanten &amp;&quot;  AS t3&quot;&amp;_
+			&quot; ON t3.KontaktID=t1.KontaktID)&quot;&amp;_
+			&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE (((YEAR(t1.Rechnungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Rechnungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0)))&quot;&amp;_
+			&quot; AND ((t1.Status=t2.Status AND LENGTH(t2.Status) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Status) IS NULL OR LENGTH(t2.Status)=0)))&quot;&amp;_
+			&quot; AND ((t1.Rechnungsname LIKE concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;) AND LENGTH(t2.Suchstring) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Suchstring) IS NULL OR LENGTH(t2.Suchstring)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t2.LieferantenID AND LENGTH(t2.LieferantenID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.LieferantenID) IS NULL OR LENGTH(t2.LieferantenID)=0)))&quot;&amp;_
+			&quot; AND ((t1.RechnungsTypID=t2.Option_2 AND t2.Option_2 &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Option_2) IS NULL OR t2.Option_2=0)))&quot;&amp;_
+			&quot; AND (((t1.gebucht=1 AND t2.Option_1=1) AND t1.Buchhaltung=1)&quot;&amp;_
+			&quot; OR ((t1.gebucht=0 AND t2.Option_1=2) AND t1.Buchhaltung=1)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Option_1) IS NULL OR t2.Option_1=0)))&quot;&amp;_
+			&quot; OR t1.RechnungsID=t2.DocumentID)&quot;
+				
+		sSQL4=&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;t1.RechnungsID,t1.Rechnungsnummer,t3.ReferenzID,&quot;&amp;_
+			&quot;t1.Rechnungsname,concat(t3.Name1,&apos; &apos;, t3.Vorname,&apos; &apos;,t3.Name2),&quot;&amp;_
+			&quot;t1.faellig,t1.Skonto_bis,t1.bezahlt_am,&quot;&amp;_
+			&quot;t1.Betrag_mit_MwSt,t1.Betrag_nach_Skonto,&quot;&amp;_
+			&quot;t1.Betrag_mit_MwSt,t1.Betrag_nach_Skonto,&quot;&amp;_
+			&quot;t3.Bank,t3.BIC,t3.IBAN,&quot;&amp;_
+			&quot;t1.Status,t1.KontaktID &quot;&amp;_
+			&quot; FROM (&quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+			&quot; INNER JOIN &quot;&amp; sLieferanten &amp;&quot;  AS t3&quot;&amp;_
+			&quot; ON t3.KontaktID=t1.KontaktID)&quot;&amp;_
+			&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE (((YEAR(t1.Rechnungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+			&quot; AND ((MONTH(t1.Rechnungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0)))&quot;&amp;_
+			&quot; AND ((t1.Status=t2.Status AND LENGTH(t2.Status) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Status) IS NULL OR LENGTH(t2.Status)=0)))&quot;&amp;_
+			&quot; AND ((t1.Rechnungsname LIKE concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;) AND LENGTH(t2.Suchstring) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Suchstring) IS NULL OR LENGTH(t2.Suchstring)=0)))&quot;&amp;_
+			&quot; AND ((t1.KontaktID=t2.LieferantenID AND LENGTH(t2.LieferantenID) &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.LieferantenID) IS NULL OR LENGTH(t2.LieferantenID)=0)))&quot;&amp;_
+			&quot; AND ((t1.RechnungsTypID=t2.Option_2 AND t2.Option_2 &gt; 0)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Option_2) IS NULL OR t2.Option_2=0)))&quot;&amp;_
+			&quot; AND (((t1.gebucht=1 AND t2.Option_1=1) AND t1.Buchhaltung=1)&quot;&amp;_
+			&quot; OR ((t1.gebucht=0 AND t2.Option_1=2) AND t1.Buchhaltung=1)&quot;&amp;_
+			&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Option_1) IS NULL OR t2.Option_1=0)))&quot;&amp;_
+			&quot; OR t1.RechnungsID=t2.DocumentID)&quot;&amp;_
+			&quot; ORDER BY t1.RechnungsID ASC&quot;
+
+		End if
+		
+		oRecordCountZahlungsziele=oResult(sSQL3)
+		While oRecordCountZahlungsziele.next()
+			iAnzahlZahlungsziele=CInt(oRecordCountZahlungsziele.getString(1))
+		Wend
+		
+			vViewCursor.jumpToEndOfPage()
+			vViewCursor.goUp(1, False)
+		
+			If NOT IsEmpty(vViewCursor.Cell) Then
+				For iCount=1 to iAnzahlZahlungsziele-1
+					document = ThisComponent.CurrentController.Frame
+					dispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+					dispatcher.executeDispatch(document, &quot;.uno:InsertRows&quot;, &quot;&quot;, 0, Array())
+				Next
+			End If
+		
+		iCountZahlungsziele=1
+		
+		Do While iAnzahlZahlungsziele &gt;= iCountZahlungsziele
+			oRecordZahlungsziele=oResult_Scroll(sSQL4)
+			oRecordZahlungsziele.absolute(iCountZahlungsziele)
+			sRechnungsID=oRecordZahlungsziele.getString(1)
+			sRechnungsnummer=oRecordZahlungsziele.getString(2)
+			sKundennummer=oRecordZahlungsziele.getString(3)
+			sRechnungsname=oRecordZahlungsziele.getString(4)
+			sLieferantenname=oRecordZahlungsziele.getString(5)
+			sFaellig=oRecordZahlungsziele.getString(6)
+			sSkontoBis=oRecordZahlungsziele.getString(7)
+			sBezahltAm=oRecordZahlungsziele.getString(8)
+			sBetragMitMwSt=oRecordZahlungsziele.getString(9)
+			sBetragNachSkonto=oRecordZahlungsziele.getString(10)
+			cBetragMitMwSt=oRecordZahlungsziele.getString(11)
+			cBetragNachSkonto=oRecordZahlungsziele.getString(12)
+			sBank=oRecordZahlungsziele.getString(13)
+			sBIC=oRecordZahlungsziele.getString(14)
+			sIBAN=oRecordZahlungsziele.getString(15)
+			sStatus=oRecordZahlungsziele.getString(16)
+			lKontaktID=oRecordZahlungsziele.getLong(17)
+		
+		if sStatus = &quot;skontofähig&quot; then
+			sSQL5=&quot;SELECT SUM(Betrag_nach_Skonto)-COALESCE(SUM(Betrag_bezahlt), 0)&quot;&amp;_
+				&quot; from &quot;&amp; sEingangsrechnungen &amp;_
+				&quot; where KontaktID=&quot;&amp; lKontaktID &amp;_
+				&quot; and Status=&apos;&quot;&amp; sStatus &amp;&quot;&apos;&quot;&amp;_
+				&quot; and Skonto_bis &lt;= &apos;&quot;&amp; sSkontoBis &amp;&quot;&apos;&quot;
+		elseif sStatus = &quot;berechnet&quot; then
+			sSQL5=&quot;SELECT SUM(Betrag_mit_MwSt)-COALESCE(SUM(Betrag_bezahlt), 0)&quot;&amp;_
+				&quot; from &quot;&amp; sEingangsrechnungen &amp;_
+				&quot; where KontaktID=&quot;&amp; lKontaktID &amp;_
+				&quot; and Status=&apos;&quot;&amp; sStatus &amp;&quot;&apos;&quot;&amp;_
+				&quot; and faellig &lt;= &apos;&quot;&amp; sFaellig &amp;&quot;&apos;&quot;
+		elseif sStatus = &quot;bezahlt&quot; then
+			sSQL5=&quot;SELECT SUM(Betrag_mit_MwSt)&quot;&amp;_
+				&quot; from &quot;&amp; sEingangsrechnungen &amp;_
+				&quot; where KontaktID=&quot;&amp; lKontaktID &amp;_
+				&quot; and Status=&apos;&quot;&amp; sStatus &amp;&quot;&apos;&quot;
+		else
+			sSQL5=&quot;SELECT SUM(Betrag_mit_MwSt)-COALESCE(SUM(Betrag_bezahlt), 0)&quot;&amp;_
+				&quot; from &quot;&amp; sEingangsrechnungen &amp;_
+				&quot; where KontaktID=&quot;&amp; lKontaktID &amp;_
+				&quot; and Status=&apos;&quot;&amp; sStatus &amp;&quot;&apos;&quot; &amp;_
+				&quot; and faellig &lt;= &apos;&quot;&amp; sFaellig &amp;&quot;&apos;&quot;
+		End if
+		
+		oRecordSUMmeStatus=oResult(sSQL5)
+		While oRecordSUMmeStatus.next()
+			sSUMmeStatus=oRecordSUMmeStatus.getString(1)
+		Wend
+	
+		iCountZahlungsziele=iCountZahlungsziele + 1
+	
+		vTableZahlungsziele.getCellByName(&quot;A&quot; &amp; iCountZahlungsziele).String=sRechnungsID
+		vTableZahlungsziele.getCellByName(&quot;B&quot; &amp; iCountZahlungsziele &amp; &quot;.1.1&quot;).String=sLieferantenname
+		vTableZahlungsziele.getCellByName(&quot;B&quot; &amp; iCountZahlungsziele &amp; &quot;.1.2&quot;).String=sRechnungsname
+		vTableZahlungsziele.getCellByName(&quot;C&quot; &amp; iCountZahlungsziele &amp; &quot;.1.1&quot;).String=sKundennummer
+		vTableZahlungsziele.getCellByName(&quot;C&quot; &amp; iCountZahlungsziele &amp; &quot;.1.2&quot;).String=sRechnungsnummer
+		vTableZahlungsziele.getCellByName(&quot;D&quot; &amp; iCountZahlungsziele &amp; &quot;.1.1&quot;).String=fTausenderpunkt(fZahlMitPunkt(sBetragMitMwSt))
+		vTableZahlungsziele.getCellByName(&quot;D&quot; &amp; iCountZahlungsziele &amp; &quot;.1.2&quot;).String=fConvDatum(sFaellig)
+		if sBetragNachSkonto &lt;&gt; &quot;&quot; then
+			vTableZahlungsziele.getCellByName(&quot;E&quot; &amp; iCountZahlungsziele &amp; &quot;.1.1&quot;).String=fTausenderpunkt(fZahlMitPunkt(sBetragNachSkonto))
+		End if
+		vTableZahlungsziele.getCellByName(&quot;E&quot; &amp; iCountZahlungsziele &amp; &quot;.1.2&quot;).String=fConvDatum(sSkontoBis)
+		vTableZahlungsziele.getCellByName(&quot;E&quot; &amp; iCountZahlungsziele &amp; &quot;.2.1&quot;).String=fTausenderpunkt(fZahlMitPunkt(sSUMmeStatus))
+		if sBezahltAm &lt;&gt; &quot;&quot; then
+			vTableZahlungsziele.getCellByName(&quot;E&quot; &amp; iCountZahlungsziele &amp; &quot;.2.2&quot;).String=fConvDatum(sBezahltAm)
+		End if
+		vTableZahlungsziele.getCellByName(&quot;F&quot; &amp; iCountZahlungsziele &amp; &quot;.1.1&quot;).String=sIBAN
+		vTableZahlungsziele.getCellByName(&quot;F&quot; &amp; iCountZahlungsziele &amp; &quot;.1.2&quot;).String=sBIC
+		vTableZahlungsziele.getCellByName(&quot;F&quot; &amp; iCountZahlungsziele &amp; &quot;.2.2&quot;).String=sBank
+		vTableZahlungsziele.getCellByName(&quot;G&quot; &amp; iCountZahlungsziele).String=sStatus
+	
+	Loop
+
+End Sub
+
+
+Function oDoc as Object
+	oDoc=thiscomponent
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

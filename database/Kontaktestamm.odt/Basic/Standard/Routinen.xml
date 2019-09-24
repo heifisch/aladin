@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement AS Object
+Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+Dim oRecord1 AS Object,oRecord2 AS Object
+Dim vStatus AS Variant
+Dim sName1 AS String,sName AS String
+Dim cMwSt_Satz AS currency
+
+Sub Start_Kontakte()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+	if oDoc.isReadOnly then
+		Dim oFrame AS Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+		
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Kontaktestamm&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 26)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+		
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Kontakte_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			OR InStr(fsTableList,&quot;;Ansprechpartner_Kontakte_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+		then
+			SetDocUserProperty(&quot;oKontakte&quot;, &quot;Kontakte&quot;	)
+			SetDocUserProperty(&quot;oAnsprechpartner_Kontakte&quot;, &quot;Ansprechpartner_Kontakte&quot;)
+		else
+			SetDocUserProperty(&quot;oKontakte&quot;, &quot;Kontakte_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oAnsprechpartner_Kontakte&quot;, &quot;Ansprechpartner_Kontakte_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			OR InStr(fsTableList,&quot;;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+		then
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden&quot;	)
+			SetDocUserProperty(&quot;oAnsprechpartner_Kunden&quot;, &quot;Ansprechpartner_Kunden&quot;)
+		else
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oAnsprechpartner_Kunden&quot;, &quot;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			OR InStr(fsTableList,&quot;;Ansprechpartner_Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+		then
+			SetDocUserProperty(&quot;oLieferanten&quot;, &quot;Lieferanten&quot;	)
+			SetDocUserProperty(&quot;oAnsprechpartner_Lieferanten&quot;, &quot;Ansprechpartner_Lieferanten&quot;)
+		else
+			SetDocUserProperty(&quot;oLieferanten&quot;, &quot;Lieferanten_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oAnsprechpartner_Lieferanten&quot;, &quot;Ansprechpartner_Lieferanten_&quot; &amp; iEinstellungsID_lokal)
+		end if
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+
+		oFrame = StarDesktop.getCurrentFrame()		
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Kontaktestamm&quot;)
+
+		sSQL1=&quot;UPDATE Steuerung SET Gesperrt=1 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		Formular_init()					&apos;Initialisierung für Mehrplatzlösung
+		oForm_Steuerung.reload()
+
+	 	StatusBar(False)
+		ToolBar(False)
+	End if
+	FormSize()
+End Sub
+
+Sub Kontakte_TEMP_loeschen()
+	sSQL1=&quot;DELETE FROM Kontakte_TEMP WHERE KontaktID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	sSQL1=&quot;DELETE FROM Ansprechpartner_TEMP WHERE KontaktID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub Kontakt_kopieren()
+	if lKontaktID &lt;&gt; 0 then
+		Kontakte_TEMP_loeschen()
+		sSQL1=&quot;INSERT INTO Kontakte_TEMP&quot;&amp;_
+			&quot;(KontaktID,Anrede,Name1,Titel,Vorname,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,Hausnummer,Aquise,ReferenzID,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bank,BIC,IBAN,UmsatzsteuerID,Umsatzsteuernummer,Mindestangaben,Bemerkungen,Ordner,Ablage,Erstkontakt) &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;&apos;&quot;&amp; iClientID &amp;&quot;&apos;,Anrede,CONCAT(Name1,&apos;  KOPIE!!!&apos;),Titel,Vorname,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,Hausnummer,Aquise,ReferenzID,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bank,BIC,IBAN,UmsatzsteuerID,Umsatzsteuernummer,Mindestangaben,Bemerkungen,Ordner,Ablage,Erstkontakt &quot;&amp;_
+			&quot;FROM &quot;&amp; sKontakte &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID
+		SQL_execute(sSQL1)
+		sSQL2=&quot;INSERT INTO Ansprechpartner_TEMP&quot;&amp;_
+			&quot;(KontaktID,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen) &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;&apos;&quot;&amp; iClientID &amp;&quot;&apos;,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen&quot;&amp;_
+			&quot; FROM &quot;&amp; sAnsprechpartner_Kontakte &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID
+		SQL_execute(sSQL2)
+		sSQL1=&quot;INSERT INTO &quot;&amp; sKontakte &amp;_
+			&quot;(Anrede,Name1,Titel,Vorname,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,Hausnummer,Aquise,ReferenzID,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bank,BIC,IBAN,UmsatzsteuerID,Umsatzsteuernummer,Mindestangaben,Bemerkungen,Ordner,Ablage,Erstkontakt) &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;Anrede,Name1,Titel,Vorname,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,Hausnummer,Aquise,ReferenzID,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bank,BIC,IBAN,UmsatzsteuerID,Umsatzsteuernummer,Mindestangaben,Bemerkungen,Ordner,Ablage,Erstkontakt &quot;&amp;_
+			&quot;FROM Kontakte_TEMP WHERE KontaktID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		sSQL2=&quot;INSERT INTO &quot;&amp; sAnsprechpartner_Kontakte &amp;_
+			&quot;(KontaktID,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen) &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;&apos;&quot;&amp; lKontaktID_import &amp;&quot;&apos;,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen&quot;&amp;_
+			&quot; FROM Ansprechpartner_TEMP WHERE KontaktID=&quot;&amp; iClientID
+		SQL_execute(sSQL2)
+		Kontakte_TEMP_loeschen()
+		SQL_UPDATE_Steuerung_KontaktID()
+		oList_Kontaktauswahl.refresh()
+		oForm_Steuerung.reload()
+	End if
+End Sub
+
+Sub Kunde_aus_Kontakt()
+	if lKontaktID &lt;&gt; 0 then
+		sSQL1=&quot;INSERT INTO &quot;&amp; sKunden &amp;_
+			&quot;(Anrede,Name1,Titel,Vorname,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,Hausnummer,Aquise,ReferenzID,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bank,BIC,IBAN,UmsatzsteuerID,Umsatzsteuernummer,Mindestangaben,Bemerkungen,Ordner,Ablage,Erstkontakt) &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;Anrede,Name1,Titel,Vorname,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,Hausnummer,Aquise,ReferenzID,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bank,BIC,IBAN,UmsatzsteuerID,Umsatzsteuernummer,Mindestangaben,Bemerkungen,Ordner,Ablage,Erstkontakt &quot;&amp;_
+			&quot;FROM &quot;&amp; sKontakte &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID
+		SQL_execute(sSQL1)
+		sSQL2=&quot;INSERT INTO &quot;&amp; sAnsprechpartner_Kunden &amp;_
+			&quot;(KontaktID,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen) &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;&apos;&quot;&amp; iMax_Datensatz(sKunden,&quot;KontaktID&quot;) &amp;&quot;&apos;,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen&quot;&amp;_
+			&quot; FROM &quot;&amp; sAnsprechpartner_Kontakte &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID
+		SQL_execute(sSQL2)
+		MsgBox(&quot;Es ist ein Kontakt in den Kundenstamm kopiert worden!&quot;,64,sTitle_lokal)
+	End if
+End Sub
+
+Sub Lieferant_aus_Kontakt()
+	if lKontaktID &lt;&gt; 0 then
+		sSQL1=&quot;INSERT INTO &quot;&amp; sLieferanten &amp;_
+			&quot;(Anrede,Name1,Titel,Vorname,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,Hausnummer,Aquise,ReferenzID,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bank,BIC,IBAN,UmsatzsteuerID,Umsatzsteuernummer,Mindestangaben,Bemerkungen,Ordner,Ablage,Erstkontakt) &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;Anrede,Name1,Titel,Vorname,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,Hausnummer,Aquise,ReferenzID,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bank,BIC,IBAN,UmsatzsteuerID,Umsatzsteuernummer,Mindestangaben,Bemerkungen,Ordner,Ablage,Erstkontakt &quot;&amp;_
+			&quot;FROM &quot;&amp; sKontakte &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID
+		SQL_execute(sSQL1)
+		sSQL2=&quot;INSERT INTO &quot;&amp; sAnsprechpartner_Lieferanten &amp;&quot;&quot;&amp;_
+			&quot;(KontaktID,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen) &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;&apos;&quot;&amp; iMax_Datensatz(sLieferanten,&quot;KontaktID&quot;) &amp;&quot;&apos;,Abteilung,Anrede,Titel,Name,Vorname,Telefon,Funktelefon,Fax,EMail,Bemerkungen&quot;&amp;_
+			&quot; FROM &quot;&amp; sAnsprechpartner_Kontakte &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID
+		SQL_execute(sSQL2)
+		MsgBox(&quot;Es ist ein Kontakt in den Lieferantenstamm kopiert worden!&quot;,64,sTitle_lokal)
+	End if
+End Sub
+
+Sub Filter_Suchstring_setzen()
+	oField_Suchstring.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Kontaktauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_Suchstring_ruecksetzen()
+	sSQL1=&quot;UPDATE Steuerung SET Suchstring=NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	wait 10
+	oList_Kontaktauswahl.refresh()
+	oForm_Steuerung.reload()
+	oForm_Steuerung.reset()
+End Sub
+
+Sub Kontaktauswahl_refresh()
+	oList_Kontaktauswahl.refresh()
+End Sub
+
+Sub Kontakt_loeschen()
+	vStatus=MsgBox(&quot;Soll der aktuelle Lieferant gelöscht werden?&quot;&amp; Chr$(13) &amp; Chr$(13) &amp; Chr$(13) &amp;_
+		&quot;Wenn Ja ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+		&quot;Wollen Sie trotzdem fortfahren?&quot;,36,sTitle_lokal)
+	if vStatus=6 then
+		sSQL1=&quot;DELETE FROM &quot;&amp; sKontakte &amp;&quot; WHERE KontaktID = &quot;&amp; lKontaktID
+		SQL_execute(sSQL1)
+		sSQL1=&quot;DELETE FROM &quot;&amp; sAnsprechpartner_Kontakte &amp;&quot; WHERE KontaktID = &quot;&amp; lKontaktID
+		SQL_execute(sSQL1)
+		SQL_KontaktID_entfernen()
+		oForm_Steuerung.reload()
+	End if
+End Sub
+
+Sub Kontakt_uebernehmen()
+	oList_Kontaktauswahl.commit()
+	oForm_Steuerung.updateRow()
+	oForm_Steuerung.reload()
+End sub
+
+Sub Kontaktdaten_speichern()
+	if lKontaktID &lt;&gt; 0 then
+		oForm_Kontaktdaten.updateRow()
+		SQL_Datum_UPDATE()
+		SQL_KontaktID_entfernen()
+		oForm_Steuerung.reload()
+		oForm_Steuerung.reset()
+	End if
+End Sub
+
+Sub Maske_schliessen()
+	if oDoc.isReadOnly then
+		if lKontaktID &lt;&gt; 0 then
+			Kontaktdaten_speichern()
+		End if
+		sSQL1=&quot;UPDATE Steuerung SET Gesperrt=0 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SQL_KontaktID_entfernen()
+		ldap_UPDATE()
+	End if
+	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+Sub neuer_Kontakt()
+nochmal:
+	sName1=InputBox(&quot;Geben Sie bitte den Kontaktnamen ein!&quot;,sTitle_lokal)
+	if sName1 = &quot;&quot; then
+		vStatus=MsgBox(&quot;Sie haben noch keine Namen eingegeben!&quot;,37,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+	sSQL2=&quot;INSERT INTO &quot;&amp; sKontakte &amp;&quot; (Name1,Erstkontakt)&quot;&amp;_
+		&quot; SELECT &apos;&quot;&amp; fsConvertApostroph(sName1) &amp;&quot;&apos;,DATE_ADD(NOW(),INTERVAL 0 DAY)&quot;
+	SQL_execute(sSQL2)
+	SQL_UPDATE_Steuerung_KontaktID()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub neuer_Ansprechpartner()
+nochmal:
+	if lKontaktID &lt;&gt; 0 then
+		sName=InputBox(&quot;Geben Sie bitte den Nachnamen des Ansprechpartners ein!&quot;,sTitle_lokal)
+		if sName = &quot;&quot; then
+			vStatus=MsgBox(&quot;Sie haben noch keine Namen eingegeben!&quot;,37,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal
+			elseif vStatus=2 then
+				exit sub
+			End if
+		End if
+		sSQL1=&quot;INSERT INTO &quot;&amp; sAnsprechpartner_Kontakte &amp;&quot; (KontaktID,Name) VALUES (&apos;&quot;&amp; lKontaktID &amp; &quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sName) &amp;&quot;&apos;)&quot;
+		SQL_execute(sSQL1)
+		oForm_Ansprechpartner.reload()
+	else
+		MsgBox(&quot;Sie haben noch keinen Lieferanten ausgewählt oder angelegt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+
+</script:module>

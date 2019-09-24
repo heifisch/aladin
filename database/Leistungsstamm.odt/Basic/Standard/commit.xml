@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="commit" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option Explicit
+
+Sub store_LeistungsID_old()
+	SetDocUserProperty(&quot;oLeistungsID_old&quot;, fLeistungsID)
+End Sub
+
+Sub set_LeistungsID_new()
+	Dim sSQL1 as String,sSQL2 as String
+	Dim vStatus as Variant
+	oField_LeistungsID.commit()
+	if fLeistungsID &lt;&gt; &quot;&quot; and fLeistungsID &lt;&gt; sLeistungsID_old then
+		vStatus=MsgBox(&quot;Wollen Sie wirklich die LeistungsID ändern?&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
+				 &quot;ACHTUNG!!!&quot;&amp; Chr$(10) &amp;_
+				 &quot;In bestehenden Dokumenten wird die LeistungsID NICHT mit geändert!!&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			if sLeistungsID_old &lt;&gt; &quot;&quot; then
+				if sLeistungsID_old &lt;&gt; fLeistungsID then
+					if fAnzahlDatensaetzeLeistungen = 0 then
+						sSQL1=&quot;update &quot;&amp; sLeistungsstamm &amp;&quot; set LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;&quot;&apos; where LeistungsID=&apos;&quot;&amp; sLeistungsID_old &amp;&quot;&apos;&quot;
+						SQL_execute(sSQL1)
+						sSQL2=&quot;update Steuerung set LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;&quot;&apos; where ClientID=&quot;&amp; iClientID
+						SQL_execute(sSQL2)
+					else
+						MsgBox(&quot;Die LeistungsID ist schon vergeben! Wählen sie bitte eine neue ID!&quot;,16,sTitle_lokal)
+					End if
+					oForm_Steuerung.reload()
+					oList_Leistungsauswahl.refresh()
+				End if
+			End if
+		elseif vStatus=7 then
+			oForm_Steuerung.reload()
+		End if
+	End if
+End Sub
+
+Sub Leistungsbeschreibung_commit()
+On Error Goto ErrorHandler
+	if fLeistungsID &lt;&gt; &quot;&quot; then
+		oField_Leistungsbeschreibung.commit()
+		oForm_Leistungsdaten.updateRow()
+		sSQL1=&quot;update &quot;&amp; sLeistungsstamm &amp;&quot; set Leistungsbeschreibung=&apos;&quot;&amp; oField_Leistungsbeschreibung.BoundField.String &amp;_
+				&quot;&apos; where LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL1)
+		oForm_Leistungsdaten.reload()
+	End if
+exit sub
+ErrorHandler:
+	oForm_Leistungsdaten.reload()
+End Sub
+</script:module>

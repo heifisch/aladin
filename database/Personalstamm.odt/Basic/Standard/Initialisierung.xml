@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Initialisierung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sSQL1 AS String,sSQL2 AS String
+Dim vSQLArray AS Variant
+
+Sub Formular_init()
+GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+init_Form_Personaldaten()
+init_Form_Steuerung()
+init_List_Personalauswahl()
+End Sub
+
+Sub init_Form_Personaldaten()
+	sSQL1=&quot;SELECT * FROM &quot;&amp; sPersonal &amp;&quot; WHERE PersonalID=:c&quot;
+	oForm_Personaldaten.DataSourceName=sDataSource
+	oForm_Personaldaten.NavigationBarMode=0
+	oForm_Personaldaten.CommandType=2
+	oForm_Personaldaten.Command=sSQL1
+	oForm_Personaldaten.Cycle=1
+	oForm_Personaldaten.AllowInserts=false
+End Sub
+
+Sub init_Form_Steuerung()
+	sSQL1=&quot;SELECT * FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oForm_Steuerung.DataSourceName=sDataSource
+	oForm_Steuerung.NavigationBarMode=0
+	oForm_Steuerung.CommandType=2
+	oForm_Steuerung.Command=sSQL1
+	oForm_Steuerung.Cycle=1
+	oForm_Steuerung.AllowInserts=false
+End Sub
+
+Sub init_List_Personalauswahl()
+	vSQLArray=Array(&quot;SELECT DISTINCT &quot;&amp;_
+		&quot;CONCAT(t1.Name1,&apos;, &apos;,t1.Vorname,&apos;  --&gt;  &apos;,t1.Ort) AS Name,&quot;&amp;_
+		&quot;t1.PersonalID FROM &quot;&amp; sPersonal &amp;&quot; AS t1 ORDER BY t1.Name1 ASC&quot;)
+	oList_Personalauswahl.ListSourceType=4
+	oList_Personalauswahl.ListSource=vSQLArray
+End Sub
+
+
+</script:module>

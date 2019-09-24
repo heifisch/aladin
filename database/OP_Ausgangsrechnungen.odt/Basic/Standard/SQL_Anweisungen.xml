@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="SQL_Anweisungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub SQL_DocumentID_entfernen()
+	sSQL1=&quot;UPDATE Steuerung SET DocumentID=NULL,KontaktID=NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Steuerung_reset()
+	sSQL1=&quot;UPDATE Steuerung&quot;&amp;_
+	&quot; SET KundenID=Null,Jahr=Null,Monat=Null,Status=Null,Suchstring=NULL,ProjektID=Null&quot;&amp;_
+	&quot; WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_KontaktID_uebernehmen()
+	sSQL1=&quot;UPDATE Steuerung SET KontaktID=&quot;&amp; lKundenID &amp;&quot; WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Status_berechnet_Ausgangsrechnung()
+	sSQL1=&quot;UPDATE &quot;&amp; sTabelle &amp;_
+	&quot; SET Status=&apos;berechnet&apos; WHERE (Status is NULL OR Status=&apos;skontofähig&apos;) AND (to_days(now()))&lt;=(to_days(gueltig_bis))&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Status_skontofaehig_Ausgangsrechnung()
+	sSQL1=&quot;UPDATE &quot;&amp; sTabelle &amp;&quot; SET Status=&apos;skontofähig&apos; &quot;&amp;_
+	&quot;WHERE Status is NULL OR (Status != &apos;Einzug&apos; AND &quot;&amp;_
+	&quot;Status != &apos;bezahlt&apos; AND Status != &apos;nicht eintreibbar&apos;) AND (to_days(skonto_bis))&gt;=(to_days(now()))&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+
+</script:module>

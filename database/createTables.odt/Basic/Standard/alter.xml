@@ -1,0 +1,814 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="alter" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Arbeitstabelle()
+Use_Aladin
+&apos;SQL_create_Arbeitstabellen()
+SQL_drop_Druckertabelle1()
+SQL_create_Druckertabelle1()
+End Sub
+
+Sub Alter_Table_20160912()
+Use_Aladin
+sSQL=&quot;ALTER TABLE Projekte ADD Materialaufschlagsatz decimal(5,2) AFTER Stundenverrechnungssatz&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+
+Sub Alter_Table_20160428()
+Use_Aladin
+sSQL=&quot;ALTER TABLE Angebote2 ADD GZ decimal(11,2) not null default 0&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen2 ADD GZ decimal(11,2) not null default 0&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine2 ADD GZ decimal(11,2) not null default 0&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze2 ADD GZ decimal(11,2) not null default 0&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen2 ADD GZ decimal(11,2) not null default 0&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften2 ADD GZ decimal(11,2) not null default 0&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Preisanfragen2 ADD GZ decimal(11,2) not null default 0&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Bestellungen2 ADD GZ decimal(11,2) not null default 0&quot;
+SQL_execute_mysql(sSQL)
+
+SQL_drop_Arbeitstabellen()
+SQL_create_Arbeitstabellen()
+
+End Sub
+
+Sub Alter_Table_20131202()
+Use_Aladin
+
+sSQL=&quot;ALTER TABLE ZwiSuAngebote ADD Bauzeit_Stunden decimal(11,2) AFTER Zwischensumme, ADD Materialeinsatz decimal(11,2) AFTER Bauzeit_Stunden&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuAuftragsbestaetigungen ADD Bauzeit_Stunden decimal(11,2) AFTER Zwischensumme, ADD Materialeinsatz decimal(11,2) AFTER Bauzeit_Stunden&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuLieferscheine ADD Bauzeit_Stunden decimal(11,2) AFTER Zwischensumme, ADD Materialeinsatz decimal(11,2) AFTER Bauzeit_Stunden&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuAufmasze ADD Bauzeit_Stunden decimal(11,2) AFTER Zwischensumme, ADD Materialeinsatz decimal(11,2) AFTER Bauzeit_Stunden&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuRechnungen ADD Bauzeit_Stunden decimal(11,2) AFTER Zwischensumme, ADD Materialeinsatz decimal(11,2) AFTER Bauzeit_Stunden&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuGutschriften ADD Bauzeit_Stunden decimal(11,2) AFTER Zwischensumme, ADD Materialeinsatz decimal(11,2) AFTER Bauzeit_Stunden&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuPreisanfragen ADD Bauzeit_Stunden decimal(11,2) AFTER Zwischensumme, ADD Materialeinsatz decimal(11,2) AFTER Bauzeit_Stunden&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuBestellungen ADD Bauzeit_Stunden decimal(11,2) AFTER Zwischensumme, ADD Materialeinsatz decimal(11,2) AFTER Bauzeit_Stunden&quot;
+SQL_execute_mysql(sSQL)
+
+End Sub
+
+Sub Serienbrief()
+Use_Aladin
+sSQL=&quot;update Projekte,Kunden Set Projekte.Stundenverrechnungssatz=Kunden.Stundenverrechnungssatz where Projekte.KontaktID = Kunden.KontaktID and (Projekte.Stundenverrechnungssatz=0 or Projekte.Stundenverrechnungssatz is Null)&quot;
+SQL_execute_mysql(sSQL)
+
+&apos;SQL_drop_Table(&quot;Kontakte_TEMP&quot;)
+&apos;SQL_create_Kontakte_TEMP()
+
+&apos;SQL_drop_Table(&quot;Ansprechpartner_TEMP&quot;)
+&apos;SQL_create_Ansprechpartner_TEMP()
+
+&apos;SQL_drop_Arbeitstabellen()
+&apos;SQL_create_Arbeitstabellen()
+
+&apos;SQL_drop_Druckertabelle()
+&apos;SQL_create_Druckertabelle()
+
+&apos;SQL_drop_Druckertabelle1()
+&apos;SQL_create_Druckertabelle1()
+
+&apos;SQL_drop_Druckertabelle2()
+&apos;SQL_create_Druckertabelle2()
+
+&apos;SQL_drop_Table(&quot;Serienbrief_Kontakte_TEMP&quot;)
+&apos;SQL_create_Serienbrief_Kontakte()
+&apos;SQL_create_Serienbrief_Listen()
+
+End Sub
+
+Sub Alter_Table_20120523()
+Use_Aladin
+sSQL=&quot;ALTER TABLE Steuerung MODIFY ClientID int(4) not null auto_increment,ADD Serienbrief int(1) default 2 AFTER Gesperrt,ADD SerBrieListenID int(10) AFTER ProjektID&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL=&quot;ALTER TABLE Kunden ADD BIC varchar(12) AFTER Bank,ADD IBAN varchar(30) AFTER BIC,DROP COLUMN Serienbrief&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Kontakte ADD BIC varchar(12) AFTER Bank,ADD IBAN varchar(30) AFTER BIC,DROP COLUMN Serienbrief&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferanten ADD BIC varchar(12) AFTER Bank,ADD IBAN varchar(30) AFTER BIC,DROP COLUMN Serienbrief&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Kontakte_TEMP ADD BIC varchar(12) AFTER Bank,ADD IBAN varchar(30) AFTER BIC&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Einstellungen ADD BIC varchar(12) AFTER Bank,ADD IBAN varchar(30) AFTER BIC&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Personal ADD BIC varchar(12) AFTER Bank,ADD IBAN varchar(30) AFTER BIC&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Projekte ADD Stundenverrechnungssatz decimal(6,2) AFTER Summe_mit_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;update Projekte,Kunden Set Projekte.Stundenverrechnungssatz=Kunden.Stundenverrechnungssatz where Projekte.KontaktID = Kunden.KontaktID and (Projekte.Stundenverrechnungssatz=0 or Projekte.Stundenverrechnungssatz is Null)&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL=&quot;ALTER TABLE Angebote1 MODIFY Minutenverrechnungssatz decimal(7,4),ADD Korrektur_Vorzeichen char(1) not null default &apos;-&apos; AFTER Skonto_Satz,&quot;&amp;_
+	&quot;CHANGE COLUMN Abzug_Satz Korrektur_Satz decimal(5,2) not null default 0,CHANGE COLUMN Abzug_Anlass Korrektur_Anlass varchar(255),CHANGE COLUMN Abzug Korrektur decimal(11,2),&quot;&amp;_
+	&quot;CHANGE COLUMN Summe_nach_Abzug Summe_nach_Korrektur decimal(11,2)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Angebote2 MODIFY Minutenverrechnungssatz decimal(7,4)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen1 MODIFY Minutenverrechnungssatz decimal(7,4),ADD Korrektur_Vorzeichen char(1) not null default &apos;-&apos; AFTER Skonto_Satz,&quot;&amp;_
+	&quot;CHANGE COLUMN Abzug_Satz Korrektur_Satz decimal(5,2) not null default 0,CHANGE COLUMN Abzug_Anlass Korrektur_Anlass varchar(255),CHANGE COLUMN Abzug Korrektur decimal(11,2),&quot;&amp;_
+	&quot;CHANGE COLUMN Summe_nach_Abzug Summe_nach_Korrektur decimal(11,2)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen2 MODIFY Minutenverrechnungssatz decimal(7,4)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine1 MODIFY Minutenverrechnungssatz decimal(7,4),ADD Korrektur_Vorzeichen char(1) not null default &apos;-&apos; AFTER Skonto_Satz,&quot;&amp;_
+	&quot;CHANGE COLUMN Abzug_Satz Korrektur_Satz decimal(5,2) not null default 0,CHANGE COLUMN Abzug_Anlass Korrektur_Anlass varchar(255),CHANGE COLUMN Abzug Korrektur decimal(11,2),&quot;&amp;_
+	&quot;CHANGE COLUMN Summe_nach_Abzug Summe_nach_Korrektur decimal(11,2)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine2 MODIFY Minutenverrechnungssatz decimal(7,4)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze1 MODIFY Minutenverrechnungssatz decimal(7,4),ADD Korrektur_Vorzeichen char(1) not null default &apos;-&apos; AFTER Skonto_Satz,&quot;&amp;_
+	&quot;CHANGE COLUMN Abzug_Satz Korrektur_Satz decimal(5,2) not null default 0,CHANGE COLUMN Abzug_Anlass Korrektur_Anlass varchar(255),CHANGE COLUMN Abzug Korrektur decimal(11,2),&quot;&amp;_
+	&quot;CHANGE COLUMN Summe_nach_Abzug Summe_nach_Korrektur decimal(11,2)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze2 MODIFY Minutenverrechnungssatz decimal(7,4)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen1 MODIFY Minutenverrechnungssatz decimal(7,4),ADD Korrektur_Vorzeichen char(1) not null default &apos;-&apos; AFTER Skonto_Satz,&quot;&amp;_
+	&quot;CHANGE COLUMN Abzug_Satz Korrektur_Satz decimal(5,2) not null default 0,CHANGE COLUMN Abzug_Anlass Korrektur_Anlass varchar(255),CHANGE COLUMN Abzug Korrektur decimal(11,2),&quot;&amp;_
+	&quot;CHANGE COLUMN Summe_nach_Abzug Summe_nach_Korrektur decimal(11,2)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen2 MODIFY Minutenverrechnungssatz decimal(7,4)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften1 MODIFY Minutenverrechnungssatz decimal(7,4),ADD Korrektur_Vorzeichen char(1) not null default &apos;-&apos; AFTER Skonto_Satz,&quot;&amp;_
+	&quot;CHANGE COLUMN Abzug_Satz Korrektur_Satz decimal(5,2) not null default 0,CHANGE COLUMN Abzug_Anlass Korrektur_Anlass varchar(255),CHANGE COLUMN Abzug Korrektur decimal(11,2),&quot;&amp;_
+	&quot;CHANGE COLUMN Summe_nach_Abzug Summe_nach_Korrektur decimal(11,2)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften2 MODIFY Minutenverrechnungssatz decimal(7,4)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Preisanfragen1 MODIFY Minutenverrechnungssatz decimal(7,4),ADD Korrektur_Vorzeichen char(1) not null default &apos;-&apos; AFTER Skonto_Satz,&quot;&amp;_
+	&quot;CHANGE COLUMN Abzug_Satz Korrektur_Satz decimal(5,2) not null default 0,CHANGE COLUMN Abzug_Anlass Korrektur_Anlass varchar(255),CHANGE COLUMN Abzug Korrektur decimal(11,2),&quot;&amp;_
+	&quot;CHANGE COLUMN Summe_nach_Abzug Summe_nach_Korrektur decimal(11,2)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Preisanfragen2 MODIFY Minutenverrechnungssatz decimal(7,4)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Bestellungen1 MODIFY Minutenverrechnungssatz decimal(7,4),ADD Korrektur_Vorzeichen char(1) not null default &apos;-&apos; AFTER Skonto_Satz,&quot;&amp;_
+	&quot;CHANGE COLUMN Abzug_Satz Korrektur_Satz decimal(5,2) not null default 0,CHANGE COLUMN Abzug_Anlass Korrektur_Anlass varchar(255),CHANGE COLUMN Abzug Korrektur decimal(11,2),&quot;&amp;_
+	&quot;CHANGE COLUMN Summe_nach_Abzug Summe_nach_Korrektur decimal(11,2)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Bestellungen2 MODIFY Minutenverrechnungssatz decimal(7,4)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Controlling MODIFY Minutenverrechnungssatz decimal(7,4)&quot;
+SQL_execute_mysql(sSQL)
+
+SQL_drop_Table(&quot;Kontakte_TEMP&quot;)
+SQL_create_Kontakte_TEMP()
+
+SQL_drop_Table(&quot;Ansprechpartner_TEMP&quot;)
+SQL_create_Ansprechpartner_TEMP()
+
+SQL_drop_Arbeitstabellen()
+SQL_create_Arbeitstabellen()
+
+SQL_drop_Druckertabelle1()
+SQL_create_Druckertabelle1()
+
+SQL_drop_Table(&quot;Serienbrief_Kontakte_TEMP&quot;)
+SQL_create_Serienbrief_Kontakte()
+SQL_create_Serienbrief_Listen()
+
+SQL_drop_Table(&quot;Monate&quot;)
+SQL_create_Monate()
+
+End Sub
+
+Sub Alter_Table_20110523()
+Use_Aladin
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen1 ADD Zahlbetrag_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD Zahlbetrag_MwSt decimal(11,2) AFTER Zahlbetrag_ohne_MwSt,ADD Zahlbetrag_mit_MwSt decimal(11,2) AFTER Zahlbetrag_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen1 ADD Zahlbetrag_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD Zahlbetrag_MwSt decimal(11,2) AFTER Zahlbetrag_ohne_MwSt,ADD Zahlbetrag_mit_MwSt decimal(11,2) AFTER Zahlbetrag_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Angebote1 ADD Zahlbetrag_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD Zahlbetrag_MwSt decimal(11,2) AFTER Zahlbetrag_ohne_MwSt,ADD Zahlbetrag_mit_MwSt decimal(11,2) AFTER Zahlbetrag_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften1 ADD Zahlbetrag_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD Zahlbetrag_MwSt decimal(11,2) AFTER Zahlbetrag_ohne_MwSt,ADD Zahlbetrag_mit_MwSt decimal(11,2) AFTER Zahlbetrag_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine1 ADD Zahlbetrag_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD Zahlbetrag_MwSt decimal(11,2) AFTER Zahlbetrag_ohne_MwSt,ADD Zahlbetrag_mit_MwSt decimal(11,2) AFTER Zahlbetrag_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze1 ADD Zahlbetrag_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD Zahlbetrag_MwSt decimal(11,2) AFTER Zahlbetrag_ohne_MwSt,ADD Zahlbetrag_mit_MwSt decimal(11,2) AFTER Zahlbetrag_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Preisanfragen1 ADD Zahlbetrag_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD Zahlbetrag_MwSt decimal(11,2) AFTER Zahlbetrag_ohne_MwSt,ADD Zahlbetrag_mit_MwSt decimal(11,2) AFTER Zahlbetrag_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Bestellungen1 ADD Zahlbetrag_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD Zahlbetrag_MwSt decimal(11,2) AFTER Zahlbetrag_ohne_MwSt,ADD Zahlbetrag_mit_MwSt decimal(11,2) AFTER Zahlbetrag_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen1 ADD AZ_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD AZ_MwSt decimal(11,2) AFTER AZ_ohne_MwSt,ADD AZ_mit_MwSt decimal(11,2) AFTER AZ_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen1 ADD AZ_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD AZ_MwSt decimal(11,2) AFTER AZ_ohne_MwSt,ADD AZ_mit_MwSt decimal(11,2) AFTER AZ_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Angebote1 ADD AZ_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD AZ_MwSt decimal(11,2) AFTER AZ_ohne_MwSt,ADD AZ_mit_MwSt decimal(11,2) AFTER AZ_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften1 ADD AZ_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD AZ_MwSt decimal(11,2) AFTER AZ_ohne_MwSt,ADD AZ_mit_MwSt decimal(11,2) AFTER AZ_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine1 ADD AZ_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD AZ_MwSt decimal(11,2) AFTER AZ_ohne_MwSt,ADD AZ_mit_MwSt decimal(11,2) AFTER AZ_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze1 ADD AZ_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD AZ_MwSt decimal(11,2) AFTER AZ_ohne_MwSt,ADD AZ_mit_MwSt decimal(11,2) AFTER AZ_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Preisanfragen1 ADD AZ_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD AZ_MwSt decimal(11,2) AFTER AZ_ohne_MwSt,ADD AZ_mit_MwSt decimal(11,2) AFTER AZ_MwSt&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Bestellungen1 ADD AZ_ohne_MwSt decimal(11,2) AFTER Summe_Mit_MwSt,ADD AZ_MwSt decimal(11,2) AFTER AZ_ohne_MwSt,ADD AZ_mit_MwSt decimal(11,2) AFTER AZ_MwSt&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL=&quot;drop table Pos_Typ&quot; 
+SQL_execute_mysql(sSQL)
+SQL_create_Pos_Typ()
+
+if iUserAnzahl &lt; 1 then
+	SetUserAnzahl()
+End if
+For iCount = 1 to iUserAnzahl
+	sSQL=&quot;drop table Drucker1_TEMP&quot;&amp; iCount 
+	SQL_execute_mysql(sSQL)
+Next iCount
+
+SQL_create_Druckertabelle1()
+
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen2 MODIFY Leistungsbeschreibung varchar(10000) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen2 MODIFY Leistungsbeschreibung varchar(10000) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Angebote2 MODIFY Leistungsbeschreibung varchar(10000) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften2 MODIFY Leistungsbeschreibung varchar(10000) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine2 MODIFY Leistungsbeschreibung varchar(10000) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze2 MODIFY Leistungsbeschreibung varchar(10000) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Preisanfragen2 MODIFY Leistungsbeschreibung varchar(10000) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Bestellungen2 MODIFY Leistungsbeschreibung varchar(10000) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Korrespondenz_Kunden ADD SerBrieKontakte varchar(1000) not null AFTER Serienbriefverteiler&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Korrespondenz_Lieferanten ADD SerBrieKontakte varchar(1000) not null AFTER Serienbriefverteiler&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Korrespondenz_Kontakte ADD SerBrieKontakte varchar(1000) not null AFTER Serienbriefverteiler&quot;
+SQL_execute_mysql(sSQL)
+
+End Sub
+
+Sub Alter_Table_20101121
+Use_Aladin
+sSQL=&quot;DROP TABLE Steuerung&quot;
+SQL_execute_mysql(sSQL)
+SQL_create_Steuerung()
+sSQL=&quot;ALTER TABLE Personal ADD Verrechnungs_Faktor decimal(5,2) not null default 1 AFTER Stunden_Satz &quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Kunden MODIFY Strasse varchar(50) not null default &apos;&apos;, &quot;&amp;_
+	&quot;MODIFY Hausnummer varchar(10) not null default &apos;&apos;&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferanten MODIFY Strasse varchar(50) not null default &apos;&apos;, &quot;&amp;_
+	&quot;MODIFY Hausnummer varchar(10) not null default &apos;&apos;&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Kontakte MODIFY Strasse varchar(50) not null default &apos;&apos;, &quot;&amp;_
+	&quot;MODIFY Hausnummer varchar(10) not null default &apos;&apos;&quot;
+SQL_execute_mysql(sSQL)
+End sub
+
+
+Sub Alter_Table_20100111
+Use_Aladin
+sSQL=&quot;ALTER TABLE Korrespondenz_Kunden ADD Serienbriefverteiler varchar(1000)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Korrespondenz_Lieferanten ADD Serienbriefverteiler varchar(1000)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Korrespondenz_Kontakte ADD Serienbriefverteiler varchar(1000)&quot;
+SQL_execute_mysql(sSQL)
+SQL_create_Kontakte_TEMP
+SQL_create_Ansprechpartner_TEMP
+SQL_create_Kontakte
+SQL_create_Schriftwechsel_Kontakte
+sSQL=&quot;DROP TABLE Document_Typ&quot;
+SQL_execute_mysql(sSQL)
+SQL_create_Document_Typ
+SQL_create_Ansprechpartner_Kontakte
+sSQL=&quot;DROP TABLE Steuerung&quot;
+SQL_execute_mysql(sSQL)
+SQL_create_Steuerung()
+sSQL=&quot;ALTER TABLE Korrespondenz_Kunden ADD ProjektID int(10) AFTER DocumentID,&quot;&amp;_
+	&quot;ADD Schreibschutz int(1) not null default 0 AFTER Leerzeilen&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Korrespondenz_Lieferanten ADD ProjektID int(10) AFTER DocumentID,&quot;&amp;_
+	&quot;ADD Schreibschutz int(1) not null default 0 AFTER Leerzeilen&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Users ADD EinstellungsID INT(2) NOT NULL DEFAULT 1 AFTER UserID&quot;
+SQL_execute_mysql(sSQL)
+UserAnzahl_aendern()
+End sub
+
+Sub Alter_Table_20091031
+Use_Aladin
+sSQL=&quot;ALTER TABLE Lieferanten ADD Bestellbemerkung varchar(255) AFTER Mindestangaben&quot;
+SQL_execute_mysql(sSQL)
+End sub
+
+Sub Alter_Table_20090626
+Use_Aladin
+sSQL=&quot;ALTER TABLE Lieferanten ADD RechnungsTypID int(2) not null default &apos;1&apos; AFTER Serienbrief&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Eingangsrechnungen ADD RechnungsTypID int(2) not null default &apos;1&apos; AFTER Kasse&quot;
+SQL_execute_mysql(sSQL)
+SQL_create_Rechnungstypen()
+End sub
+
+Sub Alter_Table_20080612
+Use_Aladin
+sSQL=&quot;ALTER TABLE Kunden MODIFY Land varchar(20)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferanten MODIFY Land varchar(20)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Einstellungen MODIFY Land varchar(20),MODIFY MwSt_Satz decimal(4,1),ADD 13bText varchar(255) default &quot;&amp;_
+	&quot;&apos;Die Lieferung bzw. Abrechnung betrifft Bauleistungen und erfolgt gemäß §13b UStG ohne Umsatzsteuer. &quot;&amp;_
+	&quot;Die Umsatzsteuer wird vom Leistungsempfänger geschuldet.&apos;,ADD ExportVerzeichnissBuchhaltung varchar(255)&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Kunden ADD 13b int(1) not null default &apos;0&apos; AFTER Serienbrief&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferanten ADD Buchhaltung int(1) not null default &apos;0&apos; AFTER Serienbrief&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Angebote1 ADD 13b int(1) not null default &apos;0&apos; AFTER Lieferbemerkung,&quot;&amp;_
+	&quot;ADD 13bText varchar(255) AFTER 13b&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen1 ADD 13b int(1) not null default &apos;0&apos; AFTER Lieferbemerkung,&quot;&amp;_
+	&quot;ADD 13bText varchar(255) AFTER 13b&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine1 ADD 13b int(1) not null default &apos;0&apos; AFTER Lieferbemerkung,&quot;&amp;_
+	&quot;ADD 13bText varchar(255) AFTER 13b&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze1 ADD 13b int(1) not null default &apos;0&apos; AFTER Lieferbemerkung,&quot;&amp;_
+	&quot;ADD 13bText varchar(255) AFTER 13b&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen1 ADD 13b int(1) not null default &apos;0&apos; AFTER Lieferbemerkung,&quot;&amp;_
+	&quot;ADD 13bText varchar(255) AFTER 13b,ADD Sicherheitseinbehalt decimal(11,2) AFTER Summe_bezahlt,&quot;&amp;_
+	&quot;ADD Kasse int(1) not null default &apos;0&apos; AFTER Sicherheitseinbehalt,ADD gebucht int(1) not null default &apos;0&apos; AFTER Kasse&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften1 ADD 13b int(1) not null default &apos;0&apos; AFTER Lieferbemerkung,&quot;&amp;_
+	&quot;ADD 13bText varchar(255) AFTER 13b,ADD Sicherheitseinbehalt decimal(11,2) AFTER Summe_bezahlt,&quot;&amp;_
+	&quot;ADD Kasse int(1) not null default &apos;0&apos; AFTER Sicherheitseinbehalt,ADD gebucht int(1) not null default &apos;0&apos; AFTER Kasse&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Eingangsrechnungen ADD Sicherheitseinbehalt decimal(11,2) AFTER Betrag_bezahlt,ADD Kasse int(1) not null default &apos;0&apos; AFTER Status,&quot;&amp;_
+	&quot;ADD Buchhaltung int(1) not null default &apos;0&apos; AFTER Kasse,ADD gebucht int(1) not null default &apos;0&apos; AFTER Buchhaltung&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL=&quot;DROP TABLE Drucker1_TEMP1&quot;
+SQL_execute_mysql(sSQL)
+
+SQL_create_Druckertabelle1()
+
+End Sub
+
+
+Sub Alter_Table_20060617
+Use_Aladin
+sSQL=&quot;ALTER TABLE Einstellungen ADD OptionInhaber int(1) not null AFTER Geschaeftsfuehrer&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Controlling MODIFY Lokation varchar(255) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Steuerung ADD PositionsID2 varchar(25) default 0 AFTER PositionsID&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub Alter_Users
+Use_Aladin
+sSQL=&quot;ALTER TABLE Users ADD PrintLeistungsbezeichnung int(1) default 1 AFTER PrintBestellnummer,&quot;&amp;_
+		&quot;ADD PrintLeistungsbeschreibung int(1) default 0 AFTER PrintLeistungsbezeichnung&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+
+
+Sub ReAlter_Table_20060212
+Use_Aladin
+sSQL=&quot;ALTER TABLE Document_Typ DROP gueltig&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Leistungsgruppen DROP PrintPreisliste&quot;
+&apos;SQL_execute_mysql(sSQL)
+
+
+End Sub
+
+Sub Alter_Table_20060212
+GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+Use_Aladin
+sSQL=&quot;ALTER TABLE Controlling MODIFY Leistungsbeschreibung varchar(10000) not null not null&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL=&quot;ALTER TABLE Document_Typ ADD ReferenzID varchar(50)not null AFTER KontaktID,ADD gueltig int(3) AFTER Bemerkung&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL=&quot;ALTER TABLE Leistungsgruppen ADD PrintPreisliste int(1)not null default 1 AFTER HauptgruppenID&quot;
+SQL_execute_mysql(sSQL)
+
+SQL_create_User()
+
+sSQL=&quot;ALTER TABLE Einstellungen ADD Name3 varchar(100)not null AFTER Name2,&quot;&amp;_
+	&quot;ADD Name4 varchar(100)not null AFTER Name3,ADD NameKurz varchar(100)not null AFTER Name4,&quot;&amp;_
+	&quot;DROP Grafik_URL,DROP Signum_URL,DROP Standard_Gruszformel,DROP Standard_Absender,DROP PrintLogo&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL=&quot;ALTER TABLE Angebote1 &quot;&amp;_
+		&quot;ADD Autor int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_durch int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_am date,&quot;&amp;_
+		&quot;ADD Rechte int (1)not null&quot;
+						
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen1 &quot;&amp;_
+		&quot;ADD Autor int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_durch int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_am date,&quot;&amp;_
+		&quot;ADD Rechte int (1)not null&quot;
+
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine1 &quot;&amp;_
+		&quot;ADD Autor int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_durch int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_am date,&quot;&amp;_
+		&quot;ADD Rechte int (1)not null&quot;
+
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze1 &quot;&amp;_
+		&quot;ADD Autor int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_durch int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_am date,&quot;&amp;_
+		&quot;ADD Rechte int (1)not null&quot;
+
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen1 &quot;&amp;_
+		&quot;ADD Autor int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_durch int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_am date,&quot;&amp;_
+		&quot;ADD Rechte int (1)not null&quot;
+
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften1 &quot;&amp;_
+		&quot;ADD Autor int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_durch int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_am date,&quot;&amp;_
+		&quot;ADD Rechte int (1)not null&quot;
+
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Preisanfragen1 &quot;&amp;_
+		&quot;ADD Autor int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_durch int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_am date,&quot;&amp;_
+		&quot;ADD Rechte int (1)not null&quot;
+
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Bestellungen1 &quot;&amp;_
+		&quot;ADD Autor int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_durch int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_am date,&quot;&amp;_
+		&quot;ADD Rechte int (1)not null&quot;
+
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Korrespondenz_Kunden &quot;&amp;_
+		&quot;ADD Autor int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_durch int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_am date,&quot;&amp;_
+		&quot;ADD Rechte int (1)not null&quot;
+
+SQL_execute_mysql(sSQL)
+
+sSQL=&quot;ALTER TABLE Korrespondenz_Lieferanten &quot;&amp;_
+		&quot;ADD Autor int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_durch int(3)not null default 0,&quot;&amp;_
+		&quot;ADD Geaendert_am date,&quot;&amp;_
+		&quot;ADD Rechte int (1)not null&quot;
+
+SQL_execute_mysql(sSQL)
+
+
+sSQL=&quot;DROP TABLE Drucker_TEMP&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;DROP TABLE Drucker1_TEMP&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;DROP TABLE Drucker2_TEMP&quot;
+SQL_execute_mysql(sSQL)
+
+SQL_create_Druckertabelle
+SQL_create_Druckertabelle1
+SQL_create_Druckertabelle2
+
+sSQL=&quot;DROP TABLE Steuerung&quot;
+SQL_execute_mysql(sSQL)
+SQL_create_Steuerung
+
+
+End Sub
+
+
+Sub Alter_Table_20050527
+Use_Aladin
+SQL_create_Leistungsstamm_import
+sSQL=&quot;ALTER TABLE Leistungsstamm ADD Bestellnummer varchar(25) AFTER LeistungsID&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL=&quot;ALTER TABLE Angebote2 ADD Bestellnummer varchar(25)NOT NULL AFTER LeistungsID,&quot;&amp;_
+						&quot;ADD Leistungsbeschreibung varchar(10000) not null AFTER Leistungsbezeichnung&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen2 ADD Bestellnummer varchar(25)NOT NULL AFTER LeistungsID,&quot;&amp;_
+						&quot;ADD Leistungsbeschreibung varchar(10000) not null AFTER Leistungsbezeichnung&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine2 ADD Bestellnummer varchar(25)NOT NULL AFTER LeistungsID,&quot;&amp;_
+						&quot;ADD Leistungsbeschreibung varchar(10000) not null AFTER Leistungsbezeichnung&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze2 ADD Bestellnummer varchar(25)NOT NULL AFTER LeistungsID,&quot;&amp;_
+						&quot;ADD Leistungsbeschreibung varchar(10000) not null AFTER Leistungsbezeichnung&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen2 ADD Bestellnummer varchar(25)NOT NULL AFTER LeistungsID,&quot;&amp;_
+						&quot;ADD Leistungsbeschreibung varchar(10000) not null AFTER Leistungsbezeichnung&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften2 ADD Bestellnummer varchar(25)NOT NULL AFTER LeistungsID,&quot;&amp;_
+						&quot;ADD Leistungsbeschreibung varchar(10000) not null AFTER Leistungsbezeichnung&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Preisanfragen2 ADD Bestellnummer varchar(25)NOT NULL AFTER LeistungsID,&quot;&amp;_
+						&quot;ADD Leistungsbeschreibung varchar(10000) not null AFTER Leistungsbezeichnung&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Bestellungen2 ADD Bestellnummer varchar(25)NOT NULL AFTER LeistungsID,&quot;&amp;_
+						&quot;ADD Leistungsbeschreibung varchar(10000) not null AFTER Leistungsbezeichnung&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL=&quot;alter Table Controlling ADD Bestellnummer varchar(25)NOT NULL AFTER LeistungsID,&quot;&amp;_
+						&quot;ADD Leistungsbeschreibung varchar(10000) not null AFTER Leistungsbezeichnung&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL= &quot;alter Table Einstellungen ADD PrintLogo int(1) default 0 AFTER Standard_Absender&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL= &quot;insert into Steuerung(ClientID,Formular)values(32,&apos;Import&apos;)&quot;
+SQL_execute_mysql(sSQL)
+
+
+sSQL=&quot;ALTER TABLE Kunden ADD Ablage varchar(50) AFTER Ordner&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferanten ADD Ablage varchar(50) AFTER Ordner&quot;
+SQL_execute_mysql(sSQL)
+
+
+sSQL=&quot;DROP TABLE Drucker1_TEMP&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;DROP TABLE Drucker2_TEMP&quot;
+SQL_execute_mysql(sSQL)
+
+
+SQL_create_Druckertabelle1
+SQL_create_Druckertabelle2
+
+SQL_drop_Arbeitstabellen()
+SQL_create_Arbeitstabellen()
+
+sSQL=&quot;DROP TABLE Status&quot;
+SQL_execute_mysql(sSQL)
+SQL_create_Status()
+
+&apos;Langtexte_kopieren()
+End Sub
+
+Sub Alter_Table_20050516
+Use_Aladin
+
+sSQL=&quot;alter Table Controlling MODIFY LV_Pos varchar(10) not null default &apos;&apos;,&quot;&amp;_
+		&quot;MODIFY LeistungsTyp int(1) not null default &apos;1&apos;,&quot;&amp;_
+		&quot;ADD Abgerechnet int(1) not null default &apos;1&apos; AFTER LeistungsTyp&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;alter Table Einstellungen&quot;&amp;_
+	&quot; MODIFY Nummern_Format varchar(5) default &apos;001&apos;&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub Alter_Table_20050115
+Use_Aladin
+sSQL=&quot;DROP TABLE Steuerung&quot;
+SQL_execute_mysql(sSQL)
+SQL_create_Steuerung
+sSQL=&quot;ALTER TABLE ZwiSuAngebote MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuAuftragsbestaetigungen MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuLieferscheine MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuAufmasze MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuRechnungen MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuGutschriften MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuPreisanfragen MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiSuBestellungen MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiBemAngebote MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiBemAuftragsbestaetigungen MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiBemLieferscheine MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiBemAufmasze MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiBemRechnungen MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiBemGutschriften MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiBemPreisanfragen MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE ZwiBemBestellungen MODIFY Pos int(6) not null&quot;
+SQL_execute_mysql(sSQL)
+
+sSQL=&quot;ALTER TABLE Angebote1 ADD ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;ADD Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen1 ADD ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;ADD Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine1 ADD ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;ADD Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze1 ADD ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;ADD Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen1 ADD ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;ADD Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;ADD AZ int(1) not null AFTER Schreibschutz,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften1 ADD ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;ADD Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;ADD AZ int(1) not null AFTER Schreibschutz,&quot;&amp;_
+							&quot;MODIFY Document_Typ varchar(100) default &apos;Gutschrift&apos;,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Preisanfragen1 ADD ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;ADD Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Bestellungen1 ADD ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;ADD Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+
+
+sSQL=&quot;update Angebote1 set ProjektID=0,Schreibschutz=1&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;update Auftragsbestaetigungen1 set ProjektID=0,Schreibschutz=1&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;update Lieferscheine1 set ProjektID=0,Schreibschutz=1&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;update Aufmasze1 set ProjektID=0,Schreibschutz=1&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;update Rechnungen1 set ProjektID=0,Schreibschutz=1&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;update Gutschriften1 set ProjektID=0,Schreibschutz=1&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;update Preisanfragen1 set ProjektID=0,Schreibschutz=1&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;update Bestellungen1 set ProjektID=0,Schreibschutz=1&quot;
+SQL_execute_mysql(sSQL)
+
+
+SQL_create_Projekt
+SQL_create_Personal
+SQL_create_Controlling
+End Sub
+
+Sub MODIFY
+Use_Aladin
+sSQL=&quot;ALTER TABLE Angebote1 MODIFY ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;MODIFY Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen1 MODIFY ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;MODIFY Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine1 MODIFY ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;MODIFY Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze1 MODIFY ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;MODIFY Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen1 MODIFY ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;MODIFY Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY AZ int(1) not null AFTER Schreibschutz,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften1 MODIFY ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;MODIFY Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Document_Typ varchar(100) default &apos;Gutschrift&apos;,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Preisanfragen1 MODIFY ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;MODIFY Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Bestellungen1 MODIFY ProjektID int(10) AFTER Document_TypID,&quot;&amp;_
+							&quot;MODIFY Schreibschutz int(1) not null AFTER Gesperrt,&quot;&amp;_
+							&quot;MODIFY Gesperrt int(4)not null&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+Rem alt------------------------------------------------------------------------------------------------
+
+Sub Alter_Table_20040515
+Dim iCount as Integer,sValue as String
+Use_Aladin
+create_new_Schriftwechsel
+sSQL=&quot;ALTER TABLE Einstellungen ADD Standard_Gruszformel varchar(50),ADD Standard_Absender varchar(50)&quot;
+SQL_execute_mysql(sSQL)
+sSQL= &quot;ALTER TABLE Kunden ADD Serienbrief int(1) not null default &apos;0&apos;&quot;
+SQL_execute_mysql(sSQL)
+sSQL= &quot;ALTER TABLE Lieferanten ADD Serienbrief int(1) not null default &apos;0&apos;&quot;
+SQL_execute_mysql(sSQL)
+sSQL= &quot;ALTER TABLE Drucker1_TEMP ADD Print_Logo int(1) default 0&quot;
+SQL_execute_mysql(sSQL)
+
+For iCount = 1 to 2
+	select case iCount
+	case 1
+		sValue = &quot;(&apos;Nummer:&apos;,&apos;Kundennummer:&apos;,null,null,null,null,null)&quot;
+	case 2
+		sValue = &quot;(&apos;Nummer:&apos;,&apos;Kundennummer:&apos;,null,null,null,null,null)&quot;
+	End select	
+sSQL2=&quot;insert into Document_Typ&quot;&amp;_
+	&quot;(DocumentID,KontaktID,Summe_ohne_MwSt,Summe_mit_MwSt,Schluss_Text1,Schluss_Text2,Bemerkung) &quot;&amp;_
+	&quot;values &quot;&amp; sValue
+	SQL_execute_mysql(sSQL2)
+Next
+
+End Sub
+
+Sub Alter_Table_20040712
+Dim iCount as Integer,sValue as String
+Use_Aladin
+sSQL=&quot;ALTER TABLE Kunden ADD Name3 varchar(100) not null AFTER Name2,&quot;&amp;_
+						&quot;ADD Name4 varchar(100) not null AFTER Name3,&quot;&amp;_
+						&quot;ADD Mindestangaben varchar(255) AFTER Hausnummer&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferanten ADD Name3 varchar(100) not null AFTER Name2,&quot;&amp;_
+							&quot;ADD Name4 varchar(100) not null AFTER Name3,&quot;&amp;_
+							&quot;ADD Mindestangaben varchar(255) AFTER Hausnummer&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Angebote1 ADD Leistungsempfaenger varchar(255) AFTER KontaktID,&quot;&amp;_
+							&quot;ADD Lieferbemerkung varchar(500) AFTER Leistungsempfaenger&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Rechnungen1 ADD Leistungsempfaenger varchar(255) AFTER KontaktID,&quot;&amp;_
+							&quot;ADD Lieferbemerkung varchar(500) AFTER Leistungsempfaenger&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Aufmasze1 ADD Leistungsempfaenger varchar(255) AFTER KontaktID,&quot;&amp;_
+							&quot;ADD Lieferbemerkung varchar(500) AFTER Leistungsempfaenger&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Auftragsbestaetigungen1 ADD Leistungsempfaenger varchar(255) AFTER KontaktID,&quot;&amp;_
+							&quot;ADD Lieferbemerkung varchar(500) AFTER Leistungsempfaenger&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Bestellungen1 ADD Leistungsempfaenger varchar(255) AFTER KontaktID,&quot;&amp;_
+							&quot;ADD Lieferbemerkung varchar(500) AFTER Leistungsempfaenger&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Gutschriften1 ADD Leistungsempfaenger varchar(255) AFTER KontaktID,&quot;&amp;_
+							&quot;ADD Lieferbemerkung varchar(500) AFTER Leistungsempfaenger&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Lieferscheine1 ADD Leistungsempfaenger varchar(255) AFTER KontaktID,&quot;&amp;_
+							&quot;ADD Lieferbemerkung varchar(500) AFTER Leistungsempfaenger&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Preisanfragen1 ADD Leistungsempfaenger varchar(255) AFTER KontaktID,&quot;&amp;_
+							&quot;ADD Lieferbemerkung varchar(500) AFTER Leistungsempfaenger&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;ALTER TABLE Leistungsstamm ADD Preisgruppe int(2) AFTER Listenpreis,&quot;&amp;_
+							&quot;ADD Rabatt int(2) AFTER Preisgruppe&quot;
+SQL_execute_mysql(sSQL)
+sSQL=&quot;UPDATE Leistungsstamm SET Listenpreis=Einkaufspreis WHERE Listenpreis=0&quot;
+SQL_execute_mysql(sSQL)
+sSQL= &quot;ALTER TABLE Drucker1_TEMP ADD Mindestangaben varchar(255) AFTER Anschrift,&quot;&amp;_
+								&quot;ADD Leistungsempfaenger varchar(255) AFTER Mindestangaben,&quot;&amp;_
+								&quot;ADD Lieferbemerkung varchar(500) AFTER Leistungsempfaenger&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+Sub Alter_Table_20041118
+Use_Aladin
+sSQL=&quot;ALTER TABLE Rechnungen1 MODIFY Summe_bezahlt decimal(11,2) not null&quot;
+SQL_execute_mysql(sSQL)
+End Sub
+
+
+</script:module>

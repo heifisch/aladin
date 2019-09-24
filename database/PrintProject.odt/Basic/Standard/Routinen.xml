@@ -1,0 +1,333 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub createRepord()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	StatusBar(True)
+	ToolBar(True)
+	FormSizePrint()
+
+	if oDoc.isReadOnly then
+		Dim oController as Object
+	
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;PrintProjekt&quot;))
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+		Kontaktdaten.KontaktDaten()
+		Leistungen.Leistungen()
+		Drucktabellen_leeren(iUserID_lokal)
+
+	End if
+End Sub
+
+Sub DokumentDrucken()
+	Dim sFaxEmpfaenger AS String
+	Dim vStatus AS Variant
+
+	if GetGUIType = 1 then
+		if iPrint_Typ = 1 AND fsInTrim(sFax_Empfaenger) &lt;&gt; &quot;&quot; AND LCase(sFaxTyp) = &quot;fritzfax&quot; then
+			if sFaxNumberPraefix &lt;&gt; &quot;&quot; AND Len(fsLeerzeichenEntfernen(sFax_Empfaenger)) &gt; CInt(iFaxLenInternNumber) then
+				sFaxEmpfaenger=fsLeerzeichenEntfernen(sFaxNumberPraefix &amp; fsPlusErsetzen(sFax_Empfaenger))
+			else
+				sFaxEmpfaenger=fsLeerzeichenEntfernen(sFax_Empfaenger)
+			End if
+			Set_FritzFax(&quot;PrintProject&quot;,sFaxEmpfaenger)		
+		End if
+	End if
+	
+	if (iDocument_TypID = 5 or iDocument_TypID = 6) and iDocumentArchiviert = 0 then
+		if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;) _
+		then
+			vStatus=MsgBox(&quot;Es ist schon ein Dokument im Archiv abgelegt.&quot;&amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+				&quot;Soll das vorhandene Dokument überschrieben werden?&quot;,36,sTitle)
+			If vStatus &lt;&gt; 6 then
+				SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
+				exit Sub		
+			End if
+		End if
+		oDoc.storeToURL(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+		SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
+	End if
+End Sub
+
+Sub DokumentSchlieszen()
+	sFaxNummer=&quot;&quot;
+	if GetGUIType = 1 then
+		ReSet_FritzFax()
+	End if
+End Sub
+
+Sub ConvertToPdfAndSendMail()
+	Dim sURL AS String,oPfad AS Object
+	Dim vStatus AS Variant,sSubject AS String,sBody AS String
+	
+	oPfad = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+
+	sURL=ConvertToURL(oPfad.temp)&amp;&quot;/&quot;&amp; sPraefix &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;
+	oDoc.storeToURL(sURL,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+
+	sSubject=sDocument_Typ &amp;&quot; &quot;&amp;_
+		fsInTrim(fsReplace(fsReplace(fsReplace(fsReplace(sDocument_Name,Chr(34),&quot; &quot;),Chr(10),&quot; - &quot;),Chr(13),&quot; - &quot;),&quot;,&quot;,&quot; &quot;))
+
+	sBody=&quot;Sehr geehrte Damen und Herren, &quot; &amp; Chr(10) &amp; Chr(10) &amp; &quot;im Anhang finden Sie unser Dokument.&quot;
+	
+ 	SendMail(sEMail_Empfaenger,sEMail,sSubject,sBody,sURL)
+
+	if (iDocument_TypID = 5 or iDocument_TypID = 6) and iDocumentArchiviert = 0 then
+		if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;) _
+		then
+			vStatus=MsgBox(&quot;Es ist schon ein Dokument im Archiv abgelegt.&quot;&amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+				&quot;Soll das vorhandene Dokument überschrieben werden?&quot;,36,sTitle)
+			If vStatus &lt;&gt; 6 then
+				SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
+				exit Sub		
+			End if
+		End if
+		oDoc.storeToURL(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+		SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
+	End if
+End Sub
+
+Sub ConvertToPDF()
+	Dim sURL AS String
+	Dim oFilePicker AS Object,vStatusFilePicker AS Variant
+	Dim vStatus AS Variant
+	Dim initArgs(0)
+	
+	initArgs=Array(com.sun.star.ui.dialogs.TemplateDescription.FILESAVE_AUTOEXTENSION_SELECTION ) 
+
+	oFilePicker = createUnoService(&quot;com.sun.star.ui.dialogs.FilePicker&quot;)
+	sURL=ConvertToURL(sStandardPfad)
+
+	nochmal:
+	oFilePicker.Initialize(initArgs)
+	oFilePicker.MultiSelectionMode=&quot;False&quot;
+	oFilePicker.setDisplayDirectory(sURL)
+	oFilePicker.setDefaultName(sPraefix &amp; CStr(lDocumentID) &amp;&quot;__&quot;&amp; fsLeerzeichenErsetzen(sBetreff) &amp; &quot;.pdf&quot;)
+	vStatusFilePicker=oFilePicker.execute
+	
+	if vStatusFilePicker=0 then
+		vStatus=MsgBox(&quot;Sie haben noch keinen Dateinamen ausgewählt!&quot;,37,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+
+	sURL = oFilePicker.Files(0)
+	oDoc.storeToURL( sURL, Array( MakePropertyValue( &quot;FilterName&quot;, &quot;writer_pdf_Export&quot; ) ) )
+End Sub
+
+Sub Document_ruecksetzen()
+	Feld_fuellen(&quot;Anschrift_Eigen_1&quot;,&quot;Anschrift_Eigen_1&quot;)
+	Feld_fuellen(&quot;Anschrift_Eigen_2&quot;,&quot;Anschrift_Eigen_2&quot;)
+	Feld_fuellen(&quot;Anschrift_Eigen_3&quot;,&quot;Anschrift_Eigen_3&quot;)
+	Feld_fuellen(&quot;Anschrift&quot;,&quot;Anschrift&quot;)
+	Feld_fuellen(&quot;Leerzeilen&quot;,&quot;Leerzeilen&quot;)
+	Feld_fuellen(&quot;Document_Typ&quot;,&quot;Document_Typ&quot;)
+	Feld_fuellen(&quot;Document_Name&quot;,&quot;Document_Name&quot;)
+	Feld_fuellen(&quot;Bemerkung&quot;,&quot;Bemerkung&quot;)
+	Feld_fuellen(&quot;Schlusstext&quot;,&quot;Schlusstext&quot;)
+	Feld_fuellen(&quot;Nummern&quot;,&quot;Nummern&quot;)
+	Feld_fuellen(&quot;Leistungsprofil&quot;,&quot;Leistungsprofil&quot;)
+	Feld_fuellen(&quot;Summe_ohne_MwSt&quot;,&quot;Summe_ohne_MwSt&quot;)
+	Feld_fuellen(&quot;Rabatt&quot;,&quot;Rabatt&quot;)
+	Feld_fuellen(&quot;Summe_nach_Rabatt&quot;,&quot;Summe_nach_Rabatt&quot;)
+	Feld_fuellen(&quot;Korrektur&quot;,&quot;Korrektur&quot;)
+	Feld_fuellen(&quot;Summe_nach_Korrektur&quot;,&quot;Summe_nach_Korrektur&quot;)
+	Feld_fuellen(&quot;MwSt&quot;,&quot;MwSt&quot;)
+	Feld_fuellen(&quot;Summe_mit_MwSt&quot;,&quot;Summe_mit_MwSt&quot;)
+	Feld_fuellen(&quot;Kontakt_Bez&quot;,&quot;Kontakt_Bez&quot;)
+	Feld_fuellen(&quot;Kontakt&quot;,&quot;Kontakt&quot;)
+	Feld_fuellen(&quot;Bankverbindung_Bez&quot;,&quot;Bankverbindung_Bez&quot;)
+	Feld_fuellen(&quot;Bankverbindung&quot;,&quot;Bankverbindung&quot;)
+	Feld_fuellen(&quot;Geschaeftsfuehrer_Bez&quot;,&quot;Geschaeftsfuehrer_Bez&quot;)
+	Feld_fuellen(&quot;Firmendaten&quot;,&quot;Firmendaten&quot;)
+	oDoc.getTextFields().refresh()
+End Sub
+
+Function FieldContent(sField AS string) AS String
+	Dim vField AS Variant,vFieldMaster AS Variant
+	Dim sFieldName AS String
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
+	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName) 
+	FieldContent = vFieldMaster.Content       
+End Function
+
+Sub Feld_fuellen(sField AS string,sInhalt AS string )
+	Dim vField AS Variant,vFieldMaster AS Variant
+	Dim sFieldName AS String
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
+	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName) 
+	vFieldMaster.Content = sInhalt        
+End Sub
+ 
+Sub Feld_loeschen(sField AS string)
+	Dim vField AS Variant,vFieldMaster AS Variant
+	Dim sFieldName AS String
+	Dim bFound AS boolean
+	vField = oDoc.createInstance(&quot;com.sun.star.text.TextField.User&quot;) 
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField
+	bFound = oDoc.getTextFieldMasters.hasbyname(sFieldName)
+	if bFound Then 
+		vFieldMaster =  oDoc.getTextFieldMasters.getByName(sFieldName) 
+		vFieldMaster.Content = &quot;&quot;    
+		vFieldMaster.dispose() 
+	End If 
+End Sub 
+
+Function fiPageCount AS Integer
+	Dim oDocument AS Object,oTextfield AS Object,oCurElement AS Object
+	Dim iElementCount AS integer
+	oDoc.refresh()
+&apos;	oDoc.getTextFields().refresh()
+	oDocument = oDoc.CurrentController.Model
+	oTextfield = oDocument.getTextfields.CreateEnumeration
+	iElementCount=0
+	While oTextField.hasmoreElements
+		oCurElement = oTextField.NextElement
+		if oCurElement.SupportsService(&quot;com.sun.star.text.TextField.PageCount&quot;) AND iElementCount=0 then
+			fiPageCount=oCurElement.getPresentation(False)
+&apos;Print oCurElement.getPresentation(true), oCurElement.getAnchor.getString
+			iElementCount=1
+		end if
+	Wend
+End Function
+
+Function fsInsertCarry(iPageCountBefore AS integer,iCountInsert AS Integer,iLastPos AS Integer) AS String
+	Dim oTables AS Object
+	Dim vTableLeistungen AS Variant
+	Dim vViewCursor AS Variant
+
+	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	oTables = oDoc.getTextTables
+	vTableLeistungen = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTableLeistungen = oTables.getByName(&quot;Leistungen&quot;)
+	vViewCursor = oDoc.CurrentController.getViewCursor()
+	vViewCursor.gotoRange(vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).createTextCursor(), False)
+	vViewCursor.jumpToEndOfPage()
+	oDoc.refresh()
+
+	If NOT IsEmpty(vViewCursor.Cell) then
+		if vViewCursor.TextTable.Name = &quot;Leistungen&quot; then
+			if CLng(Mid(vViewCursor.Cell.CellName,2)) = CLng(vTableLeistungen.Rows.getCount) then
+				if iLastPos = 1 Then	
+					if fiPageCount &gt; vViewCursor.getPage() then
+						fsInsertCarry = &quot;1;&quot;&amp; vViewCursor.getPage()
+					else
+						fsInsertCarry = &quot;0;&quot;&amp; iPageCountBefore
+					End if
+				else
+					fsInsertCarry = &quot;0;&quot;&amp; iPageCountBefore
+				end if 
+			elseif CLng(Mid(vViewCursor.Cell.CellName,2)) &lt; CLng(vTableLeistungen.Rows.getCount) then
+				fsInsertCarry = &quot;1;&quot;&amp; vViewCursor.getPage()
+			End if
+		else
+			fsInsertCarry = &quot;0;&quot;&amp; iPageCountBefore
+		End if
+	else
+		fsInsertCarry = &quot;0;&quot;&amp; iPageCountBefore
+	End if
+&apos;	print fsInsertCarry
+End Function
+
+Function fInsertCarry(iCountInsert AS Integer,sUebertrag AS String,iPageCountCarry AS Integer,iLastPos AS Integer) AS Integer
+	Dim iCountHalt AS Integer,iHalt AS Integer
+	Dim oTables AS Object
+	Dim vTableLeistungen AS Variant
+	Dim vViewCursor AS Variant
+	Dim oCursorUebertrag AS Object
+	Dim vRowsLeistungen AS Variant
+	
+	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	oTables = oDoc.getTextTables
+	vTableLeistungen = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTableLeistungen = oTables.getByName(&quot;Leistungen&quot;)
+	vViewCursor = oDoc.CurrentController.getViewCursor()
+
+	vRowsLeistungen = vTableLeistungen.getRows()
+	vRowsLeistungen.insertByIndex(iCountInsert-1,1)
+&apos;	wait 600
+	oCursorUebertrag=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
+	oCursorUebertrag.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorUebertrag.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+	oCursorUebertrag.CharPosture = com.sun.star.awt.FontSlant.NONE
+	oCursorUebertrag=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
+	oCursorUebertrag.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorUebertrag.CharPosture = com.sun.star.awt.FontSlant.NONE
+	vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=&quot;Übertrag:&quot;
+	vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=sUebertrag
+	iCountInsert=iCountInsert+1
+	iCountHalt=0
+	iHalt=0
+
+	vViewCursor.jumpToPage(iPageCountCarry+1)
+
+	Do
+		vRowsLeistungen.insertByIndex(iCountInsert-1,1)
+		vViewCursor.jumpToStartOfPage()
+
+&apos;MsgBox &quot;CellName: &quot;&amp; Mid(vViewCursor.Cell.CellName,2) &amp; Chr(13) &amp;_
+&apos;	&quot;= iCountInsert: &quot;&amp; iCountInsert &amp; Chr(13) &amp;_
+&apos;		&quot;iPageCountCarry: &quot;&amp; iPageCountCarry &amp; Chr(13) &amp;_
+&apos;		&quot;fiPageCount: &quot;&amp; fiPageCount &amp; Chr(13) &amp;_
+&apos;		&quot;Seite: &quot;&amp; vViewCursor.getPage()
+
+		iCountInsert=iCountInsert+1
+		iCountHalt=iCountHalt+1
+		if iCountHalt &gt; 50 then
+			MsgBox(&quot;Es ist ein Fehler beim Erzeugen des Dokumentes aufgetreten.&quot;&amp; Chr(10) &amp;_
+				&quot;Veringern Sie die Leerzeilen im Druckbild!&quot;&amp; Chr(10) &amp;_
+				&quot;Wenn das nicht hilft reduzieren Sie besonders lange Textpassagen &quot;&amp;_
+				&quot;in Leistungsbeschreibungen oder Bemerkungen!&quot;,16,sTitle_lokal)
+			iHalt=1
+			Exit Do
+		End if
+
+	Loop Until CLng(Mid(vViewCursor.Cell.CellName,2)) = iCountInsert-1
+
+	if iHalt=1 then
+		stop
+	End if
+	oCursorUebertrag=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert-1)
+	oCursorUebertrag.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorUebertrag.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+	oCursorUebertrag.CharPosture = com.sun.star.awt.FontSlant.NONE
+	oCursorUebertrag=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert-1)
+	oCursorUebertrag.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorUebertrag.CharPosture = com.sun.star.awt.FontSlant.NONE
+	vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert-1).String=&quot;Übertrag:&quot;
+	vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert-1).String=sUebertrag
+	fInsertCarry = iCountInsert
+End Function
+
+Sub loesche_Falzmarken()
+	Dim oDrawPage as Object
+	Dim oShape as Object
+	Dim iCount as Integer, iGetCount as Integer
+	
+	oDrawPage = oDoc.getDrawPage()
+	
+	iGetCount=oDrawPage.getCount()
+	
+	for iCount=1 to iGetCount
+ 		oShape = oDrawPage.getByIndex(iGetCount-iCount)
+		if Instr(oShape.Name,&quot;Falzmarken&quot;) &gt; 0 then
+			oDrawPage.remove(oShape)
+		End if
+	next iCount
+	
+End Sub
+
+</script:module>

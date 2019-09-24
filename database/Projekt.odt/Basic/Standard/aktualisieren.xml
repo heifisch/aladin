@@ -1,0 +1,883 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="aktualisieren" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub TestTablePos()
+
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	WritedbgInfo(oColumn_Position.BoundField)
+
+End Sub
+
+Sub TestTablePos2()
+
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	WritedbgInfo(oColumn_Position)
+
+End Sub
+
+
+Sub DokumentName_bearbeiten()
+	if lDocumentID &lt;&gt; 0 then
+		Dim vStatus as Variant
+		Dim sSQL1 as String,sSQL2 as String
+		Dim oRecordText as Object
+		Dim oDialogTextModel as Object
+		Dim oFieldText as Object
+		Dim sFieldText as String
+		Dim sTabelle as string
+		
+		GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+		oDialogText = LoadDialog(&quot;ALADIN&quot;, &quot;Text&quot;)
+		oDialogTextModel = oDialogText.Model
+		oFieldText = oDialogTextModel.getByName(&quot;Field_Text&quot;)
+
+		oField_Document_Name.commit()
+		oForm_Document.updateRow()
+
+		oDialogTextModel.Title=sTitle_lokal &amp;&quot; - Dokument Name bearbeiten:&quot;
+		
+		oFieldText.Text=oField_Document_Name.BoundField.String
+
+		vStatus = oDialogText.Execute()
+		if vStatus = 0 then
+			exit sub
+		End if
+	
+		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Document_Name=&apos;&quot;&amp; fsConvertApostroph(oFieldText.Text) &amp;_
+				&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oList_Documentauswahl.refresh()
+		oForm_Steuerung.reload()
+		oForm_Document.reload()
+		wait 1
+		oForm_Tabellendaten.last()
+	End If
+End Sub
+
+Sub ZwischenBemerkung_bearbeiten()
+	Dim vStatus as Variant
+	Dim sSQL1 as String,sSQL2 as String
+	Dim oRecordText as Object
+	Dim oDialogTextModel as Object
+	Dim oFieldText as Object
+	Dim sFieldText as String
+	Dim iRowNumber as Integer
+	Dim lZwiBemID as Long
+	Dim sTabelle as string
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogText = LoadDialog(&quot;ALADIN&quot;, &quot;Text&quot;)
+	oDialogTextModel = oDialogText.Model
+	oFieldText = oDialogTextModel.getByName(&quot;Field_Text&quot;)
+	
+	iRowNumber=oForm_Bemerkungen.getRow()
+	
+	sTabelle=sBemerkungen
+	
+	oDialogTextModel.Title=sTitle_lokal &amp;&quot; - Text bearbeiten aus Tabelle &quot;&amp; sTabelle
+	
+	lZwiBemID=CInt(oColumn_ZwiBemID.getCurrentValue) 
+	if lZwiBemID &gt; 0 then
+		sSQL1=&quot;SELECT Bemerkung&quot;&amp;_
+			&quot; FROM &quot;&amp; sTabelle &amp;&quot; WHERE ZwiBemID=&quot;&amp; lZwiBemID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			oFieldText.Text=oRecord1.getString(1)
+		Wend
+		vStatus = oDialogText.Execute()
+		if vStatus = 0 then
+			exit sub
+		End if
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle &amp;&quot; SET &quot;&amp;_
+			&quot;Bemerkung=&apos;&quot;&amp; oFieldText.Text &amp;&quot;&apos; &quot;&amp;_
+			&quot;WHERE ZwiBemID=&quot;&amp; lZwiBemID
+			SQL_execute(sSQL2)
+			oForm_Bemerkungen.reload()
+			oForm_Bemerkungen.last()
+			oForm_Bemerkungen.first()
+			oForm_Bemerkungen.absolute(iRowNumber)
+	else
+		MsgBox(&quot;Sie haben noch keine Zwischenbemerkung ausgewählt!&quot;,64,sTitle_lokal)
+	End if
+End Sub
+
+Sub ZwischenSumme_bearbeiten()
+	Dim vStatus as Variant
+	Dim sSQL1 as String,sSQL2 as String
+	Dim oRecordText as Object
+	Dim oDialogTextModel as Object
+	Dim oFieldText as Object
+	Dim sFieldText as String
+	Dim iRowNumber as Integer
+	Dim lZwiSuID as Long
+	Dim sTabelle as string
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogText = LoadDialog(&quot;ALADIN&quot;, &quot;Text&quot;)
+	oDialogTextModel = oDialogText.Model
+	oFieldText = oDialogTextModel.getByName(&quot;Field_Text&quot;)
+	
+	iRowNumber=oForm_Zwischensummen.getRow()
+	
+	sTabelle=sZwischensummen
+	
+	oDialogTextModel.Title=sTitle_lokal &amp;&quot; - Text bearbeiten aus Tabelle &quot;&amp; sTabelle
+	
+	lZwiSuID=CInt(oColumn_ZwiSuID.getCurrentValue) 
+	if lZwiSuID &gt; 0 then
+		sSQL1=&quot;SELECT ZwiSuName&quot;&amp;_
+			&quot; FROM &quot;&amp; sTabelle &amp;&quot; WHERE ZwiSuID=&quot;&amp; lZwiSuID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			oFieldText.Text=oRecord1.getString(1)
+		Wend
+		vStatus = oDialogText.Execute()
+		if vStatus = 0 then
+			exit sub
+		End if
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle &amp;&quot; SET &quot;&amp;_
+			&quot;ZwiSuName=&apos;&quot;&amp; oFieldText.Text &amp;&quot;&apos; &quot;&amp;_
+			&quot;WHERE ZwiSuID=&quot;&amp; lZwiSuID
+			SQL_execute(sSQL2)
+			oForm_Zwischensummen.reload()
+			oForm_Zwischensummen.last()
+			oForm_Zwischensummen.first()
+			oForm_Zwischensummen.absolute(iRowNumber)
+	else
+		MsgBox(&quot;Sie haben noch keine Zwischensumme ausgewählt!&quot;,64,sTitle_lokal)
+	End if
+End Sub
+
+Sub Position_bearbeiten()
+	Dim vStatus as Variant
+	Dim sSQL1 as String,sSQL2 as String
+	Dim oRecordLeistung as Object
+	Dim oDialogLeistungModel as Object
+	Dim oFieldLeistungsID as Object, oFieldLeistungsbezeichnung as Object
+	Dim oFieldEinheit as Object,oFieldBauzeit as Object,oFieldEinkaufspreis as Object
+	Dim oFieldLeistungsbeschreibung as Object,oFieldBestellnummer as Object
+	Dim sFieldLeistungsID as String, sFieldLeistungsbezeichnung as String
+	Dim sFieldEinheit as String,sFieldBauzeit as String,sFieldEinkaufspreis as String
+	Dim sFieldLeistungsbeschreibung as String,sFieldBestellnummer as String
+	Dim iRowNumber as Integer
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogLeistung = LoadDialog(&quot;ALADIN&quot;, &quot;Leistungsstamm&quot;)
+	oDialogLeistungModel = oDialogLeistung.Model
+	oFieldLeistungsID = oDialogLeistungModel.getByName(&quot;Field_LeistungsID&quot;)
+	oFieldLeistungsbezeichnung = oDialogLeistungModel.getByName(&quot;Field_Leistungsbezeichnung&quot;)
+	oFieldEinheit = oDialogLeistungModel.getByName(&quot;Field_Einheit&quot;)
+	oFieldBauzeit = oDialogLeistungModel.getByName(&quot;Field_Bauzeit&quot;)
+	oFieldEinkaufspreis = oDialogLeistungModel.getByName(&quot;Field_Einkaufspreis&quot;)
+	oFieldLeistungsbeschreibung = oDialogLeistungModel.getByName(&quot;Field_Leistungsbeschreibung&quot;)
+	oFieldBestellnummer = oDialogLeistungModel.getByName(&quot;Field_Bestellnummer&quot;)
+	
+	oDialogLeistungModel.getByName(&quot;Field_Listenpreis&quot;).Enabled=0
+	oDialogLeistungModel.getByName(&quot;Label_Listenpreis&quot;).Enabled=0
+	
+	iRowNumber=oForm_Tabellendaten.getRow()
+	
+	sTabelle=sArbeitstabelle
+	
+	oDialogLeistungModel.Title=sTitle_lokal &amp;&quot; - Leistung bearbeiten aus Tabelle &quot;&amp; sTabelle
+	
+	iPos=CInt(oColumn_Position.getCurrentValue) 
+	if iPos &gt; 0 then
+		sSQL1=&quot;SELECT LeistungsID,Bestellnummer,Leistungsbezeichnung,Einheit,Bauzeit,Einkaufspreis,Leistungsbeschreibung&quot;&amp;_
+			&quot; FROM &quot;&amp; sTabelle &amp;&quot; WHERE Pos=&quot;&amp; iPos
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			oFieldLeistungsID.Text=oRecord1.getString(1)
+			oFieldBestellnummer.Text=oRecord1.getString(2)
+			oFieldLeistungsbezeichnung.Text=oRecord1.getString(3)
+			oFieldEinheit.Text=oRecord1.getString(4)
+			oFieldBauzeit.Text=fZahlMitPunkt(oRecord1.getString(5))
+			oFieldEinkaufspreis.Text=fZahlMitPunkt(oRecord1.getString(6))
+			oFieldLeistungsbeschreibung.Text=oRecord1.getString(7)
+		Wend
+		vStatus = oDialogLeistung.Execute()
+		if vStatus = 0 then
+			exit sub
+		End if
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle &amp;&quot; SET &quot;&amp;_
+			&quot;Bestellnummer=&apos;&quot;&amp; oFieldBestellnummer.Text &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(oFieldLeistungsbezeichnung.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Einheit=&apos;&quot;&amp; oFieldEinheit.Text &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Bauzeit=&apos;&quot;&amp; fZahlMitKomma(oFieldBauzeit.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Einkaufspreis=&apos;&quot;&amp; fZahlMitKomma(oFieldEinkaufspreis.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(oFieldLeistungsbeschreibung.Text) &amp;&quot;&apos; &quot;&amp;_
+			&quot;WHERE Pos=&quot;&amp; iPos
+			SQL_execute(sSQL2)
+			oForm_Tabellendaten.reload()
+			oForm_Tabellendaten.last()
+			oForm_Tabellendaten.first()
+			oForm_Tabellendaten.absolute(iRowNumber)
+	else
+		MsgBox(&quot;Sie haben noch keine Position ausgewählt!&quot;,64,sTitle_lokal)
+	End if
+End Sub
+
+Sub Leistung_bearbeiten()
+	Dim vStatus as Variant
+	Dim sSQL1 as String,sSQL2 as String
+	Dim oRecordLeistung as Object
+	Dim oDialogLeistungModel as Object
+	Dim oFieldLeistungsID as Object, oFieldLeistungsbezeichnung as Object
+	Dim oFieldEinheit as Object,oFieldBauzeit as Object,oFieldEinkaufspreis as Object,oFieldListenpreis as Object
+	Dim oFieldLeistungsbeschreibung as Object,oFieldBestellnummer as Object
+	Dim sFieldLeistungsID as String, sFieldLeistungsbezeichnung as String
+	Dim sFieldEinheit as String,sFieldBauzeit as String,sFieldEinkaufspreis as String,sFieldListenpreis as String
+	Dim sFieldLeistungsbeschreibung as String,sFieldBestellnummer as String
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogLeistung = LoadDialog(&quot;ALADIN&quot;, &quot;Leistungsstamm&quot;)
+	oDialogLeistungModel = oDialogLeistung.Model
+	oFieldLeistungsID = oDialogLeistungModel.getByName(&quot;Field_LeistungsID&quot;)
+	oFieldLeistungsbezeichnung = oDialogLeistungModel.getByName(&quot;Field_Leistungsbezeichnung&quot;)
+	oFieldEinheit = oDialogLeistungModel.getByName(&quot;Field_Einheit&quot;)
+	oFieldBauzeit = oDialogLeistungModel.getByName(&quot;Field_Bauzeit&quot;)
+	oFieldEinkaufspreis = oDialogLeistungModel.getByName(&quot;Field_Einkaufspreis&quot;)
+	oFieldListenpreis = oDialogLeistungModel.getByName(&quot;Field_Listenpreis&quot;)
+	oFieldLeistungsbeschreibung = oDialogLeistungModel.getByName(&quot;Field_Leistungsbeschreibung&quot;)
+	oFieldBestellnummer = oDialogLeistungModel.getByName(&quot;Field_Bestellnummer&quot;)
+	
+	oDialogLeistungModel.Title=sTitle_lokal &amp;&quot; - Leistung bearbeiten aus Tabelle &quot;&amp; sTabelle
+
+	Leistungsauswahl_commit()
+
+	if fLeistungsID &lt;&gt; &quot;&quot; then
+		sSQL1=&quot;SELECT LeistungsID,Bestellnummer,Leistungsbezeichnung,Einheit,Bauzeit,Einkaufspreis,Listenpreis,Leistungsbeschreibung&quot;&amp;_
+			&quot; FROM &quot;&amp; sLeistungsstamm &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			oFieldLeistungsID.Text=oRecord1.getString(1)
+			oFieldBestellnummer.Text=oRecord1.getString(2)
+			oFieldLeistungsbezeichnung.Text=oRecord1.getString(3)
+			oFieldEinheit.Text=oRecord1.getString(4)
+			oFieldBauzeit.Text=fZahlMitPunkt(oRecord1.getString(5))
+			oFieldEinkaufspreis.Text=fZahlMitPunkt(oRecord1.getString(6))
+			oFieldListenpreis.Text=fZahlMitPunkt(oRecord1.getString(7))
+			oFieldLeistungsbeschreibung.Text=oRecord1.getString(8)
+		Wend
+		vStatus = oDialogLeistung.Execute()
+		if vStatus = 0 then
+			exit sub
+		End if
+		sSQL2=&quot;UPDATE &quot;&amp; sLeistungsstamm &amp;&quot; SET &quot;&amp;_
+			&quot;Bestellnummer=&apos;&quot;&amp; oFieldBestellnummer.Text &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(oFieldLeistungsbezeichnung.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Einheit=&apos;&quot;&amp; oFieldEinheit.Text &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Bauzeit=&apos;&quot;&amp; fZahlMitKomma(oFieldBauzeit.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Einkaufspreis=&apos;&quot;&amp; fZahlMitKomma(oFieldEinkaufspreis.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Listenpreis=&apos;&quot;&amp; fZahlMitKomma(oFieldListenpreis.Text) &amp;&quot;&apos;,&quot;&amp;_
+			&quot;Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(oFieldLeistungsbeschreibung.Text) &amp;&quot;&apos; &quot;&amp;_
+			&quot;WHERE LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;&quot;&apos;&quot;
+			SQL_execute(sSQL2)
+	else
+		MsgBox(&quot;Sie haben noch keine Leistung ausgewählt!&quot;,64,sTitle_lokal)
+	End if
+End Sub
+
+Sub Leistungsstamm_aktualisieren()
+	if iAnzahl_Datensaetze(sArbeitstabelle) &gt; 0 then
+	
+		Dim vStatus as Variant
+		Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+		Dim oRecordLeistungenNeu as Object,oRecordLeistungenAlt as Object
+		Dim oDialogAktualisieren AS Object, oDialogAktualisierenModel as Object
+		Dim oOptionAktuell as Object,oOptionEinzeln as Object,oOptionAlle as Object
+		Dim oBoxEinkauf as Object,oBoxBauzeit as Object,oBoxLeistungsbezeichnung as Object,oBoxLeistungsbeschreibung as Object
+		Dim sMessage as String
+		Dim sEinkaufspreis_Alt as String,sEinkaufspreis_Neu as String
+		Dim sBauzeit_Alt as String,sBauzeit_Neu as String
+		Dim sLeistungsbezeichnung_Alt as String,sLeistungsbezeichnung_Neu as String
+		Dim sLeistungsbeschreibung_Alt as String,sLeistungsbeschreibung_Neu as String
+		Dim iPos as integer,iRowNumber as Integer
+		Dim iCount as integer,iCountAbzug as Integer,iAenderungen as Integer
+		
+		GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+		oDialogAktualisieren = LoadDialog_Projekt(&quot;Standard&quot;, &quot;aktualisieren&quot;)
+		oDialogAktualisierenModel = oDialogAktualisieren.Model
+		oOptionAktuell = oDialogAktualisierenModel.getByName(&quot;ButtonAktueller&quot;)
+		oOptionEinzeln = oDialogAktualisierenModel.getByName(&quot;ButtonEinzeln&quot;)
+		oOptionAlle = oDialogAktualisierenModel.getByName(&quot;ButtonAlle&quot;)
+		oBoxEinkauf = oDialogAktualisierenModel.getByName(&quot;CheckBoxEinkaufspreis&quot;)
+		oBoxBauzeit = oDialogAktualisierenModel.getByName(&quot;CheckBoxBauzeit&quot;)
+		oBoxLeistungsbezeichnung = oDialogAktualisierenModel.getByName(&quot;CheckBoxLeistungsbezeichnung&quot;)
+		oBoxLeistungsbeschreibung = oDialogAktualisierenModel.getByName(&quot;CheckBoxLeistungsbeschreibung&quot;)
+	
+		oDialogAktualisieren.Title=sTitle_lokal &amp;&quot; - Leistungsstamm aktualisieren&quot;
+		
+		iCountAbzug=0
+		nochmal:
+		vStatus = oDialogAktualisieren.Execute()
+		if vStatus = 0 then
+			exit sub
+		End if
+		
+		if oBoxEinkauf.State = 0 AND oBoxBauzeit.State = 0 AND oBoxLeistungsbezeichnung.State = 0 AND oBoxLeistungsbeschreibung.State = 0 then
+			vStatus=MsgBox(&quot;Sie haben noch keine Felder angegeben, die aktualisiert werden sollen!&quot;,37,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal
+			elseif vStatus=2 then
+				exit sub
+			End if
+		else
+			iPos=CInt(oColumn_Position.getCurrentValue)
+			iRowNumber=oForm_Tabellendaten.getRow()
+			sSQL1=&quot;SELECT LeistungsID,Leistungsbezeichnung,Leistungsbeschreibung,Einkaufspreis,Bauzeit FROM &quot;&amp; sArbeitstabelle &amp;_
+				&quot; ORDER BY Pos ASC&quot;
+			
+			if oOptionAktuell.State = 1 then
+				iPos=CInt(oColumn_Position.getCurrentValue)
+				
+				oRecordLeistungenNeu=oResult_Scroll(sSQL1)
+				oRecordLeistungenNeu.absolute(iRowNumber)
+				sLeistungsID=oRecordLeistungenNeu.getString(1)
+				sLeistungsbezeichnung_Neu=oRecordLeistungenNeu.getString(2)
+				sLeistungsbeschreibung_Neu=oRecordLeistungenNeu.getString(3)
+				sEinkaufspreis_Neu=oRecordLeistungenNeu.getString(4)
+				sBauzeit_Neu=oRecordLeistungenNeu.getString(5)
+				if sLeistungsID = 0 then
+					MsgBox(&quot;Die aktuelle Leistung ist im Leistungsstamm nicht vorhanden!&quot;,64,sTitle_lokal)
+					exit Sub
+				else
+					sSQL2=&quot;SELECT Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp; sKalulationsPreis &amp;&quot;,Bauzeit &quot;&amp;_
+					&quot;FROM &quot;&amp; sLeistungsstamm &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+						oRecordLeistungenAlt=oResult(sSQL2)
+						While oRecordLeistungenAlt.next()
+							sLeistungsbezeichnung_Alt=oRecordLeistungenAlt.getString(1)
+							sLeistungsbeschreibung_Alt=oRecordLeistungenAlt.getString(2)
+							sEinkaufspreis_Alt=oRecordLeistungenAlt.getString(3)
+							sBauzeit_Alt=oRecordLeistungenAlt.getString(4)
+						Wend	
+					sSQL3 = &quot;&quot;
+					sMessage=&quot;Soll im Leistungsstamm für die Leistung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp; Chr$(10)&amp;_
+						 sLeistungsbezeichnung_Alt &amp; Chr$(10) &amp; Chr$(10) &amp; Chr$(10)
+				
+					if oBoxEinkauf.State = 1 then
+						sMessage = sMessage &amp;&quot;der alte &quot;&amp; sKalulationsPreis &amp;&quot; von:					  &quot;&amp; fZahlMitPunkt(sEinkaufspreis_Alt) &amp;&quot; &quot;&amp; sWaehrung &amp; Chr$(10) &amp;_
+											&quot;durch den neuen Preis von:					&quot;&amp; fZahlMitPunkt(sEinkaufspreis_Neu) &amp;&quot; &quot;&amp; sWaehrung  &amp; Chr$(10)
+					
+						sSQL3 = sSQL3 &amp; sKalulationsPreis &amp;&quot;=&apos;&quot; &amp; sEinkaufspreis_Neu &amp;&quot;&apos; &quot;
+					End if
+				
+					if oBoxBauzeit.State = 1 then
+						if sSQL3 &lt;&gt; &quot;&quot; then
+							sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+							sSQL3 = sSQL3 &amp;&quot;,&quot;
+						End if
+						sMessage = sMessage &amp;&quot;die alte Bauzeit von:					 &quot;&amp; fZahlMitPunkt(sBauzeit_Alt) &amp;&quot; Minuten &quot;&amp; Chr$(10) &amp;_
+											&quot;durch die neue Bauzeit von:		 &quot;&amp; fZahlMitPunkt(sBauzeit_Neu) &amp;&quot; Minuten &quot;&amp; Chr$(10)
+						
+						sSQL3 = sSQL3 &amp;&quot;Bauzeit=&apos;&quot;&amp; sBauzeit_Neu &amp;&quot;&apos; &quot;
+					End if
+				
+					if oBoxLeistungsbezeichnung.State = 1 then
+						if sSQL3 &lt;&gt; &quot;&quot; then
+							sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+							sSQL3 = sSQL3 &amp;&quot;,&quot;
+						End if
+						sMessage = sMessage &amp;&quot;die alte Leistungsbezeichnung durch die neue Leistungsbezeichnung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
+						sLeistungsbezeichnung_Neu &amp; Chr$(10) 
+							
+						sSQL3 = sSQL3 &amp;&quot;Leistungsbezeichnung=&apos;&quot;&amp; fsConvertString(sLeistungsbezeichnung_Neu) &amp;&quot;&apos; &quot;
+					End if
+				
+					if oBoxLeistungsbeschreibung.State = 1 then
+						if sSQL3 &lt;&gt; &quot;&quot; then
+							sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+							sSQL3 = sSQL3 &amp;&quot;,&quot;
+						End if
+						sMessage = sMessage &amp;&quot;die alte Leistungsbeschreibung:&quot;&amp; Chr$(10) &amp; sLeistungsbeschreibung_Alt &amp; Chr$(10) &amp; Chr$(10) &amp;_
+					                        &quot;durch die neue Leistungsbeschreibung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp; sLeistungsbeschreibung_Neu &amp; Chr$(10)
+						sSQL3 = sSQL3 &amp;&quot;Leistungsbeschreibung=&apos;&quot;&amp; fsConvertString(sLeistungsbeschreibung_Neu) &amp;&quot;&apos; &quot;
+					End if
+					
+					sSQL3=&quot;UPDATE &quot;&amp; sLeistungsstamm &amp;&quot; SET &quot;&amp; sSQL3 &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+					sMessage = sMessage &amp; Chr$(10) &amp;&quot;ersetzt werden?&quot;
+					vStatus=MsgBox(sMessage,36,sTitle_lokal)
+					if vStatus=6 then
+						SQL_execute(sSQL3)
+					End if
+				End if
+			elseif oOptionEinzeln.State = 1 then
+				For iCount = 1 to iAnzahl_Datensaetze(sArbeitstabelle)
+			
+					oRecordLeistungenNeu=oResult_Scroll(sSQL1)
+					oRecordLeistungenNeu.absolute(iCount)
+					sLeistungsID=oRecordLeistungenNeu.getString(1)
+					sLeistungsbezeichnung_Neu=oRecordLeistungenNeu.getString(2)
+					sLeistungsbeschreibung_Neu=oRecordLeistungenNeu.getString(3)
+					sEinkaufspreis_Neu=oRecordLeistungenNeu.getString(4)
+					sBauzeit_Neu=oRecordLeistungenNeu.getString(5)
+					if sLeistungsID = 0 then
+						MsgBox(&quot;Die aktuelle Leistung ist im Leistungsstamm nicht vorhanden!&quot;,64,sTitle_lokal)
+					else
+						sSQL2=&quot;SELECT Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp; sKalulationsPreis &amp;&quot;,Bauzeit &quot;&amp;_
+						&quot;FROM &quot;&amp; sLeistungsstamm &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+							oRecordLeistungenAlt=oResult(sSQL2)
+							While oRecordLeistungenAlt.next()
+								sLeistungsbezeichnung_Alt=oRecordLeistungenAlt.getString(1)
+								sLeistungsbeschreibung_Alt=oRecordLeistungenAlt.getString(2)
+								sEinkaufspreis_Alt=oRecordLeistungenAlt.getString(3)
+								sBauzeit_Alt=oRecordLeistungenAlt.getString(4)
+							Wend	
+						sMessage=&quot;Soll im Leistungsstamm für die Leistung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
+							 sLeistungsbezeichnung_Alt &amp; Chr$(10) &amp; Chr$(10)
+						iAenderungen = 0
+						sSQL3 = &quot;&quot;
+						if oBoxEinkauf.State = 1 then
+							if sEinkaufspreis_Alt &lt;&gt; sEinkaufspreis_Neu then
+								iAenderungen=1
+								sMessage = sMessage &amp;&quot;der alte &quot;&amp; sKalulationsPreis &amp;&quot; von:					  &quot;&amp; fZahlMitPunkt(sEinkaufspreis_Alt) &amp;&quot; &quot;&amp; sWaehrung &amp; Chr$(10) &amp;_
+													&quot;durch den neuen Preis von:					&quot;&amp; fZahlMitPunkt(sEinkaufspreis_Neu) &amp;&quot; &quot;&amp; sWaehrung  &amp; Chr$(10)
+						
+								sSQL3 = sSQL3 &amp;&quot;Einkaufspreis=&apos;&quot; &amp; sEinkaufspreis_Neu &amp;&quot;&apos; &quot;
+							End if
+						End if
+					
+						if oBoxBauzeit.State = 1 then
+							if sBauzeit_Alt &lt;&gt; sBauzeit_Neu then
+								if sSQL3 &lt;&gt; &quot;&quot; then
+									sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+									sSQL3 = sSQL3 &amp;&quot;,&quot;
+								End if
+								iAenderungen=1
+								sMessage = sMessage &amp;&quot;die alte Bauzeit von:					 &quot;&amp; fZahlMitPunkt(sBauzeit_Alt) &amp;&quot; Minuten &quot;&amp; Chr$(10) &amp;_
+													&quot;durch die neue Bauzeit von:		 &quot;&amp; fZahlMitPunkt(sBauzeit_Neu) &amp;&quot; Minuten &quot;&amp; Chr$(10)
+						
+								sSQL3 = sSQL3 &amp;&quot;Bauzeit=&apos;&quot;&amp; sBauzeit_Neu &amp;&quot;&apos; &quot;
+							End if
+						End if
+				
+						if oBoxLeistungsbezeichnung.State = 1 then
+							if sLeistungsbezeichnung_Alt &lt;&gt; sLeistungsbezeichnung_Neu then
+								if sSQL3 &lt;&gt; &quot;&quot; then
+									sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+									sSQL3 = sSQL3 &amp;&quot;,&quot;
+								End if
+								iAenderungen=1
+								sMessage = sMessage &amp;&quot;die alte Leistungsbezeichnung durch die neue Leistungsbezeichnung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
+											sLeistungsbezeichnung_Neu &amp; Chr$(10)
+									
+								sSQL3 = sSQL3 &amp;&quot;Leistungsbezeichnung=&apos;&quot;&amp; fsConvertString(sLeistungsbezeichnung_Neu) &amp;&quot;&apos; &quot;
+							End if
+						End if
+				
+						if oBoxLeistungsbeschreibung.State = 1 then
+							if sLeistungsbeschreibung_Alt &lt;&gt; sLeistungsbeschreibung_Neu then
+								if sSQL3 &lt;&gt; &quot;&quot; then
+									sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+									sSQL3 = sSQL3 &amp;&quot;,&quot;
+								End if
+								iAenderungen=1
+								sMessage = sMessage &amp;&quot;die alte Leistungsbeschreibung:&quot;&amp; Chr$(10) &amp; sLeistungsbeschreibung_Alt &amp; Chr$(10) &amp; Chr$(10) &amp;_
+							                        &quot;durch die neue Leistungsbeschreibung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp; sLeistungsbeschreibung_Neu &amp; Chr$(10)
+								sSQL3 = sSQL3 &amp;&quot;Leistungsbeschreibung=&apos;&quot;&amp; fsConvertString(sLeistungsbeschreibung_Neu) &amp;&quot;&apos; &quot;
+							End if
+						End if
+						
+						sSQL3 = &quot;UPDATE &quot;&amp; sLeistungsstamm &amp;&quot; SET &quot;&amp; sSQL3 &amp;&quot;WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+						sMessage = sMessage &amp; Chr$(10) &amp;&quot;ersetzt werden?&quot;
+						if iAenderungen=1 then
+							vStatus=MsgBox(sMessage,35,sTitle_lokal)
+							if vStatus=6 then
+								SQL_execute(sSQL3)
+							elseif vStatus=2 then
+								Exit For
+							End if
+						End if
+					End if
+				Next iCount
+			
+			elseif oOptionAlle.State = 1 then
+				For iCount = 1 to iAnzahl_Datensaetze(sArbeitstabelle)
+					oRecordLeistungenNeu=oResult_Scroll(sSQL1)
+					oRecordLeistungenNeu.absolute(iCount)
+					sLeistungsID=oRecordLeistungenNeu.getString(1)
+					sLeistungsbezeichnung_Neu=oRecordLeistungenNeu.getString(2)
+					sLeistungsbeschreibung_Neu=oRecordLeistungenNeu.getString(3)
+					sEinkaufspreis_Neu=oRecordLeistungenNeu.getString(4)
+					sBauzeit_Neu=oRecordLeistungenNeu.getString(5)
+					if sLeistungsID = 0 then
+						iCountAbzug=iCountAbzug+1
+					else
+						sSQL3 = &quot;&quot;
+						if oBoxEinkauf.State = 1 then
+							sSQL3 = sSQL3 &amp; sKalulationsPreis &amp;&quot;=&apos;&quot; &amp; sEinkaufspreis_Neu &amp;&quot;&apos; &quot;
+						End if
+					
+						if oBoxBauzeit.State = 1 then
+							if sSQL3 &lt;&gt; &quot;&quot; then
+								sSQL3 = sSQL3 &amp;&quot;,&quot;
+							End if
+							sSQL3 = sSQL3 &amp;&quot;Bauzeit=&apos;&quot;&amp; sBauzeit_Neu &amp;&quot;&apos; &quot;
+						End if
+				
+						if oBoxLeistungsbezeichnung.State = 1 then
+							if sSQL3 &lt;&gt; &quot;&quot; then
+								sSQL3 = sSQL3 &amp;&quot;,&quot;
+							End if
+							sSQL3 = sSQL3 &amp;&quot;Leistungsbezeichnung=&apos;&quot;&amp; fsConvertString(sLeistungsbezeichnung_Neu) &amp;&quot;&apos; &quot;
+						End if
+				
+						if oBoxLeistungsbeschreibung.State = 1 then
+							if sSQL3 &lt;&gt; &quot;&quot; then
+								sSQL3 = sSQL3 &amp;&quot;,&quot;
+							End if
+							sSQL3 = sSQL3 &amp;&quot;Leistungsbeschreibung=&apos;&quot;&amp; fsConvertString(sLeistungsbeschreibung_Neu) &amp;&quot;&apos; &quot;
+						End if
+						
+						sSQL3=&quot;UPDATE &quot;&amp; sLeistungsstamm &amp;&quot; SET &quot;&amp; sSQL3 &amp;&quot;WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+						SQL_execute(sSQL3)
+					End if
+				Next iCount
+				MsgBox(&quot;Es sind &quot;&amp; iCount-1-iCountAbzug &amp;&quot; Datensätze im Leistungsstamm aktualisiert worden!&quot;,64,sTitle_lokal)
+			End if
+		End if
+	End if
+End Sub
+
+Sub Arbeitstabelle_aktualisieren()
+	if iAnzahl_Datensaetze(sArbeitstabelle) &gt; 0 then
+		if Msg_Schreibschutz=1 then
+	 		exit Sub
+	 	else
+	
+			Dim vStatus as Variant
+			Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+			Dim oRecordLeistungenNeu as Object,oRecordLeistungenAlt as Object
+			Dim oDialogAktualisieren AS Object, oDialogAktualisierenModel as Object
+			Dim oOptionAktuell as Object,oOptionEinzeln as Object,oOptionAlle as Object
+			Dim oBoxEinkauf as Object,oBoxBauzeit as Object,oBoxLeistungsbezeichnung as Object,oBoxLeistungsbeschreibung as Object
+			Dim sMessage as String
+			Dim sEinkaufspreis_Alt as String,sEinkaufspreis_Neu as String
+			Dim sBauzeit_Alt as String,sBauzeit_Neu as String
+			Dim sLeistungsbezeichnung_Alt as String,sLeistungsbezeichnung_Neu as String
+			Dim sLeistungsbeschreibung_Alt as String,sLeistungsbeschreibung_Neu as String
+			Dim iPos as integer,iRowNumber as Integer
+			Dim iCount as integer,iCountAbzug as Integer,iAenderungen as Integer
+			
+			GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+			oDialogAktualisieren = LoadDialog_Projekt(&quot;Standard&quot;, &quot;aktualisieren&quot;)
+			oDialogAktualisierenModel = oDialogAktualisieren.Model
+			oOptionAktuell = oDialogAktualisierenModel.getByName(&quot;ButtonAktueller&quot;)
+			oOptionEinzeln = oDialogAktualisierenModel.getByName(&quot;ButtonEinzeln&quot;)
+			oOptionAlle = oDialogAktualisierenModel.getByName(&quot;ButtonAlle&quot;)
+			oBoxEinkauf = oDialogAktualisierenModel.getByName(&quot;CheckBoxEinkaufspreis&quot;)
+			oBoxBauzeit = oDialogAktualisierenModel.getByName(&quot;CheckBoxBauzeit&quot;)
+			oBoxLeistungsbezeichnung = oDialogAktualisierenModel.getByName(&quot;CheckBoxLeistungsbezeichnung&quot;)
+			oBoxLeistungsbeschreibung = oDialogAktualisierenModel.getByName(&quot;CheckBoxLeistungsbeschreibung&quot;)
+		
+			oDialogAktualisieren.Title=sTitle_lokal &amp;&quot; - Arbeitstabelle aktualisieren&quot;
+			
+			iCountAbzug=0
+			nochmal:
+			vStatus = oDialogAktualisieren.Execute()
+			if vStatus = 0 then
+				exit sub
+			End if
+			
+			if oBoxEinkauf.State = 0 AND oBoxBauzeit.State = 0 AND oBoxLeistungsbezeichnung.State = 0 AND oBoxLeistungsbeschreibung.State = 0 then
+				vStatus=MsgBox(&quot;Sie haben noch keine Felder angegeben, die aktualisiert werden sollen!&quot;,37,sTitle_lokal)
+				if vStatus=4 then
+					goto nochmal
+				elseif vStatus=2 then
+					exit sub
+				End if
+			else
+				iPos=CInt(oColumn_Position.getCurrentValue)
+				iRowNumber=oForm_Tabellendaten.getRow()
+				sSQL1=&quot;SELECT LeistungsID,Leistungsbezeichnung,Leistungsbeschreibung,Einkaufspreis,Bauzeit FROM &quot;&amp; sArbeitstabelle &amp;_
+					&quot; ORDER BY Pos ASC&quot;
+				
+				if oOptionAktuell.State = 1 then
+					iPos=CInt(oColumn_Position.getCurrentValue)
+					
+					sLeistungsbezeichnung_Neu=&quot;&quot;
+					sLeistungsbeschreibung_Neu=&quot;&quot;
+					sEinkaufspreis_Neu=&quot;&quot;
+					sBauzeit_Neu=&quot;&quot;
+					
+					oRecordLeistungenAlt=oResult_Scroll(sSQL1)
+					oRecordLeistungenAlt.absolute(iRowNumber)
+					sLeistungsID=oRecordLeistungenAlt.getString(1)
+					sLeistungsbezeichnung_Alt=oRecordLeistungenAlt.getString(2)
+					sLeistungsbeschreibung_Alt=oRecordLeistungenAlt.getString(3)
+					sEinkaufspreis_Alt=oRecordLeistungenAlt.getString(4)
+					sBauzeit_Alt=oRecordLeistungenAlt.getString(5)
+					if sLeistungsID &lt;&gt; 0 and  sLeistungsID &lt;&gt; &quot;&quot; then
+					
+						sSQL2=&quot;SELECT Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp; sKalulationsPreis &amp;&quot;,Bauzeit &quot;&amp;_
+							&quot;FROM &quot;&amp; sLeistungsstamm &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+							
+						oRecordLeistungenNeu=oResult(sSQL2)
+						While oRecordLeistungenNeu.next()
+							sLeistungsbezeichnung_Neu=oRecordLeistungenNeu.getString(1)
+							sLeistungsbeschreibung_Neu=oRecordLeistungenNeu.getString(2)
+							sEinkaufspreis_Neu=oRecordLeistungenNeu.getString(3)
+							sBauzeit_Neu=oRecordLeistungenNeu.getString(4)
+						Wend
+							
+						sSQL3 = &quot;&quot;
+						sMessage=&quot;Soll in der Arbeitstabelle für die Leistung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp; Chr$(10)&amp;_
+							 sLeistungsbezeichnung_Alt &amp; Chr$(10) &amp; Chr$(10) &amp; Chr$(10)
+					
+						if oBoxEinkauf.State = 1 and sEinkaufspreis_Neu &lt;&gt; &quot;&quot; then
+							sMessage = sMessage &amp;&quot;der alte &quot;&amp; sKalulationsPreis &amp;&quot; von:					  &quot;&amp; fZahlMitPunkt(sEinkaufspreis_Alt) &amp;&quot; &quot;&amp; sWaehrung &amp; Chr$(10) &amp;_
+												&quot;durch den neuen Preis von:					&quot;&amp; fZahlMitPunkt(sEinkaufspreis_Neu) &amp;&quot; &quot;&amp; sWaehrung  &amp; Chr$(10)
+						
+							sSQL3 = sSQL3 &amp; sKalulationsPreis &amp;&quot;=&apos;&quot; &amp; sEinkaufspreis_Neu &amp;&quot;&apos; &quot;
+						End if
+					
+						if oBoxBauzeit.State = 1 and sBauzeit_Neu &lt;&gt;&quot; &quot; then
+							if sSQL3 &lt;&gt; &quot;&quot; then
+								sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+								sSQL3 = sSQL3 &amp;&quot;,&quot;
+							End if
+							sMessage = sMessage &amp;&quot;die alte Bauzeit von:					 &quot;&amp; fZahlMitPunkt(sBauzeit_Alt) &amp;&quot; Minuten &quot;&amp; Chr$(10) &amp;_
+												&quot;durch die neue Bauzeit von:		 &quot;&amp; fZahlMitPunkt(sBauzeit_Neu) &amp;&quot; Minuten &quot;&amp; Chr$(10)
+							
+							sSQL3 = sSQL3 &amp;&quot;Bauzeit=&apos;&quot;&amp; sBauzeit_neu &amp;&quot;&apos; &quot;
+						End if
+					
+						if oBoxLeistungsbezeichnung.State = 1 and sLeistungsbezeichnung_Neu &lt;&gt; &quot;&quot; then
+							if sSQL3 &lt;&gt; &quot;&quot; then
+								sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+								sSQL3 = sSQL3 &amp;&quot;,&quot;
+							End if
+							sMessage = sMessage &amp;&quot;die alte Leistungsbezeichnung durch die neue Leistungsbezeichnung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
+							sLeistungsbezeichnung_Neu &amp; Chr$(10) 
+								
+							sSQL3 = sSQL3 &amp;&quot;Leistungsbezeichnung=&apos;&quot;&amp; fsConvertString(sLeistungsbezeichnung_Neu) &amp;&quot;&apos; &quot;
+						End if
+					
+						if oBoxLeistungsbeschreibung.State = 1 and sLeistungsbeschreibung_Neu &lt;&gt; &quot;&quot; then
+							if sSQL3 &lt;&gt; &quot;&quot; then
+								sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+								sSQL3 = sSQL3 &amp;&quot;,&quot;
+							End if
+							sMessage = sMessage &amp;&quot;die alte Leistungsbeschreibung:&quot;&amp; Chr$(10) &amp; sLeistungsbeschreibung_Alt &amp; Chr$(10) &amp; Chr$(10) &amp;_
+						                        &quot;durch die neue Leistungsbeschreibung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp; sLeistungsbeschreibung_Neu &amp; Chr$(10)
+							sSQL3 = sSQL3 &amp;&quot;Leistungsbeschreibung=&apos;&quot;&amp; fsConvertString(sLeistungsbeschreibung_Neu) &amp;&quot;&apos; &quot;
+						End if
+						
+						If sSQL3 &lt;&gt; &quot;&quot; then
+							sSQL3=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET &quot;&amp; sSQL3 &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+							sMessage = sMessage &amp; Chr$(10) &amp;&quot;aus dem Leistungsstamm ersetzt werden?&quot;
+							vStatus=MsgBox(sMessage,36,sTitle_lokal)
+							if vStatus=6 then
+								SQL_execute(sSQL3)
+							End if
+						End if
+					End If
+					oForm_Tabellendaten.reload()
+					oForm_Tabellendaten.last()	
+					oForm_Tabellendaten.first()	
+					oForm_Tabellendaten.absolute(iRowNumber)	
+				elseif oOptionEinzeln.State = 1 then
+					For iCount = 1 to iAnzahl_Datensaetze(sArbeitstabelle)
+				
+						sLeistungsbezeichnung_Neu=&quot;&quot;
+						sLeistungsbeschreibung_Neu=&quot;&quot;
+						sEinkaufspreis_Neu=&quot;&quot;
+						sBauzeit_Neu=&quot;&quot;
+						
+						oRecordLeistungenAlt=oResult_Scroll(sSQL1)
+						oRecordLeistungenAlt.absolute(iCount)
+						sLeistungsID=oRecordLeistungenAlt.getString(1)
+						sLeistungsbezeichnung_Alt=oRecordLeistungenAlt.getString(2)
+						sLeistungsbeschreibung_Alt=oRecordLeistungenAlt.getString(3)
+						sEinkaufspreis_Alt=oRecordLeistungenAlt.getString(4)
+						sBauzeit_Alt=oRecordLeistungenAlt.getString(5)
+						if sLeistungsID &lt;&gt; 0 and  sLeistungsID &lt;&gt;&quot;&quot; then
+						
+							sSQL2=&quot;SELECT Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp; sKalulationsPreis &amp;&quot;,Bauzeit &quot;&amp;_
+								&quot;FROM &quot;&amp; sLeistungsstamm &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+								
+							oRecordLeistungenNeu=oResult(sSQL2)
+							While oRecordLeistungenNeu.next()
+								sLeistungsbezeichnung_Neu=oRecordLeistungenNeu.getString(1)
+								sLeistungsbeschreibung_Neu=oRecordLeistungenNeu.getString(2)
+								sEinkaufspreis_Neu=oRecordLeistungenNeu.getString(3)
+								sBauzeit_Neu=oRecordLeistungenNeu.getString(4)
+							Wend	
+							
+							sMessage=&quot;Soll in der Arbeitstabelle für die Leistung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
+									sLeistungsbezeichnung_alt &amp; Chr$(10) &amp; Chr$(10)
+							iAenderungen = 0
+							sSQL3 = &quot;&quot;
+							if oBoxEinkauf.State = 1 and  sEinkaufspreis_Neu &lt;&gt; &quot;&quot; then
+								if sEinkaufspreis_Alt &lt;&gt; sEinkaufspreis_Neu then
+									iAenderungen=1
+									sMessage = sMessage &amp;&quot;der alte &quot;&amp; sKalulationsPreis &amp;&quot; von:					  &quot;&amp; fZahlMitPunkt(sEinkaufspreis_Alt) &amp;&quot; &quot;&amp; sWaehrung &amp; Chr$(10) &amp;_
+														&quot;durch den neuen Preis von:					&quot;&amp; fZahlMitPunkt(sEinkaufspreis_Neu) &amp;&quot; &quot;&amp; sWaehrung  &amp; Chr$(10)
+							
+									sSQL3 = sSQL3 &amp;&quot;Einkaufspreis=&apos;&quot; &amp; sEinkaufspreis_Neu &amp;&quot;&apos; &quot;
+								End if
+							End if
+						
+							if oBoxBauzeit.State = 1  and sBauzeit_Neu &lt;&gt;&quot; &quot; then
+								if sBauzeit_Alt &lt;&gt; sBauzeit_Neu then
+									if sSQL3 &lt;&gt; &quot;&quot; then
+										sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+										sSQL3 = sSQL3 &amp;&quot;,&quot;
+									End if
+									iAenderungen=1
+									sMessage = sMessage &amp;&quot;die alte Bauzeit von:					 &quot;&amp; fZahlMitPunkt(sBauzeit_Alt) &amp;&quot; Minuten &quot;&amp; Chr$(10) &amp;_
+														&quot;durch die neue Bauzeit von:		 &quot;&amp; fZahlMitPunkt(sBauzeit_Neu) &amp;&quot; Minuten &quot;&amp; Chr$(10)
+							
+									sSQL3 = sSQL3 &amp;&quot;Bauzeit=&apos;&quot;&amp; sBauzeit_Neu &amp;&quot;&apos; &quot;
+								End if
+							End if
+					
+							if oBoxLeistungsbezeichnung.State = 1 and sLeistungsbezeichnung_Neu &lt;&gt; &quot;&quot; then
+								if sLeistungsbezeichnung_Alt &lt;&gt; sLeistungsbezeichnung_Neu then
+									if sSQL3 &lt;&gt; &quot;&quot; then
+										sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+										sSQL3 = sSQL3 &amp;&quot;,&quot;
+									End if
+									iAenderungen=1
+									sMessage = sMessage &amp;&quot;die alte Leistungsbezeichnung durch die neue Leistungsbezeichnung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
+												sLeistungsbezeichnung_Neu &amp; Chr$(10)
+										
+									sSQL3 = sSQL3 &amp;&quot;Leistungsbezeichnung=&apos;&quot;&amp; fsConvertString(sLeistungsbezeichnung_Neu) &amp;&quot;&apos; &quot;
+								End if
+							End if
+					
+							if oBoxLeistungsbeschreibung.State = 1 then
+								if sLeistungsbeschreibung_Alt &lt;&gt; sLeistungsbeschreibung_Neu then
+									if sSQL3 &lt;&gt; &quot;&quot; then
+										sMessage = sMessage &amp;&quot;______________________________________________________________  &quot; &amp; Chr$(10) &amp; Chr$(10)
+										sSQL3 = sSQL3 &amp;&quot;,&quot;
+									End if
+									iAenderungen=1
+									sMessage = sMessage &amp;&quot;die alte Leistungsbeschreibung:&quot;&amp; Chr$(10) &amp; sLeistungsbeschreibung_Alt &amp; Chr$(10) &amp; Chr$(10) &amp;_
+								                        &quot;durch die neue Leistungsbeschreibung:&quot;&amp; Chr$(10) &amp; Chr$(10) &amp; sLeistungsbeschreibung_Neu &amp; Chr$(10)
+									sSQL3 = sSQL3 &amp;&quot;Leistungsbeschreibung=&apos;&quot;&amp; fsConvertString(sLeistungsbeschreibung_Neu) &amp;&quot;&apos; &quot;
+								End if
+							End if
+							
+							If sSQL3 &lt;&gt; &quot;&quot; then
+								sSQL3 = &quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET &quot;&amp; sSQL3 &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+								sMessage = sMessage &amp; Chr$(10) &amp;&quot;aus dem Leistungsstamm ersetzt werden?&quot;
+								if iAenderungen=1 then
+									vStatus=MsgBox(sMessage,35,sTitle_lokal)
+									if vStatus=6 then
+										SQL_execute(sSQL3)
+									elseif vStatus=2 then
+										Exit For
+									End if
+								End if
+							End If
+						End if
+					Next iCount
+					oForm_Tabellendaten.reload()
+					oForm_Tabellendaten.last()	
+
+				elseif oOptionAlle.State = 1 then
+
+					For iCount = 1 to iAnzahl_Datensaetze(sArbeitstabelle)
+						oRecordLeistungenAlt=oResult_Scroll(sSQL1)
+						oRecordLeistungenAlt.absolute(iCount)
+						sLeistungsID=oRecordLeistungenAlt.getString(1)
+
+						sLeistungsbezeichnung_Neu=&quot;&quot;
+						sLeistungsbeschreibung_Neu=&quot;&quot;
+						sEinkaufspreis_Neu=&quot;&quot;
+						sBauzeit_Neu=&quot;&quot;
+						
+						sSQL2=&quot;SELECT Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp; sKalulationsPreis &amp;&quot;,Bauzeit &quot;&amp;_
+							&quot;FROM &quot;&amp; sLeistungsstamm &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+
+						oRecordLeistungenNeu=oResult(sSQL2)
+						While oRecordLeistungenNeu.next()
+							sLeistungsbezeichnung_Neu=oRecordLeistungenNeu.getString(1)
+							sLeistungsbeschreibung_Neu=oRecordLeistungenNeu.getString(2)
+							sEinkaufspreis_Neu=oRecordLeistungenNeu.getString(3)
+							sBauzeit_Neu=oRecordLeistungenNeu.getString(4)
+						Wend	
+						if sLeistungsID = 0 then
+							iCountAbzug=iCountAbzug+1
+						else
+							sSQL3 = &quot;&quot;
+							if oBoxEinkauf.State = 1  and sEinkaufspreis_Neu &lt;&gt; &quot;&quot; then
+								sSQL3 = sSQL3 &amp; sKalulationsPreis &amp;&quot;=&apos;&quot; &amp; sEinkaufspreis_Neu &amp;&quot;&apos; &quot;
+							End if
+						
+							if oBoxBauzeit.State = 1  and sBauzeit_Neu &lt;&gt;&quot; &quot; then
+								if sSQL3 &lt;&gt; &quot;&quot; then
+									sSQL3 = sSQL3 &amp;&quot;,&quot;
+								End if
+								sSQL3 = sSQL3 &amp;&quot;Bauzeit=&apos;&quot;&amp; sBauzeit_Neu &amp;&quot;&apos; &quot;
+							End if
+					
+							if oBoxLeistungsbezeichnung.State = 1 and sLeistungsbezeichnung_Neu &lt;&gt; &quot;&quot; then
+								if sSQL3 &lt;&gt; &quot;&quot; then
+									sSQL3 = sSQL3 &amp;&quot;,&quot;
+								End if
+								sSQL3 = sSQL3 &amp;&quot;Leistungsbezeichnung=&apos;&quot;&amp; fsConvertString(sLeistungsbezeichnung_Neu) &amp;&quot;&apos; &quot;
+							End if
+					
+							if oBoxLeistungsbeschreibung.State = 1 and sLeistungsbeschreibung_Neu &lt;&gt; &quot;&quot; then
+								if sSQL3 &lt;&gt; &quot;&quot; then
+									sSQL3 = sSQL3 &amp;&quot;,&quot;
+								End if
+								sSQL3 = sSQL3 &amp;&quot;Leistungsbeschreibung=&apos;&quot;&amp; fsConvertString(sLeistungsbeschreibung_Neu) &amp;&quot;&apos; &quot;
+							End if
+							If sSQL3 &lt;&gt; &quot;&quot; then
+								sSQL3=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET &quot;&amp; sSQL3 &amp;&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+								SQL_execute(sSQL3)
+							End If
+						End if
+					Next iCount
+					oForm_Tabellendaten.reload()
+					oForm_Tabellendaten.last()	
+					MsgBox(&quot;Es sind &quot;&amp; iCount-1-iCountAbzug &amp;&quot; Datensätze im Leistungsstamm aktualisiert worden!&quot;,64,sTitle_lokal)
+				End If
+			End If
+		End If
+	End If
+End Sub
+
+Sub Werte_uebernehmen()
+	if iAnzahl_Datensaetze(sArbeitstabelle) &gt; 0 then
+		Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+		Dim oRecordLeistungenNeu as Object
+		Dim sEinkaufspreis_neu as String
+		Dim sBauzeit_neu as String
+		Dim sLeistungsbezeichnung_neu as String
+		Dim iPos as integer,iRowNumber as Integer
+	
+		sSQL1=&quot;SELECT LeistungsID,Leistungsbezeichnung,Einkaufspreis,Bauzeit FROM &quot;&amp; sArbeitstabelle &amp;_
+			&quot; ORDER BY Pos ASC&quot;
+		iPos=CInt(oColumn_Position.getCurrentValue)
+		iRowNumber=oForm_Tabellendaten.getRow()
+		oRecordLeistungenNeu=oResult_Scroll(sSQL1)
+		oRecordLeistungenNeu.absolute(iRowNumber)
+		sLeistungsID=oRecordLeistungenNeu.getString(1)
+		sLeistungsbezeichnung_neu=oRecordLeistungenNeu.getString(2)
+		sEinkaufspreis_neu=oRecordLeistungenNeu.getString(3)
+		sBauzeit_neu=oRecordLeistungenNeu.getString(4)
+		sSQL3=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET&quot;&amp;_
+				&quot; Einkaufspreis=&apos;&quot; &amp; sEinkaufspreis_neu &amp;&quot;&apos;,&quot;&amp;_
+				&quot; Bauzeit=&apos;&quot;&amp; sBauzeit_neu &amp;&quot;&apos;&quot;&amp;_
+				&quot; WHERE LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
+				&quot; AND Leistungsbezeichnung=&apos;&quot;&amp; sLeistungsbezeichnung_neu &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL3)
+		oForm_Tabellendaten.reload()
+		oForm_Tabellendaten.last()	
+		oForm_Tabellendaten.first()	
+		oForm_Tabellendaten.absolute(iRowNumber+1)	
+	End if
+End Sub
+
+
+</script:module>

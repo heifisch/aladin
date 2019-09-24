@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Schreibschutz" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Schreibschutz_setzen()
+	oForm_Document.updateRow()
+	if iOption_Schreibschutz = 1 then
+		oList_Projektauswahl.Enabled=False
+		oField_ProjektID.Enabled=False
+		oList_Kontaktauswahl.Enabled=False
+		oList_Ansprechpartner.Enabled=False
+		oField_Stundensatz_Kontakt.Enabled=False
+		oField_Stundensatz_Projekt.Enabled=False
+		oButton_Projekt_ruecksetzen.Enabled=False
+		oButton_Ansprechpartner_ruecksetzen.Enabled=False
+		oField_Leistungsempfaenger.Enabled=False
+		oField_Lieferbemerkung.Enabled=False
+		oButton_MAS_dynamisch.Enabled=False
+		oButton_MVS_dynamisch.Enabled=False
+		oField_Materialaufschlagsatz.Enabled=False
+		oField_Minutenverrechnugssatz.Enabled=False
+		oButton_MAS_uebernehmen.Enabled=False
+		oButton_MVS_uebernehmen.Enabled=False
+		oButton_Document_berechnen.Enabled=False
+		oList_Leerzeilen.Enabled=False
+		oList_Korrektur_Vorzeichen.Enabled=False
+		oField_Document_Typ.Enabled=False
+		oField_DocumentID.Enabled=False
+		oField_Erstellungsdatum.Enabled=False
+		oField_gueltig_bis.Enabled=False
+		oField_Status.Enabled=False
+		oField_Skonto_Tage.Enabled=False
+		oField_Faellig_Tage.Enabled=False
+		oField_Korrektur_Anlass.Enabled=False
+		oField_Document_Name.Enabled=False
+		oField_Rabatt_Satz.Enabled=False
+		oField_Korrektur_Satz.Enabled=False
+		oField_MwSt_Satz.Enabled=False
+		oField_Skonto_Satz.Enabled=False
+		oButton_Leistung_uebernehmen.Enabled=False
+		oButton_LeistungsID_uebernehmen.Enabled=False
+		oButton_Pos_neu.Enabled=False
+		oButton_AusgefuehrtAm.Enabled=False
+		oButton_Bemerkung.Enabled=False
+		oButton_Zwischensumme.Enabled=False
+		oButton_Blanko.Enabled=False
+		oButton_Pos_Kopieren.Enabled=False
+		oButton_Pos_Verschieben.Enabled=False
+		oButton_Leistungsdaten_bearbeiten.Enabled=False
+		oButton_Zwischenbemerkung_bearbeiten.Enabled=False
+		oButton_Zwischensumme_bearbeiten.Enabled=False
+		oButton_DokumentName_bearbeiten.Enabled=False
+		oButton_EK_BZ_uebernehmen.Enabled=False
+		oButton_AZ.Enabled=False
+		oColumn_Position.Enabled=False
+		oColumn_LV_Position.Enabled=False
+		oColumn_Leistungsbezeichnung.Enabled=False
+		oColumn_Einheit.Enabled=False
+		oColumn_Menge.Enabled=False
+		oColumn_Einkaufspreis.Enabled=False
+		oColumn_Bauzeit.Enabled=False
+		oColumn_Materialaufschlagsatz.Enabled=False
+		oColumn_Minutenverrechnungssatz.Enabled=False
+		oColumn_Pos_Typ.Enabled=False
+		oColumn_ZwiSu_Position.Enabled=False
+		oColumn_ZwiSu_Zwischensummen_Name.Enabled=False
+		oColumn_ZwiBem_Position.Enabled=False
+		oColumn_ZwiBem_Bemerkung.Enabled=False
+		oColumn_ZwiBemID.Enabled=False
+		oField_Bemerkung.Enabled=False
+		oForm_Tabellendaten.AllowDeletes=False
+		oForm_Zwischensummen.AllowDeletes=False
+		oForm_Bemerkungen.AllowDeletes=False
+		oOption_AZ.Enabled=False
+		oOption_13b.Enabled=False
+		oField_13bText.Enabled=False
+		oForm_Document.reload()
+		wait 1
+		oForm_Tabellendaten.last()
+	else
+		oList_Projektauswahl.Enabled=True
+		oField_ProjektID.Enabled=True
+		oList_Kontaktauswahl.Enabled=True
+		oList_Ansprechpartner.Enabled=True
+		oField_Stundensatz_Kontakt.Enabled=True
+		oField_Stundensatz_Projekt.Enabled=True
+		oButton_Projekt_ruecksetzen.Enabled=True
+		oButton_Ansprechpartner_ruecksetzen.Enabled=True
+		oField_Leistungsempfaenger.Enabled=True
+		oField_Lieferbemerkung.Enabled=True
+		oButton_MAS_dynamisch.Enabled=True
+		oButton_MVS_dynamisch.Enabled=True
+		oField_Materialaufschlagsatz.Enabled=True
+		oField_Minutenverrechnugssatz.Enabled=True
+		oButton_MAS_uebernehmen.Enabled=True
+		oButton_MVS_uebernehmen.Enabled=True
+		oButton_Document_berechnen.Enabled=True
+		oList_Leerzeilen.Enabled=True
+		oList_Korrektur_Vorzeichen.Enabled=True
+		oField_Document_Typ.Enabled=True
+		oField_DocumentID.Enabled=True
+		oField_Erstellungsdatum.Enabled=True
+		oField_gueltig_bis.Enabled=True
+		oField_Status.Enabled=True
+		oField_Skonto_Tage.Enabled=True
+		oField_Faellig_Tage.Enabled=True
+		oField_Korrektur_Anlass.Enabled=True
+		oField_Document_Name.Enabled=True
+		oField_Rabatt_Satz.Enabled=True
+		oField_Korrektur_Satz.Enabled=True
+		oField_MwSt_Satz.Enabled=True
+		oField_Skonto_Satz.Enabled=True
+		oButton_Leistung_uebernehmen.Enabled=True
+		oButton_LeistungsID_uebernehmen.Enabled=True
+		oButton_Pos_neu.Enabled=True
+		oButton_AusgefuehrtAm.Enabled=True
+		oButton_Bemerkung.Enabled=True
+		oButton_Zwischensumme.Enabled=True
+		oButton_Blanko.Enabled=True
+		oButton_Pos_Kopieren.Enabled=True
+		oButton_Pos_Verschieben.Enabled=True
+		oButton_Leistungsdaten_bearbeiten.Enabled=True
+		oButton_Zwischenbemerkung_bearbeiten.Enabled=True
+		oButton_Zwischensumme_bearbeiten.Enabled=True
+		oButton_DokumentName_bearbeiten.Enabled=True
+		oButton_EK_BZ_uebernehmen.Enabled=True
+		oColumn_Position.Enabled=True
+		oColumn_LV_Position.Enabled=True
+		oColumn_Leistungsbezeichnung.Enabled=True
+		oColumn_Einheit.Enabled=True
+		oColumn_Menge.Enabled=True
+		oColumn_Einkaufspreis.Enabled=True
+		oColumn_Bauzeit.Enabled=True
+		oColumn_Materialaufschlagsatz.Enabled=True
+		oColumn_Minutenverrechnungssatz.Enabled=True
+		oColumn_Pos_Typ.Enabled=True
+		oColumn_ZwiSu_Position.Enabled=True
+		oColumn_ZwiSu_Zwischensummen_Name.Enabled=True
+		oColumn_ZwiBem_Position.Enabled=True
+		oColumn_ZwiBem_Bemerkung.Enabled=True
+		oColumn_ZwiBemID.Enabled=True
+		oField_Bemerkung.Enabled=True
+		oForm_Tabellendaten.AllowDeletes=True
+		oForm_Zwischensummen.AllowDeletes=True
+		oForm_Bemerkungen.AllowDeletes=True
+		if iDocTypID &gt; 0 AND iDocTypID &lt; 7 then
+			if iDocTypID = 5 OR iDocTypID = 6 then
+				oOption_AZ.Enabled=True
+				oButton_AZ.Enabled=True
+			End if
+			oOption_13b.Enabled=True
+			oField_13bText.Enabled=True
+		end if
+		oForm_Document.reload()
+		wait 1
+		oForm_Tabellendaten.last()
+	End if
+End Sub
+
+Function Msg_Schreibschutz as integer
+	Dim vStatus as Variant,sSQL1 as String
+	if iOption_Schreibschutz = 1 then
+		Msg_Schreibschutz=0
+		vStatus=MsgBox(&quot;Der Schreibschutz für dieses Dokument ist gesetzt!&quot; +Chr$(13)+Chr$(13)+_
+		&quot;Wollen Sie diesen jetzt entfernen?&quot;,36,sTitle_lokal)
+		if vStatus = 6 then
+			sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Schreibschutz=0 WHERE DocumentID=&quot;&amp; lDocumentID
+			SQL_execute(sSQL1)
+			oForm_Document.reload()
+			Schreibschutz_setzen()
+		elseif vStatus = 7 then
+			Msg_Schreibschutz=1
+		End if
+	End if
+End Function
+
+
+</script:module>

@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Startmenue" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option explicit
+
+Sub neuerTask()
+	Dim vStatus as Variant,sSQL1 as String,oRecordGesperrt as Object,iCount as Integer
+	Dim iGesperrt as Integer,iUserID_lokal as Integer
+	Dim oOptionProjekt as Object,oOptionDokument as Object,oOptionControlling as Object,oOptionInventur as Object
+	Dim oOptionKundenstamm as Object,oOptionLieferantenstamm as Object,oOptionKontaktestamm as Object,oOptionPersonalstamm as Object
+	Dim oOptionLeistungsstamm as Object,oOptionLeistungsgruppen as Object,oOptionProjekte as Object
+	Dim oOptionEinstellungen as Object,oOptionOP_Eingangsrechnungen as Object
+	Dim oOptionOP_Ausgangsrechnungen as Object,oOptionZahlZiel as Object,oOptionImport as Object
+	Dim oOptionKassenbuch as Object,oOptionPreislisten as Object
+	Dim oDialogStartmenue as Object,oDialogStartmenueModel as Object
+
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN_Global&quot;)
+	oConnection()
+
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogStartmenue = LoadDialog(&quot;ALADIN&quot;, &quot;Start&quot;)
+	oDialogStartmenueModel = oDialogStartmenue.Model
+	oOptionProjekt = oDialogStartmenueModel.getByName(&quot;OptionProjekt&quot;)
+	oOptionDokument = oDialogStartmenueModel.getByName(&quot;OptionDokument&quot;)
+	oOptionProjekte = oDialogStartmenueModel.getByName(&quot;OptionProjekte&quot;)
+	oOptionControlling = oDialogStartmenueModel.getByName(&quot;OptionControlling&quot;)
+	oOptionInventur = oDialogStartmenueModel.getByName(&quot;OptionInventur&quot;)
+	oOptionPreislisten = oDialogStartmenueModel.getByName(&quot;OptionPreislisten&quot;)
+	oOptionImport = oDialogStartmenueModel.getByName(&quot;OptionImport&quot;)
+	oOptionKundenstamm = oDialogStartmenueModel.getByName(&quot;OptionKundenstamm&quot;)
+	oOptionLieferantenstamm = oDialogStartmenueModel.getByName(&quot;OptionLieferantenstamm&quot;)
+	oOptionKontaktestamm = oDialogStartmenueModel.getByName(&quot;OptionKontaktestamm&quot;)
+	oOptionPersonalstamm = oDialogStartmenueModel.getByName(&quot;OptionPersonalstamm&quot;)
+	oOptionLeistungsstamm = oDialogStartmenueModel.getByName(&quot;OptionLeistungsstamm&quot;)
+	oOptionLeistungsgruppen = oDialogStartmenueModel.getByName(&quot;OptionLeistungsgruppen&quot;)
+	oOptionEinstellungen = oDialogStartmenueModel.getByName(&quot;OptionEinstellungen&quot;)
+	oOptionOP_Eingangsrechnungen = oDialogStartmenueModel.getByName(&quot;OptionOPEingang&quot;)
+	oOptionOP_Ausgangsrechnungen = oDialogStartmenueModel.getByName(&quot;OptionOPAusgang&quot;)
+	oOptionZahlZiel = oDialogStartmenueModel.getByName(&quot;OptionZahlZiel&quot;)
+	oOptionKassenbuch = oDialogStartmenueModel.getByName(&quot;OptionKassenbuch&quot;)
+
+	iUserID_lokal=iUserID(&quot;Start&quot;)
+	oDialogStartmenue.Title=sTitle(iUserID_lokal) &amp; &quot; - neue Aufgabe&quot; 
+	Steuerung_zuruecksetzen(iUserID_lokal)	
+	sSQL1=&quot;select Gesperrt from Steuerung order by ClientID ASC LIMIT &quot;&amp; (22+iClientIDOffset(iUserID_lokal)) &amp;&quot;,14&quot;
+	wait 1
+	
+	For iCount = 1 to 14
+		oRecordGesperrt=oResult_Scroll(sSQL1)
+		oRecordGesperrt.absolute(iCount)
+		iGesperrt=oRecordGesperrt.getInt(1)
+		if iCount = 1 AND iGesperrt = 1 then
+			oOptionProjekte.Enabled=0
+		elseif iCount = 2 AND iGesperrt = 1 then
+			oOptionKundenstamm.Enabled=0
+		elseif iCount = 3 AND iGesperrt = 1 then
+			oOptionLieferantenstamm.Enabled=0
+		elseif iCount = 4 AND iGesperrt = 1 then
+			oOptionKontaktestamm.Enabled=0
+		elseif iCount = 5 AND iGesperrt = 1 then
+			oOptionPersonalstamm.Enabled=0
+		elseif iCount = 6 AND iGesperrt = 1 then
+			oOptionLeistungsstamm.Enabled=0
+		elseif iCount = 7 AND iGesperrt = 1 then
+			oOptionLeistungsgruppen.Enabled=0
+		elseif iCount = 8 AND iGesperrt = 1 then
+			oOptionControlling.Enabled=0
+		elseif iCount = 9 AND iGesperrt = 1 then
+			oOptionInventur.Enabled=0
+		elseif iCount = 10 AND iGesperrt = 1 then
+			oOptionOP_Eingangsrechnungen.Enabled=0
+		elseif iCount = 11 AND iGesperrt = 1 then
+			oOptionOP_Ausgangsrechnungen.Enabled=0
+		elseif iCount = 12 AND iGesperrt = 1 then
+			oOptionEinstellungen.Enabled=0
+		elseif iCount = 13 AND iGesperrt = 1 then
+			oOptionImport.Enabled=0
+		elseif iCount = 14 AND iGesperrt = 1 then
+			oOptionPreislisten.Enabled=0
+		end if
+	Next iCount
+	
+	vStatus = oDialogStartmenue.Execute()
+	if vStatus = 0 then
+		iSetUserID=0
+		exit sub
+	end if
+	if oOptionProjekt.State=1 then
+		Projekt()
+	elseif oOptionDokument.State=1 then
+		Dokument()
+	elseif oOptionControlling.State=1 then
+		Controlling()
+	elseif oOptionInventur.State=1 then
+		Inventur()
+	elseif oOptionProjekte.State=1 then
+		Projekte()
+	elseif oOptionKundenstamm.State=1 then
+		Kundenstamm()
+	elseif oOptionLieferantenstamm.State=1 then
+		Lieferantenstamm()
+	elseif oOptionKontaktestamm.State=1 then
+		Kontaktestamm()
+	elseif oOptionPersonalstamm.State=1 then
+		Personalstamm()
+	elseif oOptionLeistungsstamm.State=1 then
+		Leistungsstamm()
+	elseif oOptionLeistungsgruppen.State=1 then
+		Gruppenverwaltung()
+	elseif oOptionEinstellungen.State=1 then
+		Einstellungen()
+	elseif oOptionImport.State=1 then
+		Import()
+	elseif oOptionOP_Eingangsrechnungen.State=1 then
+		OP_Eingangsrechnungen()
+	elseif oOptionOP_Ausgangsrechnungen.State=1 then
+		OP_Ausgangsrechnungen()
+	elseif oOptionZahlZiel.State=1 then
+		Zahlungsziele()
+	elseif oOptionKassenbuch.State=1 then
+		Kassenbuch()
+	elseif oOptionPreislisten.State=1 then
+		Preislisten()
+	end if
+end Sub
+
+Sub Projekt()
+	Dim iCount as integer
+	Dim iOption as integer,iGesperrt as Integer,iUserID_lokal as Integer
+	Dim oDialogProjekt as Object,oDialogProjektModel as Object
+	Dim oOptionAngebotNeu as Object,oOptionAuftragNeu as Object,oOptionLieferscheinNeu as Object
+	Dim oOptionAufmaszNeu as Object,oOptionRechnungNeu as Object,oOptionGutschriftNeu as Object
+	Dim oOptionPreisanfrageNeu as Object,oOptionBestellungNeu as Object,oOptionAngebotBearbeiten as Object
+	Dim oOptionAuftragBearbeiten as Object,oOptionLieferscheinBearbeiten as Object,oOptionAufmaszBearbeiten as Object
+	Dim oOptionRechnungBearbeiten as Object,oOptionGutschriftBearbeiten as Object
+	Dim oOptionPreisanfrageBearbeiten as Object,oOptionBestellungBearbeiten  as Object
+	Dim oRecordGesperrt as Object
+	Dim oRecord1 as Object
+	Dim vStatus as Variant
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogProjekt = LoadDialog(&quot;ALADIN&quot;, &quot;Projekt&quot;)
+	oDialogProjektModel = oDialogProjekt.Model
+	oOptionAngebotNeu = oDialogProjektModel.getByName(&quot;OptionAngebotNeu&quot;)
+	oOptionAuftragNeu = oDialogProjektModel.getByName(&quot;OptionAuftragNeu&quot;)
+	oOptionLieferscheinNeu = oDialogProjektModel.getByName(&quot;OptionLieferscheinNeu&quot;)
+	oOptionAufmaszNeu = oDialogProjektModel.getByName(&quot;OptionAufmaszNeu&quot;)
+	oOptionRechnungNeu = oDialogProjektModel.getByName(&quot;OptionRechnungNeu&quot;)
+	oOptionGutschriftNeu = oDialogProjektModel.getByName(&quot;OptionGutschriftNeu&quot;)
+	oOptionPreisanfrageNeu = oDialogProjektModel.getByName(&quot;OptionPreisanfrageNeu&quot;)
+	oOptionBestellungNeu = oDialogProjektModel.getByName(&quot;OptionBestellungNeu&quot;)
+	oOptionAngebotBearbeiten = oDialogProjektModel.getByName(&quot;OptionAngebotBearbeiten&quot;)
+	oOptionAuftragBearbeiten = oDialogProjektModel.getByName(&quot;OptionAuftragBearbeiten&quot;)
+	oOptionLieferscheinBearbeiten = oDialogProjektModel.getByName(&quot;OptionLieferscheinBearbeiten&quot;)
+	oOptionAufmaszBearbeiten = oDialogProjektModel.getByName(&quot;OptionAufmaszBearbeiten&quot;)
+	oOptionRechnungBearbeiten = oDialogProjektModel.getByName(&quot;OptionRechnungBearbeiten&quot;)
+	oOptionGutschriftBearbeiten = oDialogProjektModel.getByName(&quot;OptionGutschriftBearbeiten&quot;)
+	oOptionPreisanfrageBearbeiten = oDialogProjektModel.getByName(&quot;OptionPreisanfrageBearbeiten&quot;)
+	oOptionBestellungBearbeiten = oDialogProjektModel.getByName(&quot;OptionBestellungBearbeiten&quot;)
+
+	iUserID_lokal=iUserID(&quot;Start&quot;)
+	oDialogProjekt.Title=sTitle(iUserID_lokal) &amp; &quot; - Angebot, Rechnungen, Bestellungen...&quot; 
+	Steuerung_zuruecksetzen(iUserID_lokal)	
+	sSQL1=&quot;select Gesperrt from Steuerung order by ClientID ASC LIMIT &quot;&amp; iClientIDOffset(iUserID_lokal) &amp;&quot;,16&quot;
+
+	wait 1
+	For iCount = 1 to 16
+		oRecordGesperrt=oResult_Scroll(sSQL1)
+		oRecordGesperrt.absolute(iCount)
+		iGesperrt=oRecordGesperrt.getInt(1)
+		if iCount = 1 AND iGesperrt = 1 then
+			oOptionAngebotNeu.Enabled=0
+		elseif iCount = 2 AND iGesperrt = 1 then
+			oOptionAngebotBearbeiten.Enabled=0
+		elseif iCount = 3 AND iGesperrt = 1 then
+			oOptionAuftragNeu.Enabled=iGesperrt
+		elseif iCount = 4 AND iGesperrt = 1 then
+			oOptionAuftragBearbeiten.Enabled=0
+		elseif iCount = 5 AND iGesperrt = 1 then
+			oOptionLieferscheinNeu.Enabled=0
+		elseif iCount = 6 AND iGesperrt = 1 then
+			oOptionLieferscheinBearbeiten.Enabled=0
+		elseif iCount = 7 AND iGesperrt = 1 then
+			oOptionAufmaszNeu.Enabled=0
+		elseif iCount = 8 AND iGesperrt = 1 then
+			oOptionAufmaszBearbeiten.Enabled=0
+		elseif iCount = 9 AND iGesperrt = 1 then
+			oOptionRechnungNeu.Enabled=0
+		elseif iCount = 10 AND iGesperrt = 1 then
+			oOptionRechnungBearbeiten.Enabled=0
+		elseif iCount = 11 AND iGesperrt = 1 then
+			oOptionGutschriftNeu.Enabled=0
+		elseif iCount = 12 AND iGesperrt = 1 then
+			oOptionGutschriftBearbeiten.Enabled=0
+		elseif iCount = 13 AND iGesperrt = 1 then
+			oOptionPreisanfrageNeu.Enabled=0
+		elseif iCount = 14 AND iGesperrt = 1 then
+			oOptionPreisanfrageBearbeiten.Enabled=0
+		elseif iCount = 15 AND iGesperrt = 1 then
+			oOptionBestellungNeu.Enabled=0
+		elseif iCount = 16 AND iGesperrt = 1 then
+			oOptionBestellungBearbeiten.Enabled=0
+		end if
+	Next iCount
+	vStatus = oDialogProjekt.Execute()
+
+	if vStatus = 0 then
+		iSetUserID=0
+		exit sub
+	end if
+	
+	if oOptionAngebotNeu.State=1 then
+		Angebot_neu(iUserID_lokal)
+	elseif oOptionAngebotBearbeiten.State=1 then
+		Angebot_bearbeiten(iUserID_lokal)
+	elseif oOptionAuftragNeu.State=1 then
+		Auftrag_neu(iUserID_lokal)
+	elseif oOptionAuftragBearbeiten.State=1 then
+		Auftrag_bearbeiten(iUserID_lokal)
+	elseif oOptionLieferscheinNeu.State=1 then
+		Lieferschein_neu(iUserID_lokal)
+	elseif oOptionLieferscheinBearbeiten.State=1 then
+		Lieferschein_bearbeiten(iUserID_lokal)
+	elseif oOptionAufmaszNeu.State=1 then
+		Aufmasz_neu(iUserID_lokal)
+	elseif oOptionAufmaszBearbeiten.State=1 then
+		Aufmasz_bearbeiten(iUserID_lokal)
+	elseif oOptionRechnungNeu.State=1 then
+		Rechnung_neu(iUserID_lokal)
+	elseif oOptionRechnungBearbeiten.State=1 then
+		Rechnung_bearbeiten(iUserID_lokal)
+	elseif oOptionGutschriftNeu.State=1 then
+		Gutschrift_neu(iUserID_lokal)
+	elseif oOptionGutschriftBearbeiten.State=1 then
+		Gutschrift_bearbeiten(iUserID_lokal)
+	elseif oOptionPreisanfrageNeu.State=1 then
+		Preisanfrage_neu(iUserID_lokal)
+	elseif oOptionPreisanfrageBearbeiten.State=1 then
+		Preisanfrage_bearbeiten(iUserID_lokal)
+	elseif oOptionBestellungNeu.State=1 then
+		Bestellung_neu(iUserID_lokal)
+	elseif oOptionBestellungBearbeiten.State=1 then
+		Bestellung_bearbeiten(iUserID_lokal)
+	end if	
+end Sub
+
+Sub Dokument()
+	Dim iCount as integer
+	Dim iOption as integer,iGesperrt as Integer,iUserID_lokal as Integer
+	Dim oDialogDokument as Object,oDialogDokumentModel as Object
+	Dim oOptionDokumentKundeNeu as Object,oOptionDokumentKundeBearbeiten as Object
+	Dim oOptionDokumentLieferantNeu as Object,oOptionDokumentLieferantBearbeiten as Object
+	Dim oOptionDokumentKontaktNeu as Object,oOptionDokumentKontaktBearbeiten as Object
+	Dim oRecordGesperrt as Object
+	Dim oRecord1 as Object
+	Dim vStatus as Variant
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogDokument = LoadDialog(&quot;ALADIN&quot;, &quot;Dokument&quot;)
+	oDialogDokumentModel = oDialogDokument.Model
+	oOptionDokumentKundeNeu = oDialogDokumentModel.getByName(&quot;OptionDokumentKundeNeu&quot;)
+	oOptionDokumentKundeBearbeiten = oDialogDokumentModel.getByName(&quot;OptionDokumentKundeBearbeiten&quot;)
+	oOptionDokumentLieferantNeu = oDialogDokumentModel.getByName(&quot;OptionDokumentLieferantNeu&quot;)
+	oOptionDokumentLieferantBearbeiten = oDialogDokumentModel.getByName(&quot;OptionDokumentLieferantBearbeiten&quot;)
+	oOptionDokumentKontaktNeu = oDialogDokumentModel.getByName(&quot;OptionDokumentKontaktNeu&quot;)
+	oOptionDokumentKontaktBearbeiten = oDialogDokumentModel.getByName(&quot;OptionDokumentKontaktBearbeiten&quot;)
+	
+	iUserID_lokal=iUserID(&quot;Start&quot;)
+	oDialogDokument.Title=sTitle(iUserID_lokal) &amp; &quot; - Schriftwechsel&quot; 
+	Steuerung_zuruecksetzen(iUserID_lokal)	
+	sSQL1=&quot;select Gesperrt from Steuerung order by ClientID ASC LIMIT &quot;&amp; (16+iClientIDOffset(iUserID_lokal)) &amp;&quot;,6&quot;
+
+	wait 1
+	For iCount = 1 to 6
+		oRecordGesperrt=oResult_Scroll(sSQL1)
+		oRecordGesperrt.absolute(iCount)
+		iGesperrt=oRecordGesperrt.getInt(1)
+		if iCount = 1 AND iGesperrt = 1 then
+			oOptionDokumentKundeNeu.Enabled=0
+		elseif iCount = 2 AND iGesperrt = 1 then
+			oOptionDokumentKundeBearbeiten.Enabled=0
+		elseif iCount = 3 AND iGesperrt = 1 then
+			oOptionDokumentLieferantNeu.Enabled=0
+		elseif iCount = 4 AND iGesperrt = 1 then
+			oOptionDokumentLieferantBearbeiten.Enabled=0
+		elseif iCount = 5 AND iGesperrt = 1 then
+			oOptionDokumentKontaktNeu.Enabled=0
+		elseif iCount = 6 AND iGesperrt = 1 then
+			oOptionDokumentKontaktBearbeiten.Enabled=0
+		end if	
+	Next iCount
+	vStatus = oDialogDokument.Execute()
+
+	if vStatus = 0 then
+		iSetUserID=0
+		exit sub
+	end if
+	
+	if oOptionDokumentKundeNeu.State=1 then
+		DokumentKunden_neu(iUserID_lokal)
+	elseif oOptionDokumentKundeBearbeiten.State=1 then
+		DokumentKunden_bearbeiten(iUserID_lokal)
+	elseif oOptionDokumentLieferantNeu.State=1 then
+		DokumentLieferanten_neu(iUserID_lokal)
+	elseif oOptionDokumentLieferantBearbeiten.State=1 then
+		DokumentLieferanten_bearbeiten(iUserID_lokal)
+	elseif oOptionDokumentKontaktNeu.State=1 then
+		DokumentKontakte_neu(iUserID_lokal)
+	elseif oOptionDokumentKontaktBearbeiten.State=1 then
+		DokumentKontakte_bearbeiten(iUserID_lokal)
+	end if	
+end Sub
+
+Sub SET_Option(iUserID_lokal as Integer,iOption as Integer,iSetUnloaded as Integer,iSetExport as Integer)
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+	Dim iStartCount as Integer,iStartoption as integer,iStartlock as integer
+	Dim oRecord1 as Object
+	sSQL1=&quot;select Startoption,Startlock from Start WHERE StartID=&quot;&amp; iUserID_lokal
+	iStartCount = 0
+	Do
+		iStartCount = iStartCount + 1
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iStartoption=oRecord1.getInt(1)
+			iStartlock=oRecord1.getInt(2)
+		Wend
+		wait 100
+		if iStartCount=10 then
+			sSQL2=&quot;UPDATE Start SET Startlock=0 WHERE StartID=&quot;&amp; iUserID_lokal
+			SQL_execute(sSQL2)
+		end if
+	Loop Until iStartlock = 0
+	sSQL3=&quot;UPDATE Start SET Startoption=&quot;&amp; iOption &amp;&quot;,Unloaded=&quot;&amp; iSetUnloaded &amp;_
+		&quot;,Export=&quot;&amp; iSetExport &amp;&quot;,Startlock=1 WHERE StartID=&quot;&amp; iUserID_lokal
+	SQL_execute(sSQL3)
+end Sub
+
+Sub Angebot_neu(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,1,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Angebot_bearbeiten(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,2,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Auftrag_neu(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,3,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Auftrag_bearbeiten(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,4,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Lieferschein_neu(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,5,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Lieferschein_bearbeiten(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,6,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Aufmasz_neu(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,7,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Aufmasz_bearbeiten(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,8,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Rechnung_neu(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,9,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Rechnung_bearbeiten(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,10,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Gutschrift_neu(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,11,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Gutschrift_bearbeiten(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,12,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Preisanfrage_neu(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,13,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Preisanfrage_bearbeiten(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,14,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Bestellung_neu(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,15,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub Bestellung_bearbeiten(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,16,0,0)
+	Projekt_oeffnen()
+end Sub
+
+Sub DokumentKunden_neu(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,17,0,0)
+	Dokument_oeffnen()
+end Sub
+
+Sub DokumentKunden_bearbeiten(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,18,0,0)
+	Dokument_oeffnen()
+end Sub
+
+Sub DokumentLieferanten_neu(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,19,0,0)
+	Dokument_oeffnen()
+end Sub
+
+Sub DokumentLieferanten_bearbeiten(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,20,0,0)
+	Dokument_oeffnen()
+end Sub
+
+Sub DokumentKontakte_neu(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,21,0,0)
+	Dokument_oeffnen()
+end Sub
+
+Sub DokumentKontakte_bearbeiten(iUserID_lokal as Integer)
+	SET_Option(iUserID_lokal,22,0,0)
+	Dokument_oeffnen()
+end Sub
+
+</script:module>

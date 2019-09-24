@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE toolbar:toolbarlayouts PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "toolbar.dtd">
+<toolbar:toolbarlayouts xmlns:toolbar="http://openoffice.org/2001/toolbar">
+ <toolbar:toolbarlayout toolbar:id="functionbar" toolbar:align="top" toolbar:visible="true" toolbar:style="symbol"/>
+ <toolbar:toolbarlayout toolbar:id="objectbar" toolbar:align="top" toolbar:visible="true" toolbar:style="symbol"/>
+ <toolbar:toolbarlayout toolbar:id="toolbar" toolbar:align="left" toolbar:visible="true" toolbar:style="symbol"/>
+ <toolbar:toolbarlayout toolbar:id="macrobar" toolbar:align="top" toolbar:visible="true" toolbar:style="symbol"/>
+ <toolbar:toolbarlayout toolbar:id="fullscreenbar" toolbar:floatingposleft="2147483647" toolbar:floatingpostop="2147483647" toolbar:align="top" toolbar:visible="true" toolbar:floating="true" toolbar:style="text"/>
+ <toolbar:toolbarlayout toolbar:id="commontaskbar" toolbar:floatingposleft="60" toolbar:floatingpostop="124" toolbar:floatinglines="65535" toolbar:align="top" toolbar:visible="true" toolbar:floating="true" toolbar:style="text"/>
+ <toolbar:toolbarlayout toolbar:id="optionbar" toolbar:align="bottom" toolbar:visible="false" toolbar:style="symbol"/>
+ <toolbar:toolbarlayout toolbar:id="userdefbar1" toolbar:align="top" toolbar:visible="true" toolbar:style="symbol"/>
+ <toolbar:toolbarlayout toolbar:id="userdefbar2" toolbar:align="top" toolbar:visible="true" toolbar:style="symbol"/>
+ <toolbar:toolbarlayout toolbar:id="userdefbar3" toolbar:align="top" toolbar:visible="true" toolbar:style="symbol"/>
+ <toolbar:toolbarlayout toolbar:id="userdefbar4" toolbar:align="top" toolbar:visible="true" toolbar:style="symbol"/>
+ <toolbar:toolbarlayout toolbar:id="navigationbar" toolbar:align="bottom" toolbar:visible="true" toolbar:style="symbol"/>
+ <toolbar:toolbarlayout toolbar:id="statusbar" toolbar:align="bottom" toolbar:visible="true" toolbar:style="text"/>
+</toolbar:toolbarlayouts>

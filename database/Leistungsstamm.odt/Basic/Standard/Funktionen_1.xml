@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc as Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_Leistungsdaten as Object
+	oForm_Leistungsdaten=oForm_Steuerung.getByName(&quot;Form_Leistungsdaten&quot;)
+End Function
+
+Function oForm_Steuerung as Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oForm_Standard_Artikel as Object
+	oForm_Standard_Artikel=oDoc.DrawPage.Forms.getByName(&quot;Form_Standard_Artikel&quot;)
+End Function
+
+Function oField_LeistungsID as Object
+	oField_LeistungsID=oForm_Leistungsdaten.getByName(&quot;Field_LeistungsID&quot;)
+End Function
+
+Function oList_Leistungsauswahl as Object
+	oList_Leistungsauswahl=oForm_Steuerung.getByName(&quot;List_Leistungsauswahl&quot;)
+End Function
+
+Function oList_Hauptgruppenauswahl as Object
+	oList_Hauptgruppenauswahl=oForm_Steuerung.getByName(&quot;List_Hauptgruppenauswahl&quot;)
+End Function
+
+Function oList_Gruppenauswahl as Object
+	oList_Gruppenauswahl=oForm_Steuerung.getByName(&quot;List_Gruppenauswahl&quot;)
+End Function
+
+Function oList_Leistungsgruppe as Object
+	oList_Leistungsgruppe=oForm_Leistungsdaten.getByName(&quot;List_Leistungsgruppe&quot;)
+End Function
+
+Function oField_Suchstring as Object
+	oField_Suchstring=oForm_Steuerung.getByName(&quot;Field_Suchstring&quot;)
+End Function
+
+Function oField_Leistungsbezeichnung as Object
+	oField_Leistungsbezeichnung=oForm_Leistungsdaten.getByName(&quot;Field_Leistungsbezeichnung&quot;)
+End Function
+
+Function oField_Leistungsbeschreibung as Object
+	oField_Leistungsbeschreibung=oForm_Leistungsdaten.getByName(&quot;Field_Leistungsbeschreibung&quot;)
+End Function
+
+Function oList_Einheit as Object
+	oList_Einheit=oForm_Leistungsdaten.getByName(&quot;List_Einheit&quot;)
+End Function
+
+Function oList_Standard as Object
+	oList_Standard=oForm_Leistungsdaten.getByName(&quot;List_Standard&quot;)
+End Function
+
+Function oList_Lieferant_1 as Object
+	oList_Lieferant_1=oForm_Leistungsdaten.getByName(&quot;List_Lieferant_1&quot;)
+End Function
+
+Function oList_Lieferant_2 as Object
+	oList_Lieferant_2=oForm_Leistungsdaten.getByName(&quot;List_Lieferant_2&quot;)
+End Function
+
+Function oList_Lieferant_3 as Object
+	oList_Lieferant_3=oForm_Leistungsdaten.getByName(&quot;List_Lieferant_3&quot;)
+End Function
+
+Function fLeistungsID as string
+	fLeistungsID=oField_LeistungsID.getCurrentValue
+End Function
+
+Function sLeistungsID_import as string
+	sSQL1=&quot;select LeistungsID from &quot;&amp; sLeistungsstamm &amp;&quot; where LeistungsID = &apos;%&apos;&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sLeistungsID_import=oRecord1.getString(1)
+	Wend
+End Function
+
+Function fSelected_Item(oList as Object)as String
+	Dim oList_View as Object
+	oList_View=oDoc.CurrentController.getControl(oList)
+	fSelected_Item=oList_View.SelectedItem()
+End Function
+
+Function sLeistungsID_old as String
+	sLeistungsID_old=GetDocUserProperty(&quot;oLeistungsID_old&quot;)
+End Function
+
+Function fAnzahlDatensaetzeLeistungen as integer
+	Dim oRecord1 as Object
+	Dim sSQL1 as String
+	sSQL1=&quot;select count(*) from &quot;&amp; sLeistungsstamm &amp;&quot; where LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;&quot;&apos;&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fAnzahlDatensaetzeLeistungen=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+
+</script:module>

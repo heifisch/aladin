@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Auswertung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oListAngNetto as Object
+	oListAngNetto=oForm_Steuerung.getByName(&quot;ListAngNetto&quot;)
+End Function
+
+Function oListAngMateinsatz as Object
+	oListAngMateinsatz=oForm_Steuerung.getByName(&quot;ListAngMateinsatz&quot;)
+End Function
+
+Function oListAngLieferung as Object
+	oListAngLieferung=oForm_Steuerung.getByName(&quot;ListAngLieferung&quot;)
+End Function
+
+Function oListAngSollZeit as Object
+	oListAngSollZeit=oForm_Steuerung.getByName(&quot;ListAngSollZeit&quot;)
+End Function
+
+Function oListAngSollLeistung as Object
+	oListAngSollLeistung=oForm_Steuerung.getByName(&quot;ListAngSollLeistung&quot;)
+End Function
+
+Function oListAuftrNetto as Object
+	oListAuftrNetto=oForm_Steuerung.getByName(&quot;ListAuftrNetto&quot;)
+End Function
+
+Function oListAuftrMateinsatz as Object
+	oListAuftrMateinsatz=oForm_Steuerung.getByName(&quot;ListAuftrMateinsatz&quot;)
+End Function
+
+Function oListAuftrLieferung as Object
+	oListAuftrLieferung=oForm_Steuerung.getByName(&quot;ListAuftrLieferung&quot;)
+End Function
+
+Function oListAuftrSollZeit as Object
+	oListAuftrSollZeit=oForm_Steuerung.getByName(&quot;ListAuftrSollZeit&quot;)
+End Function
+
+Function oListAuftrSollLeistung as Object
+	oListAuftrSollLeistung=oForm_Steuerung.getByName(&quot;ListAuftrSollLeistung&quot;)
+End Function
+
+Function oListGeleistetNetto as Object
+	oListGeleistetNetto=oForm_Steuerung.getByName(&quot;ListGeleistetNetto&quot;)
+End Function
+
+Function oListGeleistetMateinsatz as Object
+	oListGeleistetMateinsatz=oForm_Steuerung.getByName(&quot;ListGeleistetMateinsatz&quot;)
+End Function
+
+Function oListGeleistetLieferung as Object
+	oListGeleistetLieferung=oForm_Steuerung.getByName(&quot;ListGeleistetLieferung&quot;)
+End Function
+
+Function oListGeleistetSollZeit as Object
+	oListGeleistetSollZeit=oForm_Steuerung.getByName(&quot;ListGeleistetSollZeit&quot;)
+End Function
+
+Function oListGeleistetSollLeistung as Object
+	oListGeleistetSollLeistung=oForm_Steuerung.getByName(&quot;ListGeleistetSollLeistung&quot;)
+End Function
+
+Function oListGeleistetIstZeit as Object
+	oListGeleistetIstZeit=oForm_Steuerung.getByName(&quot;ListGeleistetIstZeit&quot;)
+End Function
+
+Function oListGeleistetIstLeistung as Object
+	oListGeleistetIstLeistung=oForm_Steuerung.getByName(&quot;ListGeleistetIstLeistung&quot;)
+End Function
+
+Function oListGeleistetIstNetto as Object
+	oListGeleistetIstNetto=oForm_Steuerung.getByName(&quot;ListGeleistetIstNetto&quot;)
+End Function
+
+Function oListRechnungNetto as Object
+	oListRechnungNetto=oForm_Steuerung.getByName(&quot;ListRechnungNetto&quot;)
+End Function
+
+Function oListRechnungMateinsatz as Object
+	oListRechnungMateinsatz=oForm_Steuerung.getByName(&quot;ListRechnungMateinsatz&quot;)
+End Function
+
+Function oListRechnungLieferung as Object
+	oListRechnungLieferung=oForm_Steuerung.getByName(&quot;ListRechnungLieferung&quot;)
+End Function
+
+Function oListRechnungSollZeit as Object
+	oListRechnungSollZeit=oForm_Steuerung.getByName(&quot;ListRechnungSollZeit&quot;)
+End Function
+
+Function oListRechnungSollLeistung as Object
+	oListRechnungSollLeistung=oForm_Steuerung.getByName(&quot;ListRechnungSollLeistung&quot;)
+End Function
+
+Function oListStandardNetto as Object
+	oListStandardNetto=oForm_Steuerung.getByName(&quot;ListStandardNetto&quot;)
+End Function
+
+Function oListStandardMateinsatz as Object
+	oListStandardMateinsatz=oForm_Steuerung.getByName(&quot;ListStandardMateinsatz&quot;)
+End Function
+
+Function oListStandardLieferung as Object
+	oListStandardLieferung=oForm_Steuerung.getByName(&quot;ListStandardLieferung&quot;)
+End Function
+
+Function oListStandardSollZeit as Object
+	oListStandardSollZeit=oForm_Steuerung.getByName(&quot;ListStandardSollZeit&quot;)
+End Function
+
+Function oListStandardSollLeistung as Object
+	oListStandardSollLeistung=oForm_Steuerung.getByName(&quot;ListStandardSollLeistung&quot;)
+End Function
+
+Function oListStandardIstZeit as Object
+	oListStandardIstZeit=oForm_Steuerung.getByName(&quot;ListStandardIstZeit&quot;)
+End Function
+
+Function oListStandardIstLeistung as Object
+	oListStandardIstLeistung=oForm_Steuerung.getByName(&quot;ListStandardIstLeistung&quot;)
+End Function
+
+Function oListStandardIstNetto as Object
+	oListStandardIstNetto=oForm_Steuerung.getByName(&quot;ListStandardIstNetto&quot;)
+End Function
+
+Function oListNachtragNetto as Object
+	oListNachtragNetto=oForm_Steuerung.getByName(&quot;ListNachtragNetto&quot;)
+End Function
+
+Function oListNachtragMateinsatz as Object
+	oListNachtragMateinsatz=oForm_Steuerung.getByName(&quot;ListNachtragMateinsatz&quot;)
+End Function
+
+Function oListNachtragLieferung as Object
+	oListNachtragLieferung=oForm_Steuerung.getByName(&quot;ListNachtragLieferung&quot;)
+End Function
+
+Function oListNachtragSollZeit as Object
+	oListNachtragSollZeit=oForm_Steuerung.getByName(&quot;ListNachtragSollZeit&quot;)
+End Function
+
+Function oListNachtragSollLeistung as Object
+	oListNachtragSollLeistung=oForm_Steuerung.getByName(&quot;ListNachtragSollLeistung&quot;)
+End Function
+
+Function oListNachtragIstZeit as Object
+	oListNachtragIstZeit=oForm_Steuerung.getByName(&quot;ListNachtragIstZeit&quot;)
+End Function
+
+Function oListNachtragIstLeistung as Object
+	oListNachtragIstLeistung=oForm_Steuerung.getByName(&quot;ListNachtragIstLeistung&quot;)
+End Function
+
+Function oListNachtragIstNetto as Object
+	oListNachtragIstNetto=oForm_Steuerung.getByName(&quot;ListNachtragIstNetto&quot;)
+End Function
+
+Function oListNebenLeistNetto as Object
+	oListNebenLeistNetto=oForm_Steuerung.getByName(&quot;ListNebenLeistNetto&quot;)
+End Function
+
+Function oListNebenLeistMateinsatz as Object
+	oListNebenLeistMateinsatz=oForm_Steuerung.getByName(&quot;ListNebenLeistMateinsatz&quot;)
+End Function
+
+Function oListNebenLeistLieferung as Object
+	oListNebenLeistLieferung=oForm_Steuerung.getByName(&quot;ListNebenLeistLieferung&quot;)
+End Function
+
+Function oListNebenLeistSollZeit as Object
+	oListNebenLeistSollZeit=oForm_Steuerung.getByName(&quot;ListNebenLeistSollZeit&quot;)
+End Function
+
+Function oListNebenLeistSollLeistung as Object
+	oListNebenLeistSollLeistung=oForm_Steuerung.getByName(&quot;ListNebenLeistSollLeistung&quot;)
+End Function
+</script:module>

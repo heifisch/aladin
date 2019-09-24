@@ -1,0 +1,921 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement AS Object
+Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+Dim oRecord1 AS Object,oRecord2 AS Object,iOption1 AS Integer
+Dim vStatus AS Variant
+
+Sub Start_OP_Ausgangsrechnungen()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	reset_Summen()
+
+	if oDoc.isReadOnly then
+		Dim oFrame AS Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+		
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;OP_Ausgangsrechnungen&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 33)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+		
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden&quot;)
+		else
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Projekte_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oProjekte&quot;, &quot;Projekte&quot;)
+		else
+			SetDocUserProperty(&quot;oProjekte&quot;, &quot;Projekte_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			OR InStr(fsTableList,&quot;;Gutschriften1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+		then
+			SetDocUserProperty(&quot;oRechnungen1&quot;, &quot;Rechnungen1&quot;)
+			SetDocUserProperty(&quot;oGutschriften1&quot;, &quot;Gutschriften1&quot;)
+		else
+			SetDocUserProperty(&quot;oRechnungen1&quot;, &quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oGutschriften1&quot;, &quot;Gutschriften1_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - OP-Ausgangsrechnungen&quot;)
+
+		sSQL1=&quot;UPDATE Steuerung SET Gesperrt=1 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SET_Tabelle()
+		Formular_init()
+		Status_setzen_auto()
+		Refresh_Summen()
+		if lDocumentID &gt; 0 then
+			Praefix_setzen()
+			if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) _
+			then
+				oButton_Dokument_ansehen.Enabled=1
+			else
+				oButton_Dokument_ansehen.Enabled=0
+			end if
+		else
+			oButton_Dokument_ansehen.Enabled=0
+		end if
+	 	StatusBar(False)
+		ToolBar(False)
+	End if
+	FormSize()
+End Sub
+
+Sub Praefix_setzen()
+	Select Case UCase(Left(sTabelle,2))
+	Case &quot;RE&quot;
+		if oOption_AZ.BoundField.value = 1 then
+			SetDocUserProperty(&quot;oPraefix&quot;,&quot;AZ&quot;)
+		else
+			SetDocUserProperty(&quot;oPraefix&quot;,&quot;RE&quot;)
+		End if
+	Case &quot;GU&quot;
+		SetDocUserProperty(&quot;oPraefix&quot;,&quot;GU&quot;)
+	End Select
+End Sub
+
+Sub Dokument_Anzeigen()
+	Dim oShell as Object,sUrl as String
+	Praefix_setzen()
+	if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) then
+		sUrl=&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+	else
+		oButton_Dokument_ansehen.Enabled=0
+		MsgBox(&quot;Kein Dokument vorhanden!&quot;,16)
+		exit Sub
+	End if
+
+	oShell = createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;)
+	oShell.execute(sUrl,,0)
+End Sub
+
+
+Sub Tabelle_setzen()
+	oForm_Steuerung.updateRow()
+	SET_Tabelle()
+End Sub
+
+Sub Refresh_Summen()
+	Summe_Rechnungen_Kunde()
+	Summe_aller_offenen_Rechnungen()
+	Umsatz_aktuelles_Jahr_ohne_MwSt()
+	Umsatz_aktuelles_Jahr_mit_MwSt()
+	Zahlungen_aktuelles_Jahr()
+	Umsatz_aktueller_Monat_ohne_MwSt()
+	Umsatz_aktueller_Monat_mit_MwSt()
+	Zahlungen_aktueller_Monat()
+	Umsatz_Jahr_ohne_MwSt()
+	Umsatz_Jahr_mit_MwSt()
+	Zahlungen_Jahr()
+	Umsatz_Monat_ohne_MwSt()
+	Umsatz_Monat_mit_MwSt()
+	Zahlungen_Monat()
+	Umsatz_bis_Monat_ohne_MwSt()
+	Umsatz_bis_Monat_mit_MwSt()
+	Zahlungen_bis_Monat()
+End Sub
+
+Sub Summe_Rechnungen_Kunde()
+	Dim sSumme AS String 
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;SELECT (SELECT COALESCE((SELECT (SUM(t1.Zahlbetrag_mit_MwSt)-SUM(t1.Summe_bezahlt))&quot;&amp;_
+			&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t1.KontaktID=t2.KontaktID&quot;&amp;_
+			&quot; AND (t1.Status != &apos;bezahlt&apos; AND t1.Status != &apos;nicht eintreibbar&apos;)),0))&quot;&amp;_
+			&quot;-(SELECT COALESCE((SELECT (SUM(t1.Zahlbetrag_mit_MwSt)-SUM(t1.Summe_bezahlt))&quot;&amp;_
+			&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t1.KontaktID=t2.KontaktID&quot;&amp;_
+			&quot; AND (t1.Status != &apos;bezahlt&apos; AND t1.Status != &apos;nicht eintreibbar&apos;)),0))&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sSumme=oRecord1.getString(1)
+		Wend
+		if CDbl(sSumme)=0 then
+			oField_Summe_Rechnungen_Kunde.Label=&quot;&quot;
+		else
+			sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+			oField_Summe_Rechnungen_Kunde.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+		End if
+	else
+		oField_Summe_Rechnungen_Kunde.Label=&quot;&quot;
+	End if
+End Sub
+
+Sub Summe_aller_offenen_Rechnungen()
+	Dim sSumme AS String
+	sSQL1=&quot;SELECT(SELECT COALESCE((SELECT(SUM(t1.Zahlbetrag_mit_MwSt)-SUM(t1.Summe_bezahlt))&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; WHERE (t1.Status != &apos;bezahlt&apos; AND t1.Status != &apos;nicht eintreibbar&apos;)),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT(SUM(t1.Zahlbetrag_mit_MwSt)-SUM(t1.Summe_bezahlt))&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; WHERE (t1.Status != &apos;bezahlt&apos; AND t1.Status != &apos;nicht eintreibbar&apos;)),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Summe_aller_offenen_Rechnungen.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Summe_aller_offenen_Rechnungen.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Umsatz_aktuelles_Jahr_ohne_MwSt()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_ohne_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_ohne_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Umsatz_aktuelles_Jahr_ohne_MwSt.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Umsatz_aktuelles_Jahr_ohne_MwSt.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Umsatz_aktuelles_Jahr_mit_MwSt()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_mit_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_mit_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Umsatz_aktuelles_Jahr_mit_MwSt.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Umsatz_aktuelles_Jahr_mit_MwSt.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Zahlungen_aktuelles_Jahr()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Summe_bezahlt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Summe_bezahlt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Zahlungen_aktuelles_Jahr.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Zahlungen_aktuelles_Jahr.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Umsatz_aktueller_Monat_ohne_MwSt()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_ohne_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=MONTH(NOW())),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_ohne_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=MONTH(NOW())),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Umsatz_aktueller_Monat_ohne_MwSt.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Umsatz_aktueller_Monat_ohne_MwSt.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Umsatz_aktueller_Monat_mit_MwSt()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_mit_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=MONTH(NOW())),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_mit_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=MONTH(NOW())),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Umsatz_aktueller_Monat_mit_MwSt.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Umsatz_aktueller_Monat_mit_MwSt.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Zahlungen_aktueller_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Summe_bezahlt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=MONTH(NOW())),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Summe_bezahlt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=YEAR(NOW())&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=MONTH(NOW())),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Zahlungen_aktueller_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Zahlungen_aktueller_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Umsatz_Jahr_ohne_MwSt()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_ohne_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_ohne_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Umsatz_Jahr_ohne_MwSt.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Umsatz_Jahr_ohne_MwSt.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Umsatz_Jahr_mit_MwSt()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_mit_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_mit_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Umsatz_Jahr_mit_MwSt.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Umsatz_Jahr_mit_MwSt.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Zahlungen_Jahr()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Summe_bezahlt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Summe_bezahlt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Zahlungen_Jahr.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Zahlungen_Jahr.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Umsatz_Monat_ohne_MwSt()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_ohne_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2 &quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=t2.HauptgruppenID),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_ohne_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2 &quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=t2.HauptgruppenID),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Umsatz_Monat_ohne_MwSt.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Umsatz_Monat_ohne_MwSt.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Umsatz_Monat_mit_MwSt()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_mit_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2 &quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=t2.HauptgruppenID),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_mit_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2 &quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=t2.HauptgruppenID),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Umsatz_Monat_mit_MwSt.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Umsatz_Monat_mit_MwSt.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Zahlungen_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Summe_bezahlt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2 &quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=t2.HauptgruppenID),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Summe_bezahlt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2 &quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)=t2.HauptgruppenID),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Zahlungen_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Zahlungen_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Umsatz_bis_Monat_ohne_MwSt()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_ohne_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)&lt;=t2.HauptgruppenID),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_ohne_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)&lt;=t2.HauptgruppenID),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Umsatz_bis_Monat_ohne_MwSt.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Umsatz_bis_Monat_ohne_MwSt.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Umsatz_bis_Monat_mit_MwSt()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_mit_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)&lt;=t2.HauptgruppenID),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Zahlbetrag_mit_MwSt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)&lt;=t2.HauptgruppenID),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Umsatz_bis_Monat_mit_MwSt.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Umsatz_bis_Monat_mit_MwSt.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Zahlungen_bis_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT (SELECT COALESCE((SELECT SUM(t1.Summe_bezahlt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)&lt;=t2.HauptgruppenID),0))&quot;&amp;_
+		&quot;-(SELECT COALESCE((SELECT SUM(t1.Summe_bezahlt)&quot;&amp;_
+		&quot; FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Erstellungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Erstellungsdatum)&lt;=t2.HauptgruppenID),0))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Zahlungen_bis_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Zahlungen_bis_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub reset_Summen()
+	oField_Summe_Rechnungen_Kunde.Label=&quot;&quot;
+	oField_Summe_aller_offenen_Rechnungen.Label=&quot;&quot;
+	oField_Umsatz_aktuelles_Jahr_ohne_MwSt.Label=&quot;&quot;
+	oField_Umsatz_aktuelles_Jahr_mit_MwSt.Label=&quot;&quot;
+	oField_Zahlungen_aktuelles_Jahr.Label=&quot;&quot;
+	oField_Umsatz_Jahr_ohne_MwSt.Label=&quot;&quot;
+	oField_Umsatz_Jahr_mit_MwSt.Label=&quot;&quot;
+	oField_Zahlungen_Jahr.Label=&quot;&quot;
+	oField_Umsatz_aktueller_Monat_ohne_MwSt.Label=&quot;&quot;
+	oField_Umsatz_aktueller_Monat_mit_MwSt.Label=&quot;&quot;
+	oField_Zahlungen_aktueller_Monat.Label=&quot;&quot;
+	oField_Umsatz_Monat_ohne_MwSt.Label=&quot;&quot;
+	oField_Umsatz_Monat_mit_MwSt.Label=&quot;&quot;
+	oField_Zahlungen_Monat.Label=&quot;&quot;
+	oField_Umsatz_bis_Monat_ohne_MwSt.Label=&quot;&quot;
+	oField_Umsatz_bis_Monat_mit_MwSt.Label=&quot;&quot;
+	oField_Zahlungen_bis_Monat.Label=&quot;&quot;
+End Sub
+
+Sub SET_Tabelle()
+	if oDoc.isReadOnly then
+		Daten_uebernehmen()
+		sSQL1=&quot;SELECT Option_1 FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iOption1=oRecord1.getInt(1)
+		Wend
+		if iOption1&lt;2 then
+			SetDocUserProperty(&quot;oTabelle&quot;, sRechnungen1)
+			oLabel_Tabelle.Label=&quot;Ausgangsrechnungen&quot;
+		elseif iOption1=2 then
+			SetDocUserProperty(&quot;oTabelle&quot;, sGutschriften1)
+			oLabel_Tabelle.Label=&quot;Gutschriften&quot;
+		End if
+		init_Form_Steuerung()
+		init_Form_Document()
+		init_List_Documentauswahl()
+		init_List_Filter_Jahr()
+		init_List_Filter_Monat()
+		init_List_Filter_Status()
+		init_List_Filter_Kunde()
+		init_List_Filter_Projekte()
+		oForm_Steuerung.reload()
+		oForm_Document.reload()
+		Filter_reset()
+	End if
+End Sub
+
+Sub Daten_uebernehmen()
+	if lDocumentID &lt;&gt; 0 then
+		SQL_DocumentID_entfernen()
+		wait 10
+		oList_Filter_Monat.refresh()
+		oList_Filter_Status.refresh()
+		oList_Filter_Kunde.refresh()
+		oList_Filter_Projekte.refresh()
+		oList_Documentauswahl.refresh()
+		oForm_Steuerung.reload()
+		oForm_Steuerung.reset()
+		Refresh_Summen()
+		if lDocumentID &gt; 0 then
+			Praefix_setzen()
+			if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) _
+			then
+				oButton_Dokument_ansehen.Enabled=1
+			else
+				oButton_Dokument_ansehen.Enabled=0
+			end if
+		else
+			oButton_Dokument_ansehen.Enabled=0
+		end if
+	End if
+End Sub
+
+Sub Ausgangsrechnungen_drucken()
+	SET_Option(iUserID_lokal,1,0,0)
+	SetUserID(iUserID_lokal)
+	Ausgangsrechnungen()
+End Sub
+
+Sub Ausgangsrechnungen_offen()
+	SET_Option(iUserID_lokal,2,0,0)
+	SetUserID(iUserID_lokal)
+	Ausgangsrechnungen()
+End Sub
+
+Sub Abschlagszahlungen()
+	SET_Option(iUserID_lokal,3,0,0)
+	SetUserID(iUserID_lokal)
+	Ausgangsrechnungen()
+End Sub
+
+Sub Abschlagszahlungen_bis_Vorjahr()
+	SET_Option(iUserID_lokal,4,0,0)
+	SetUserID(iUserID_lokal)
+	Ausgangsrechnungen()
+End Sub
+
+Sub Ausgangsrechnungen_faellig()
+	SetUserID(iUserID_lokal)
+	Ausgangsrechnungen()
+End Sub
+
+Sub Zahlungserinnerung_Druck()
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;UPDATE Steuerung SET Option_1=0 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SetUserID(iUserID_lokal)
+		Zahlungserinnerung()
+	End if
+End Sub
+
+Sub Zahlungserinnerung_Fax()
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;UPDATE Steuerung SET Option_1=1 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SetUserID(iUserID_lokal)
+		Zahlungserinnerung()
+	End if
+End Sub
+
+Sub Zahlungserinnerung_EMail()
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;UPDATE Steuerung SET Option_1=2 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SetUserID(iUserID_lokal)
+		Zahlungserinnerung()
+	End if
+End Sub
+
+Sub Mahnung_Druck()
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;UPDATE Steuerung SET Option_1=0 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SetUserID(iUserID_lokal)
+		Mahnung()
+	End if
+End Sub
+
+Sub Mahnung_Fax()
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;UPDATE Steuerung SET Option_1=1 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SetUserID(iUserID_lokal)
+		Mahnung()
+	End if
+End Sub
+
+Sub Mahnung_EMail()
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;UPDATE Steuerung SET Option_1=2 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SetUserID(iUserID_lokal)
+		Mahnung()
+	End if
+End Sub
+
+Sub bezahlt_mit_Skonto()
+	if lDocumentID &gt; 0 then
+		sSQL1=&quot;UPDATE &quot;&amp; sTabelle &amp;&quot; SET Status=&apos;bezahlt&apos;,Summe_bezahlt=Summe_nach_Skonto &quot;&amp;_
+			&quot;WHERE DocumentID= &apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL1)
+		oForm_Document.reload()
+		Summe_Rechnungen_Kunde()
+		Summe_aller_offenen_Rechnungen()
+	End if
+End Sub
+
+Sub bezahlt_ohne_Skonto()
+	if lDocumentID &gt; 0 then
+		sSQL1=&quot;UPDATE &quot;&amp; sTabelle &amp;&quot; SET Status=&apos;bezahlt&apos;,Summe_bezahlt=Zahlbetrag_mit_MwSt &quot;&amp;_
+			&quot;WHERE DocumentID= &apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL1)
+		oForm_Document.reload()
+		Summe_Rechnungen_Kunde()
+		Summe_aller_offenen_Rechnungen()
+	end if
+End Sub
+
+Sub Monat_uebernehmen()
+	oList_Monat.commit()
+	oForm_Steuerung.updateRow()
+	Refresh_Summen()
+End Sub
+
+Sub Kalenderjahr_uebernehmen()
+	oList_Kalenderjahr.commit()
+	oForm_Steuerung.updateRow()
+	Refresh_Summen()
+End Sub
+
+Sub Maske_schliessen()
+	if oDoc.isReadOnly then
+		SQL_Steuerung_reset()
+		Daten_uebernehmen()
+		sSQL1=&quot;UPDATE Steuerung SET Gesperrt=0 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+	End if
+	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+Sub List_Rechnungsname_refresh()
+	oList_Documentauswahl.refresh()
+End Sub
+
+Sub Filter_Status_refresh()
+	oList_Filter_Status.refresh()
+End Sub
+
+Sub Filter_Kunde_refresh()
+	oList_Filter_Kunde.refresh()
+End Sub
+
+Sub Filter_Jahr_refresh()
+	oList_Filter_Jahr.refresh()
+End Sub
+
+Sub Filter_Monat_refresh()
+	oList_Filter_Monat.refresh()
+End Sub
+
+Sub Filter_Projekte_refresh()
+	oList_Filter_Projekte.refresh()
+End Sub
+
+Sub Filter_reset()
+	SQL_Steuerung_reset()
+	oList_Filter_Monat.refresh()
+	oList_Filter_Status.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Filter_Projekte.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_Jahr_setzen()
+	oList_Filter_Jahr.commit()
+	oForm_Steuerung.updateRow()
+	oList_Filter_Monat.refresh()
+	oList_Filter_Status.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Filter_Projekte.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_Monat_setzen()
+	oList_Filter_Monat.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Filter_Monat.refresh()
+	oList_Filter_Status.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Filter_Projekte.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_Status_setzen()
+	oList_Filter_Status.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Filter_Status.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Filter_Projekte.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_Kunde_setzen()
+	oList_Filter_Kunde.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Filter_Kunde.refresh()
+	oList_Filter_Projekte.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_Projekte_setzen()
+	oList_Filter_Projekte.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Rechnung_uebernehmen()
+	oList_Documentauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+	SQL_KontaktID_uebernehmen()
+	Refresh_Summen()
+	if lDocumentID &gt; 0 then
+		Praefix_setzen()
+		if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) then
+			oButton_Dokument_ansehen.Enabled=1
+		else
+			oButton_Dokument_ansehen.Enabled=0
+		End if
+	End if
+End sub
+
+Sub Datum_bezahlt_setzen()
+	oField_bezahlt_am.commit()
+	oForm_Document.updateRow()
+End Sub
+
+Sub Betrag_bezahlt_setzen()
+	oField_Summe_bezahlt.commit()
+	oForm_Document.updateRow()
+End Sub
+
+Sub Status_setzen()
+	oList_Status.commit()
+	oForm_Document.updateRow()
+	wait 10
+	oList_Filter_Status.refresh()
+	Refresh_Summen()
+End Sub
+
+Sub update_Ordner()
+	if lDocumentID &gt; 0 then
+		if lKundenID &gt; 0 then
+			oField_Ordner.commit()
+			oForm_Kundendaten.updateRow()
+		End If
+	End If
+End Sub
+
+Sub Status_setzen_auto()
+	SQL_Status_berechnet_Ausgangsrechnung()
+	SQL_Status_skontofaehig_Ausgangsrechnung()
+	SQL_Status_faellig_Ausgangsrechnung(iUserID_lokal)
+	SQL_Status_ueberfaellig_Ausgangsrechnung(iUserID_lokal)
+	SQL_Status_ueberueberfaellig_Ausgangsrechnung(iUserID_lokal)
+End Sub
+	
+Sub Filter_Suchstring_setzen()
+	oField_Suchstring.commit()
+	oForm_Steuerung.updateRow()
+	oList_Filter_Monat.refresh()
+	oList_Filter_Status.refresh()
+	oList_Filter_Kunde.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+
+
+</script:module>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="SQL_Anweisungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub SQL_KontaktID_entfernen
+	sSQL1=&quot;UPDATE Steuerung SET KontaktID=NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_UPDATE_Steuerung_KontaktID
+	sSQL1=&quot;UPDATE Steuerung SET KontaktID=&quot;&amp; lKontaktID_import &amp;&quot; WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Datum_UPDATE
+	sSQL1=&quot;UPDATE &quot;&amp; sLieferanten &amp;&quot; SET Letztes_UPDATE=(DATE_ADD(NOW(),INTERVAL 0 month)) WHERE KontaktID=&quot;&amp; lKontaktID
+	SQL_execute(sSQL1)
+End Sub
+</script:module>

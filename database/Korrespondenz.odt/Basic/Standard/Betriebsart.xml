@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Betriebsart" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim vStatus as Variant
+Dim iGesperrt as integer
+Dim iCount as Integer
+Dim oRecord1 as Object
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+Dim oRecordGesperrt as Object
+
+Sub Betriebsart()
+	Dim iOption as integer,iGesperrt as Integer
+	Dim oDialogDokument as Object,oDialogDokumentModel as Object
+	Dim oOptionDokumentKundeNeu as Object,oOptionDokumentKundeBearbeiten as Object
+	Dim oOptionDokumentLieferantNeu as Object,oOptionDokumentLieferantBearbeiten as Object
+	Dim oOptionDokumentKontaktNeu as Object,oOptionDokumentKontaktBearbeiten as Object
+
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogDokument = LoadDialog_Korrespondenz(&quot;Standard&quot;, &quot;Dokument&quot;)
+	oDialogDokumentModel = oDialogDokument.Model
+	oOptionDokumentKundeNeu = oDialogDokumentModel.getByName(&quot;OptionDokumentKundeNeu&quot;)
+	oOptionDokumentKundeBearbeiten = oDialogDokumentModel.getByName(&quot;OptionDokumentKundeBearbeiten&quot;)
+	oOptionDokumentLieferantNeu = oDialogDokumentModel.getByName(&quot;OptionDokumentLieferantNeu&quot;)
+	oOptionDokumentLieferantBearbeiten = oDialogDokumentModel.getByName(&quot;OptionDokumentLieferantBearbeiten&quot;)
+	oOptionDokumentKontaktNeu = oDialogDokumentModel.getByName(&quot;OptionDokumentKontaktNeu&quot;)
+	oOptionDokumentKontaktBearbeiten = oDialogDokumentModel.getByName(&quot;OptionDokumentKontaktBearbeiten&quot;)
+
+	oDialogDokument.Title=sTitle_lokal &amp; &quot; - Schriftwechsel&quot;
+
+	Steuerung_zuruecksetzen(iUserID_lokal)
+	sSQL1=&quot;select Gesperrt from Steuerung&quot;&amp;_
+		&quot; where ClientID &lt;= &quot;&amp; (iUserID_lokal*40) &amp;_
+		&quot; and ClientID &gt; &quot;&amp; (iUserID_lokal*40)-40 &amp;_
+		&quot; order by ClientID ASC LIMIT 16,6 &quot;
+	wait 1
+	For iCount = 1 to 6
+		oRecordGesperrt=oResult_Scroll(sSQL1)
+		oRecordGesperrt.absolute(iCount)
+		iGesperrt=oRecordGesperrt.getInt(1)
+&apos;		print iGesperrt
+		if iCount = 1 and iGesperrt = 1 then
+			oOptionDokumentKundeNeu.Enabled=0
+		elseif iCount = 2 and iGesperrt = 1 then
+			oOptionDokumentKundeBearbeiten.Enabled=0
+		elseif iCount = 3 and iGesperrt = 1 then
+			oOptionDokumentLieferantNeu.Enabled=0
+		elseif iCount = 4 and iGesperrt = 1 then
+			oOptionDokumentLieferantBearbeiten.Enabled=0
+		elseif iCount = 5 and iGesperrt = 1 then
+			oOptionDokumentKontaktNeu.Enabled=0
+		elseif iCount = 6 and iGesperrt = 1 then
+			oOptionDokumentKontaktBearbeiten.Enabled=0
+		End if	
+	Next iCount
+	vStatus = oDialogDokument.Execute()
+
+	if vStatus = 0 then
+		exit sub
+	end if
+	
+	if oOptionDokumentKundeNeu.State=1 then
+		Betriebsart_aendern(17)
+	elseif oOptionDokumentKundeBearbeiten.State=1 then
+		Betriebsart_aendern(18)
+	elseif oOptionDokumentLieferantNeu.State=1 then
+		Betriebsart_aendern(19)
+	elseif oOptionDokumentLieferantBearbeiten.State=1 then
+		Betriebsart_aendern(20)
+	elseif oOptionDokumentKontaktNeu.State=1 then
+		Betriebsart_aendern(21)
+	elseif oOptionDokumentKontaktBearbeiten.State=1 then
+		Betriebsart_aendern(22)
+	End if	
+End Sub
+
+Sub Betriebsart_aendern(iBetriebsart as integer)
+	oTextField_Betriebsart.Label=&quot;Initialisierung läuft&quot;
+	if iClientID&lt;&gt;0 then
+		Document_speichern()
+		sSQL2=&quot;update Steuerung set Gesperrt=0 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL2)
+		SQL_delete_Serienbrief_Kontakte()
+		SQL_Reset_AutoIncrement(&quot;Serienbrief_Kontakte&quot;)
+	End if
+	sSQL1=&quot;select Gesperrt from Steuerung where ClientID=&quot;&amp; (iUserID_lokal*40)-40+iBetriebsart
+	wait 1
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iGesperrt=oRecord1.getInt(1)
+	Wend
+	if iGesperrt=1 then
+		MsgBox(&quot;Diese Anwendung läuft schon! &quot;&amp; Chr$(13) &amp;&quot;Es ist nicht möglich diese zweimal zu öffnen!&quot;,sTitle_lokal)
+	else
+		set_ClientID(iBetriebsart)
+		set_Tabellen(iBetriebsart)
+		SQL_delete_Serienbrief_Kontakte()
+		SQL_Reset_AutoIncrement(&quot;Serienbrief_Kontakte&quot;)
+		SQL_insert_Serienbrief_Kontakte()
+		Formular_init()
+		oList_Jahrauswahl.refresh()
+		oForm_Steuerung.reload()
+		if iUnloaded = 1 then
+			Document_speichern()
+		End if
+		Select Case iBetriebsart
+		Case 17, 18
+			oTextField_Kontaktvorauswahl.Label=&quot;Filter (Kunden): &quot;
+			oTextField_Kontaktdaten.Label=&quot;Kunde: &quot;
+			if iBetriebsart = 17 then
+				oTextField_Betriebsart.Label=&quot;Post an Kunden (1)&quot;
+				neues_Document()
+			elseif iBetriebsart = 18 then
+				oTextField_Betriebsart.Label=&quot;Post an Kunden (2)&quot;
+			end if
+		Case 19, 20
+			oTextField_Kontaktvorauswahl.Label=&quot;Filter (Lieferanten): &quot;
+			oTextField_Kontaktdaten.Label=&quot;Lieferant: &quot;
+			if iBetriebsart = 19 then
+				oTextField_Betriebsart.Label=&quot;Post an Lieferanten (1)&quot;
+				neues_Document()
+			elseif iBetriebsart = 20 then
+				oTextField_Betriebsart.Label=&quot;Post an Lieferanten (2)&quot;
+			end if
+		Case 21, 22
+			oTextField_Kontaktvorauswahl.Label=&quot;Filter (Kontakte): &quot;
+			oTextField_Kontaktdaten.Label=&quot;Kontakt: &quot;
+			if iBetriebsart = 21 then
+				oTextField_Betriebsart.Label=&quot;Post an Kontakt (1)&quot;
+				neues_Document()
+			elseif iBetriebsart = 22 then
+				oTextField_Betriebsart.Label=&quot;Post an Kontakt (2)&quot;
+			end if
+		End Select
+		Dim oFrame as Object
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - &quot;&amp; oTextField_Betriebsart.Label)
+		sSQL3=&quot;update Steuerung set Gesperrt=1,Option_Serienbrief=2 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL3)
+		if iExport = 1 then
+&apos;			Kontaktdaten_setzen()
+&apos;			Datum_setzen_manuel()
+		End if
+		oForm_Steuerung.refreshRow()
+		oList_Documentauswahl.refresh()
+		oForm_Document.refreshRow()
+	End if
+End Sub
+
+Sub set_Tabellen(iBetriebsart as integer)
+	if sKorrespondenz = NULL then
+		SetDocUserProperty(&quot;oKorrespondenz_old&quot;, &quot;null&quot;)
+		SetDocUserProperty(&quot;oKontakte_old&quot;, &quot;null&quot;)
+		SetDocUserProperty(&quot;oAnsprechpartner_old&quot;, &quot;null&quot;)
+	else
+		SetDocUserProperty(&quot;oKorrespondenz_old&quot;, sKorrespondenz)
+		SetDocUserProperty(&quot;oKontakte_old&quot;, sKontakte)
+		SetDocUserProperty(&quot;oAnsprechpartner_old&quot;, sAnsprechpartner)
+	end if
+	Select Case iBetriebsart
+	Case 17, 18
+		if iEinstellungsID_lokal=1 or InStr(fsTableList,&quot;;Korrespondenz_Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+			SetDocUserProperty(&quot;oKorrespondenz&quot;, &quot;Korrespondenz_Kunden&quot;)
+		else
+			SetDocUserProperty(&quot;oKorrespondenz&quot;, &quot;Korrespondenz_Kunden_&quot;&amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _
+			or InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oKontakte&quot;, &quot;Kunden&quot;	)
+			SetDocUserProperty(&quot;oAnsprechpartner&quot;, &quot;Ansprechpartner_Kunden&quot;)
+		else
+			SetDocUserProperty(&quot;oKontakte&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oAnsprechpartner&quot;, &quot;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	Case 19, 20
+		if iEinstellungsID_lokal=1 or InStr(fsTableList,&quot;;Korrespondenz_Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+			SetDocUserProperty(&quot;oKorrespondenz&quot;, &quot;Korrespondenz_Lieferanten&quot;)
+		else
+			SetDocUserProperty(&quot;oKorrespondenz&quot;, &quot;Korrespondenz_Lieferanten_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _
+			or InStr(fsTableList,&quot;;Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Ansprechpartner_Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oKontakte&quot;, &quot;Lieferanten&quot;	)
+			SetDocUserProperty(&quot;oAnsprechpartner&quot;, &quot;Ansprechpartner_Lieferanten&quot;)
+		else
+			SetDocUserProperty(&quot;oKontakte&quot;, &quot;Lieferanten_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oAnsprechpartner&quot;, &quot;Ansprechpartner_Lieferanten_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	Case 21, 22
+		if iEinstellungsID_lokal=1 or InStr(fsTableList,&quot;;Korrespondenz_Kontakte_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+			SetDocUserProperty(&quot;oKorrespondenz&quot;, &quot;Korrespondenz_Kontakte&quot;)
+		else
+			SetDocUserProperty(&quot;oKorrespondenz&quot;, &quot;Korrespondenz_Kontakte_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _
+			or InStr(fsTableList,&quot;;Kontakte_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Ansprechpartner_Kontakte_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oKontakte&quot;, &quot;Kontakte&quot;	)
+			SetDocUserProperty(&quot;oAnsprechpartner&quot;, &quot;Ansprechpartner_Kontakte&quot;)
+		else
+			SetDocUserProperty(&quot;oKontakte&quot;, &quot;Kontakte_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oAnsprechpartner&quot;, &quot;Ansprechpartner_Kontakte_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	End Select
+
+	if iEinstellungsID_lokal=1 or InStr(fsTableList,&quot;;Projekte_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+		SetDocUserProperty(&quot;oProjekte&quot;, &quot;Projekte&quot;)
+	else
+		SetDocUserProperty(&quot;oProjekte&quot;, &quot;Projekte_&quot; &amp; iEinstellungsID_lokal)
+	end if
+
+	if iEinstellungsID_lokal=1 or InStr(fsTableList,&quot;;Serienbrief_Listen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 then
+		SetDocUserProperty(&quot;oSerienbrief_Listen&quot;, &quot;Serienbrief_Listen&quot;)
+	else
+		SetDocUserProperty(&quot;oSerienbrief_Listen&quot;, &quot;Serienbrief_Listen_&quot; &amp; iEinstellungsID_lokal)
+	end if
+
+End Sub
+
+Sub set_ClientID(iBetriebsart as integer)
+	SetDocUserProperty(&quot;oClientID&quot;, CStr(iClientIDOffset(iUserID_lokal) + iBetriebsart))
+End Sub
+</script:module>

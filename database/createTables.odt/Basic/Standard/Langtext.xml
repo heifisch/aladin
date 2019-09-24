@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Langtext" script:language="StarBasic">REM  *****  BASIC  *****
+
+Sub Langtexte_kopieren()
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+Dim sLeistungsID as String,sLeistungsbeschreibung as String
+Dim oRecord1 as Object,oRecord2 as Object
+Dim iCount as Integer,sTabelle2 as String
+
+GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+iCount=1
+For iCount=1 To 9
+
+Select Case iCount
+Case 1
+sTabelle2=&quot;Angebote2&quot;
+Case 2
+sTabelle2=&quot;Auftragsbestaetigungen2&quot;
+Case 3
+sTabelle2=&quot;Lieferscheine2&quot;
+Case 4
+sTabelle2=&quot;Aufmasze2&quot;
+Case 5
+sTabelle2=&quot;Rechnungen2&quot;
+Case 6
+sTabelle2=&quot;Gutschriften2&quot;
+Case 7
+sTabelle2=&quot;Preisanfragen2&quot;
+Case 8
+sTabelle2=&quot;Bestellungen2&quot;
+Case 9
+sTabelle2=&quot;Controlling&quot;
+End Select
+
+Do UNTIL iAnzahl_LeistungsID(sTabelle2)=0
+
+sSQL1=&quot;select DISTINCT t1.LeistungsID from &quot;&amp; sTabelle2 &amp;&quot; as t1,Leistungsstamm as t2&quot;&amp;_
+	&quot; where t2.LeistungsID=t1.LeistungsID&quot;&amp;_
+	&quot; and t1.Leistungsbeschreibung IS NULL&quot;&amp;_
+	&quot; and t2.Leistungsbeschreibung IS NOT NULL LIMIT 1&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sLeistungsID=oRecord1.getString(1)
+	Wend
+
+sSQL2=&quot;select @sLeistungsbeschreibung:=Leistungsbeschreibung from Leistungsstamm where LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+SQL_execute(sSQL2)
+
+sSQL3=&quot;update &quot;&amp; sTabelle2 &amp;&quot; set Leistungsbeschreibung=@sLeistungsbeschreibung&quot;&amp;_
+		&quot; where LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+
+SQL_execute(sSQL3)
+
+Loop
+Next iCount
+End Sub
+
+Function iAnzahl_LeistungsID(sTabelle2 as String) as Integer
+Dim oRecord1 as Object
+sSQL1=&quot;select count(distinct t1.LeistungsID) from &quot;&amp; sTabelle2 &amp;&quot; as t1,Leistungsstamm as t2&quot;&amp;_
+	&quot; where t2.LeistungsID=t1.LeistungsID&quot;&amp;_
+	&quot; and t1.Leistungsbeschreibung IS NULL&quot;&amp;_
+	&quot; and t2.Leistungsbeschreibung IS NOT NULL&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iAnzahl_LeistungsID=oRecord1.getInt(1)
+	Wend
+End Function
+</script:module>

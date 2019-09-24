@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Schreibschutz" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+
+Sub Schreibschutz_setzen()
+	Dim sJahr AS String,sMonat AS String,sWoche AS String,sBaudatum AS String
+	Dim sPersonalID AS String,sProjektID AS String,sLeistungsTyp AS String,sStatus AS String
+	Dim sLokation AS String,sKundenID AS String
+		
+	sSQL1=&quot;SELECT Jahr,Monat,Woche,Datum,PersonalID,ProjektID,LeistungsTyp,Status,Lokation,KundenID&quot;&amp;_
+		&quot; FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sJahr=oRecord1.getString(1)
+		sMonat=oRecord1.getString(2)
+		sWoche=oRecord1.getString(3)
+		sBaudatum=oRecord1.getString(4)
+		sPersonalID=oRecord1.getString(5)
+		sProjektID=oRecord1.getString(6)
+		sLeistungsTyp=oRecord1.getString(7)
+		sStatus=oRecord1.getString(8)
+		sLokation=oRecord1.getString(9)
+		sKundenID=oRecord1.getString(10)
+	Wend
+
+	if Trim(sJahr)=&quot;&quot; AND Trim(sMonat)=&quot;&quot; AND Trim(sWoche)=&quot;&quot; AND Trim(sBaudatum)=&quot;&quot; then
+		oColumn_Baudatum.Enabled=True
+		if Trim(sBaudatum)=&quot;&quot; then
+			oOption_Datum_bis.Enabled=False
+			oOption_Datum_am.Enabled=False
+			oOption_Datum_ab.Enabled=False
+		end if
+	else
+		oColumn_Baudatum.Enabled=False
+		if Trim(sBaudatum)&lt;&gt;&quot;&quot; then
+			oOption_Datum_bis.Enabled=True
+			oOption_Datum_am.Enabled=True
+			oOption_Datum_ab.Enabled=True
+		end if
+	End if
+	if Trim(sPersonalID)=&quot;&quot; then
+		oColumn_PersonalID.Enabled=True
+	else
+		oColumn_PersonalID.Enabled=False
+	End if
+&apos;	if Trim(sProjektID)=&quot;&quot; AND Trim(sKundenID)=&quot;&quot; then
+	if Trim(sProjektID)=&quot;&quot; then
+		oColumn_ProjektID.Enabled=True
+	else
+		oColumn_ProjektID.Enabled=False
+	End if
+	if Trim(sLeistungsTyp)=&quot;0&quot; then
+		oColumn_LeistungsTyp.Enabled=True
+	else
+		oColumn_LeistungsTyp.Enabled=False
+	End if
+	if Trim(sStatus)=&quot;0&quot; then
+		oColumn_Status.Enabled=True
+	else
+		oColumn_Status.Enabled=False
+	End if
+	if Trim(sLokation)=&quot;&quot; then
+		oColumn_Lokation.Enabled=True
+	else
+		oColumn_Lokation.Enabled=False
+	End if
+End Sub
+
+Sub Msg_Schreibschutz_Baudatum()
+	if oColumn_Baudatum.Enabled=False then
+		vStatus=MsgBox(&quot;Der Schreibschutz für das Feld &quot;&amp; Chr(34) &amp;&quot; Baudatum &quot;&amp; Chr(34) &amp;_
+			&quot; ist gesetzt. Wenn sie in diesem Feld etwas ändern wollen, müssen Sie erst die Filter &quot;&amp; Chr(34) &amp;&quot; Jahr &quot;&amp; Chr(34) &amp;_
+			&quot;, &quot;&amp; Chr(34) &amp;&quot; Monat &quot;&amp; Chr(34) &amp;&quot; und &quot;&amp; Chr(34) &amp;&quot; Woche &quot;&amp; Chr(34) &amp;&quot; sowie oben das Feld &quot;&amp; Chr(34) &amp;&quot; Datum &quot;&amp; Chr(34) &amp;_
+			&quot; zurücksetzen!!!&quot;,36,sTitle_lokal)
+	End if
+End Sub
+
+
+</script:module>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Copy" script:language="StarBasic">Option Explicit
+
+Const sTitle = &quot;Kassenbuch&quot;
+
+Sub Copy
+	Dim sTableTitle as String
+	Dim cEndbestand as currency
+	Dim oDocument as object
+	Dim oDispatcher as object
+	Dim vStatus as Variant
+	
+	oDocument = ThisComponent.CurrentController.Frame
+	oDispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
+
+	cEndbestand = ThisComponent.Sheets(0).getCellByPosition(4, 50).Value
+
+nochmal:
+	sTableTitle=InputBox(&quot;Bitte geben Sie den Namen des neuen Blatts ein!&quot;,sTitle)
+	if sTableTitle = &quot;&quot; then
+		vStatus=MsgBox(&quot;Sie haben noch keine Namen eingegeben!&quot;,37,sTitle)
+		if vStatus=4 then
+			goto nochmal
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+
+	ThisComponent.Sheets.CopyByName(&quot;Vorlage&quot;,sTableTitle,0)
+
+	Dim args1(0) as new com.sun.star.beans.PropertyValue
+	args1(0).Name = &quot;Nr&quot;
+	args1(0).Value = 1
+	oDispatcher.executeDispatch(oDocument, &quot;.uno:JumpToTable&quot;, &quot;&quot;, 0, args1())
+
+	ThisComponent.Sheets(0).getCellRangeByName(&quot;$J$5&quot;).string = sTableTitle
+	ThisComponent.Sheets(0).getCellRangeByName(&quot;$F$15&quot;).value = cEndbestand
+
+	Dim args2(0) as new com.sun.star.beans.PropertyValue
+	args2(0).Name = &quot;ToPoint&quot;
+	args2(0).Value = &quot;$E$16&quot;
+	oDispatcher.executeDispatch(oDocument, &quot;.uno:GoToCell&quot;, &quot;&quot;, 0, args2())
+
+	SetPrintArea()
+
+End Sub
+
+Sub SetPrintArea()
+	DelPrintAreas()
+	
+	Dim oPrintArea(0) as New com.sun.star.table.CellRangeAddress
+
+	With oPrintArea(0)
+		.StartColumn = 2
+		.StartRow = 2
+		.EndColumn = 10
+		.EndRow = 52
+	End With
+
+	ThisComponent.currentController.activeSheet.setPrintAreas(oPrintArea())
+End Sub
+
+Sub DelPrintAreas()
+	Dim oPrintArea()
+	Dim iSheetNumber as Integer
+	Dim iSheetCount as Integer
+	iSheetCount=ThisComponent.Sheets.Count
+	
+	For iSheetNumber=0 to iSheetCount-1
+		ThisComponent.Sheets(iSheetNumber).setPrintAreas(oPrintArea())
+	Next iSheetNumber
+End Sub
+
+</script:module>

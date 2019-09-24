@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc AS Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_Personaldaten AS Object
+	oForm_Personaldaten=oForm_Steuerung.getByName(&quot;Form_Personaldaten&quot;)
+End Function
+
+Function oForm_Steuerung AS Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oField_PersonalID AS Object
+	oField_PersonalID=oForm_Personaldaten.getByName(&quot;Field_PersonalID&quot;)
+End Function
+
+Function oField_Name_1 AS Object
+	oField_Name_1=oForm_Personaldaten.getByName(&quot;Field_Name_1&quot;)
+End Function
+
+Function oField_Stunden_Satz AS Object
+	oField_Stunden_Satz=oForm_Personaldaten.getByName(&quot;Field_Stunden_Satz&quot;)
+End Function
+
+Function oList_Personalauswahl AS Object
+	oList_Personalauswahl=oForm_Steuerung.getByName(&quot;List_Personalauswahl&quot;)
+End Function
+
+Function lPersonalID AS long
+	lPersonalID=CLng(oField_PersonalID.Value)
+End Function
+
+Function fName1 AS String
+	fName1=oField_Name_1.BoundField.string
+End Function
+
+Function lPersonalID_import AS long
+	sSQL1=&quot;SELECT Max(PersonalID) FROM &quot;&amp; sPersonal
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lPersonalID_import=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function fAnzahlDatensaetzePersonal AS integer
+	Dim oRecord1 AS Object
+	Dim sSQL1 AS String
+	sSQL1=&quot;SELECT count(*) FROM &quot;&amp; sPersonal &amp;&quot; WHERE PersonalID=&quot;&amp; lPersonalID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fAnzahlDatensaetzePersonal=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function GetDocUserProperty(sPropertyName AS String) AS String
+	Dim oUserProps AS Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

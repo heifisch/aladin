@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub createRepord()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	StatusBar(True)
+	ToolBar(True)
+	FormSizePrint()
+	if oDoc.isReadOnly then
+		Dim oFrame as Object
+
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;PrintInventur&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 31)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Leistungsstamm_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm&quot;)
+		else
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm_&quot; &amp; iEinstellungsID_lokal)
+		end if
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+		
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Druck Inventur&quot;)
+		
+		Kontaktdaten.KontaktDaten()
+		Leistungen.Leistungen()
+	End if
+End Sub
+
+Sub Document_ruecksetzen()
+	Feld_fuellen(&quot;Anschrift_Eigen_1&quot;,&quot;Anschrift_Eigen_1&quot;)
+	Feld_fuellen(&quot;Anschrift_Eigen_2&quot;,&quot;Anschrift_Eigen_2&quot;)
+	Feld_fuellen(&quot;Anschrift_Eigen_3&quot;,&quot;Anschrift_Eigen_3&quot;)
+	Feld_fuellen(&quot;Anschrift&quot;,&quot;Anschrift&quot;)
+	Feld_fuellen(&quot;Document_Typ&quot;,&quot;Document_Typ&quot;)
+	Feld_fuellen(&quot;Kontakt_Bez&quot;,&quot;Kontakt_Bez&quot;)
+	Feld_fuellen(&quot;Kontakt&quot;,&quot;Kontakt&quot;)
+	Feld_fuellen(&quot;Bankverbindung_Bez&quot;,&quot;Bankverbindung_Bez&quot;)
+	Feld_fuellen(&quot;Bankverbindung&quot;,&quot;Bankverbindung&quot;)
+	Feld_fuellen(&quot;Geschaeftsfuehrer_Bez&quot;,&quot;Geschaeftsfuehrer_Bez&quot;)
+	Feld_fuellen(&quot;Firmendaten&quot;,&quot;Firmendaten&quot;)
+	oDoc.getTextFields().refresh()
+End Sub
+
+Function FieldContent(sField as string) as String
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
+	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName) 
+	FieldContent = vFieldMaster.Content       
+End Function
+
+Sub Feld_fuellen(sField as string,sInhalt as string )
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
+	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName) 
+	vFieldMaster.Content = sInhalt        
+End Sub
+ 
+Sub Feld_loeschen(sField as string)
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	Dim bFound as boolean
+	vField = oDoc.createInstance(&quot;com.sun.star.text.TextField.User&quot;) 
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField
+	bFound = oDoc.getTextFieldMasters.hasbyname(sFieldName)
+	if bFound Then 
+		vFieldMaster =  oDoc.getTextFieldMasters.getByName(sFieldName) 
+		vFieldMaster.Content = &quot;&quot;    
+		vFieldMaster.dispose() 
+	End If 
+End Sub 
+
+Function ifPageCount as Integer
+	Dim oDocument As Object,oTextfield As Object,oCurElement As Object
+	Dim iElementCount as integer
+	oDocument = oDoc.CurrentController.Model
+	oTextfield = oDocument.getTextfields.CreateEnumeration
+	iElementCount=0
+	While oTextField.hasmoreElements
+		oCurElement = oTextField.NextElement
+		if oCurElement.SupportsService(&quot;com.sun.star.text.TextField.PageCount&quot;) and iElementCount=0 then
+			ifPageCount=oCurElement.getPresentation(False)
+&apos;Print oCurElement.getPresentation(true), oCurElement.getAnchor.getString
+			iElementCount=1
+		end if
+	Wend
+End Function
+
+Function ifInsertCarry(iPageCount) as Integer
+	Dim oTables as Object
+	Dim vTableLeistungen as Variant
+	Dim vViewCursor as Variant
+	if ifPageCount &gt; iPageCount then
+	&apos;	wait 600
+		oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+		oTables = oDoc.getTextTables
+		vTableLeistungen = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+		vTableLeistungen = oTables.getByName(&quot;Leistungen&quot;)
+		vViewCursor = oDoc.CurrentController.getViewCursor()
+		vViewCursor.jumpToPage(iPageCount)
+		vViewCursor.jumpToEndOfPage()
+		If NOT IsEmpty(vViewCursor.Cell) then
+			if vViewCursor.TextTable.Name = &quot;Leistungen&quot; then
+	&apos;Print Mid(vViewCursor.Cell.CellName,2) &amp; &quot; &quot; &amp; vTableLeistungen.Rows.getCount
+				if CLng(Mid(vViewCursor.Cell.CellName,2)) = CLng(vTableLeistungen.Rows.getCount) then
+					ifInsertCarry = 0
+				elseif CLng(Mid(vViewCursor.Cell.CellName,2)) &lt; CLng(vTableLeistungen.Rows.getCount) then
+					ifInsertCarry = 1
+				End if
+			else
+				ifInsertCarry = 0
+			End if
+		else
+			ifInsertCarry = 0
+		End if
+	else
+		ifInsertCarry = 0
+	End if
+End Function
+
+Function fInsertCarry(iCountInsert,sUebertrag,iPageCount) as Integer
+	Dim oTables as Object
+	Dim vTableLeistungen as Variant
+	Dim vViewCursor as Variant
+	Dim oCursorUebertrag as Object
+	Dim vRowsLeistungen as Variant
+	
+	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	oTables = oDoc.getTextTables
+	vTableLeistungen = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTableLeistungen = oTables.getByName(&quot;Leistungen&quot;)
+	vRowsLeistungen = vTableLeistungen.getRows()
+	vRowsLeistungen.insertByIndex(iCountInsert-1,1)
+&apos;	wait 600
+	oCursorUebertrag=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
+	oCursorUebertrag.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorUebertrag.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+	oCursorUebertrag.CharPosture = com.sun.star.awt.FontSlant.NONE
+	oCursorUebertrag=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
+	oCursorUebertrag.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorUebertrag.CharPosture = com.sun.star.awt.FontSlant.NONE
+
+	vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=&quot;Übertrag:&quot;
+	vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=sUebertrag
+	iCountInsert=iCountInsert+1
+	Do
+		vRowsLeistungen.insertByIndex(iCountInsert-1,1)
+&apos;		wait 600
+		vViewCursor = oDoc.CurrentController.getViewCursor()
+		vViewCursor.jumpToPage(iPageCount+1)
+		vViewCursor.jumpToStartOfPage()
+&apos;Print Mid(vViewCursor.Cell.CellName,2) &amp;&quot; = &quot;&amp; iCountInsert
+		iCountInsert=iCountInsert+1
+	Loop Until CLng(Mid(vViewCursor.Cell.CellName,2)) = iCountInsert-1
+	oCursorUebertrag=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert-1)
+	oCursorUebertrag.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorUebertrag.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+	oCursorUebertrag.CharPosture = com.sun.star.awt.FontSlant.NONE
+	oCursorUebertrag=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert-1)
+	oCursorUebertrag.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorUebertrag.CharPosture = com.sun.star.awt.FontSlant.NONE
+	vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert-1).String=&quot;Übertrag:&quot;
+	vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert-1).String=sUebertrag
+	fInsertCarry = iCountInsert
+End Function
+
+Function flAnzahlLeistungen as long
+	Dim sSQL1 as String
+	Dim oRecord1 as Object
+	sSQL1=&quot;select count(*) from &quot;&amp; sLeistungsstamm &amp;&quot; where Warenbestand &gt; 0 and Warenbestand is not null&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		flAnzahlLeistungen=oRecord1.getString(1)
+	Wend
+End Function
+
+Function sLeistungsstamm as String
+	sLeistungsstamm=GetDocUserProperty(&quot;oLeistungsstamm&quot;)
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+
+
+</script:module>

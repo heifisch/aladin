@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="kopieren" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Test_Last
+Dim sTableName as String,oRecord1 as Object
+Dim sSQL1 as String,sSQL2 as String
+
+sSQL1=&quot;use aladin&quot;
+SQL_execute_mysql(sSQL1)
+sSQL2=&quot;show tables&quot;
+oRecord1=oResult_Scroll_mysql(sSQL2)
+
+&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+&apos;WriteDbgInfo(oRecord1)
+
+
+oRecord1.first
+oRecord1.last
+&apos;oRecord1.AFTERLast
+&apos;oRecord1.previous
+
+sTableName=oRecord1.getString(1)
+print sTableName
+End Sub
+
+Sub SQL_DB_kopieren
+GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+Dim sTableName as String,oRecord1 as Object
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String,sSQL5 as String
+Dim iCountTable as Integer
+Use_Aladin
+
+sSQL4=&quot;delete from Einstellungen&quot;
+SQL_execute_mysql(sSQL4)
+sSQL5=&quot;delete from Controlling where PositionsID=1&quot;
+SQL_execute_mysql(sSQL5)
+
+sSQL1=&quot;use aladin_old&quot;
+SQL_execute_mysql(sSQL1)
+sSQL2=&quot;show tables&quot;
+oRecord1=oResult_Scroll_mysql(sSQL2)
+
+oRecord1.AFTERLast
+oRecord1.previous
+
+iCountTable=oRecord1.getRow
+sTableName=oRecord1.getString(1)
+
+
+
+For iCount=1 to iCountTable
+oRecord1=oResult_Scroll_mysql(sSQL2)
+oRecord1.absolute(iCount)
+sTableName=oRecord1.getString(1)
+&apos;print sTableName
+
+if sTableName=&quot;Steuerung&quot; or sTableName=&quot;Einheit&quot; or sTableName=&quot;Leerzeilen&quot; _
+or sTableName=&quot;Document_Typ&quot; or Right(sTableName,4)= &quot;TEMP&quot; or Left(Right(sTableName,5),4)= &quot;TEMP&quot; _
+or Left(Right(sTableName,6),4)= &quot;TEMP&quot; _
+or sTableName=&quot;Start&quot; or sTableName=&quot;Status&quot; or sTableName=&quot;Monate&quot; or sTableName=&quot;Pos_Typ&quot; then
+wait 1
+else
+sSQL3=&quot;insert into aladin.&quot;&amp; sTableName &amp;&quot; select * from aladin_old.&quot;&amp; sTableName
+SQL_execute_mysql(sSQL3)
+wait 10
+End if
+
+Next iCount
+End Sub
+
+Sub SQL_DB_kopieren_old
+Dim sTableName as String
+	For iCount = 1 to 17	
+		if iCount = 1 then
+			sTableName= &quot;Adressen&quot;
+		elseif iCount = 2 then
+			sTableName= &quot;Angebote1&quot;
+		elseif iCount = 3 then
+			sTableName= &quot;Angebote2&quot;
+		elseif iCount = 4 then
+			sTableName= &quot;Ansprechpartner_Kunden&quot;
+		elseif iCount = 5 then
+			sTableName= &quot;Hauptgruppen&quot;
+		elseif iCount = 6 then
+			sTableName= &quot;Kunden&quot;
+		elseif iCount = 7 then
+			sTableName= &quot;Leistungsgruppen&quot;
+		elseif iCount = 8 then
+			sTableName= &quot;Leistungsstamm&quot;
+		elseif iCount = 9 then
+			sTableName= &quot;Lieferanten&quot;
+		elseif iCount = 10 then
+			sTableName= &quot;ZwiBemAngebote&quot;
+		elseif iCount = 11 then
+			sTableName= &quot;ZwiSuAngebote&quot;
+		elseif iCount = 12 then
+			sTableName= &quot;Rechnungen1&quot;
+		elseif iCount = 13 then
+			sTableName= &quot;Rechnungen2&quot;
+		elseif iCount = 14 then		
+			sTableName= &quot;ZwiBemRechnungen&quot;
+		elseif iCount = 15 then
+			sTableName= &quot;ZwiSuRechnungen&quot;
+		elseif iCount = 16 then
+			sTableName= &quot;Ansprechpartner_Lieferanten&quot;
+		elseif iCount = 17 then
+			sTableName= &quot;Eingangsrechnungen&quot;
+		End if
+		sSQL=&quot;insert into aladin.&quot;&amp; sTableName &amp;&quot; select * from aladin_old.&quot;&amp; sTableName
+		SQL_execute_mysql(sSQL)
+	Next iCount
+End Sub
+</script:module>

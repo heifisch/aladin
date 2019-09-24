@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="SQL_Anweisungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub SQL_Steuerung_reset
+	sSQL1=&quot;UPDATE Steuerung SET&quot;&amp;_
+		&quot; LieferantenID=Null,Jahr=Null,Monat=Null,Status=Null,Suchstring=NULL,Option_1=0,Option_2=0&quot;&amp;_
+		&quot; WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_update_Steuerung_DocumentID_last
+	sSQL1=&quot;UPDATE Steuerung SET DocumentID=&quot;&amp; flDocumentID_import &amp;&quot; WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_leerer_Datensatz_entfernen
+	sSQL1=&quot;delete FROM &quot;&amp; sEingangsrechnungen &amp;&quot; WHERE KontaktID=&apos;*&apos;&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_DocumentID_entfernen
+	sSQL1=&quot;UPDATE Steuerung SET DocumentID=NULL,KontaktID=NULL WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Status_skontofaehig
+	sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET Status=&apos;skontofähig&apos; &quot;&amp;_
+		&quot;WHERE Status is NULL OR (Status != &apos;Einzug&apos; AND Status != &apos;bezahlt&apos;) AND &quot;&amp;_
+		&quot;(to_days(skonto_bis))&gt;=(to_days(now()))&quot;
+	SQL_execute(sSQL1)
+End Sub
+	
+Sub SQL_Status_berechnet
+	sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET Status=&apos;berechnet&apos; &quot;&amp;_
+		&quot;WHERE Status is NULL OR (Status != &apos;Einzug&apos; AND Status != &apos;bezahlt&apos;) AND &quot;&amp;_
+		&quot;(skonto_bis is NULL OR (to_days(skonto_bis))&lt;(to_days(now()))) AND (to_days(faellig))&gt;=(to_days(now())) &quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Status_faellig
+	sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET Status=&apos;fällig&apos; &quot;&amp;_
+		&quot;WHERE Status is NULL OR (Status != &apos;Einzug&apos; AND Status != &apos;bezahlt&apos;) &quot;&amp;_
+		&quot;AND (to_days(faellig))&lt;(to_days(now()))&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_KontaktID_uebernehmen
+	sSQL1=&quot;UPDATE Steuerung SET KontaktID=&quot;&amp; lKontaktID &amp;&quot; WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+</script:module>

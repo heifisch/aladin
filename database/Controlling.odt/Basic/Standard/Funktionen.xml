@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc AS Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_Steuerung AS Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oForm_Steuerung_1 AS Object
+	oForm_Steuerung_1=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung_1&quot;)
+End Function
+
+Function oForm_Tabellendaten AS Object
+	oForm_Tabellendaten=oForm_Steuerung.getByName(&quot;Form_Tabellendaten&quot;)
+End Function
+
+Function oList_Filter_Jahr AS Object
+	oList_Filter_Jahr=oForm_Steuerung.getByName(&quot;List_Filter_Jahr&quot;)
+End Function
+
+Function oList_Filter_Monat AS Object
+	oList_Filter_Monat=oForm_Steuerung.getByName(&quot;List_Filter_Monat&quot;)
+End Function
+
+Function oList_Filter_Woche AS Object
+	oList_Filter_Woche=oForm_Steuerung.getByName(&quot;List_Filter_Woche&quot;)
+End Function
+
+Function oList_Filter_Lokation AS Object
+	oList_Filter_Lokation=oForm_Steuerung.getByName(&quot;List_Filter_Lokation&quot;)
+End Function
+
+Function oList_Filter_LeistungsTyp AS Object
+	oList_Filter_LeistungsTyp=oForm_Steuerung.getByName(&quot;List_Filter_LeistungsTyp&quot;)
+End Function
+
+Function oList_Filter_Status AS Object
+	oList_Filter_Status=oForm_Steuerung.getByName(&quot;List_Filter_Status&quot;)
+End Function
+
+Function oList_Filter_Kunde AS Object
+	oList_Filter_Kunde=oForm_Steuerung.getByName(&quot;List_Filter_Kunde&quot;)
+End Function
+
+Function oList_Filter_Personal AS Object
+	oList_Filter_Personal=oForm_Steuerung.getByName(&quot;List_Filter_Personal&quot;)
+End Function
+
+Function oList_Kalkulationspreis AS Object
+	oList_Kalkulationspreis=oForm_Steuerung_1.getByName(&quot;List_Kalkulationspreis&quot;)
+End Function
+
+Function oField_SollZeit AS Object
+	oField_SollZeit=oForm_Steuerung.getByName(&quot;Field_SollZeit&quot;)
+End Function
+
+Function oField_IstZeit AS Object
+	oField_IstZeit=oForm_Steuerung.getByName(&quot;Field_IstZeit&quot;)
+End Function
+
+Function oField_Materialeinsatz AS Object
+	oField_Materialeinsatz=oForm_Steuerung.getByName(&quot;Field_Materialeinsatz&quot;)
+End Function
+
+Function oField_Lieferung AS Object
+	oField_Lieferung=oForm_Steuerung.getByName(&quot;Field_Lieferung&quot;)
+End Function
+
+Function oField_SollLeistung AS Object
+	oField_SollLeistung=oForm_Steuerung.getByName(&quot;Field_SollLeistung&quot;)
+End Function
+
+Function oField_IstLeistung AS Object
+	oField_IstLeistung=oForm_Steuerung.getByName(&quot;Field_IstLeistung&quot;)
+End Function
+
+Function oField_SollGesamt AS Object
+	oField_SollGesamt=oForm_Steuerung.getByName(&quot;Field_SollGesamt&quot;)
+End Function
+
+Function oField_IstGesamt AS Object
+	oField_IstGesamt=oForm_Steuerung.getByName(&quot;Field_IstGesamt&quot;)
+End Function
+
+Function oField_Stundenverrechnungssatz AS Object
+	oField_Stundenverrechnungssatz=oForm_Steuerung.getByName(&quot;Field_Stundenverrechnungssatz&quot;)
+End Function
+
+Function oField_Materialaufschlagsatz AS Object
+	oField_Materialaufschlagsatz=oForm_Steuerung.getByName(&quot;Field_Materialaufschlagsatz&quot;)
+End Function
+
+Function oField_MVS_Faktor AS Object
+	oField_MVS_Faktor=oForm_Steuerung.getByName(&quot;Field_MVS_Faktor&quot;)
+End Function
+
+Function oField_Filter_Datum AS Object
+	oField_Filter_Datum=oForm_Steuerung.getByName(&quot;Field_Filter_Datum&quot;)
+End Function
+
+Function oList_Projektauswahl AS Object
+	oList_Projektauswahl=oForm_Steuerung_1.getByName(&quot;List_Projektauswahl&quot;)
+End Function
+
+Function oGrid_Tabellendaten AS Object
+	oGrid_Tabellendaten=oForm_Tabellendaten.getByName(&quot;Grid_Tabellendaten&quot;)
+End Function
+
+Function oColumn_Leistungsbezeichnung AS Object
+	oColumn_Leistungsbezeichnung=oGrid_Tabellendaten.getByName(&quot;Leistungsbezeichnung&quot;)
+End Function
+
+Function oColumn_Einheit AS Object
+	oColumn_Einheit=oGrid_Tabellendaten.getByName(&quot;Einheit&quot;)
+End Function
+
+Function oColumn_Menge AS Object
+	oColumn_Menge=oGrid_Tabellendaten.getByName(&quot;Menge&quot;)
+End Function
+
+Function oColumn_Einkaufspreis AS Object
+	oColumn_Einkaufspreis=oGrid_Tabellendaten.getByName(&quot;Einkaufspreis&quot;)
+End Function
+
+Function oColumn_Bauzeit AS Object
+	oColumn_Bauzeit=oGrid_Tabellendaten.getByName(&quot;Bauzeit&quot;)
+End Function
+
+Function oColumn_Lokation AS Object
+	oColumn_Lokation=oGrid_Tabellendaten.getByName(&quot;Lokation&quot;)
+End Function
+
+Function oColumn_PositionsID AS Object
+	oColumn_PositionsID=oGrid_Tabellendaten.getByName(&quot;PositionsID&quot;)
+End Function
+
+Function oColumn_Baudatum AS Object
+	oColumn_Baudatum=oGrid_Tabellendaten.getByName(&quot;Baudatum&quot;)
+End Function
+
+Function oColumn_PersonalID AS Object
+	oColumn_PersonalID=oGrid_Tabellendaten.getByName(&quot;PersonalID&quot;)
+End Function
+
+Function oColumn_ProjektID AS Object
+	oColumn_ProjektID=oGrid_Tabellendaten.getByName(&quot;ProjektID&quot;)
+End Function
+
+Function oColumn_LeistungsTyp AS Object
+	oColumn_LeistungsTyp=oGrid_Tabellendaten.getByName(&quot;LeistungsTyp&quot;)
+End Function
+
+Function oColumn_Status AS Object
+	oColumn_Status=oGrid_Tabellendaten.getByName(&quot;Status&quot;)
+End Function
+
+Function oField_ProjektID AS Object
+	oField_ProjektID=oForm_Steuerung.getByName(&quot;Field_ProjektID&quot;)
+End Function
+
+Function oField_PersonalID AS Object
+	oField_PersonalID=oForm_Steuerung.getByName(&quot;Field_PersonalID&quot;)
+End Function
+
+Function oList_Hauptgruppenauswahl AS Object
+	oList_Hauptgruppenauswahl=oForm_Steuerung_1.getByName(&quot;List_Hauptgruppenauswahl&quot;)
+End Function
+
+Function oList_Gruppenauswahl AS Object
+	oList_Gruppenauswahl=oForm_Steuerung_1.getByName(&quot;List_Gruppenauswahl&quot;)
+End Function
+
+Function oField_Suchstring AS Object
+	oField_Suchstring=oForm_Steuerung_1.getByName(&quot;Field_Suchstring&quot;)
+End Function
+
+Function oField_Suchstring_2 AS Object
+	oField_Suchstring_2=oForm_Steuerung_1.getByName(&quot;Field_Suchstring_2&quot;)
+End Function
+
+Function oList_Leistungsauswahl AS Object
+	oList_Leistungsauswahl=oForm_Steuerung_1.getByName(&quot;List_Leistungsauswahl&quot;)
+End Function
+
+Function oList_Leistungsauswahl_Auftrag AS Object
+	oList_Leistungsauswahl_Auftrag=oForm_Steuerung_1.getByName(&quot;List_Leistungsauswahl_Auftrag&quot;)
+End Function
+
+Function oList_Leistungsauswahl_Projekt AS Object
+	oList_Leistungsauswahl_Projekt=oForm_Steuerung_1.getByName(&quot;List_Leistungsauswahl_Projekt&quot;)
+End Function
+
+Function oCheckBox_LeistungsID AS Object
+	oCheckBox_LeistungsID=oForm_Steuerung_1.getByName(&quot;CheckBox_LeistungsID&quot;)
+End Function
+
+Function oCheckBox_Bezeichnung AS Object
+	oCheckBox_Bezeichnung=oForm_Steuerung_1.getByName(&quot;CheckBox_Bezeichnung&quot;)
+End Function
+
+Function oCheckBox_Beschreibung AS Object
+	oCheckBox_Beschreibung=oForm_Steuerung_1.getByName(&quot;CheckBox_Beschreibung&quot;)
+End Function
+
+Function oOption_Datum_bis AS Object
+	oOption_Datum_bis=oForm_Steuerung.getByName(&quot;Option_Datum_bis&quot;)
+End Function
+
+Function oOption_Datum_am AS Object
+	oOption_Datum_am=oForm_Steuerung.getByName(&quot;Option_Datum_am&quot;)
+End Function
+
+Function oOption_Datum_ab AS Object
+	oOption_Datum_ab=oForm_Steuerung.getByName(&quot;Option_Datum_ab&quot;)
+End Function
+
+Function lProjektID AS Long
+	lProjektID=oField_ProjektID.BoundField.value
+End Function
+
+Function flPersonalID AS long
+	flPersonalID=oColumn_PersonalID.BoundField.Value
+End Function
+
+Function flProjektID AS long
+	flProjektID=oColumn_ProjektID.BoundField.Value
+End Function
+
+Function fiLeistungsTyp AS Integer
+	fiLeistungsTyp=oColumn_LeistungsTyp.BoundField.Value
+End Function
+
+Function fiStatus AS Integer
+	fiStatus=oColumn_Status.BoundField.Value
+End Function
+
+Function fsLokation AS String
+	fsLokation=oColumn_Lokation.BoundField.Value
+End Function
+
+Function oButton_Pos_kopieren AS Object
+	oButton_Pos_kopieren=oForm_Steuerung_1.getByName(&quot;Button_Pos_Kopieren&quot;)
+End Function
+
+Function oButton_Pos_verschieben AS Object
+	oButton_Pos_verschieben=oForm_Steuerung_1.getByName(&quot;Button_Pos_Verschieben&quot;)
+End Function
+
+Function oCheckBox_Filter_Invertieren AS Object
+	oCheckBox_Filter_Invertieren=oForm_Steuerung.getByName(&quot;CheckBox_Filter_Invertieren&quot;)
+End Function
+
+Function fsBaudatum AS String
+	Dim sInput AS String
+	sInput=oColumn_Baudatum.Date
+	fsBaudatum= Left(sInput,4) &amp;&quot;-&quot;&amp; Mid(sInput,5,2) &amp;&quot;-&quot;&amp; Right(sInput,2)
+End Function
+
+Function fsJahr AS String
+	Dim sInput AS String
+	sInput=oColumn_Baudatum.Date
+	fsJahr= Left(sInput,4)
+End Function
+
+Function fsMonat AS String
+	Dim sInput AS String
+	sInput=oColumn_Baudatum.Date
+	fsMonat= Mid(sInput,5,2)
+End Function
+
+Function fsWoche AS String
+	Dim sInput AS String
+	Dim sSQL AS String
+	sSQL=&quot;SELECT week(&apos;&quot;&amp; fsBaudatum &amp;&quot;&apos;)&quot;
+	oRecord1=oResult(sSQL)
+	While oRecord1.next()
+		fsWoche=oRecord1.getString(1)
+	Wend
+End Function
+
+Function fSelected_Item(oList AS Object)AS String
+	Dim oList_View AS Object
+	oList_View=oDoc.CurrentController.getControl(oList)
+	fSelected_Item=oList_View.SelectedItem()
+End Function
+
+Function fMenge_eingeben (iAendern AS integer) AS integer
+	Dim sTest AS String
+	if iAendern=1 then
+		vStatus=MsgBox(&quot;Möchten Sie die Menge der einzelnen Positionen gleich eingeben?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			SetDocUserProperty(&quot;oMenge_eingeben_abfragen&quot;, &quot;1&quot;)
+		elseif vStatus=7 then
+			SetDocUserProperty(&quot;oMenge_eingeben_abfragen&quot;, &quot;0&quot;)
+		End If
+	else
+		sTest=sMenge_eingeben_abfragen
+		if sTest=1 then
+			wait 1
+		elseif sTest=0 then
+		else
+			vStatus=MsgBox(&quot;Möchten Sie die Menge der einzelnen Positionen gleich eingeben?&quot;,36)
+			if vStatus=6 then
+				SetDocUserProperty(&quot;oMenge_eingeben_abfragen&quot;, &quot;1&quot;)
+			elseif vStatus=7 then
+				SetDocUserProperty(&quot;oMenge_eingeben_abfragen&quot;, &quot;0&quot;)
+			End If
+		End If
+	End if
+	fMenge_eingeben=sMenge_eingeben_abfragen
+End Function
+
+Function fIstZeit_eingeben (iAendern AS integer) AS integer
+	Dim sTest AS String
+	if iAendern=1 then
+		vStatus=MsgBox(&quot;Möchten Sie die Ist-Zeit der einzelnen Positionen gleich eingeben?&quot;,36)
+		if vStatus=6 then
+			SetDocUserProperty(&quot;oIstZeit_eingeben_abfragen&quot;, &quot;1&quot;)
+		elseif vStatus=7 then
+			SetDocUserProperty(&quot;oIstZeit_eingeben_abfragen&quot;, &quot;0&quot;)
+		End If
+	else
+		sTest=sIstZeit_eingeben_abfragen
+		if sTest=1 then
+			wait 1
+		elseif sTest=0 then
+		else
+			vStatus=MsgBox(&quot;Möchten Sie die Ist-Zeit der einzelnen Positionen gleich eingeben?&quot;,36)
+			if vStatus=6 then
+				SetDocUserProperty(&quot;oIstZeit_eingeben_abfragen&quot;, &quot;1&quot;)
+			elseif vStatus=7 then
+				SetDocUserProperty(&quot;oIstZeit_eingeben_abfragen&quot;, &quot;0&quot;)
+			End If
+		End If
+	End if
+	fIstZeit_eingeben=sIstZeit_eingeben_abfragen
+End Function
+
+Function fLokation_eingeben (iAendern AS integer) AS integer
+	Dim sTest AS String
+	if iAendern=1 then
+		vStatus=MsgBox(&quot;Möchten Sie die Lokation der einzelnen Positionen gleich eingeben?&quot;,36)
+		if vStatus=6 then
+			SetDocUserProperty(&quot;oLokation_eingeben_abfragen&quot;, &quot;1&quot;)
+		elseif vStatus=7 then
+			SetDocUserProperty(&quot;oLokation_eingeben_abfragen&quot;, &quot;0&quot;)
+		End If
+	else
+		sTest=sLokation_eingeben_abfragen
+		if sTest=1 then
+			wait 1
+		elseif sTest=0 then
+		else
+			vStatus=MsgBox(&quot;Möchten Sie die Lokation der einzelnen Positionen gleich eingeben?&quot;,36)
+			if vStatus=6 then
+				SetDocUserProperty(&quot;oLokation_eingeben_abfragen&quot;, &quot;1&quot;)
+			elseif vStatus=7 then
+				SetDocUserProperty(&quot;oLokation_eingeben_abfragen&quot;, &quot;0&quot;)
+			End If
+		End If
+	End if
+	fLokation_eingeben=sLokation_eingeben_abfragen
+End Function
+
+Function fLeistungsID AS String
+	sSQL1=&quot;SELECT LeistungsID FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fLeistungsID=oRecord1.getString(1)
+	Wend
+End Function
+
+Function lDocumentID_export(iRefresh AS integer) AS long
+	Dim sDocumentID_1 AS String,sDocumentID_2 AS String
+	Dim sJahr AS String,sJahr_1 AS String,sJahr_2 AS String
+	Dim sMonat AS String,sMonat_1 AS String,sMonat_2 AS String
+	Dim iMonat AS integer
+	Dim sNummer_1 AS String,sNummer_2 AS String
+	if iRefresh = 1 then	
+		sDocumentID_1=iMax_Datensatz(sTabelle1_export,&quot;DocumentID&quot;)
+		sJahr_1=Mid(sDocumentID_1,1,4)
+		sMonat_1=Mid(sDocumentID_1,5,2)
+		sNummer_1=Mid(sDocumentID_1,7)
+		sJahr=Year(Now)
+		sMonat=Month(Now)
+		iMonat=Month(Now)
+		if iMonat&lt;10 then
+			sMonat= &quot;0&quot; &amp; Month(Now)
+		End if
+		if sJahr_1=sJahr then
+			sJahr_2=sJahr_1
+			sNummer_2=sNummer_1
+		else
+			sJahr_2=sJahr
+			sNummer_2=fsNummern_Format
+		End if
+		if sMonat_1=sMonat then
+			sMonat_2=sMonat_1
+		else
+			sMonat_2=sMonat
+		End if
+		sDocumentID_2=sJahr_2 &amp; sMonat_2 &amp; sNummer_2
+		SetDocUserProperty(&quot;oDocumentID_exp2&quot;, CLng(sDocumentID_2))
+	End if
+	lDocumentID_export=lDocumentID_exp2
+End Function
+
+Function iMax_Datensatz(sTabelle AS String,sCol AS String) AS String
+	sSQL1=&quot;SELECT Max(&quot;&amp; sCol &amp;&quot;) FROM &quot;&amp; sTabelle
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iMax_Datensatz=oRecord1.getInt(1)
+	Wend	
+End Function
+
+Function fBemerkung_export(iDocTypID_export AS Integer) AS String
+	sSQL1=&quot;SELECT DISTINCT Bemerkung FROM Document_Typ WHERE Document_TypID=&quot;&amp; iDocTypID_export
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fBemerkung_export=oRecord1.getString(1)
+	Wend
+End Function
+
+Function fsNummern_Format AS String
+	sSQL1=&quot;SELECT Nummern_Format FROM Einstellungen WHERE EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fsNummern_Format=oRecord1.getString(1)
+	Wend	
+End Function
+
+Function sSQL_WHERE AS String
+	Dim sJahr AS String,sMonat AS String,sWoche AS String,sDatum AS String,sSQL AS String
+	Dim sLokation AS String,sPersonalID AS String,sProjektID AS String
+	Dim oRecord1 AS Object,iOption1 AS Integer,iOption2 AS Integer,iOption3 AS Integer,iOption5 AS Integer
+	sSQL1=&quot;SELECT Jahr,Monat,Woche,Lokation,Datum,PersonalID,ProjektID,LeistungsTyp,Status,Option_4,Option_5&quot;&amp;_
+		&quot; FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sJahr=oRecord1.getString(1)
+		sMonat=oRecord1.getString(2)
+		sWoche=oRecord1.getString(3)
+		sLokation=oRecord1.getString(4)
+		sDatum=oRecord1.getString(5)
+		sPersonalID=oRecord1.getString(6)
+		sProjektID=oRecord1.getString(7)
+		iOption1=CInt(oRecord1.getString(8))
+		iOption2=oRecord1.getInt(9)
+		iOption3=oRecord1.getInt(10)
+		iOption5=oRecord1.getInt(11)
+	Wend
+	sSQL=&quot;&quot;
+	if sJahr &lt;&gt; &quot;&quot; then
+		sSQL=&quot; WHERE year(Erstellungsdatum) =&apos;&quot;&amp; sJahr &amp;&quot;&apos;&quot;
+	End if
+	if sMonat &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;month(Erstellungsdatum) =&apos;&quot;&amp; sMonat &amp;&quot;&apos;&quot;
+	End if
+	if sWoche &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;week(Erstellungsdatum) =&apos;&quot;&amp; sWoche &amp;&quot;&apos;&quot;
+	End if
+	if sDatum &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		SELECT case iOption5
+			case 0 
+				sSQL=sSQL &amp; &quot;Erstellungsdatum =&apos;&quot;&amp; sDatum &amp;&quot;&apos;&quot;
+			case 1 
+				sSQL=sSQL &amp; &quot;Erstellungsdatum &lt;=&apos;&quot;&amp; sDatum &amp;&quot;&apos;&quot;
+			case 2 
+				sSQL=sSQL &amp; &quot;Erstellungsdatum &gt;=&apos;&quot;&amp; sDatum &amp;&quot;&apos;&quot;
+		end SELECT
+	End if
+	if sLokation &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;Lokation =&apos;&quot;&amp; sLokation &amp;&quot;&apos;&quot;
+	End if
+	if sPersonalID &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;PersonalID =&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;&quot;
+	End if
+	if sProjektID &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;ProjektID =&apos;&quot;&amp; sProjektID &amp;&quot;&apos;&quot;
+	End if
+	if iOption1 &lt;&gt; 0 then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		if iOption3 = 0 then
+			sSQL=sSQL &amp; &quot;LeistungsTyp =&apos;&quot;&amp; iOption1 &amp;&quot;&apos;&quot;
+		elseif iOption3 = 1 then
+			sSQL=sSQL &amp; &quot;LeistungsTyp !=&apos;&quot;&amp; iOption1 &amp;&quot;&apos;&quot;
+		End if
+	End if
+	if iOption2 &lt;&gt; 0 then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;Abgerechnet =&apos;&quot;&amp; iOption2 &amp;&quot;&apos;&quot;
+	End if
+	sSQL_WHERE=sSQL
+End Function
+
+Function sKalulationsPreis AS String
+	Dim iKalkulationsPreis AS Integer
+	sSQL1=&quot;SELECT Option_5 FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iKalkulationsPreis=oRecord1.getInt(1)
+	Wend
+	if iKalkulationsPreis=0 then
+		sKalulationsPreis=&quot;Einkaufspreis&quot;
+	elseif iKalkulationsPreis=1 then
+		sKalulationsPreis=&quot;Listenpreis&quot;
+	End if
+End Function
+
+Function GetDocUserProperty(sPropertyName AS String) AS String
+	Dim oUserProps AS Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+Function sMVS_Steuerung as String
+Dim sSQL1 as String
+	sSQL1=&quot;SELECT Stundenverrechnungssatz/60*Verrechnungs_Faktor&quot;&amp;_
+		&quot; FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sMVS_Steuerung=oRecord1.getString(1)
+	Wend
+End Function
+
+Function sMAS_Steuerung as String
+Dim sSQL1 as String
+	sSQL1=&quot;SELECT Materialaufschlagsatz&quot;&amp;_
+		&quot; FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sMAS_Steuerung=oRecord1.getString(1)
+	Wend
+End Function
+
+Function flPositionsID() as long
+	If oColumn_PositionsID.BoundField.wasNull then
+		flPositionsID=1
+	else
+		flPositionsID=oColumn_PositionsID.BoundField.Value
+	End If
+End Function
+
+</script:module>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Start" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option explicit
+
+Sub Modul_oeffnen(sDateiName as String)
+	Dim sUrl as String
+	Dim oDoc as Object
+	Dim args(1) as new com.sun.star.beans.PropertyValue
+	Dim oFileAccessService as Object
+	oFileAccessService = createUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+	args(0).Name = &quot;ReadOnly&quot;
+	args(0).Value = True
+	args(1).Name = &quot;MacroExecutionMode&quot;
+	args(1).Value = 4
+	sUrl=ConvertToUrl(sAladinPfad &amp; sDateiName)
+	if NOT oFileAccessService.exists(sUrl) then
+		MsgBox (&quot;Kann folgende Datei nicht lesen: &quot; &amp; Chr$(13) &amp; Chr$(13) &amp;_
+		sUrl &amp; Chr$(13) &amp; Chr$(13) &amp;_
+		&quot;Überprüfen Sie die Pfad-Einstellungen im Basic-Modul&quot; &amp; Chr$(13) &amp;_
+		&quot; &gt;&gt; ALADIN.Global &lt;&lt; !&quot;,48,sTitle)
+	else
+		oDoc = vDesktop.LoadComponentFromUrl(sUrl, &quot;_blank&quot;, 63, args()) 
+	end if
+end Sub
+
+Sub Projekt_oeffnen()
+	Modul_oeffnen(&quot;Projekt.odt&quot;)
+end Sub
+
+Sub Projekte()
+	Modul_oeffnen(&quot;Projekte.odt&quot;)
+end Sub
+
+Sub Dokument_oeffnen()
+	Modul_oeffnen(&quot;Korrespondenz.odt&quot;)
+end Sub
+
+Sub Controlling()
+	Modul_oeffnen(&quot;Controlling.odt&quot;)
+end Sub
+
+Sub Import()
+	Modul_oeffnen(&quot;Import.odt&quot;)
+end Sub
+
+Sub Inventur()
+	Modul_oeffnen(&quot;Inventur.odt&quot;)
+end Sub
+
+Sub Preislisten()
+	Modul_oeffnen(&quot;Preislisten.odt&quot;)
+end Sub
+
+Sub KorrespondenzPrint()
+	Modul_oeffnen(&quot;PrintKorrespondenz.odt&quot;)
+end Sub
+
+Sub SerienbriefverteilerPrint()
+	Modul_oeffnen(&quot;PrintSerienbriefverteiler.ott&quot;)
+end Sub
+
+Sub ProjectPrint()
+	Modul_oeffnen(&quot;PrintProject.odt&quot;)
+end Sub
+
+Sub ArbeitsblattPrint()
+	Modul_oeffnen(&quot;PrintArbeitsblatt.odt&quot;)
+end Sub
+
+Sub PreislistePrint()
+	Modul_oeffnen(&quot;PrintPreisliste.odt&quot;)
+end Sub
+
+Sub InventurPrint()
+	Modul_oeffnen(&quot;PrintInventur.odt&quot;)
+end Sub
+
+Sub OP_Eingangsrechnungen()
+	Modul_oeffnen(&quot;OP_Eingangsrechnungen.odt&quot;)
+end Sub
+
+Sub OP_Ausgangsrechnungen()
+	Modul_oeffnen(&quot;OP_Ausgangsrechnungen.odt&quot;)
+end Sub
+
+Sub Leistungsstamm()
+	Modul_oeffnen(&quot;Leistungsstamm.odt&quot;)
+end Sub
+
+Sub Kundenstamm()
+	Modul_oeffnen(&quot;Kundenstamm.odt&quot;)
+end Sub
+
+Sub Lieferantenstamm()
+	Modul_oeffnen(&quot;Lieferantenstamm.odt&quot;)
+end Sub
+
+Sub Kontaktestamm()
+	Modul_oeffnen(&quot;Kontaktestamm.odt&quot;)
+end Sub
+
+Sub Personalstamm()
+	Modul_oeffnen(&quot;Personalstamm.odt&quot;)
+end Sub
+
+Sub Einstellungen()
+	Modul_oeffnen(&quot;Einstellungen.odt&quot;)
+end Sub
+
+Sub Gruppenverwaltung()
+	Modul_oeffnen(&quot;Gruppenverwaltung.odt&quot;)
+end Sub
+
+Sub Zahlungsziele()
+	Modul_oeffnen(&quot;PrintZahlungsziele.ott&quot;)
+end Sub
+
+Sub Ausgangsrechnungen()
+	Modul_oeffnen(&quot;PrintAusgangsrechnungen.ott&quot;)
+end Sub
+
+Sub Zahlungserinnerung()
+	Modul_oeffnen(&quot;PrintZahlungserinnerung.odt&quot;)
+end Sub
+
+Sub Mahnung()
+	Modul_oeffnen(&quot;PrintMahnung.odt&quot;)
+end Sub
+
+Sub Kassenbuch()
+	Dim sUrl as String
+	Dim oDoc as Object
+	Dim args(1) as new com.sun.star.beans.PropertyValue
+	Dim oFileAccessService as Object
+	oFileAccessService = createUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+	args(0).Name = &quot;ReadOnly&quot;
+	args(0).Value = False
+	args(1).Name = &quot;MacroExecutionMode&quot;
+	args(1).Value = 4
+	sUrl=ConvertToUrl(sAladinPfad &amp; &quot;Kassenbuch.ods&quot;)
+	if NOT oFileAccessService.exists(sUrl) then
+		MsgBox (&quot;Kann folgende Datei nicht lesen: &quot; &amp; Chr$(13) &amp; Chr$(13) &amp;_
+		sUrl &amp; Chr$(13) &amp; Chr$(13) &amp;_
+		&quot;Überprüfen Sie die Pfad-Einstellungen im Basic-Modul&quot; &amp; Chr$(13) &amp;_
+		&quot; &gt;&gt; ALADIN.Global &lt;&lt; !&quot;,48,sTitle)
+	else
+		oDoc = vDesktop.LoadComponentFromUrl(sUrl, &quot;_blank&quot;, 63, args()) 
+	end if
+end Sub
+</script:module>

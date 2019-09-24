@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Fax" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de - www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+&apos; Code-Teile von Stefan Weigel &lt;sweigel AT openoffice DOT org&gt;
+&apos; Code-Teile aus YajHFCFax Extension für OOo
+REM ***** BASIC *****
+Option Explicit
+
+Sub ShowYajHFCConfigDialog()
+	bLoadSettings()
+	YajHFCConfigDialog()
+end sub
+
+
+&apos; ################# Fritz!Fax #######################################
+
+Declare Function RegCreateKey Lib &quot;advapi32.dll&quot; Alias &quot;RegCreateKeyA&quot; _
+	(ByVal hKey As Long, _
+	ByVal lpSubKey As String, _
+	phkResult As Long) As Long
+ 
+Declare Function RegDeleteKey Lib &quot;advapi32.dll&quot; Alias &quot;RegDeleteKeyA&quot; _
+	(ByVal hKey As Long,_
+	ByVal lpSubKey As String) As Long 
+
+Declare Function RegSetValueEx Lib &quot;advapi32.dll&quot; Alias &quot;RegSetValueExA&quot; _
+	(ByVal hKey As Long, _
+	ByVal lpValueName As String, _
+	ByVal Reserved As Long, _
+	ByVal dwType As Long, _
+	lpData As Any, _
+	ByVal cbData As Long) As Long
+	
+Declare Function RegCloseKeyA Lib &quot;advapi32.dll&quot; Alias &quot;RegCloseKey&quot; _
+	(ByVal hKey As Long) As Long
+
+Sub SET_FritzFax(sDocumentName as String,sFaxNummer as String)
+	Dim lCurrrentKey As Long
+	RegCreateKey(&amp;H80000001, &quot;Software\VB AND VBA Program Settings\FRITZ!fax\Print\&quot;, lCurrrentKey)
+	RegSetValueEx(lCurrrentKey, sDocumentName, 0, 1, sFaxNummer, Len(sFaxNummer))
+	RegCloseKeyA(lCurrrentKey)
+end Sub
+
+Sub ReSet_FritzFax()
+	RegDeleteKey(&amp;H80000001, &quot;Software\VB AND VBA Program Settings\FRITZ!fax\Print\&quot;)
+end Sub
+
+&apos; ################# YajHFC #######################################
+
+Global sFaxNummer as String
+Dim sYajHFCjar As String
+Dim sJavaExe as String
+
+Sub SetPfadEinstellungenYajHFC(sJavaExe as String, sJarFile as string)
+	Dim oLibALADIN as Object
+	Dim sFunction as String
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN_Global&quot;)
+	oLibALADIN = GlobalScope.BasicLibraries.GetByName(&quot;ALADIN_Global&quot;)
+
+	if not oLibALADIN.HasByName (&quot;YajHFCSettings&quot;) then
+		oLibALADIN.InsertByName (&quot;YajHFCSettings&quot;, &quot;DummyText&quot;)
+	end if
+
+	sFunction = &quot;REM ***** BASIC *****&quot; &amp; Chr (13)
+	sFunction = sFunction &amp; &quot;Option Explicit&quot; &amp; Chr (13) &amp; Chr (13)
+	
+	sFunction = sFunction &amp; &quot;Function sGetJavaEXE() as String&quot; &amp; Chr (13)
+	sFunction = sFunction &amp; &quot;sGetJavaEXE = &quot; &amp; Chr (34) &amp; sJavaExe &amp; Chr (34) &amp; Chr (13)
+	sFunction = sFunction &amp; &quot;End Function&quot; &amp; Chr(13) &amp; Chr(13)
+	 
+	sFunction = sFunction &amp; &quot;Function sGetJarFile() as String&quot; &amp; Chr (13)
+	sFunction = sFunction &amp; &quot;sGetJarFile = &quot; &amp; Chr (34) &amp; sJarFile &amp; Chr (34) &amp; Chr (13)
+	sFunction = sFunction &amp; &quot;End Function&quot;
+ 
+	oLibALADIN.replacebyName (&quot;YajHFCSettings&quot;, sFunction)
+end Sub
+
+Function bLoadSettings as boolean
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN_Global&quot;)
+	if GlobalScope.BasicLibraries.GetByName(&quot;ALADIN_Global&quot;).HasByName(&quot;YajHFCSettings&quot;) then
+		if FileExists(sGetJarFile()) AND FileExists(sGetJavaEXE()) then
+			sYajHFCjar = sGetJarFile()
+			sJavaExe = sGetJavaEXE()
+			bLoadSettings = true
+		else
+			sYajHFCjar = sGetJarFile()
+			sJavaExe = sGetJavaEXE()
+			bLoadSettings = false
+		end if
+	else
+		sJavaExe = &quot;java&quot;
+		bLoadSettings = false
+	end if
+End Function
+
+Sub YajHFCConfigDialog()
+	Dim oDialogYajHFCSettings As Object,oDialogYajHFCSettingsModel As Object
+	Dim oJavaPfad as Object, oJarPfad as Object
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+
+	oDialogYajHFCSettings=LoadDialog(&quot;ALADIN&quot;, &quot;YajHFCSettings&quot;)
+	oDialogYajHFCSettingsModel=oDialogYajHFCSettings.Model
+	oDialogYajHFCSettingsModel.Title = &quot;Konfiguration YajHFC Pfade&quot;
+
+	oJavaPfad = oDialogYajHFCSettingsModel.getByName(&quot;JavaPfad&quot;)
+	oJarPfad = oDialogYajHFCSettingsModel.getByName(&quot;JarPfad&quot;)
+	
+	oJavaPfad.Text = sJavaExe
+	oJarPfad.Text = sYajHFCjar
+	
+	Select Case oDialogYajHFCSettings.Execute() 
+	Case 1 &apos;OK
+		SetPfadEinstellungenYajHFC(oJavaPfad.Text,oJarPfad.Text)
+	end Select
+end sub
+
+Function sGetTempFilename() As String
+	Dim sTempPfad As String
+	Dim sResult as String
+	Dim i as Integer
+	
+	sTempPfad = ConvertFromURL(CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;).Temp)
+	
+	sResult = Right(sTempPfad, 1)
+	if (sResult &lt;&gt; &quot;/&quot; AND sResult &lt;&gt; &quot;\&quot;) then
+		sTempPfad = sTempPfad &amp; &quot;/&quot;
+	end if
+
+	sResult = sTempPfad &amp; &quot;fax.pdf&quot;
+	i = 1
+	do while FileExists(sResult)
+		sResult = sTempPfad &amp; &quot;fax&quot; &amp; i &amp; &quot;.pdf&quot;
+		i = i+1
+	loop
+	sGetTempFilename = sResult
+End Function
+
+Function doPDFExport(sFileName as String) as boolean
+	Dim sFilter as String
+
+	if HasUnoInterfaces(ThisComponent, &quot;com.sun.star.lang.XServiceInfo&quot;) then
+		if ThisComponent.supportsService (&quot;com.sun.star.text.GenericTextDocument&quot;) then
+			sFilter = &quot;writer_pdf_Export&quot;
+		elseif ThisComponent.supportsService(&quot;com.sun.star.sheet.SpreadsheetDocument&quot;) then
+			sFilter = &quot;calc_pdf_Export&quot;
+		elseif ThisComponent.supportsService(&quot;com.sun.star.presentation.PresentationDocument&quot;) then
+			sFilter = &quot;impress_pdf_Export&quot;
+		elseif ThisComponent.supportsService(&quot;com.sun.star.drawing.GenericDrawingDocument&quot;) then
+			sFilter = &quot;draw_pdf_Export&quot;	
+		else
+			sFilter = &quot;&quot;
+		end if
+	else
+		sFilter = &quot;&quot;
+	end if
+
+	if (sFilter = &quot;&quot;) then
+		MsgBox &quot;Das Senden eines Faxes mit diesem Dokument-Typ wird nicht unterstützt.&quot;
+		doPDFExport = false
+		exit function
+	end if
+
+ 	&apos; Save the document using a filter. 
+ 	ThisComponent.storeToURL(ConvertToURL(sFileName), Array(MakePropertyValue( &quot;FilterName&quot;, sFilter),) 
+
+	doPDFExport = true
+End Function
+
+sub SendFaxYajHFC()
+	Dim sTempFile as String
+	Dim sFaxOption as String
+	
+	if not bLoadSettings then
+		YajHFCConfigDialog()
+		exit sub
+	end if
+	
+	sTempFile = sGetTempFilename()
+	
+	if doPDFExport(sTempFile) then
+		if Trim(sFaxNummer) &lt;&gt; &quot;&quot; then
+			sFaxOption = &quot; --background --no-wait --no-gui --recipient=&quot; &amp; Trim(sFaxNummer)
+		else
+			sFaxOption = &quot; --background &quot;
+		end if
+
+&apos;		print sJavaExe, 1, &quot;-jar &quot; &amp; Chr(34) &amp; sYajHFCjar &amp; Chr(34) &amp; sFaxOption &amp; &quot; &quot; &amp; Chr(34) &amp; sTempFile &amp; Chr(34)
+
+		Shell sJavaExe, 1, &quot;-jar &quot; &amp; Chr(34) &amp; sYajHFCjar &amp; Chr(34) &amp; sFaxOption &amp; &quot; &quot; &amp; Chr(34) &amp; sTempFile &amp; Chr(34), true
+&apos;		Shell sKonsole, 1, &quot;-e &quot; &amp; sJavaExe &amp; &quot; -jar &quot; &amp; Chr(34) &amp; sYajHFCjar &amp; Chr(34) &amp; sFaxOption &amp; Chr(34) &amp; sTempFile &amp; Chr(34), true
+		Kill sTempFile
+	end if
+end sub
+
+sub SendFaxYajHFC_Dialog()
+	Dim sTempFile as String
+	Dim sFaxOption as String
+	
+	if not bLoadSettings then
+		YajHFCConfigDialog()
+		exit sub
+	end if
+	
+	sTempFile = sGetTempFilename()
+	
+	if doPDFExport(sTempFile) then
+		if Trim(sFaxNummer) &lt;&gt; &quot;&quot; then
+			sFaxOption = &quot; --background --recipient=&quot; &amp; Trim(sFaxNummer) 
+		else
+			sFaxOption = &quot; --background &quot;
+		end if
+		Shell sJavaExe, 1, &quot;-jar &quot; &amp; Chr(34) &amp; sYajHFCjar &amp; Chr(34) &amp; sFaxOption  &amp; &quot; &quot; &amp; Chr(34) &amp; sTempFile &amp; Chr(34), true
+		Kill sTempFile
+	end if
+end sub
+
+
+</script:module>

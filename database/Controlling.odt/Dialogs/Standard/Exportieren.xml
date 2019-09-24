@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="2" dlg:id="Exportieren" dlg:left="48" dlg:top="60" dlg:width="183" dlg:height="189" dlg:closeable="true" dlg:moveable="true" dlg:title="Datensätze in folgendes Formular exportieren:">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="1" dlg:look="simple" dlg:font-name="Arial" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="2" dlg:background-color="0x99ccff"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="108" dlg:top="171" dlg:width="51" dlg:height="14" dlg:value="OK" dlg:button-type="ok"/>
+  <dlg:button dlg:style-id="0" dlg:id="neuer Task" dlg:tab-index="0" dlg:left="24" dlg:top="171" dlg:width="47" dlg:height="14" dlg:value="Abbrechen" dlg:button-type="cancel"/>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAngebote1" dlg:tab-index="10" dlg:left="7" dlg:top="78" dlg:width="82" dlg:height="10" dlg:value="Angebote (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAuftrag1" dlg:tab-index="16" dlg:left="7" dlg:top="88" dlg:width="82" dlg:height="10" dlg:value="Auftragsbestätigungen (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionLieferscheine1" dlg:tab-index="11" dlg:left="7" dlg:top="98" dlg:width="82" dlg:height="10" dlg:value="Lieferscheine (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionRechnungen1" dlg:tab-index="12" dlg:left="7" dlg:top="118" dlg:width="82" dlg:height="10" dlg:value="Rechnungen (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionPreisanfragen1" dlg:tab-index="14" dlg:left="7" dlg:top="138" dlg:width="82" dlg:height="10" dlg:value="Preisanfragen (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionBestellungen1" dlg:tab-index="15" dlg:left="7" dlg:top="148" dlg:width="82" dlg:height="10" dlg:value="Bestellungen (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAngebote2" dlg:tab-index="2" dlg:left="93" dlg:top="78" dlg:width="83" dlg:height="10" dlg:value="Angebote (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAuftrag2" dlg:tab-index="8" dlg:left="93" dlg:top="88" dlg:width="83" dlg:height="10" dlg:value="Auftragsbestätigungen (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionLieferscheine2" dlg:tab-index="3" dlg:left="93" dlg:top="98" dlg:width="83" dlg:height="10" dlg:value="Lieferscheine (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAufmasze2" dlg:tab-index="9" dlg:left="93" dlg:top="108" dlg:width="83" dlg:height="10" dlg:value="Aufmaße (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionRechnungen2" dlg:tab-index="4" dlg:left="93" dlg:top="118" dlg:width="83" dlg:height="10" dlg:value="Rechnungen (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionGutschriften2" dlg:tab-index="5" dlg:left="93" dlg:top="128" dlg:width="83" dlg:height="10" dlg:value="Gutschriften (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionPreisanfragen2" dlg:tab-index="6" dlg:left="93" dlg:top="138" dlg:width="83" dlg:height="10" dlg:value="Preisanfragen (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionBestellungen2" dlg:tab-index="7" dlg:left="93" dlg:top="148" dlg:width="83" dlg:height="10" dlg:value="Bestellungen (2)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionAufmasze1" dlg:tab-index="17" dlg:left="7" dlg:top="108" dlg:width="82" dlg:height="10" dlg:value="Aufmaße (1)"/>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionGutschriften1" dlg:tab-index="13" dlg:left="7" dlg:top="128" dlg:width="82" dlg:height="10" dlg:value="Gutschriften (1)"/>
+  </dlg:radiogroup>
+  <dlg:titledbox dlg:style-id="0" dlg:id="FrameGliederung" dlg:tab-index="18" dlg:left="4" dlg:top="3" dlg:width="175" dlg:height="38">
+   <dlg:title dlg:value="Gliederung"/>
+  </dlg:titledbox>
+  <dlg:titledbox dlg:style-id="0" dlg:id="FrameFormular" dlg:tab-index="19" dlg:left="4" dlg:top="68" dlg:width="175" dlg:height="97">
+   <dlg:title dlg:value="Formular"/>
+  </dlg:titledbox>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionDatum" dlg:tab-index="20" dlg:left="95" dlg:top="13" dlg:width="35" dlg:height="10" dlg:help-text="Gliederung nach Datum." dlg:value="Datum">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:Standard.Exportieren.DialogExportierenSchreibSchutz?language=Basic&amp;location=document" script:language="Script"/>
+   </dlg:radio>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionLokation" dlg:tab-index="21" dlg:left="7" dlg:top="13" dlg:width="38" dlg:height="10" dlg:help-text="Gliederung nach Lokation." dlg:value="Lokation" dlg:checked="true">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:Standard.Exportieren.DialogExportierenSchreibSchutz?language=Basic&amp;location=document" script:language="Script"/>
+   </dlg:radio>
+   <dlg:radio dlg:style-id="1" dlg:id="OptionZusammenfassung" dlg:tab-index="22" dlg:left="7" dlg:top="47" dlg:width="70" dlg:height="10" dlg:help-text="Gleiche Leistungen zusammenfassen." dlg:value="Zusammenfassung">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:Standard.Exportieren.DialogExportierenSchreibSchutz?language=Basic&amp;location=document" script:language="Script"/>
+   </dlg:radio>
+  </dlg:radiogroup>
+  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="23" dlg:left="4" dlg:top="61" dlg:width="175" dlg:height="6"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBoxDatum" dlg:tab-index="24" dlg:left="17" dlg:top="27" dlg:width="72" dlg:height="10" dlg:help-text="Datum mit in Leistungsbezeichnung übernehmen." dlg:value="und nach Datum" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBoxLokation" dlg:tab-index="25" dlg:disabled="true" dlg:left="105" dlg:top="27" dlg:width="67" dlg:height="10" dlg:help-text="Lokation mit in Leistungsbezeichnung übernehmen." dlg:value="und nach Lokation" dlg:checked="false"/>
+  <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="26" dlg:left="88" dlg:top="9" dlg:width="4" dlg:height="30" dlg:align="vertical"/>
+ </dlg:bulletinboard>
+</dlg:window>

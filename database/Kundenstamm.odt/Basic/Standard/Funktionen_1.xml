@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc AS Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_Kontaktdaten AS Object
+	oForm_Kontaktdaten=oForm_Steuerung.getByName(&quot;Form_Kontaktdaten&quot;)
+End Function
+
+Function oForm_Ansprechpartner AS Object
+	oForm_Ansprechpartner=oForm_Steuerung.getByName(&quot;Form_Ansprechpartner&quot;)
+End Function
+
+Function oForm_Steuerung AS Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oField_KontaktID AS Object
+	oField_KontaktID=oForm_Kontaktdaten.getByName(&quot;Field_KontaktID&quot;)
+End Function
+
+Function oComboBox_Anrede AS Object
+	oComboBox_Anrede=oForm_Kontaktdaten.getByName(&quot;ComboBox_Anrede&quot;)
+End Function
+
+Function oComboBox_Titel AS Object
+	oComboBox_Titel=oForm_Kontaktdaten.getByName(&quot;ComboBox_Titel&quot;)
+End Function
+
+Function oGrid_Ansprechpartner AS Object
+	oGrid_Ansprechpartner=oForm_Ansprechpartner.getByName(&quot;Grid_Ansprechpartner&quot;)
+End Function
+
+Function oColumn_Anrede AS Object
+	oColumn_Anrede=oGrid_Ansprechpartner.getByName(&quot;Anrede&quot;)
+End Function
+
+Function oColumn_Titel AS Object
+	oColumn_Titel=oGrid_Ansprechpartner.getByName(&quot;Titel&quot;)
+End Function
+
+Function oField_Suchstring AS Object
+	oField_Suchstring=oForm_Steuerung.getByName(&quot;Field_Suchstring&quot;)
+End Function
+
+Function oField_Name_1 AS Object
+	oField_Name_1=oForm_Kontaktdaten.getByName(&quot;Field_Name_1&quot;)
+End Function
+
+Function oField_Skonto_Satz AS Object
+	oField_Skonto_Satz=oForm_Kontaktdaten.getByName(&quot;Field_Skonto_Satz&quot;)
+End Function
+
+Function oField_Skonto_Tage AS Object
+	oField_Skonto_Tage=oForm_Kontaktdaten.getByName(&quot;Field_Skonto_Tage&quot;)
+End Function
+
+Function oField_Stundenverrechnungssatz AS Object
+	oField_Stundenverrechnungssatz=oForm_Kontaktdaten.getByName(&quot;Field_Stundenverrechnungssatz&quot;)
+End Function
+
+Function oField_Materialaufschlagsatz AS Object
+	oField_Materialaufschlagsatz=oForm_Kontaktdaten.getByName(&quot;Field_Materialaufschlagsatz&quot;)
+End Function
+
+Function oList_Kontaktauswahl AS Object
+	oList_Kontaktauswahl=oForm_Steuerung.getByName(&quot;List_Kontaktauswahl&quot;)
+End Function
+
+Function oField_Umsatz_aktuellen_Kalenderjahr AS Object
+	oField_Umsatz_aktuellen_Kalenderjahr=oForm_Steuerung.getByName(&quot;Field_Umsatz_aktuellen_Kalenderjahr&quot;)
+End Function
+
+Function oField_Gesamtumsatz AS Object
+	oField_Gesamtumsatz=oForm_Steuerung.getByName(&quot;Field_Gesamtumsatz&quot;)
+End Function
+
+Function oList_Kalenderjahr AS Object
+	oList_Kalenderjahr=oForm_Steuerung.getByName(&quot;List_Kalenderjahr&quot;)
+End Function
+
+Function oField_Umsatz_im_Kalenderjahr AS Object
+	oField_Umsatz_im_Kalenderjahr=oForm_Steuerung.getByName(&quot;Field_Umsatz_im_Kalenderjahr&quot;)
+End Function
+
+Function lKontaktID AS long
+	lKontaktID=CLng(oField_KontaktID.Value)
+End Function
+
+Function fName1 AS String
+	fName1=oField_Name_1.BoundField.string
+End Function
+
+Function lKontaktID_import AS long
+	sSQL1=&quot;SELECT Max(KontaktID) FROM &quot;&amp; sKunden
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lKontaktID_import=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function fAnzahlDatensaetzeKontakte AS integer
+	Dim oRecord1 AS Object
+	Dim sSQL1 AS String
+	sSQL1=&quot;SELECT count(*) FROM &quot;&amp; sKunden &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		fAnzahlDatensaetzeKontakte=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function GetDocUserProperty(sPropertyName AS String) AS String
+	Dim oUserProps AS Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

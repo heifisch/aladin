@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub createRepord()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	FormSizePrint()
+
+	if oDoc.isReadOnly then
+		Dim oFrame as Object
+	
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;PrintZahlungserinnerung&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 33)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden&quot;)
+			SetDocUserProperty(&quot;oAnsprechpartner_Kunden&quot;, &quot;Ansprechpartner_Kunden&quot;)
+		else
+			SetDocUserProperty(&quot;oKunden&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oAnsprechpartner_Kunden&quot;, &quot;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oRechnungen1&quot;, &quot;Rechnungen1&quot;)
+		else
+			SetDocUserProperty(&quot;oRechnungen1&quot;, &quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal)
+		end if
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Druck vorbereiten: Mahnung&quot;)
+
+		Dim sSQL1 as String
+		Kontaktdaten.KontaktDaten()
+		Rechnungen.Rechnungen()
+		sSQL1=&quot;update Steuerung set Option_1=0 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+	End if
+End Sub
+
+Sub DokumentDrucken()
+	Dim sFaxEmpfaenger as String
+	if GetGUIType = 1 then
+		if iPrint_Typ = 1 and fsInTrim(sFax_Empfaenger) &lt;&gt; &quot;&quot; and LCase(sFaxTyp) = &quot;fritzfax&quot; then
+			if sFaxNumberPrefix &lt;&gt; &quot;&quot; and Len(fsLeerzeichenEntfernen(sFax_Empfaenger)) &gt; CInt(iFaxLenInternNumber) then
+				sFaxEmpfaenger=fsLeerzeichenEntfernen(sFaxNumberPrefix &amp; fsPlusErsetzen(sFax_Empfaenger))
+			else
+				sFaxEmpfaenger=fsLeerzeichenEntfernen(sFax_Empfaenger)
+			End if
+			Set_FritzFax(&quot;PrintMahnung&quot;,sFaxEmpfaenger)		
+		End if
+	End if
+End Sub
+
+Sub DokumentSchlieszen()
+	sFaxNummer=&quot;&quot;
+	if GetGUIType = 1 then
+		ReSet_FritzFax()
+	End if
+End Sub
+
+Sub ConvertToPdfAndSendMail()
+	Dim sURL as String,oPfad as Object
+	Dim vStatus as Variant, oMailer as Object,oMailClient as Object,oMessage as Object
+	Dim vAttachement(0)
+	oPfad = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+
+&apos;	sURL=ConvertToURL(sStandardPfad &amp; &quot;/mail/&quot; &amp; sDocumentID &amp; &quot;.pdf&quot;)
+	sURL=ConvertToURL(oPfad.temp)&amp;&quot;/&quot;&amp; sDocument_Name &amp; &quot;.pdf&quot;
+	oDoc.storeToURL(sURL,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+	vAttachement(0) = sURL
+
+	oMailer = createUnoService( &quot;com.sun.star.system.SystemMailProvider&quot; )
+
+	oMailClient = oMailer.queryMailClient()
+	oMessage = oMailClient.createMailMessage()
+	
+	oMessage.Recipient=sEMail_Empfaenger
+	oMessage.Subject=fsInTrim(fsReplace(fsReplace(fsReplace(fsReplace(sDocument_Name,Chr(34),&quot; &quot;),Chr(10),&quot; - &quot;),Chr(13),&quot; - &quot;),&quot;,&quot;,&quot; &quot;))
+	oMessage.Body=&quot;Sehr geehrte Damen und Herren,&quot; &amp; Chr(10) &amp; Chr(10) &amp; &quot;im Anhang finden Sie unsere Mahnung.&quot;
+	oMessage.Attachement=vAttachement()
+
+	oMailClient.sendMailMessage( oMessage, 0 )
+&apos;	kill(sURL)
+	Status_Datum_setzen()
+End Sub
+
+Sub ConvertToPDF()
+	Dim sURL as String
+	Dim oFilePicker as Object,vStatusFilePicker as Variant
+	Dim vStatus as Variant
+	Dim initArgs(0)
+	
+	initArgs=Array(com.sun.star.ui.dialogs.TemplateDescription.FILESAVE_AUTOEXTENSION_SELECTION ) 
+
+	oFilePicker = createUnoService(&quot;com.sun.star.ui.dialogs.FilePicker&quot;)
+	sURL=ConvertToURL(sStandardPfad)
+
+	nochmal:
+	oFilePicker.Initialize(initArgs)
+	oFilePicker.MultiSelectionMode=&quot;False&quot;
+	oFilePicker.setDisplayDirectory(sURL)
+	oFilePicker.setDefaultName(sDocument_Name &amp; &quot;.pdf&quot;)
+	vStatusFilePicker=oFilePicker.execute
+	
+	if vStatusFilePicker=0 then
+		vStatus=MsgBox(&quot;Sie haben noch keinen Dateinamen ausgewählt!&quot;,37,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+
+	sURL = oFilePicker.Files(0)
+	oDoc.storeToURL( sURL, Array( MakePropertyValue( &quot;FilterName&quot;, &quot;writer_pdf_Export&quot; ) ) )
+End Sub
+
+Sub Status_Datum_setzen()
+	if oDoc.isReadOnly then
+		DokumentDrucken()
+		Dim sSQL1 as String
+		sSQL1=&quot;update &quot;&amp; sRechnungen1 &amp;_
+			&quot; set Status=&apos;gemahnt&apos;,gemahnt_am=(date_add(now(),interval 0 month)),&quot;&amp;_
+			&quot;gemahnt_bis=(date_add(gemahnt_am,interval 8 Day))where KontaktID=&quot;&amp; lKontaktID &amp;&quot; and Status=&apos;überfällig&apos;&quot;
+		SQL_execute(sSQL1)
+	End if
+End Sub
+
+Function FieldContent(sField as string) as String
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
+	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName) 
+	FieldContent = vFieldMaster.Content       
+End Function
+
+Sub Feld_fuellen(sField as string,sInhalt as string )
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
+	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName) 
+	vFieldMaster.Content = sInhalt        
+End Sub
+ 
+Sub Feld_loeschen(sField as string)
+	Dim vField as Variant,vFieldMaster as Variant
+	Dim sFieldName as String
+	Dim bFound as boolean
+	vField = oDoc.createInstance(&quot;com.sun.star.text.TextField.User&quot;) 
+	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField
+	bFound = oDoc.getTextFieldMasters.hasByName(sFieldName)
+	if bFound Then 
+		vFieldMaster =  oDoc.getTextFieldMasters.getByName(sFieldName) 
+		vFieldMaster.Content = &quot;&quot;    
+		vFieldMaster.dispose() 
+	End If 
+End Sub 
+
+Sub loesche_Falzmarken()
+	Dim oDrawPage as Object
+	Dim oShape as Object
+	Dim iCount as Integer, iGetCount as Integer
+	
+	oDrawPage = oDoc.getDrawPage()
+	
+	iGetCount=oDrawPage.getCount()
+	
+	for iCount=1 to iGetCount
+ 		oShape = oDrawPage.getByIndex(iGetCount-iCount)
+		if Instr(oShape.Name,&quot;Falzmarken&quot;) &gt; 0 then
+			oDrawPage.remove(oShape)
+		End if
+	next iCount
+	
+End Sub
+
+</script:module>

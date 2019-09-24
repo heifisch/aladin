@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc AS Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_Steuerung AS Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oForm_Document AS Object
+	oForm_Document=oForm_Steuerung.getByName(&quot;Form_Document&quot;)
+End Function
+
+Function oForm_Kundendaten AS Object
+	oForm_Kundendaten=oForm_Document.getByName(&quot;Form_Kundendaten&quot;)
+End Function
+
+Function oField_DocumentID AS Object
+	oField_DocumentID=oForm_Document.getByName(&quot;Field_DocumentID&quot;)
+End Function
+
+Function oField_KontaktID AS Object
+	oField_KontaktID=oForm_Document.getByName(&quot;Field_KontaktID&quot;)
+End Function
+
+Function oField_bezahlt_am AS Object
+	oField_bezahlt_am=oForm_Document.getByName(&quot;Field_bezahlt_am&quot;)
+End Function
+
+Function oField_Summe_bezahlt AS Object
+	oField_Summe_bezahlt=oForm_Document.getByName(&quot;Field_Summe_bezahlt&quot;)
+End Function
+
+Function oField_Suchstring AS Object
+	oField_Suchstring=oForm_Steuerung.getByName(&quot;Field_Suchstring&quot;)
+End Function
+
+Function oList_Documentauswahl AS Object
+	oList_Documentauswahl=oForm_Steuerung.getByName(&quot;List_Documentauswahl&quot;)
+End Function
+
+Function oField_Ordner AS Object
+	oField_Ordner=oForm_Kundendaten.getByName(&quot;Field_Ordner&quot;)
+End Function
+
+Function oList_Status AS Object
+	oList_Status=oForm_Document.getByName(&quot;List_Status&quot;)
+End Function
+
+Function oList_Filter_Status AS Object
+	oList_Filter_Status=oForm_Steuerung.getByName(&quot;List_Filter_Status&quot;)
+End Function
+
+Function oList_Filter_Jahr AS Object
+	oList_Filter_Jahr=oForm_Steuerung.getByName(&quot;List_Filter_Jahr&quot;)
+End Function
+
+Function oList_Filter_Monat AS Object
+	oList_Filter_Monat=oForm_Steuerung.getByName(&quot;List_Filter_Monat&quot;)
+End Function
+
+Function oList_Filter_Kunde AS Object
+	oList_Filter_Kunde=oForm_Steuerung.getByName(&quot;List_Filter_Kunde&quot;)
+End Function
+
+Function oList_Filter_Projekte AS Object
+	oList_Filter_Projekte=oForm_Steuerung.getByName(&quot;List_Filter_Projekte&quot;)
+End Function
+
+Function oList_Kalenderjahr AS Object
+	oList_Kalenderjahr=oForm_Steuerung.getByName(&quot;List_Kalenderjahr&quot;)
+End Function
+
+Function oList_Monat AS Object
+	oList_Monat=oForm_Steuerung.getByName(&quot;List_Monat&quot;)
+End Function
+
+Function oField_Summe_Rechnungen_Kunde AS Object
+	oField_Summe_Rechnungen_Kunde=oForm_Steuerung.getByName(&quot;Field_Summe_Rechnungen_Kunde&quot;)
+End Function
+
+Function oField_Summe_aller_offenen_Rechnungen AS Object
+	oField_Summe_aller_offenen_Rechnungen=oForm_Steuerung.getByName(&quot;Field_Summe_aller_offenen_Rechnungen&quot;)
+End Function
+
+Function oField_Umsatz_aktuelles_Jahr_ohne_MwSt AS Object
+	oField_Umsatz_aktuelles_Jahr_ohne_MwSt=oForm_Steuerung.getByName(&quot;Field_Umsatz_aktuelles_Jahr_ohne_MwSt&quot;)
+End Function
+
+Function oField_Umsatz_aktuelles_Jahr_mit_MwSt AS Object
+	oField_Umsatz_aktuelles_Jahr_mit_MwSt=oForm_Steuerung.getByName(&quot;Field_Umsatz_aktuelles_Jahr_mit_MwSt&quot;)
+End Function
+
+Function oField_Zahlungen_aktuelles_Jahr AS Object
+	oField_Zahlungen_aktuelles_Jahr=oForm_Steuerung.getByName(&quot;Field_Zahlungen_aktuelles_Jahr&quot;)
+End Function
+
+Function oField_Umsatz_aktueller_Monat_ohne_MwSt AS Object
+	oField_Umsatz_aktueller_Monat_ohne_MwSt=oForm_Steuerung.getByName(&quot;Field_Umsatz_aktueller_Monat_ohne_MwSt&quot;)
+End Function
+
+Function oField_Umsatz_aktueller_Monat_mit_MwSt AS Object
+	oField_Umsatz_aktueller_Monat_mit_MwSt=oForm_Steuerung.getByName(&quot;Field_Umsatz_aktueller_Monat_mit_MwSt&quot;)
+End Function
+
+Function oField_Zahlungen_aktueller_Monat AS Object
+	oField_Zahlungen_aktueller_Monat=oForm_Steuerung.getByName(&quot;Field_Zahlungen_aktueller_Monat&quot;)
+End Function
+
+Function oField_Umsatz_Jahr_ohne_MwSt AS Object
+	oField_Umsatz_Jahr_ohne_MwSt=oForm_Steuerung.getByName(&quot;Field_Umsatz_Jahr_ohne_MwSt&quot;)
+End Function
+
+Function oField_Umsatz_Jahr_mit_MwSt AS Object
+	oField_Umsatz_Jahr_mit_MwSt=oForm_Steuerung.getByName(&quot;Field_Umsatz_Jahr_mit_MwSt&quot;)
+End Function
+
+Function oField_Zahlungen_Jahr AS Object
+	oField_Zahlungen_Jahr=oForm_Steuerung.getByName(&quot;Field_Zahlungen_Jahr&quot;)
+End Function
+
+Function oField_Umsatz_Monat_ohne_MwSt AS Object
+	oField_Umsatz_Monat_ohne_MwSt=oForm_Steuerung.getByName(&quot;Field_Umsatz_Monat_ohne_MwSt&quot;)
+End Function
+
+Function oField_Umsatz_Monat_mit_MwSt AS Object
+	oField_Umsatz_Monat_mit_MwSt=oForm_Steuerung.getByName(&quot;Field_Umsatz_Monat_mit_MwSt&quot;)
+End Function
+
+Function oField_Zahlungen_Monat AS Object
+	oField_Zahlungen_Monat=oForm_Steuerung.getByName(&quot;Field_Zahlungen_Monat&quot;)
+End Function
+
+Function oField_Umsatz_bis_Monat_ohne_MwSt AS Object
+	oField_Umsatz_bis_Monat_ohne_MwSt=oForm_Steuerung.getByName(&quot;Field_Umsatz_bis_Monat_ohne_MwSt&quot;)
+End Function
+
+Function oField_Umsatz_bis_Monat_mit_MwSt AS Object
+	oField_Umsatz_bis_Monat_mit_MwSt=oForm_Steuerung.getByName(&quot;Field_Umsatz_bis_Monat_mit_MwSt&quot;)
+End Function
+
+Function oField_Zahlungen_bis_Monat AS Object
+	oField_Zahlungen_bis_Monat=oForm_Steuerung.getByName(&quot;Field_Zahlungen_bis_Monat&quot;)
+End Function
+
+Function oLabel_Tabelle AS Object
+	oLabel_Tabelle=oForm_Steuerung.getByName(&quot;Label_Tabelle&quot;)
+End Function
+
+Function oOption_Rechnungen()
+	oOption_Rechnungen=oForm_Steuerung.getByName(&quot;Option_Rechnungen&quot;)
+End Function
+
+Function oOption_Gutschriften()
+	oOption_Gutschriften=oForm_Steuerung.getByName(&quot;Option_Gutschriften&quot;)
+End Function
+
+Function oOption_AZ()
+	oOption_AZ=oForm_Document.getByName(&quot;Option_AZ&quot;)
+End Function
+
+Function lDocumentID AS long
+	sSQL1=&quot;SELECT COALESCE(DocumentID,0) FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lDocumentID=oRecord1.getInt(1)
+	Wend
+End Function
+
+Function lKundenID AS long
+	lKundenID=oField_KontaktID.BoundField.value
+End Function
+
+Function oButton_Dokument_ansehen AS Object
+	oButton_Dokument_ansehen=oForm_Steuerung.getByName(&quot;Button_Dokument_ansehen&quot;)
+End Function
+
+Function GetDocUserProperty(sPropertyName AS String) AS String
+	Dim oUserProps AS Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="3" dlg:id="Drucken" dlg:left="50" dlg:top="50" dlg:width="179" dlg:height="235" dlg:closeable="true" dlg:moveable="true" dlg:title="Druck vorbereiten">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="1" dlg:look="simple" dlg:font-name="Arial" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
+  <dlg:style dlg:style-id="2" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0x99ccff"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton1" dlg:tab-index="0" dlg:left="95" dlg:top="218" dlg:width="60" dlg:height="12" dlg:value="OK" dlg:button-type="ok"/>
+  <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="23" dlg:top="218" dlg:width="60" dlg:height="12" dlg:value="Abbrechen" dlg:button-type="cancel"/>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="1" dlg:id="Button_Zusammenstellung" dlg:tab-index="10" dlg:left="25" dlg:top="69" dlg:width="132" dlg:height="12" dlg:value="nur Zusammenstellung">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:Standard.Drucken.DruckSchreibschutz?language=Basic&amp;location=document" script:language="Script"/>
+   </dlg:radio>
+   <dlg:radio dlg:style-id="1" dlg:id="Button_Druckoptionen" dlg:tab-index="11" dlg:left="25" dlg:top="96" dlg:width="131" dlg:height="12" dlg:value="gemäß Auswahl" dlg:checked="true">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:Standard.Drucken.DruckSchreibschutz?language=Basic&amp;location=document" script:language="Script"/>
+   </dlg:radio>
+  </dlg:radiogroup>
+  <dlg:titledbox dlg:style-id="2" dlg:id="Druckoptionen" dlg:tab-index="8" dlg:left="19" dlg:top="84" dlg:width="141" dlg:height="80">
+   <dlg:title dlg:value="Druckoptionen"/>
+  </dlg:titledbox>
+  <dlg:titledbox dlg:style-id="2" dlg:id="Ausgabetyp" dlg:tab-index="9" dlg:left="19" dlg:top="6" dlg:width="141" dlg:height="57">
+   <dlg:title dlg:value="Ausgabetyp"/>
+  </dlg:titledbox>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="1" dlg:id="Button_Fax" dlg:tab-index="4" dlg:left="25" dlg:top="39" dlg:width="130" dlg:height="10" dlg:value="Dokument als Fax">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:Standard.Drucken.DruckSchreibschutz?language=Basic&amp;location=document" script:language="Script"/>
+   </dlg:radio>
+   <dlg:radio dlg:style-id="1" dlg:id="Button_Mail" dlg:tab-index="5" dlg:left="25" dlg:top="48" dlg:width="130" dlg:height="10" dlg:value="Dokument als E-Mail">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:Standard.Drucken.DruckSchreibschutz?language=Basic&amp;location=document" script:language="Script"/>
+   </dlg:radio>
+   <dlg:radio dlg:style-id="1" dlg:id="Button_Druck" dlg:tab-index="3" dlg:left="25" dlg:top="15" dlg:width="130" dlg:height="10" dlg:value="Dokument als Druck" dlg:checked="true">
+    <script:event script:event-name="on-itemstatechange" script:macro-name="vnd.sun.star.script:Standard.Drucken.DruckSchreibschutz?language=Basic&amp;location=document" script:language="Script"/>
+   </dlg:radio>
+  </dlg:radiogroup>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox_LiefuLeist" dlg:tab-index="6" dlg:left="25" dlg:top="140" dlg:width="130" dlg:height="10" dlg:value="Lieferung und Leistung" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox_Leistungsbeschreibung" dlg:tab-index="2" dlg:left="25" dlg:top="130" dlg:width="130" dlg:height="10" dlg:value="Leistungsbeschreibung" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox_BestEP" dlg:tab-index="7" dlg:left="25" dlg:top="150" dlg:width="130" dlg:height="10" dlg:value="Einkaufspreis bei Bestellung" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox_Logo_drucken" dlg:tab-index="12" dlg:left="31" dlg:top="25" dlg:width="125" dlg:height="9" dlg:value="Logo drucken" dlg:checked="false"/>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox_Bestellnummer" dlg:tab-index="13" dlg:left="25" dlg:top="110" dlg:width="130" dlg:height="10" dlg:value="Bestellnummer" dlg:checked="false"/>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="1" dlg:id="Option_LV_Pos_drucken" dlg:tab-index="15" dlg:left="24" dlg:top="190" dlg:width="130" dlg:height="10" dlg:value="lange Positionsnummern drucken"/>
+   <dlg:radio dlg:style-id="1" dlg:id="Option_Pos_drucken" dlg:tab-index="14" dlg:left="24" dlg:top="180" dlg:width="130" dlg:height="10" dlg:value="kurze Positionsnummern drucken" dlg:checked="true"/>
+  </dlg:radiogroup>
+  <dlg:titledbox dlg:style-id="2" dlg:id="Frame_Positionsnummern" dlg:tab-index="17" dlg:left="19" dlg:top="169" dlg:width="141" dlg:height="44">
+   <dlg:title dlg:value="Positionsnummern"/>
+  </dlg:titledbox>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="1" dlg:id="Option_Bestellnummer_drucken" dlg:tab-index="16" dlg:left="24" dlg:top="199" dlg:width="130" dlg:height="12" dlg:value="Bestellnummer statt Position drucken"/>
+  </dlg:radiogroup>
+  <dlg:checkbox dlg:style-id="1" dlg:id="CheckBox_Leistungsbezeichnung" dlg:tab-index="18" dlg:left="25" dlg:top="120" dlg:width="130" dlg:height="10" dlg:value="Leistungsbezeichnung" dlg:checked="false"/>
+ </dlg:bulletinboard>
+</dlg:window>

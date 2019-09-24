@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Control" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc as Object
+	oDoc = thisComponent 
+End Function
+
+Function iEinstellungsID_lokal as Integer
+	iEinstellungsID_lokal=GetDocUserProperty(&quot;oEinstellungsID_lokal&quot;)
+End Function
+
+Function iUserID_lokal as Integer
+	iUserID_lokal=GetDocUserProperty(&quot;oUserID_lokal&quot;)
+End Function
+
+Function iClientID as Integer
+	iClientID=GetDocUserProperty(&quot;oClientID&quot;)
+End Function
+
+Function sFax_Empfaenger as String
+	sFax_Empfaenger=GetDocUserProperty(&quot;oFax_Empfaenger&quot;)
+End Function
+
+Function iPrint_Typ as Integer
+	iPrint_Typ=GetDocUserProperty(&quot;oPrint_Typ&quot;)
+End Function
+
+Function sDocument_Name as String
+	sDocument_Name=GetDocUserProperty(&quot;oDocument_Name&quot;)
+End Function
+
+Function sEMail_Empfaenger as String
+	sEMail_Empfaenger=GetDocUserProperty(&quot;oEMail_Empfaenger&quot;)
+End Function
+
+Function lKontaktID as Long
+	lKontaktID=GetDocUserProperty(&quot;oKontaktID&quot;)
+End Function
+
+Function sRechnungen1 as String
+	sRechnungen1=GetDocUserProperty(&quot;oRechnungen1&quot;)
+End Function
+
+Function sKunden as String
+	sKunden=GetDocUserProperty(&quot;oKunden&quot;)
+End Function
+
+Function sAnsprechpartner_Kunden as String
+	sAnsprechpartner_Kunden=GetDocUserProperty(&quot;oAnsprechpartner_Kunden&quot;)
+End Function
+
+Function sTitle_lokal as String
+	 sTitle_lokal=GetDocUserProperty(&quot;oTitle_lokal&quot;)
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

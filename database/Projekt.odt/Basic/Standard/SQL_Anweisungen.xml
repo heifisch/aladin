@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="SQL_Anweisungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sTabelle as String
+Dim sDocument_Name as String
+Dim iSkonto_Tage as integer
+Dim sBezeichnung as String,sBemerkung as String
+Dim oRecord1 as Object
+Dim sSQL1 as String,sSQL2 as String
+
+Sub SQL_cp_Bemerkung()
+	sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
+		&quot; SET Bemerkung=&apos;&quot;&amp; fsConvertString(fBemerkung) &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Update_Steuerung_DocumentID(iOption as integer)
+	sSQL1=&quot;UPDATE Steuerung SET DocumentID=&quot;&amp; lDocumentID_import(iOption) &amp;_
+		&quot; WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Update_Steuerung_export_DocumentID(iOption as integer)
+	sSQL1=&quot;UPDATE Steuerung SET DocumentID=&quot;&amp; lDocumentID_export(iOption) &amp;_
+		&quot; WHERE ClientID=&quot;&amp; iClientID_export
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Gruppe_reset
+	sSQL1=&quot;UPDATE Steuerung SET GruppenID=&apos;%&apos; WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_neues_Document(sDocument_Name)
+	sSQL1=&quot;INSERT INTO &quot;&amp; sTabelle1 &amp;_
+		&quot; (Document_Name,ProjektID,KontaktID,Leerzeilen) VALUES(&apos;&quot;&amp;_
+	 sDocument_Name &amp;&quot;&apos;,0,0,&apos;\n\n\n\n\n&apos;)&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Document_Name_aendern(sDocument_Name)
+	sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
+		&quot; SET Document_Name=&apos;&quot;&amp; sDocument_Name &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Update_Tabelle1_DocumentID(iOption as integer)
+	sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET DocumentID=&quot;&amp; lDocumentID_import(iOption) &amp;_
+		&quot; WHERE DocumentID=&quot;&amp; iMax_Datensatz(sTabelle1,&quot;DocumentID&quot;)
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Update_Tabelle1_export_DocumentID(iOption as integer)
+	sSQL1=&quot;UPDATE &quot;&amp; sTabelle1_export &amp;&quot; SET DocumentID=&quot;&amp; lDocumentID_export(iOption) &amp;_
+		&quot; WHERE DocumentID=&quot;&amp; iMax_Datensatz(sTabelle1_export,&quot;DocumentID&quot;)
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Update_Arbeitstabelle_DocumentID()
+	sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+		&quot; SET PositionsID=NULL,DocumentID=&apos;&quot;&amp; lDocumentID_import(0) &amp;&quot;&apos;&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Update_Document1_Gesperrt_1(sTabelle,lDocID as long)
+	sSQL1=&quot;UPDATE &quot;&amp; sTabelle &amp;_
+		&quot; SET Gesperrt=&quot;&amp; iClientID &amp;&quot; WHERE DocumentID=&quot;&amp; lDocID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Update_Document1_Gesperrt_0(sTabelle,lDocID as long)
+	sSQL1=&quot;UPDATE &quot;&amp; sTabelle &amp;&quot; SET Gesperrt=0,Schreibschutz=1 WHERE DocumentID=&quot;&amp; lDocID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Datensaetze_Tabelle2_entfernen()
+	sSQL1=&quot;DELETE FROM &quot;&amp; sTabelle2 &amp;&quot;  WHERE DocumentID=&quot;&amp; fDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Pos_entfernen()
+	sSQL1=&quot;UPDATE &quot;&amp; sTabelle2 &amp;&quot; SET Pos=&apos;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_PositionsID_entfernen()
+	sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET PositionsID=NULL&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Datensaetze_Tabelle2_einfuegen()
+	if InStr(sTabelle2,&quot;Bestellungen2&quot;) &gt; 0 then
+		sSQL1=&quot;INSERT INTO &quot;&amp; sTabelle2 &amp;_
+			&quot; (PositionsID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp;_
+			&quot; Einheit,Menge,DocumentID,Pos,LV_Pos,Einkaufspreis,EP,GP,GZ,Pos_TypID)&quot;&amp;_
+			&quot; SELECT PositionsID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp;_
+			&quot; Einheit,Menge,DocumentID,Pos,LV_Pos,Einkaufspreis,EP,GP,GZ,Pos_TypID&quot;&amp;_
+			&quot; FROM &quot; &amp; sArbeitstabelle &amp;&quot; ORDER BY Pos ASC&quot;
+	else
+		sSQL1=&quot;INSERT INTO &quot;&amp; sTabelle2 &amp;_
+			&quot; (PositionsID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp;_
+			&quot; Einheit,Menge,DocumentID,Pos,LV_Pos,Einkaufspreis,&quot;&amp;_
+			&quot; Materialaufschlagsatz,Bauzeit,Minutenverrechnungssatz,Lieferung,Leistung,EP,GP,GZ,Pos_TypID)&quot;&amp;_
+			&quot; SELECT PositionsID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp;_
+			&quot; Einheit,Menge,DocumentID,Pos,LV_Pos,Einkaufspreis,&quot;&amp;_
+			&quot; Materialaufschlagsatz,Bauzeit,Minutenverrechnungssatz,Lieferung,Leistung,EP,GP,GZ,Pos_TypID&quot;&amp;_
+			&quot; FROM &quot; &amp; sArbeitstabelle &amp;&quot; ORDER BY Pos ASC&quot;
+	end if
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Leistung_berechnen()
+	sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+		&quot; SET Lieferung=Einkaufspreis*Materialaufschlagsatz,Leistung=Bauzeit*Minutenverrechnungssatz,EP=Lieferung+Leistung,GP=EP*Menge,GZ=Bauzeit*Menge/60&quot;&amp;_
+		&quot; WHERE Pos_TypID &lt; 4&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_AZ_berechnen(sMwSt_Satz as String)
+	sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+		&quot; SET Lieferung=&quot;&amp; sMwSt_Satz &amp;&quot;,Leistung=Einkaufspreis/100*&quot;&amp; sMwSt_Satz &amp;&quot;,EP=Einkaufspreis,GP=EP+Leistung&quot;&amp;_
+		&quot; WHERE Pos_TypID = 4&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Arbeitstabelle_fuellen()
+	sSQL1=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+		&quot; (PositionsID,DocumentID,Pos,LV_Pos,LeistungsID,Bestellnummer,&quot;&amp;_
+		&quot; Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,&quot;&amp;_
+		&quot; Einkaufspreis,Bauzeit,Minutenverrechnungssatz,Materialaufschlagsatz,Lieferung,Leistung,EP,GP,GZ,Pos_TypID)&quot;&amp;_
+		&quot; SELECT distinct t1.PositionsID,t1.DocumentID,t1.Pos,LV_Pos,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
+		&quot; t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,t1.Einheit,&quot;&amp;_
+		&quot; t1.Menge,t1.Einkaufspreis,t1.Bauzeit,t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz,t1.Lieferung,&quot;&amp;_
+		&quot; t1.Leistung,t1.EP,t1.GP,t1.GZ,t1.Pos_TypID&quot;&amp;_
+		&quot; FROM &quot;&amp; sTabelle2 &amp;&quot; as t1,Steuerung as t2 WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; AND t1.DocumentID=t2.DocumentID ORDER BY t1.PositionsID ASC&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Arbeitstabelle_fuellen_order_LeistungsID()
+	sSQL1=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+		&quot; (PositionsID,DocumentID,Pos,LV_Pos,LeistungsID,Bestellnummer,&quot;&amp;_
+		&quot; Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,&quot;&amp;_
+		&quot; Einkaufspreis,Bauzeit,Minutenverrechnungssatz,Materialaufschlagsatz,Lieferung,Leistung,EP,GP,GZ,Pos_TypID)&quot;&amp;_
+		&quot; SELECT distinct t1.PositionsID,t1.DocumentID,t1.Pos,LV_Pos,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
+		&quot; t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,t1.Einheit,&quot;&amp;_
+		&quot; t1.Menge,t1.Einkaufspreis,t1.Bauzeit,t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz,t1.Lieferung,&quot;&amp;_
+		&quot; t1.Leistung,t1.EP,t1.GP,t1.GZ,t1.Pos_TypID&quot;&amp;_
+		&quot; FROM &quot;&amp; sTabelle2 &amp;&quot; as t1,Steuerung as t2 WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; AND t1.DocumentID=t2.DocumentID ORDER BY t1.LeistungsID ASC&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Arbeitstabelle_leeren()
+	sSQL1=&quot;DELETE FROM &quot;&amp; sArbeitstabelle
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_DocumentID_entfernen()
+	sSQL2=&quot;UPDATE Steuerung SET DocumentID=null,DocumentID2=null,Stundenverrechnungssatz=null WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL2)
+End Sub
+
+Sub SQL_Update_DocumentID()
+	sSQL2=&quot;UPDATE Steuerung SET DocumentID=DocumentID2 WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL2)
+End Sub
+
+Sub SQL_Zwischensumme_einfuegen(sBezeichnung)
+	sSQL1=&quot;INSERT INTO &quot;&amp; sZwischensummen &amp;_
+		&quot; (DocumentID,Pos,ZwiSuName) VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; fPos_neu &amp;&quot;,&apos;&quot;&amp; sBezeichnung &amp;&quot;&apos;)&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Zwischenbemerkung_einfuegen(sBemerkung)
+	sSQL1=&quot;INSERT INTO &quot;&amp; sBemerkungen &amp;_
+		&quot; (DocumentID,Pos,Bemerkung) VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; fPos_neu &amp;&quot;,&apos;&quot;&amp; sBemerkung &amp;&quot;&apos;)&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Zwischenbemerkung_aendern(sBemerkung)
+	sSQL1=&quot;DELETE FROM &quot;&amp; sBemerkungen &amp;_
+		&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; AND Pos=&quot;&amp; fPos_neu
+	SQL_execute(sSQL1)
+	SQL_Zwischenbemerkung_einfuegen(sBemerkung)
+End Sub
+
+Sub SQL_Zwischenbemerkung_aendern_old(sBemerkung)
+	sSQL1=&quot;UPDATE &quot;&amp; sBemerkungen &amp;_
+	&quot; SET Bemerkung=&apos;&quot;&amp; sBemerkung &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; AND Pos=&quot;&amp; fPos_neu
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Update_Pos_Zwischensumme_Pos_einfuegen()
+	iMaxPos=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+	sSQL1=&quot;UPDATE &quot;&amp; sZwischensummen &amp;_
+		&quot; SET Pos=Pos+1,Zwischensumme=NULL,Bauzeit_Stunden=NULL,Materialeinsatz=NULL WHERE DocumentID=&quot;&amp; lDocumentID &amp;_
+		&quot; AND Pos &gt;=&quot;&amp; fiPos_neu &amp;&quot; AND Pos &lt; &quot;&amp; iMaxPos
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Update_Pos_Zwischenbemerkung_Pos_einfuegen()
+	iMaxPos=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+	sSQL1=&quot;UPDATE &quot;&amp; sBemerkungen &amp;_
+		&quot; SET Pos=Pos+1 WHERE DocumentID=&quot;&amp; lDocumentID &amp;_
+		&quot; AND Pos &gt;=&quot;&amp; fiPos_neu &amp;&quot; AND Pos &lt; &quot;&amp; iMaxPos - 1
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Document_loeschen_Tabelle3()
+	sSQL1=&quot;DELETE FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Document_loeschen_Tabelle4()
+	sSQL1=&quot;DELETE FROM &quot;&amp; sTabelle2 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Document_loeschen_Arbeitstabelle()
+	sSQL1=&quot;DELETE FROM &quot;&amp; sArbeitstabelle 
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Document_loeschen_Zwischensumme()
+	sSQL1=&quot;DELETE FROM &quot;&amp; sZwischensummen &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Document_loeschen_Bemerkungen()
+	sSQL1=&quot;DELETE FROM &quot;&amp; sBemerkungen &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_DocumentID_uebernehmen_Zwischensumme(lDocumentID_alt)
+	sSQL1=&quot;UPDATE &quot;&amp; sZwischensummen &amp;&quot; SET DocumentID=&quot;&amp; lDocumentID &amp;&quot; WHERE DocumentID=&apos;&quot;&amp; lDocumentID_alt &amp;&quot;&apos;&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_DocumentID_uebernehmen_Bemerkungen(lDocumentID_alt)
+	sSQL1=&quot;UPDATE &quot;&amp; sBemerkungen &amp;&quot; SET DocumentID=&quot;&amp; lDocumentID &amp;&quot; WHERE DocumentID=&apos;&quot;&amp; lDocumentID_alt &amp;&quot;&apos;&quot;
+	SQL_execute(sSQL1)
+End Sub
+
+Sub SQL_Datum_setzen()
+	if InStr(sKontakte,&quot;Lieferanten&quot;) &gt; 0 then
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
+			&quot; SET Erstellungsdatum=(date_add(now(),interval 0 month)),&quot;&amp;_
+			&quot;gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day)) WHERE DocumentID=&quot;&amp; lDocumentID
+	else
+		sSQL1=&quot;SELECT Skonto_Tage FROM &quot;&amp; sKontakte &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next
+			iSkonto_Tage=oRecord1.getInt(1)
+		Wend
+		if iSkonto_Tage &gt; 0 then
+			sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
+				&quot; SET Erstellungsdatum=(date_add(now(),interval 0 month)),&quot;&amp;_
+				&quot;gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day)),&quot;&amp;_
+				&quot;Skonto_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iSkonto_Tage &amp;&quot; day))WHERE DocumentID=&quot;&amp; lDocumentID
+		else
+			sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
+				&quot; SET Erstellungsdatum=(date_add(now(),interval 0 month)),&quot;&amp;_
+				&quot;gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day))WHERE DocumentID=&quot;&amp; lDocumentID
+		End if
+	End if
+	SQL_execute(sSQL2)
+End Sub
+</script:module>

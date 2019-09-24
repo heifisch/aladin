@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Leistungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+&apos;Global vViewCursor as Variant
+
+Sub Leistungen(iOption1 as Integer,iOption2 as Integer,ifLeistungsbezeichnung as Integer,ifLeistungsbeschreibung as Integer,sMaterialaufschlag as String,sStundensatz as String)
+	Dim sLeistungsID as String
+	Dim sLeistungsbezeichnung as String,sEinheit as String,sLeistungsbeschreibung as String,sLeistungstext as String
+	Dim sWarenbestand as String,sEinkaufspreis as String
+	Dim sGP as String,cGP as currency,cUebertrag as currency,sUebertrag as String
+	Dim lGruppenID as Long,sGruppenname as String
+	Dim lPosLeistung as Long
+	Dim lCountLeistung as Long,lCountInsert as Long,lCountGruppen as Long
+	Dim lCountGesamtLeistung as Long
+	Dim lAnzahlGruppen as Long,lAnzahlLeistungen as Long,lAnzahlGesamtLeistungen as Long
+	Dim oCursorDocTyp1 as Object,oCursorDocTyp2 as Object
+	Dim oRangeAltPos as Object,oRangeZwiSum as Object
+	Dim vColumns as Variant,vColumnPos as Variant
+	Dim iPageCountNew as Integer,iPageCount as Integer,iPageNumber as Integer
+	Dim oTables as Object
+	Dim vTableKopf1 as Variant,vTableKopf2 as Variant
+	Dim vTableLeistungen as Variant,vRowsLeistungen as Variant
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String
+	Dim oRecordLeistungen as Object,oRecordCountLeistungen as Object
+	Dim oRecordCountGruppen as Object,oRecordGruppen as Object
+	Dim oProgressbar as Object,oCursorGruppenName as Object,oCursorGruppenID as Object
+	Dim oStyleFamilies as Object,oPageStyles as Object,oPageStyle_1 as Object,oPageStyle_2 as Object
+	Dim vViewCursor as Variant
+	Dim sPreis as String,sNummern as String
+	Dim iCountHalt as Integer,iHalt as Integer
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	oTables = oDoc.getTextTables
+	vTableLeistungen = createunoservice(&quot;com.sun.star.text.TextTable&quot;)
+	vTableLeistungen = oTables.getByName(&quot;Leistungen&quot;)
+	vRowsLeistungen = vTableLeistungen.getRows()
+	vViewCursor = oDoc.CurrentController.getViewCursor()
+	oStyleFamilies= oDoc.getStyleFamilies()
+	oPageStyles = oStyleFamilies.getByName(&quot;PageStyles&quot;)
+	oPageStyle_1 = oPageStyles.getByName(&quot;Erste Seite&quot;)
+	oPageStyle_2 = oPageStyles.getByName(&quot;Standard&quot;)
+	
+	lAnzahlGesamtLeistungen=flAnzahlLeistungen
+	if lAnzahlGesamtLeistungen &gt; 0 then
+		oProgressbar = oDoc.GetCurrentController.GetFrame.CreateStatusIndicator
+		oProgressbar.Start(&quot;&quot;, lAnzahlGesamtLeistungen)
+	
+		select Case iOption1
+		case 1
+			sPreis=&quot;Einkaufspreis*&quot;&amp; sMaterialaufschlag
+		case 2
+			sPreis=&quot;Listenpreis*&quot;&amp; sMaterialaufschlag
+		case 3
+			sPreis=&quot;Bauzeit/60*&quot;&amp; sStundensatz
+		case 4
+			sPreis=&quot;Einkaufspreis*&quot;&amp; sMaterialaufschlag &amp;&quot;+Bauzeit/60*&quot;&amp; sStundensatz
+		case 5
+			sPreis=&quot;Listenpreis*&quot;&amp; sMaterialaufschlag &amp;&quot;+Bauzeit/60*&quot;&amp; sStundensatz
+		case else 
+			sPreis=&quot;Listenpreis*&quot;&amp; sMaterialaufschlag &amp;&quot;+Bauzeit/60*&quot;&amp; sStundensatz
+		End Select
+		
+		select Case iOption2
+		case 1
+			sNummern=&quot;LeistungsID&quot;
+		case 2
+			sNummern=&quot;Bestellnummer&quot;
+		case else
+			sNummern=&quot;LeistungsID&quot;
+		End Select
+		
+		sSQL1=&quot;select count(distinct GruppenID,PrintPreisliste)&quot;&amp;_
+			&quot; from &quot;&amp; sLeistungsgruppen &amp;_
+			&quot; where PrintPreisliste=1&quot;
+		oRecordCountGruppen=oResult(sSQL1)
+		While oRecordCountGruppen.next()
+			lAnzahlGruppen=oRecordCountGruppen.getLong(1)
+		Wend
+	
+		lCountGesamtLeistung=1	
+		lCountGruppen=1
+		lCountInsert = 2
+		iPageCount = 1
+		
+		Do While lAnzahlGruppen &gt;= lCountGruppen
+		
+			sSQL2=&quot;select distinct GruppenID,Gruppenname&quot;&amp;_
+				&quot; from &quot;&amp; sLeistungsgruppen &amp;_
+				&quot; where PrintPreisliste = 1&quot;&amp;_
+				&quot; order by GruppenID ASC&quot;
+			oRecordGruppen=oResult_Scroll(sSQL2)
+			oRecordGruppen.absolute(lCountGruppen)
+			lGruppenID = oRecordGruppen.getLong(1)
+			sGruppenname = oRecordGruppen.getString(2)
+			
+			vRowsLeistungen.insertByIndex(lCountInsert,1)
+			vRowsLeistungen.getByIndex(lCountInsert-1).IsAutoHeight = True
+		
+			oCursorGruppenID=vTableLeistungen.createCursorByCellName(&quot;A&quot; &amp; lCountInsert)
+			oCursorGruppenID.CharWeight=com.sun.star.awt.FontWeight.BOLD
+			vTableLeistungen.getCellByName(&quot;A&quot; &amp; lCountInsert).TopBorderDistance=600
+			vTableLeistungen.getCellByName(&quot;A&quot; &amp; lCountInsert).String=lGruppenID &amp; Chr$(13)
+			oCursorGruppenName=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; lCountInsert)
+			oCursorGruppenName.CharWeight=com.sun.star.awt.FontWeight.BOLD
+			vTableLeistungen.getCellByName(&quot;B&quot; &amp; lCountInsert).TopBorderDistance=600
+			vTableLeistungen.getCellByName(&quot;B&quot; &amp; lCountInsert).String=sGruppenname &amp; Chr$(13)
+			
+			oProgressbar.End		
+			oDoc.refresh()
+			oProgressbar = oDoc.GetCurrentController.GetFrame.CreateStatusIndicator
+			oProgressbar.Start(&quot;&quot;, lAnzahlGesamtLeistungen)
+			oProgressbar.Value = lCountGesamtLeistung
+	
+			lCountInsert=lCountInsert + 1
+			lCountGruppen = lCountGruppen+1
+			
+			lCountLeistung = 1
+			sSQL3=&quot;select count(*)&quot;&amp;_
+				&quot; from &quot;&amp; sLeistungsstamm &amp;_
+				&quot; where Leistungsgruppe = &quot;&amp; lGruppenID
+			oRecordCountLeistungen=oResult(sSQL3)
+			While oRecordCountLeistungen.next()
+				lAnzahlLeistungen=oRecordCountLeistungen.getLong(1)
+			Wend
+	
+			Do While lAnzahlLeistungen &gt;= lCountLeistung
+				sSQL4=&quot;select distinct &quot;&amp; sNummern &amp;&quot;,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,&quot;&amp; sPreis &amp;_
+					&quot; from &quot;&amp; sLeistungsstamm &amp;_
+					&quot; where Leistungsgruppe = &quot;&amp; lGruppenID &amp;_
+					&quot; order by &quot;&amp; sNummern &amp;&quot; ASC&quot;
+			
+				oProgressbar.Value = lCountGesamtLeistung
+	
+				oRecordLeistungen=oResult_Leistungen(sSQL4)
+				oRecordLeistungen.absolute(lCountLeistung)
+				sLeistungsID = oRecordLeistungen.getString(1)
+				sLeistungsbezeichnung = oRecordLeistungen.getString(2)
+				sLeistungsbeschreibung = oRecordLeistungen.getString(3)
+				sEinheit = oRecordLeistungen.getString(4)
+				sEinkaufspreis = oRecordLeistungen.getString(5)
+				sLeistungstext = &quot;&quot;
+				if ifLeistungsbezeichnung = 1 and sLeistungsbezeichnung &lt;&gt; &quot;&quot; then
+					sLeistungstext = sLeistungsbezeichnung
+				End if
+				if ifLeistungsbeschreibung = 1 then
+					if sLeistungsbeschreibung = &quot;&quot; and ifLeistungsbezeichnung = 0 then
+						sLeistungstext = sLeistungsbezeichnung
+					elseif sLeistungsbeschreibung &lt;&gt; &quot;&quot; then
+						if sLeistungstext = &quot;&quot; then
+							sLeistungstext = sLeistungsbeschreibung
+						else
+							sLeistungstext = sLeistungstext &amp; Chr(10) &amp; sLeistungsbeschreibung
+						End if
+					End if
+				End if
+	
+				vRowsLeistungen.insertByIndex(lCountInsert,1)
+				vRowsLeistungen.getByIndex(lCountInsert-1).IsAutoHeight = True
+	
+				vTableLeistungen.getCellByName(&quot;A&quot; &amp; lCountInsert).TopBorderDistance=100
+				vTableLeistungen.getCellByName(&quot;B&quot; &amp; lCountInsert).TopBorderDistance=100
+				vTableLeistungen.getCellByName(&quot;C&quot; &amp; lCountInsert).TopBorderDistance=100
+				vTableLeistungen.getCellByName(&quot;D&quot; &amp; lCountInsert).TopBorderDistance=100
+			
+				vTableLeistungen.getCellByName(&quot;A&quot; &amp; lCountInsert).String=sLeistungsID
+	
+				vTableLeistungen.getCellByName(&quot;B&quot; &amp; lCountInsert).String=sLeistungstext
+	
+				vTableLeistungen.getCellByName(&quot;C&quot; &amp; lCountInsert).String=sEinheit
+				vTableLeistungen.getCellByName(&quot;D&quot; &amp; lCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sEinkaufspreis))
+	
+				lCountInsert=lCountInsert + 1
+				lCountLeistung = lCountLeistung + 1
+				lCountGesamtLeistung=lCountGesamtLeistung + 1
+			Loop
+	
+			oProgressbar.End		
+			oDoc.refresh()
+			oProgressbar = oDoc.GetCurrentController.GetFrame.CreateStatusIndicator
+			oProgressbar.Start(&quot;&quot;, lAnzahlGesamtLeistungen)
+			oProgressbar.Value = lCountGesamtLeistung
+	
+			wait 1
+	
+			if lAnzahlGruppen &gt;= lCountGruppen then
+		
+				vViewCursor = oDoc.CurrentController.getViewCursor()
+				vViewCursor.jumpToLastPage()
+				wait 1
+				iPageCount=vViewCursor.getPage()
+				iCountHalt=0
+				iHalt=0
+				Do Until iPageCount &lt; vViewCursor.getPage()
+					vRowsLeistungen.insertByIndex(lCountInsert,1)
+					lCountInsert=lCountInsert + 1
+					vViewCursor.jumpToLastPage()
+					iCountHalt=iCountHalt+1
+					if iCountHalt &gt; 50 then
+						MsgBox(&quot;Es ist ein Fehler beim Erzeugen des Dokumentes aufgetreten.&quot;&amp; Chr(10) &amp;_
+								&quot;Bitte starten Sie den Ausdruck neu!&quot;,16,sTitle_lokal)
+						iHalt=1
+						Exit Do
+					End if
+				Loop
+				if iHalt=1 then
+					oProgressbar.End
+					stop
+				End if
+				oProgressbar.End		
+				oDoc.refresh()
+				oProgressbar = oDoc.GetCurrentController.GetFrame.CreateStatusIndicator
+				oProgressbar.Start(&quot;&quot;, lAnzahlGesamtLeistungen)
+				oProgressbar.Value = lCountGesamtLeistung
+			End if
+		Loop
+		oProgressbar.End
+	else
+		MsgBox(&quot;Sie haben noch keine Gruppen ausgewählt aus denen Leistungen in der Preisliste gedruckt werden könnten!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+</script:module>

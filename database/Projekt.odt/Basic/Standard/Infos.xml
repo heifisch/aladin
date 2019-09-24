@@ -1,0 +1,307 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Infos" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sAnrede as String,sTitel as String,sVorname as String,sName1 as String
+Dim sName2 as String,sName3 as String,sName4 as String
+Dim sLand as String,sPLZ as String,sOrt as String
+Dim sStrasse as String,sHausnummer as String,sMindestangaben as String,sTelefon as String
+Dim sFunktelefon as String,sFax as String,sEMail as String,sUrl as String
+Dim sReferenzID as String,sOrdner as String
+Dim sAnrede_Ansprechpartner as String,sTitel_Ansprechpartner as String
+Dim sVorname_Ansprechpartner as String,sName_Ansprechpartner as String
+Dim sFunktelefon_Ansprechpartner as String,sFax_Ansprechpartner as String
+Dim sEMail_Ansprechpartner as String,sTelefon_Ansprechpartner as String
+Dim sBemerkung_Ansprechpartner as String,sAbteilung_Ansprechpartner as String
+
+Dim sLeistungsgruppe as String,sBauzeit as String,sEinkaufspreis as String,sListenpreis as String
+Dim sWarenbestand as String,sGruppenname as String,sBestellnummer as String
+Dim sLeistungsID as string
+Dim sLeistungsbezeichnung as string,sLeistungsbeschreibung as String,sEinheit as String
+Dim iPos as integer
+Dim sBemerkung as String
+Dim oRecord1 as Object
+Dim sSQL1 as String,sSQL2 as String
+
+Sub Aufwand_anzeigen()
+	if lDocumentID &gt; 0 then
+		Dim sMaterialeinsatz as String,sBauzeit_Tage as String,sBauzeit_Stunden as String
+		Dim sSumme_ohne_MwSt as String,sSumme_MwSt as String,sSumme_mit_MwSt as String
+		Dim sAZ_ohne_MwSt as String,sAZ_MwSt as String,sAZ_mit_MwSt as String
+		Dim sZahlbetrag_ohne_MwSt as String,sZahlbetrag_MwSt as String,sZahlbetrag_mit_MwSt as String
+		Dim sRechnungen as String
+		
+		sSQL1=&quot;SELECT distinct Materialeinsatz,Bauzeit_Tage,Bauzeit_Stunden,&quot;&amp;_
+			&quot;Summe_nach_Korrektur,MwSt,Summe_mit_MwSt,&quot;&amp;_
+			&quot;AZ_ohne_MwSt,AZ_MwSt,AZ_mit_MwSt,&quot;&amp;_
+			&quot;Zahlbetrag_ohne_MwSt,Zahlbetrag_MwSt,Zahlbetrag_mit_MwSt&quot;&amp;_
+			&quot; FROM &quot;&amp;_
+			sTabelle1 &amp;&quot; WHERE DocumentID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sMaterialeinsatz=oRecord1.getString(1)
+			sBauzeit_Tage=oRecord1.getString(2)
+			sBauzeit_Stunden=oRecord1.getString(3)
+			sSumme_ohne_MwSt=oRecord1.getString(4)
+			sSumme_MwSt=oRecord1.getString(5)
+			sSumme_mit_MwSt=oRecord1.getString(6)
+			sAZ_ohne_MwSt=oRecord1.getString(7)
+			sAZ_MwSt=oRecord1.getString(8)
+			sAZ_mit_MwSt=oRecord1.getString(9)
+			sZahlbetrag_ohne_MwSt=oRecord1.getString(10)
+			sZahlbetrag_MwSt=oRecord1.getString(11)
+			sZahlbetrag_mit_MwSt=oRecord1.getString(12)
+		Wend
+		if iDocTypID=5 OR iDocTypID=6 then
+			sRechnungen=&quot;_______________________________________________________________&quot;&amp;_
+					Chr$(13)&amp; Chr$(13) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            &quot;ohne MwST&quot; &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp;&quot;MwSt&quot;&amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp;&quot;mit MwSt&quot;&amp; Chr$(13) &amp;_
+		            &quot;Rechnungssumme  &quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sSumme_ohne_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sSumme_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sSumme_mit_MwSt)) &amp; &quot; €&quot; &amp; Chr$(13)&amp;_
+		            &quot;./. Abschlagszahlungen   &quot;&amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sAZ_ohne_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sAZ_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sAZ_mit_MwSt)) &amp; &quot; €&quot; &amp; Chr$(13) &amp;_
+		            &quot;Restbetrag  &quot;&amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_ohne_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_mit_MwSt)) &amp; &quot; €&quot;
+		  else
+		  	sRechnungen=&quot;&quot;
+		  End if
+
+		MsgBox(Chr$(13) &amp; Chr$(13) &amp;_
+			&quot; Materialeinsatz in &quot;&amp; sWaehrung &amp;&quot;: &quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sMaterialeinsatz)) &amp; Chr$(13) &amp;_
+			&quot;      Bauzeit in Tagen: &quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sBauzeit_Tage)) &amp; Chr$(13) &amp;_
+			&quot;  Bauzeit in Stunden: &quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sBauzeit_Stunden)) &amp; Chr$(13) &amp; Chr$(13) &amp; Chr$(13) &amp;_
+			sRechnungen ,64,sTitle_lokal &amp;&quot; Aufwand&quot;) 
+
+
+	End if
+End Sub
+
+Sub Leistungsdaten_anzeigen
+Dim sLeistungsdaten as String
+	Leistungsauswahl_commit()
+
+	if fSelected_Item(oList_Leistungsauswahl) &lt;&gt; &quot;&quot; then
+		sSQL1=&quot;SELECT t1.Bestellnummer,t1.Leistungsgruppe,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&quot;&amp;_
+			&quot;t1.Einheit,t1.Bauzeit,t1.Einkaufspreis,t1.Listenpreis,t1.Warenbestand,t2.Gruppenname&quot;&amp;_
+			&quot; FROM &quot; &amp; sLeistungsstamm &amp; &quot; as t1,&quot; &amp; sLeistungsgruppen &amp; &quot; as t2 WHERE LeistungsID=&apos;&quot;&amp; fLeistungsID &amp;_
+			&quot;&apos; AND t2.GruppenID=t1.Leistungsgruppe&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sBestellnummer=oRecord1.getString(1)
+			sLeistungsgruppe=oRecord1.getString(2)
+			sLeistungsbezeichnung=oRecord1.getString(3)
+			sLeistungsbeschreibung=oRecord1.getString(4)
+			sEinheit=oRecord1.getString(5)
+			sBauzeit=oRecord1.getString(6)
+			sEinkaufspreis=oRecord1.getString(7)
+			sListenpreis=oRecord1.getString(8)
+			sWarenbestand=oRecord1.getString(9)
+			sGruppenname=oRecord1.getString(10)
+		Wend
+		sLeistungsdaten = &quot;        LeistungsID:&quot;&amp;Chr$(9)&amp; fLeistungsID &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  &quot;  Bestellnummer:&quot;&amp;Chr$(9)&amp; sBestellnummer &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  &quot;Leistungsgruppe:&quot;&amp;Chr$(9)&amp; sLeistungsgruppe &amp;&quot; - &quot;&amp; sGruppenname &amp;Chr$(13)&amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  &quot;Leistungsbezeichnung:&quot; &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  sLeistungsbezeichnung &amp;Chr$(13)&amp;Chr$(13)&amp;Chr$(13)
+		if sLeistungsbeschreibung &lt;&gt; &quot;&quot; then
+						sLeistungsdaten = sLeistungsdaten &amp;_
+						  &quot;Leistungsbeschreibung:&quot; &amp;Chr$(13)&amp;Chr$(13)&amp;_
+						  sLeistungsbeschreibung &amp;Chr$(13)&amp;Chr$(13)&amp;Chr$(13)
+		End if
+		sLeistungsdaten = sLeistungsdaten &amp;_
+			  &quot;              Einheit:&quot;&amp; Chr$(9)&amp; sEinheit &amp;Chr$(13)&amp;_
+			  &quot;             Bauzeit:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sBauzeit) &amp;&quot; Minuten &quot; &amp;Chr$(13)&amp;_
+			  &quot;    Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
+			  &quot;        Listenpreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sListenpreis) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
+			  &quot;  Warenbestand:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sWarenbestand) &amp;&quot; &quot;&amp; sEinheit &amp;Chr$(13)
+		MsgBox(sLeistungsdaten,64,sTitle_lokal &amp;&quot; Leistungsdaten&quot;)
+	End if
+End Sub
+
+Sub Leistungsbeschreibung_anzeigen
+	iPos=CInt(oColumn_Position.getCurrentValue) 
+	if iPos &gt; 0 then
+		sSQL1=&quot;SELECT distinct Leistungsbeschreibung,LeistungsID,Bestellnummer FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos=&quot;&amp; iPos
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()	
+			sLeistungsbeschreibung=oRecord1.getString(1)
+			sLeistungsID=oRecord1.getString(2)
+			sBestellnummer=oRecord1.getString(3)
+		Wend
+		if sLeistungsbeschreibung = &quot;&quot; OR sLeistungsbeschreibung = &quot; &quot; then
+			MsgBox(sLeistungsID &amp;Chr$(13)&amp;Chr$(13)&amp;_
+				&quot;Bestellnummer: &quot;&amp; sBestellnummer &amp;Chr$(13)&amp;Chr$(13)&amp;_
+				&quot;*** Es ist keine Leistungsbeschreibung vorhanden! ***&quot;,64,sTitle_lokal &amp;&quot; Leistungsbeschreibung&quot;)
+		else
+			MsgBox(sLeistungsID &amp;Chr$(13)&amp;Chr$(13)&amp;_
+				&quot;Bestellnummer: &quot;&amp; sBestellnummer &amp;Chr$(13)&amp;Chr$(13)&amp;_
+				sLeistungsbeschreibung,64,sTitle_lokal &amp;&quot; Leistungsbeschreibung&quot;)
+		End if
+	else
+		MsgBox(&quot;Sie haben noch keine Position ausgewählt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+Sub Kontaktdaten_anzeigen
+Dim sKontaktdaten as String
+	if lKontaktID &lt;&gt; 0 then
+		sSQL1=&quot;SELECT distinct Anrede,Titel,Vorname,Name1,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,&quot;&amp;_
+			&quot;Hausnummer,Mindestangaben,Telefon,Funktelefon,Fax,EMail,Url,ReferenzID,Bemerkungen,Ordner&quot;&amp;_
+			&quot; FROM &quot;&amp; sKontakte &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sAnrede=oRecord1.getString(1)
+			sTitel=oRecord1.getString(2)
+			sVorname=oRecord1.getString(3)
+			sName1=oRecord1.getString(4)
+			sName2=oRecord1.getString(5)
+			sName3=oRecord1.getString(6)
+			sName4=oRecord1.getString(7)
+			sLand=oRecord1.getString(8)
+			sPLZ=oRecord1.getString(9)
+			sOrt=oRecord1.getString(10)
+			sStrasse=oRecord1.getString(11)
+			sHausnummer=oRecord1.getString(12)
+			sMindestangaben=oRecord1.getString(13)
+			sTelefon=oRecord1.getString(14)
+			sFunktelefon=oRecord1.getString(15)
+			sFax=oRecord1.getString(16)
+			sEMail=oRecord1.getString(17)
+			sUrl=oRecord1.getString(18)
+			sReferenzID=oRecord1.getString(19)
+			sBemerkung=oRecord1.getString(20)
+			sOrdner=oRecord1.getString(21)
+		Wend
+		sKontaktdaten=&quot;    Kontaktnummer:&quot;&amp; Chr$(9) &amp; lKontaktID &amp; Chr$(13)&amp; Chr$(13)
+		if sReferenzID &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp;&quot;   Referenznummer:&quot;&amp; Chr$(9) &amp; sReferenzID &amp; Chr$(13)&amp; Chr$(13)
+		End if
+		if sAnrede &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sAnrede &amp; Chr$(13)
+		End if
+		sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)
+		if sTitel &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sTitel &amp; &quot; &quot;
+		End if
+		if sVorname &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sVorname &amp; &quot; &quot;
+		End if
+		if sName1 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sName1 &amp; Chr$(13)
+		End if
+		if sName2 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sName2 &amp; Chr$(13)
+		End if
+		if sName3 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sName3 &amp; Chr$(13)
+		End if
+		if sName4 &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sName4 &amp; Chr$(13)
+		End if
+		if sPLZ &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sPLZ &amp; &quot; &quot;
+		End if
+		if sOrt &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sOrt &amp; Chr$(13)
+		End if
+		if sStrasse &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sStrasse &amp;&quot; &quot;&amp; sHausnummer &amp;Chr$(13)
+		End if
+		if sLand &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp; sLand &amp;Chr$(13)&amp;Chr$(13)
+		End if
+		if sMindestangaben &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; sMindestangaben &amp; Chr$(13)&amp;Chr$(13)
+		End if
+		if sTelefon &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp;  &quot;Telefon:&quot;&amp;Chr$(9)&amp; sTelefon &amp;Chr$(13)
+		End if
+		if sFax &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;      Fax:&quot;&amp;Chr$(9)&amp; sFax &amp;Chr$(13)
+		End if
+		if sFunktelefon &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;   Mobil:&quot;&amp;Chr$(9)&amp; sFunktelefon &amp;Chr$(13)
+		End if
+		if sEMail &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;   Email:&quot;&amp;Chr$(9)&amp; sEMail &amp;Chr$(13)
+		End if
+		if sUrl &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;       Url:&quot;&amp;Chr$(9)&amp; sUrl &amp;Chr$(13)&amp;Chr$(13)
+		End if
+		if sBemerkung &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;Bemerkungen:&quot; &amp;Chr$(13)&amp; sBemerkung &amp;Chr$(13)&amp;Chr$(13)
+		End if
+		if sOrdner &lt;&gt; &quot;&quot; then
+			sKontaktdaten=sKontaktdaten &amp; &quot;Ordner:&quot;&amp;Chr$(9)&amp; sOrdner &amp;Chr$(13)&amp;Chr$(13)
+		End if
+
+		if lAnsprechpartnerID &gt; 0 then
+			sSQL2=&quot;SELECT distinct Anrede,Titel,Vorname,Name,Abteilung,&quot;&amp;_
+				&quot;Telefon,Funktelefon,Fax,EMail,Bemerkungen&quot;&amp;_
+				&quot; FROM &quot;&amp; sAnsprechpartner &amp;&quot; WHERE AnsprechpartnerID=&quot;&amp; lAnsprechpartnerID
+			oRecord1=oResult(sSQL2)
+			While oRecord1.next()
+				sAnrede_Ansprechpartner=oRecord1.getString(1)
+				sTitel_Ansprechpartner=oRecord1.getString(2)
+				sVorname_Ansprechpartner=oRecord1.getString(3)
+				sName_Ansprechpartner=oRecord1.getString(4)
+				sAbteilung_Ansprechpartner=oRecord1.getString(5)
+				sTelefon_Ansprechpartner=oRecord1.getString(6)
+				sFunktelefon_Ansprechpartner=oRecord1.getString(7)
+				sFax_Ansprechpartner=oRecord1.getString(8)
+				sEMail_Ansprechpartner=oRecord1.getString(9)
+				sBemerkung_Ansprechpartner=oRecord1.getString(10)
+			Wend
+			sKontaktdaten=sKontaktdaten &amp; &quot;______________________________________________________&quot;&amp;Chr$(13)&amp;Chr$(13)
+			if lAnsprechpartnerID &lt;&gt; 0 then
+				sKontaktdaten=sKontaktdaten &amp; &quot;Ansprechpartner:&quot;&amp;Chr$(9)&amp; lAnsprechpartnerID &amp;Chr$(13)&amp;Chr$(13)
+			End if
+			if sAnrede_Ansprechpartner &lt;&gt; &quot;&quot; then
+				sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;sAnrede_Ansprechpartner &amp;Chr$(13)
+			End if
+			sKontaktdaten=sKontaktdaten &amp; Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)&amp;Chr$(9)
+			if sTitel_Ansprechpartner &lt;&gt; &quot;&quot; then
+				sKontaktdaten=sKontaktdaten &amp; sTitel_Ansprechpartner &amp;&quot; &quot;
+			End if
+			if sVorname_Ansprechpartner &lt;&gt; &quot;&quot; then
+				sKontaktdaten=sKontaktdaten &amp; sVorname_Ansprechpartner &amp;&quot; &quot;
+			End if
+			if sName_Ansprechpartner &lt;&gt; &quot;&quot; then
+				sKontaktdaten=sKontaktdaten &amp; sName_Ansprechpartner &amp; Chr$(13)&amp;Chr$(13)
+			End if
+			if sAbteilung_Ansprechpartner &lt;&gt; &quot;&quot; then
+				sKontaktdaten=sKontaktdaten &amp; &quot;Abteilung:&quot;&amp;Chr$(9)&amp; sAbteilung_Ansprechpartner &amp;Chr$(13)
+			End if
+			if sTelefon_Ansprechpartner &lt;&gt; &quot;&quot; then
+				sKontaktdaten=sKontaktdaten &amp; &quot;   Telefon:&quot;&amp;Chr$(9)&amp; sTelefon_Ansprechpartner &amp;Chr$(13)
+			End if
+			if sFax_Ansprechpartner &lt;&gt; &quot;&quot; then
+				sKontaktdaten=sKontaktdaten &amp; &quot;         Fax:&quot;&amp;Chr$(9)&amp; sFax_Ansprechpartner &amp;Chr$(13)
+			End if
+			if sFunktelefon_Ansprechpartner &lt;&gt; &quot;&quot; then
+				sKontaktdaten=sKontaktdaten &amp; &quot;      Mobil:&quot;&amp;Chr$(9)&amp; sFunktelefon_Ansprechpartner &amp;Chr$(13)
+			End if
+			if sEMail_Ansprechpartner &lt;&gt; &quot;&quot; then
+				sKontaktdaten=sKontaktdaten &amp; &quot;      Email:&quot;&amp;Chr$(9)&amp; sEMail_Ansprechpartner &amp;Chr$(13)&amp;Chr$(13)
+			End if
+			if sBemerkung_Ansprechpartner &lt;&gt; &quot;&quot; then
+				sKontaktdaten=sKontaktdaten &amp; &quot;Bemerkungen:&quot; &amp;Chr$(13)&amp; sBemerkung_Ansprechpartner &amp;Chr$(13)&amp;Chr$(13)
+			End if
+		End if
+		MsgBox(sKontaktdaten,64,sTitle_lokal &amp;&quot; &quot;&amp; sKontakte &amp;&quot;daten&quot;)
+	End if
+End Sub
+
+
+</script:module>

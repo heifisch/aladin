@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pos" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option Explicit
+
+Sub Pos_kopieren
+	Pos_kopieren_sub(0)
+End Sub
+
+Sub Pos_kopieren_loeschen
+	Pos_kopieren_sub(1)
+End Sub
+
+Sub Pos_kopieren_sub(iReset AS Integer)
+	Dim sDatum AS String,sPersonalID AS String,sProjektID AS String,ifOption_Datum AS Long
+	Dim oRecord1 AS Object
+	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+	Dim lPositionsID AS long
+	Dim ifLokation AS String,iLokation_eingeben AS Integer,sLokation AS String
+	lPositionsID=flPositionsID()
+		if iReset = 0 then
+			if iVorgang_cp = 0 then
+				if lPositionsID &gt; 0 then
+					sSQL1=&quot;SELECT LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,Einkaufspreis,&quot;&amp;_
+						&quot;Bauzeit,Minutenverrechnungssatz,Materialaufschlagsatz,LV_Pos FROM &quot;&amp; sControlling &amp;&quot; WHERE PositionsID=&quot;&amp; lPositionsID
+					oRecord1=oResult(sSQL1)
+					While oRecord1.next()	
+						SetDocUserProperty(&quot;oLeistungsID_cp&quot;, oRecord1.getString(1))
+						SetDocUserProperty(&quot;oBestellnummer_cp&quot;, oRecord1.getString(2))
+						SetDocUserProperty(&quot;oLeistungsbezeichnung_cp&quot;, oRecord1.getString(3))
+						SetDocUserProperty(&quot;oLeistungsbeschreibung_cp&quot;, oRecord1.getString(4))
+						SetDocUserProperty(&quot;oEinheit_cp&quot;, oRecord1.getString(5))
+						SetDocUserProperty(&quot;oMenge_cp&quot;, oRecord1.getString(6))
+						SetDocUserProperty(&quot;oEinkaufspreis_cp&quot;, oRecord1.getString(7))
+						SetDocUserProperty(&quot;oBauzeit_cp&quot;, oRecord1.getString(8))
+						SetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;, oRecord1.getString(9))
+						SetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;, oRecord1.getString(10))
+						SetDocUserProperty(&quot;oLV_Pos_cp&quot;, oRecord1.getString(11))
+					Wend
+					
+					SetDocUserProperty(&quot;oVorgang_cp&quot;, &quot;1&quot;)
+					oButton_Pos_kopieren.Label=&quot;Einfügen&quot;
+					oButton_Pos_kopieren.TextColor=16711680
+					oButton_Pos_kopieren.HelpText=&quot;Den aktuellen Datensatz einfügen: &quot;&amp; sLeistungsbezeichnung_cp &amp;&quot;  &quot;									
+				else
+					MsgBox(&quot;Sie haben noch keine Position ausgewählt!&quot;,16,sTitle_lokal)
+				End if	
+			elseif iVorgang_cp = 1 then
+				sSQL1=&quot;SELECT Datum,PersonalID,ProjektID,Lokation,Option_5&quot;&amp;_
+					&quot; FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+				oRecord1=oResult(sSQL1)
+				While oRecord1.next()
+					sDatum=oRecord1.getString(1)
+					sPersonalID=oRecord1.getString(2)
+					sProjektID=oRecord1.getString(3)
+					ifLokation=oRecord1.getString(4)
+					ifOption_Datum=oRecord1.getLong(5)
+				Wend
+				if sDatum = &quot;&quot; then
+					MsgBox(&quot;Sie haben noch kein Datum ausgewählt!&quot;,16,sTitle_lokal)
+					Exit Sub
+				else
+					if ifOption_Datum &gt; 0 then
+						MsgBox(&quot;Bitte wählen Sie vorher als Datums-Option &quot;&amp; Chr(34) &amp;&quot;am&quot;&amp; Chr(34)&amp;&quot; !&quot;,16,sTitle_lokal)
+						Exit Sub
+					else
+						if sPersonalID = &quot;&quot; then
+							MsgBox(&quot;Sie haben noch keinen Mitarbeiter ausgewählt!&quot;,16,sTitle_lokal)
+							Exit Sub
+						else
+							if sProjektID = &quot;&quot; then
+								MsgBox(&quot;Sie haben noch kein Projekt ausgewählt!&quot;,16,sTitle_lokal)
+								Exit Sub
+							else
+								iLokation_eingeben=fLokation_eingeben(0)			
+								if iLokation_eingeben=1 then
+									sLokation=InputBox(&quot;Bitte geben Sie einen Lokation für die Leistung ein!&quot;,sTitle_lokal)
+								else
+									sLokation=ifLokation
+								End if
+								sSQL2=&quot;INSERT INTO  &quot;&amp; sControlling &amp;_
+									&quot;(LV_Pos,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,&quot;&amp;_
+									&quot;Einkaufspreis,Bauzeit,Minutenverrechnungssatz,Materialaufschlagsatz,Erstellungsdatum,PersonalID,ProjektID,Lokation)&quot;&amp;_
+									&quot; VALUES (&apos;&quot;&amp; sLV_Pos_cp &amp;&quot;&apos;,&apos;&quot;&amp; sLeistungsID_cp &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer_cp &amp;_
+									&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung_cp) &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung_cp) &amp;_
+									&quot;&apos;,&apos;&quot;&amp; sEinheit_cp &amp;&quot;&apos;,&quot;&amp; cMenge_cp &amp;&quot;,&quot;&amp; cEinkaufspreis_cp &amp;&quot;,&quot;&amp; cBauzeit_cp &amp;&quot;,&quot;&amp; cMinutenverechnungssatz_cp &amp;_
+									&quot;,&quot; &amp; cMaterialaufschlagsatz_cp &amp;&quot;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;)&quot;
+								SQL_execute(sSQL2)
+								oForm_Tabellendaten.reload()
+								oForm_Tabellendaten.last
+								SetDocUserProperty(&quot;oVorgang_cp&quot;, &quot;1&quot;)
+							End if
+						End if
+					End if
+				End if
+			End if
+		elseif iReset = 1 then
+			sSQL2=&quot;SELECT &apos;&apos;&quot;
+			oRecord1=oResult(sSQL2)
+			SetDocUserProperty(&quot;oLeistungsID_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oBestellnummer_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oLeistungsbezeichnung_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oLeistungsbeschreibung_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oEinheit_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMenge_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oEinkaufspreis_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oBauzeit_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oVorgang_cp&quot;, &quot;0&quot;)
+			oButton_Pos_kopieren.Label=&quot;Kopieren&quot;
+			oButton_Pos_kopieren.TextColor=16777215
+			oButton_Pos_kopieren.HelpText=&quot;Den aktuellen Datensatz kopieren.&quot;
+		End if
+End Sub
+
+Sub Pos_verschieben
+	Pos_verschieben_sub(0)
+End Sub
+
+Sub Pos_verschieben_loeschen
+	Pos_verschieben_sub(1)
+End Sub
+
+Sub Pos_verschieben_sub(iReset AS Integer)
+	Dim sDatum AS String,sPersonalID AS String,sProjektID AS String,ifOption_Datum AS Long
+	Dim oRecord1 AS Object
+	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+	Dim lPositionsID AS long
+	Dim ifLokation AS String,iLokation_eingeben AS Integer,sLokation AS String
+	lPositionsID=flPositionsID() 
+		if iReset = 0 then
+			if iVorgang_mv = 0 then
+				if lPositionsID &gt; 0 then
+					sSQL1=&quot;SELECT LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,Einkaufspreis,Bauzeit,&quot;&amp;_
+						&quot;Minutenverrechnungssatz,Materialaufschlagsatz,LV_Pos FROM &quot;&amp; sControlling &amp;&quot; WHERE PositionsID=&quot;&amp; lPositionsID
+					oRecord1=oResult(sSQL1)
+					While oRecord1.next()	
+						SetDocUserProperty(&quot;oLeistungsID_mv&quot;, oRecord1.getString(1))
+						SetDocUserProperty(&quot;oBestellnummer_mv&quot;, oRecord1.getString(2))
+						SetDocUserProperty(&quot;oLeistungsbezeichnung_mv&quot;, oRecord1.getString(3))
+						SetDocUserProperty(&quot;oLeistungsbeschreibung_mv&quot;, oRecord1.getString(4))
+						SetDocUserProperty(&quot;oEinheit_mv&quot;, oRecord1.getString(5))
+						SetDocUserProperty(&quot;oMenge_mv&quot;, oRecord1.getString(6))
+						SetDocUserProperty(&quot;oEinkaufspreis_mv&quot;, oRecord1.getString(7))
+						SetDocUserProperty(&quot;oBauzeit_mv&quot;, oRecord1.getString(8))
+						SetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;, oRecord1.getString(9))
+						SetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;, oRecord1.getString(10))
+						SetDocUserProperty(&quot;oLV_Pos_mv&quot;, oRecord1.getString(11))
+					Wend
+					SetDocUserProperty(&quot;oVorgang_mv&quot;, &quot;1&quot;)
+					oButton_Pos_verschieben.Label=&quot;Einfügen&quot;
+					oButton_Pos_verschieben.TextColor=16711680
+					oButton_Pos_verschieben.HelpText=&quot;Den aktuellen Datensatz einfügen: &quot;&amp; sLeistungsbezeichnung_cp &amp;&quot;  &quot;
+					sSQL2=&quot;delete FROM &quot;&amp; sControlling &amp;&quot; WHERE PositionsID=&quot;&amp; lPositionsID
+					SQL_execute(sSQL2)
+					SQL_Reset_AutoIncrement(sControlling)
+					oForm_Tabellendaten.reload()
+					oForm_Tabellendaten.last
+				else
+					MsgBox(&quot;Sie haben noch keine Position ausgewählt!&quot;,16,sTitle_lokal)
+				End if
+			elseif iVorgang_mv = 1 then
+				sSQL1=&quot;SELECT Datum,PersonalID,ProjektID,Lokation,Option_5&quot;&amp;_
+					&quot; FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+				oRecord1=oResult(sSQL1)
+				While oRecord1.next()
+					sDatum=oRecord1.getString(1)
+					sPersonalID=oRecord1.getString(2)
+					sProjektID=oRecord1.getString(3)
+					ifLokation=oRecord1.getString(4)
+					ifOption_Datum=oRecord1.getLong(5)
+				Wend
+				if sDatum = &quot;&quot; then
+					MsgBox(&quot;Sie haben noch kein Datum ausgewählt!&quot;,16,sTitle_lokal)
+					Exit Sub
+				else
+					if ifOption_Datum &gt; 0 then
+						MsgBox(&quot;Bitte wählen Sie vorher als Datums-Option &quot;&amp; Chr(34) &amp;&quot;am&quot;&amp; Chr(34)&amp;&quot; !&quot;,16,sTitle_lokal)
+						Exit Sub
+					else
+						if sPersonalID = &quot;&quot; then
+							MsgBox(&quot;Sie haben noch keinen Mitarbeiter ausgewählt!&quot;,16,sTitle_lokal)
+							Exit Sub
+						else
+							if sProjektID = &quot;&quot; then
+								MsgBox(&quot;Sie haben noch kein Projekt ausgewählt!&quot;,16,sTitle_lokal)
+								Exit Sub
+							else
+								iLokation_eingeben=fLokation_eingeben(0)			
+								if iLokation_eingeben=1 then
+									sLokation=InputBox(&quot;Bitte geben Sie einen Lokation für die Leistung ein!&quot;)
+								else
+									sLokation=ifLokation
+								End if
+								sSQL2=&quot;INSERT INTO  &quot;&amp; sControlling &amp;_
+									&quot;(LV_Pos,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,&quot;&amp;_
+									&quot;Einkaufspreis,Bauzeit,Minutenverrechnungssatz,Materialaufschlagsatz,Erstellungsdatum,PersonalID,ProjektID,Lokation)&quot;&amp;_
+									&quot; VALUES (&apos;&quot;&amp; sLV_Pos_mv &amp;&quot;&apos;,&apos;&quot;&amp; sLeistungsID_mv &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer_mv &amp;_
+									&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung_mv) &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung_mv) &amp;_
+									&quot;&apos;,&apos;&quot;&amp; sEinheit_mv &amp;&quot;&apos;,&quot;&amp; cMenge_mv &amp;&quot;,&quot;&amp; cEinkaufspreis_mv &amp;&quot;,&quot;&amp; cBauzeit_mv &amp;&quot;,&quot;&amp; cMinutenverechnungssatz_mv &amp;_
+									&quot;,&quot; &amp; cMaterialaufschlagsatz_mv &amp;&quot;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;)&quot;
+								SQL_execute(sSQL2)
+								oForm_Tabellendaten.reload()
+								oForm_Tabellendaten.last
+								SetDocUserProperty(&quot;oVorgang_mv&quot;, &quot;1&quot;)
+							End if
+						End if
+					End if
+				End if
+			End if
+		elseif iReset = 1 then
+			SetDocUserProperty(&quot;oLeistungsID_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oBestellnummer_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oLeistungsbezeichnung_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oLeistungsbeschreibung_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oEinheit_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMenge_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oEinkaufspreis_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oBauzeit_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oVorgang_mv&quot;, &quot;0&quot;)
+			oButton_Pos_verschieben.Label=&quot;Ausschneiden&quot;
+			oButton_Pos_verschieben.TextColor=16777215
+			oButton_Pos_verschieben.HelpText=&quot;Den aktuellen Datensatz ausschneiden.&quot;
+		End if
+End Sub
+
+</script:module>

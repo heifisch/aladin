@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="refreshs" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+Dim lCount as long
+Dim oRecord1 as Object
+Dim sSQL1 as String,sSQL2 as String
+
+Sub Kontakt_refresh()
+	SetDocUserProperty(&quot;oKontaktID_old&quot;, lKontaktID)
+	oList_Kontaktauswahl.refresh()
+End Sub
+
+Sub Projekt_refresh()
+	oList_Projektauswahl.refresh()
+End Sub
+
+Sub Ansprechpartner_refresh()
+	oList_Ansprechpartner.refresh()
+End Sub
+
+Sub Hauptgruppen_refresh()
+	oList_Hauptgruppenauswahl.refresh()
+End Sub
+
+Sub Gruppenauswahl_refresh()
+	oList_Gruppenauswahl.refresh()
+End Sub
+
+Sub Leistungsauswahl_refresh()
+	oList_Leistungsauswahl.refresh()
+End Sub
+
+Sub List_Documente_refresh()
+	oList_Documentauswahl.refresh()
+End Sub
+
+Sub List_Jahrauswahl_refresh()
+	oList_Jahrauswahl.refresh()
+End Sub
+
+Sub Kontaktvorauswahl_refresh()
+	oList_Kontaktvorauswahl.refresh()
+End Sub
+
+Sub Projektvorauswahl_refresh()
+	oList_Projektvorauswahl.refresh()
+End Sub
+
+Sub Korrektur_Vorzeichen_refresh()
+	oList_Korrektur_Vorzeichen.refresh()
+	if oList_Korrektur_Vorzeichen.BoundField.String=&quot;-&quot; then
+		oList_Korrektur_Vorzeichen.TextColor=16711680
+		oField_Korrektur.TextColor=16711680
+		oLabel_Korrektur.Label=&quot;Abzug [%] &quot;
+		oLabel_Korrektur_Anlass.Label=&quot;Abzug: &quot;
+	elseif oList_Korrektur_Vorzeichen.BoundField.String=&quot;+&quot; then
+		oList_Korrektur_Vorzeichen.TextColor=255
+		oField_Korrektur.TextColor=255
+		oLabel_Korrektur.Label=&quot;Aufschlag [%] &quot;
+		oLabel_Korrektur_Anlass.Label=&quot;Aufschlag: &quot;
+	End if
+End Sub
+
+Sub List_Leistungen_refresh()
+	sSQL1=&quot;SELECT COUNT(distinct t1.Leistungsbezeichnung,t1.LeistungsID) FROM &quot; &amp; sLeistungsstamm &amp; &quot; as t1,Steuerung as t2 WHERE (t2.ClientID=&quot;&amp; iClientID &amp;_
+ 	&quot; AND (((((t1.Leistungsgruppe=t2.GruppenID AND LENGTH(t2.GruppenID) &gt; 0) OR (t1.Leistungsgruppe like &apos;%&apos; AND LENGTH(t2.GruppenID) IS NULL))&quot;&amp;_
+ 	&quot; AND (((t2.Option_1=1 AND (t1.LeistungsID like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;) OR t1.Bestellnummer like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)))&quot;&amp;_
+ 	&quot; OR (t2.Option_2=1 AND t1.Leistungsbezeichnung like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)) OR (t2.Option_3=1 AND t1.Leistungsbeschreibung like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;))&quot;&amp;_
+ 	&quot; AND LENGTH(t2.Suchstring) &gt; 0) OR (((t2.Option_1=0 AND t2.Option_2=0 AND t2.Option_3=0) OR LENGTH(t2.Suchstring) IS NULL)&quot;&amp;_
+ 	&quot; AND t1.LeistungsID like &apos;%&apos;))) OR t1.Standard=1 OR t1.LeistungsID=t2.LeistungsID)))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lCount=oRecord1.getInt(1)
+	Wend
+	if lCount &gt; 5000 then
+		MsgBox(&quot;Sie haben &quot;&amp; lCount &amp;_
+		&quot; Artikel ausgewählt!!&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+		&quot;Es werden jedoch nur 5000 Artikel angezeigt.&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+		&quot;Bitte wählen Sie eine Leistungsgruppe aus oder geben Sie einen genaueren Suchstring als Filter ein!&quot;,16,sTitle_lokal)
+	End If
+	oList_Leistungsauswahl.refresh()
+End Sub
+</script:module>

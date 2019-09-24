@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Funktionen_1" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function oDoc as Object
+	oDoc=thiscomponent
+End Function
+
+Function oForm_Steuerung as Object
+	oForm_Steuerung=oDoc.DrawPage.Forms.getByName(&quot;Form_Steuerung&quot;)
+End Function
+
+Function oForm_Hauptgruppen as Object
+	oForm_Hauptgruppen=oForm_Steuerung.getByName(&quot;Form_Hauptgruppen&quot;)
+End Function
+
+Function oForm_Leistungsgruppen as Object
+	oForm_Leistungsgruppen=oForm_Steuerung.getByName(&quot;Form_Leistungsgruppen&quot;)
+End Function
+
+Function oList_Hauptgruppen as Object
+	oList_Hauptgruppen=oForm_Steuerung.getByName(&quot;List_Hauptgruppen&quot;)
+End Function
+
+Function oList_Leistungsgruppen as Object
+	oList_Leistungsgruppen=oForm_Steuerung.getByName(&quot;List_Leistungsgruppen&quot;)
+End Function
+
+Function oField_HauptgruppenID as Object
+	oField_HauptgruppenID=oForm_Steuerung.getByName(&quot;Field_HauptgruppenID&quot;)
+End Function
+
+Function oField_LeistungsgruppenID as Object
+	oField_LeistungsgruppenID=oForm_Steuerung.getByName(&quot;Field_LeistungsgruppenID&quot;)
+End Function
+
+Function oGrid_Leistungsgruppen as Object
+	oGrid_Leistungsgruppen=oForm_Leistungsgruppen.getByName(&quot;Grid_Leistungsgruppen&quot;)
+End Function
+
+Function oColumn_HauptgruppenID as Object
+	oColumn_HauptgruppenID=oGrid_Leistungsgruppen.getByName(&quot;HauptgruppenID&quot;)
+End Function
+
+Function sHauptgruppenID as string
+	sHauptgruppenID=oField_HauptgruppenID.BoundField.string
+End Function
+
+Function sLeistungsgruppenID as string
+	sLeistungsgruppenID=oField_LeistungsgruppenID.BoundField.string
+End Function
+
+Function fSelected_Item(oList as Object)as String
+	Dim oList_View as Object
+	oList_View=oDoc.CurrentController.getControl(oList)
+	fSelected_Item=oList_View.getSelectedItem()
+End Function
+
+Function GetDocUserProperty(sPropertyName as String) As String
+	Dim oUserProps As Object
+&apos;	On Error Resume Next
+	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
+	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
+	else
+		GetDocUserProperty = &quot;&quot;
+	end if
+End Function
+
+</script:module>

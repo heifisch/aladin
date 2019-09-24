@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Initialisierung" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim sSQL AS String,sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+Dim vSQLArray AS Variant
+Dim sWhereMonat AS String,sWhereWoche AS String,sWhereLokation AS String,sWhereKunde AS String,sWhereProjektauswahl AS String,sWhereProjektID AS String
+
+Sub Formular_init()
+	init_Form_Steuerung()
+	init_Form_Steuerung_1()
+	init_Form_Tabellendaten()
+	init_List_Filter_Jahr()
+	init_List_Hauptgruppenauswahl()
+	init_List_Gruppenauswahl()
+	init_List_Leistungsauswahl()
+	init_List_Leistungsauswahl_Auftrag()
+	init_List_Leistungsauswahl_Projekt()
+	init_List_Filter_Monat()
+	init_List_Filter_Woche()
+	init_List_Filter_Lokation()
+	init_Column_Lokation()
+	init_List_Filter_Kunde()
+	init_List_Filter_Personal()
+	init_List_Projektauswahl()
+	init_Grid_List_Personal()
+	init_Grid_List_ProjektID()
+End Sub
+
+Sub init_Form_Steuerung()
+	sSQL1=&quot;SELECT * FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oForm_Steuerung.DataSourceName=sDataSource
+	oForm_Steuerung.NavigationBarMode=0
+	oForm_Steuerung.CommandType=2
+	oForm_Steuerung.Command=sSQL1
+	oForm_Steuerung.Cycle=1
+	oForm_Steuerung.AllowInserts=false
+End Sub
+
+Sub init_Form_Steuerung_1()
+	sSQL1=&quot;SELECT * FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oForm_Steuerung_1.DataSourceName=sDataSource
+	oForm_Steuerung_1.NavigationBarMode=0
+	oForm_Steuerung_1.CommandType=2
+	oForm_Steuerung_1.Command=sSQL1
+	oForm_Steuerung_1.Cycle=1
+	oForm_Steuerung_1.AllowInserts=false
+	oForm_Steuerung_1.AllowDeletes=false
+End Sub
+
+Sub init_Form_Tabellendaten()
+	Dim sJahr AS String,sMonat AS String,sWoche AS String,sDatum AS String
+	Dim sLokation AS String,sPersonalID AS String,sProjektID AS String,sKundenID
+	Dim oRecord1 AS Object,iOption1 AS Integer,iOption2 AS Integer,iOption3 AS Integer,iOption5 AS Integer
+
+	sSQL1=&quot;SELECT Jahr,Monat,Woche,Lokation,Datum,PersonalID,KundenID,ProjektID,LeistungsTyp,Status,Option_4,Option_5&quot;&amp;_
+		&quot; FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sJahr=oRecord1.getString(1)
+		sMonat=oRecord1.getString(2)
+		sWoche=oRecord1.getString(3)
+		sLokation=oRecord1.getString(4)
+		sDatum=oRecord1.getString(5)
+		sPersonalID=Trim(oRecord1.getString(6))
+		sKundenID=Trim(oRecord1.getString(7))
+		sProjektID=Trim(oRecord1.getString(8))
+		iOption1=oRecord1.getInt(9)
+		iOption2=oRecord1.getInt(10)
+		iOption3=oRecord1.getInt(11)
+		iOption5=oRecord1.getInt(12)
+	Wend
+	if sJahr &lt;&gt; &quot;&quot; then
+		sSQL=&quot; WHERE year(t1.Erstellungsdatum) =&apos;&quot;&amp; sJahr &amp;&quot;&apos;&quot;
+	End if
+	sWhereMonat=sSQL
+	if sMonat &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;month(t1.Erstellungsdatum) =&apos;&quot;&amp; sMonat &amp;&quot;&apos;&quot;
+	End if
+	sWhereWoche=sSQL
+	if sWoche &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;week(t1.Erstellungsdatum) =&apos;&quot;&amp; sWoche &amp;&quot;&apos;&quot;
+	End if
+	if sDatum &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		SELECT case iOption5
+			case 0 
+				sSQL=sSQL &amp; &quot;t1.Erstellungsdatum =&apos;&quot;&amp; sDatum &amp;&quot;&apos;&quot;
+			case 1 
+				sSQL=sSQL &amp; &quot;t1.Erstellungsdatum &lt;=&apos;&quot;&amp; sDatum &amp;&quot;&apos;&quot;
+			case 2 
+				sSQL=sSQL &amp; &quot;t1.Erstellungsdatum &gt;=&apos;&quot;&amp; sDatum &amp;&quot;&apos;&quot;
+		end SELECT
+	End if
+	if sLokation &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;t1.Lokation =&apos;&quot;&amp; sLokation &amp;&quot;&apos;&quot;
+	End if
+	if sPersonalID &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;t1.PersonalID =&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;&quot;
+	End if
+	if sProjektID &lt;&gt; &quot;&quot; then
+		if sSQL = &quot;&quot; then
+			
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;t1.ProjektID =&apos;&quot;&amp; sProjektID &amp;&quot;&apos;&quot;
+	End if
+	if iOption1 &lt;&gt; 0 then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		if iOption3 = 0 then
+			sSQL=sSQL &amp; &quot;t1.LeistungsTyp =&apos;&quot;&amp; iOption1 &amp;&quot;&apos;&quot;
+		else
+			sSQL=sSQL &amp; &quot;t1.LeistungsTyp !=&apos;&quot;&amp; iOption1 &amp;&quot;&apos;&quot;
+		End if
+	End if
+	if iOption2 &lt;&gt; 0 then
+		if sSQL = &quot;&quot; then
+			sSQL = sSQL &amp;&quot; WHERE &quot;
+		else
+			sSQL = sSQL &amp;&quot; AND &quot;
+		End if	
+		sSQL=sSQL &amp; &quot;t1.Abgerechnet =&apos;&quot;&amp; iOption2 &amp;&quot;&apos;&quot;
+	End if
+	sSQL2=&quot;SELECT * FROM &quot;&amp; sControlling &amp; &quot; AS t1&quot; 
+
+&apos; Wichtig!!! Sobald in der Abfrage 2 Tabellen enthalten sind, kann im Formular in der Tabelle nichts mehr geändert werden!!!
+	if sKundenID &lt;&gt; &quot;&quot; AND sProjektID = &quot;&quot; then
+&apos;		sSQL2=sSQL2 &amp; &quot; INNER JOIN &quot;&amp; sProjekte &amp;&quot; AS t2 ON (t1.ProjektID = t2.ProjektID AND t2.KontaktID =&apos;&quot;&amp; sKundenID &amp;&quot;&apos;)&quot;
+		Dim oRecordProjektAnzahl AS Object,oRecordProjektID AS Object
+		Dim lProjektAnzahlKunde AS Long,lProjektZahl AS Long,sProjektIDKunde AS String
+		sSQL3=&quot;SELECT COUNT(DISTINCT ProjektID) FROM &quot;&amp; sProjekte &amp;&quot; WHERE KontaktID=&apos;&quot;&amp; sKundenID &amp;&quot;&apos;&quot;
+		oRecordProjektAnzahl=oResult(sSQL3)
+		While oRecordProjektAnzahl.next()
+			lProjektAnzahlKunde=oRecordProjektAnzahl.getLong(1)
+		Wend
+
+		lProjektZahl=1
+
+		sSQL4=&quot;SELECT DISTINCT ProjektID FROM &quot;&amp; sProjekte &amp;&quot; WHERE KontaktID=&apos;&quot;&amp; sKundenID &amp;&quot;&apos;&quot;
+
+		Do While lProjektAnzahlKunde &gt;= lProjektZahl
+			oRecordProjektID=oResult_Scroll(sSQL4)
+			oRecordProjektID.absolute(lProjektZahl)
+			sProjektIDKunde=Trim(oRecordProjektID.getString(1))
+			if sSQL = &quot;&quot; then
+				sSQL = sSQL &amp;&quot; WHERE (&quot;
+			else
+				if lProjektZahl=1 then
+					sSQL = sSQL &amp;&quot; AND (&quot;
+				else
+					sSQL = sSQL &amp;&quot; OR &quot;
+				End if
+			End if	
+			sSQL=sSQL &amp; &quot;t1.ProjektID =&apos;&quot;&amp; sProjektIDKunde &amp;&quot;&apos;&quot;
+			if lProjektZahl=lProjektAnzahlKunde then
+				sSQL = sSQL &amp;&quot;)&quot;
+			End if
+			lProjektZahl=lProjektZahl+1
+		Loop
+
+	End if
+	sSQL2=sSQL2 &amp; sSQL &amp; &quot; ORDER BY t1.Erstellungsdatum ASC,t1.PersonalID ASC,t1.ProjektID ASC&quot;
+	oForm_Tabellendaten.DataSourceName=sDataSource
+	oForm_Tabellendaten.NavigationBarMode=0
+	oForm_Tabellendaten.CommandType=2
+	oForm_Tabellendaten.Command=sSQL2
+	oForm_Tabellendaten.Cycle=1
+	oForm_Tabellendaten.AllowInserts=false
+	oForm_Tabellendaten.AllowDeletes=true
+	oForm_Tabellendaten.AllowUpdates=true
+	Schreibschutz_setzen()
+End Sub
+
+Sub init_List_Projektauswahl()
+	vSQLArray=Array(&quot;SELECT DISTINCT t1.Projekt_Name,t1.ProjektID &quot;&amp;_
+		&quot; FROM (&quot;&amp; sProjekte &amp;&quot; AS t1&quot;&amp;_
+		&quot; LEFT JOIN &quot;&amp; sControlling &amp;&quot; AS t2&quot;&amp;_
+		&quot; ON t1.ProjektID=t2.ProjektID AND t1.ProjektID &gt; 0)&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE ((((((YEAR(t2.Erstellungsdatum)=t3.Jahr AND LENGTH(t3.Jahr)&gt;0)&quot;&amp;_
+		&quot;  OR (t1.ProjektID LIKE &apos;%&apos; AND (LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((t2.Abgerechnet=t3.Status AND t3.Status &gt; 0)&quot;&amp;_
+		&quot;  OR (t1.ProjektID LIKE &apos;%&apos; AND t3.Status = 0)))&quot;&amp;_
+		&quot;  OR (t1.ProjektID &gt; 0&quot;&amp;_
+		&quot; AND ((LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0)&quot;&amp;_
+		&quot; AND t3.Status = 0)))&quot;&amp;_
+		&quot; AND ((t1.KontaktID=t3.KundenID AND LENGTH(t3.KundenID)&gt;0)&quot;&amp;_
+		&quot;  OR (t1.ProjektID LIKE &apos;%&apos; AND (LENGTH(t3.KundenID) IS NULL OR LENGTH(t3.KundenID)=0)))&quot;&amp;_
+		&quot; AND ((t1.Projekt_Name LIKE CONCAT(&apos;%&apos;,t3.Suchstring_2,&apos;%&apos;) AND LENGTH(t3.Suchstring_2) &gt; 0)&quot;&amp;_
+		&quot;  OR (t1.ProjektID LIKE &apos;%&apos; AND (LENGTH(t3.Suchstring_2) IS NULL OR LENGTH(t3.Suchstring_2)=0))))&quot;&amp;_
+		&quot;  OR t1.ProjektID=t3.ProjektID)&quot;&amp;_
+		&quot; ORDER BY t1.Projekt_Name ASC&quot;)
+	oList_Projektauswahl.ListSourceType=4
+	oList_Projektauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Kunde()
+	vSQLArray=Array(&quot;SELECT DISTINCT CONCAT(t4.Name1,&apos; &apos;,t4.Vorname,&apos; &apos;,t4.Name2,&apos;  --&gt;  &apos;,t4.Ort) AS Name,t1.KontaktID&quot;&amp;_
+		&quot; FROM (&quot;&amp; sKunden &amp;&quot; AS t4&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sProjekte &amp;&quot; AS t1&quot;&amp;_
+		&quot; ON t4.KontaktID=t1.KontaktID&quot;&amp;_
+		&quot; LEFT JOIN &quot;&amp; sControlling &amp;&quot; AS t2&quot;&amp;_
+		&quot; ON t1.ProjektID=t2.ProjektID AND t1.ProjektID &gt; 0)&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((((year(t2.Erstellungsdatum)=t3.Jahr AND LENGTH(t3.Jahr)&gt;0)&quot;&amp;_
+		&quot;  OR (t1.KontaktID LIKE &apos;%&apos; AND (LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((t2.Abgerechnet=t3.Status AND t3.Status &gt; 0)&quot;&amp;_
+		&quot;  OR (t1.KontaktID LIKE &apos;%&apos; AND t3.Status = 0)))&quot;&amp;_
+		&quot;  OR ( t1.ProjektID &gt; 0&quot;&amp;_
+		&quot; AND ((LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0)&quot;&amp;_
+		&quot; AND t3.Status = 0)))&quot;&amp;_
+		&quot;  OR t1.KontaktID=t3.KundenID)&quot;&amp;_
+		&quot; ORDER BY Name ASC&quot;)
+	oList_Filter_Kunde.ListSourceType=4
+	oList_Filter_Kunde.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Jahr()
+	vSQLArray=Array(&quot;SELECT DISTINCT year(Erstellungsdatum),year(Erstellungsdatum) AS Jahr &quot;&amp;_
+		&quot;FROM &quot;&amp; sControlling &amp;&quot; ORDER BY Jahr DESC&quot;)
+	oList_Filter_Jahr.ListSourceType=4
+	oList_Filter_Jahr.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Monat()
+	vSQLArray=Array(&quot;SELECT DISTINCT t1.Monat,t1.MonatID&quot;&amp;_
+		&quot; FROM (Monate AS t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sControlling &amp;&quot; AS t2&quot;&amp;_
+		&quot; ON t1.MonatID = MONTH(t2.Erstellungsdatum))&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((year(t2.Erstellungsdatum)=t3.Jahr AND LENGTH(t3.Jahr) &gt; 0)&quot;&amp;_
+		&quot;  OR (year(t2.Erstellungsdatum)=year(date_add(now(),interval 0 day) AND LENGTH(t3.Jahr) is NULL)))&quot;&amp;_
+		&quot;  OR MONTH(t2.Erstellungsdatum)=t3.Monat)&quot;&amp;_
+		&quot; ORDER BY t1.MonatID+0 ASC&quot;)
+	oList_Filter_Monat.ListSourceType=4
+	oList_Filter_Monat.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Woche()
+	vSQLArray=Array(&quot;SELECT DISTINCT week(t1.Erstellungsdatum),week(t1.Erstellungsdatum) &quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((year(t1.Erstellungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot;  OR (year(t1.Erstellungsdatum)=year(date_add(now(),interval 0 day) AND LENGTH(t2.Jahr) is NULL)))&quot;&amp;_
+		&quot; AND ((month(t1.Erstellungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+		&quot;  OR (month(t1.Erstellungsdatum)LIKE &apos;%&apos; AND LENGTH(t2.Monat) is NULL))&quot;&amp;_
+		&quot;  OR week(t1.Erstellungsdatum) = t2.Woche)&quot;&amp;_
+		&quot; ORDER BY week(t1.Erstellungsdatum) ASC&quot;)
+	oList_Filter_Woche.ListSourceType=4
+	oList_Filter_Woche.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Lokation()
+	vSQLArray=Array(&quot;SELECT DISTINCT t1.Lokation,t1.Lokation&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; LEFT JOIN &quot;&amp; sProjekte &amp;&quot; AS t3&quot;&amp;_
+		&quot; ON t3.KontaktID=t2.KundenID&quot;&amp;_
+		&quot; WHERE ((t1.ProjektID=t2.ProjektID AND LENGTH(t2.ProjektID)&gt;0)&quot;&amp;_
+		&quot;  OR (t1.ProjektID=t3.ProjektID AND (LENGTH(t2.ProjektID) IS NULL OR LENGTH(t2.ProjektID)=0)&quot;&amp;_
+		&quot; AND (LENGTH(t2.KundenID)&gt;0)))&quot;&amp;_
+		&quot; ORDER BY t1.Lokation ASC&quot;)
+	oList_Filter_Lokation.ListSourceType=4
+	oList_Filter_Lokation.ListSource=vSQLArray
+End Sub
+
+Sub init_Column_Lokation()
+	vSQLArray=&quot;SELECT DISTINCT t1.Lokation&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; LEFT JOIN &quot;&amp; sProjekte &amp;&quot; AS t3&quot;&amp;_
+		&quot; ON t3.KontaktID=t2.KundenID&quot;&amp;_
+		&quot; WHERE ((t1.ProjektID=t2.ProjektID AND LENGTH(t2.ProjektID)&gt;0)&quot;&amp;_
+		&quot;  OR (t1.ProjektID=t3.ProjektID AND (LENGTH(t2.ProjektID) IS NULL OR LENGTH(t2.ProjektID)=0)&quot;&amp;_
+		&quot; AND (LENGTH(t2.KundenID)&gt;0)))&quot;&amp;_
+		&quot; ORDER BY t1.Lokation ASC&quot;
+	oColumn_Lokation.ListSourceType=4
+	oColumn_Lokation.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Filter_Personal()
+	vSQLArray=Array(&quot;SELECT DISTINCT&quot;&amp;_
+		&quot; CONCAT(t1.Name1,&apos; &apos;,t1.Vorname,&apos;  --&gt;  &apos;,t1.Ort) AS Name,t1.PersonalID&quot;&amp;_
+		&quot; FROM &quot;&amp; sPersonal &amp;&quot; AS t1 ORDER BY t1.Name1 ASC&quot;)
+	oList_Filter_Personal.ListSourceType=4
+	oList_Filter_Personal.ListSource=vSQLArray
+End Sub
+
+Sub init_Grid_List_Personal()
+	vSQLArray=Array(&quot;SELECT DISTINCT &quot;&amp;_
+		&quot; CONCAT(t1.Name1,&apos;, &apos;,t1.Vorname) AS Name,t1.PersonalID&quot;&amp;_
+		&quot; FROM &quot;&amp; sPersonal &amp;&quot; AS t1 ORDER BY t1.Name1 ASC&quot;)
+	oColumn_PersonalID.ListSourceType=4
+	oColumn_PersonalID.ListSource=vSQLArray
+End Sub
+
+Sub init_Grid_List_ProjektID()
+	vSQLArray=Array(&quot;SELECT DISTINCT t1.Projekt_Name,t1.ProjektID&quot;&amp;_
+		&quot; FROM (&quot;&amp; sProjekte &amp;&quot; AS t1&quot;&amp;_
+		&quot; LEFT JOIN &quot;&amp; sControlling &amp;&quot; AS t2&quot;&amp;_
+		&quot; ON t1.ProjektID=t2.ProjektID AND t1.ProjektID &gt; 0)&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t3&quot;&amp;_
+		&quot; ON t3.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((t1.KontaktID=t3.KundenID AND LENGTH(t3.KundenID)&gt;0)&quot;&amp;_
+		&quot;  OR (t1.ProjektID LIKE &apos;%&apos; AND (LENGTH(t3.KundenID) IS NULL OR LENGTH(t3.KundenID)=0)))&quot;&amp;_
+		&quot;  OR t1.ProjektID=t3.ProjektID)&quot;&amp;_
+		&quot; ORDER BY t1.Projekt_Name ASC&quot;)
+	oColumn_ProjektID.ListSourceType=4
+	oColumn_ProjektID.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Hauptgruppenauswahl()
+	vSQLArray=Array(&quot;SELECT CONCAT(Hauptgruppenname),HauptgruppenID FROM &quot;&amp; sHauptgruppen)
+	oList_Hauptgruppenauswahl.ListSourceType=3
+	oList_Hauptgruppenauswahl.ListSource=vSQLArray
+End Sub
+
+Sub init_List_Gruppenauswahl()
+	oList_Gruppenauswahl.ListSourceType=3
+	oList_Gruppenauswahl.ListSource=Array(&quot;SELECT DISTINCT&quot;&amp;_
+		&quot; CONCAT(t1.Gruppenname),t1.GruppenID&quot;&amp;_
+		&quot; FROM &quot;&amp; sLeistungsgruppen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((t1.HauptgruppenID=t2.HauptgruppenID AND LENGTH(t2.HauptgruppenID) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.HauptgruppenID LIKE &apos;%&apos; AND LENGTH(t2.HauptgruppenID) IS NULL))&quot;&amp;_
+		&quot; OR t1.GruppenID=t2.GruppenID)&quot;&amp;_
+		&quot; ORDER BY t1.GruppenID ASC&quot;)
+End Sub
+
+Sub init_List_Leistungsauswahl()
+	oList_Leistungsauswahl.ListSourceType=3
+	oList_Leistungsauswahl.ListSource=Array(&quot;SELECT DISTINCT&quot;&amp;_
+		&quot; t1.Leistungsbezeichnung,t1.LeistungsID&quot;&amp;_
+		&quot; FROM &quot;&amp; sLeistungsstamm &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE ((((t1.Leistungsgruppe=t2.GruppenID AND LENGTH(t2.GruppenID) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.Leistungsgruppe LIKE &apos;%&apos; AND LENGTH(t2.GruppenID) IS NULL))&quot;&amp;_
+		&quot; AND (((t2.Option_1=1 AND (t1.LeistungsID LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+		&quot; OR t1.Bestellnummer LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)))&quot;&amp;_
+		&quot; OR (t2.Option_2=1 AND t1.Leistungsbezeichnung LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;))&quot;&amp;_
+		&quot; OR (t2.Option_3=1 AND t1.Leistungsbeschreibung LIKE CONCAT(&apos;%&apos;,t2.Suchstring,&apos;%&apos;))&quot;&amp;_
+		&quot; AND LENGTH(t2.Suchstring) &gt; 0)&quot;&amp;_
+		&quot; OR (((t2.Option_1=0 AND t2.Option_2=0 AND t2.Option_3=0) OR LENGTH(t2.Suchstring) IS NULL)&quot;&amp;_
+		&quot; AND t1.LeistungsID LIKE &apos;%&apos;)))&quot;&amp;_
+		&quot; OR t1.Standard=1 OR t1.LeistungsID=t2.LeistungsID)&quot;&amp;_
+		&quot; ORDER BY LeistungsID ASC LIMIT 5000&quot;)
+End Sub
+
+Sub init_List_Leistungsauswahl_Auftrag()
+	oList_Leistungsauswahl_Auftrag.ListSourceType=3
+	oList_Leistungsauswahl_Auftrag.ListSource=Array(&quot;SELECT DISTINCT t1.Leistungsbezeichnung,t1.PositionsID&quot;&amp;_
+		&quot; FROM &quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; AS t3&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; AND t3.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; AS t1&quot;&amp;_
+		&quot; ON t1.DocumentID=t3.DocumentID&quot;&amp;_
+		&quot; GROUP BY t1.Leistungsbezeichnung,t1.Leistungsbeschreibung&quot;&amp;_
+		&quot; ORDER BY t1.Leistungsbezeichnung ASC LIMIT 5000&quot;)
+End Sub
+
+Sub init_List_Leistungsauswahl_Projekt()
+	oList_Leistungsauswahl_Projekt.ListSourceType=3
+	oList_Leistungsauswahl_Projekt.ListSource=Array(&quot;SELECT DISTINCT t1.Leistungsbezeichnung,t1.PositionsID&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; AND t1.ProjektID=t2.ProjektID&quot;&amp;_
+		&quot; GROUP BY t1.Leistungsbezeichnung,t1.Leistungsbeschreibung&quot;&amp;_
+		&quot; ORDER BY Leistungsbezeichnung ASC LIMIT 5000&quot;)
+End Sub
+
+Sub init_List_SollZeit()
+	oList_SollZeit.ListSourceType=3
+	oList_SollZeit.ListSource=Array(&quot;SELECT DISTINCT&quot;&amp;_
+		&quot; SUM(t1.Menge*t1.Bauzeit)/60,SUM(t1.Menge*t1.Bauzeit)/60&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE ((year(t1.Erstellungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot;  OR (year(t1.Erstellungsdatum)LIKE &apos;%&apos; AND LENGTH(t2.Jahr) is NULL))&quot;&amp;_
+		&quot; AND ((month(t1.Erstellungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+		&quot;  OR (month(t1.Erstellungsdatum)LIKE &apos;%&apos; AND LENGTH(t2.Monat) is NULL))&quot;&amp;_
+		&quot; AND ((week(t1.Erstellungsdatum)=t2.Woche AND LENGTH(t2.Woche) &gt; 0)&quot;&amp;_
+		&quot;  OR (week(t1.Erstellungsdatum)LIKE &apos;%&apos; AND LENGTH(t2.Woche) is NULL))&quot;&amp;_
+		&quot; AND ((t1.Erstellungsdatum=t2.Datum AND LENGTH(t2.Datum) &gt; 0)&quot;&amp;_
+		&quot;  OR (t1.Erstellungsdatum LIKE &apos;%&apos; AND LENGTH(t2.Datum) is NULL))&quot;&amp;_
+		&quot; AND ((t1.Lokation=t2.Lokation AND LENGTH(t2.Lokation) &gt; 0)&quot;&amp;_
+		&quot;  OR (t1.Lokation LIKE &apos;%&apos; AND LENGTH(t2.Lokation) is NULL))&quot;&amp;_
+		&quot; AND ((t1.PersonalID=t2.PersonalID AND LENGTH(t2.PersonalID) &gt; 0)&quot;&amp;_
+		&quot;  OR (t1.PersonalID LIKE &apos;%&apos; AND LENGTH(t2.PersonalID) is NULL))&quot;&amp;_
+		&quot; AND ((t1.ProjektID=t2.ProjektID AND LENGTH(t2.ProjektID) &gt; 0)&quot;&amp;_
+		&quot;  OR (t1.ProjektID LIKE &apos;%&apos; AND LENGTH(t2.ProjektID) is NULL))&quot;)
+End Sub
+
+Sub init_List_IstZeit()
+	oList_IstZeit.ListSourceType=3
+	oList_IstZeit.ListSource=Array(&quot;SELECT DISTINCT SUM(IstZeit),SUM(IstZeit)&quot;&amp;_
+		&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE ((year(t1.Erstellungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot;  OR (year(t1.Erstellungsdatum)LIKE &apos;%&apos; AND LENGTH(t2.Jahr) is NULL))&quot;&amp;_
+		&quot; AND ((month(t1.Erstellungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+		&quot;  OR (month(t1.Erstellungsdatum)LIKE &apos;%&apos; AND LENGTH(t2.Monat) is NULL))&quot;&amp;_
+		&quot; AND ((week(t1.Erstellungsdatum)=t2.Woche AND LENGTH(t2.Woche) &gt; 0)&quot;&amp;_
+		&quot;  OR (week(t1.Erstellungsdatum)LIKE &apos;%&apos; AND LENGTH(t2.Woche) is NULL))&quot;&amp;_
+		&quot; AND ((t1.Erstellungsdatum=t2.Datum AND LENGTH(t2.Datum) &gt; 0)&quot;&amp;_
+		&quot;  OR (t1.Erstellungsdatum LIKE &apos;%&apos; AND LENGTH(t2.Datum) is NULL))&quot;&amp;_
+		&quot; AND ((t1.Lokation=t2.Lokation AND LENGTH(t2.Lokation) &gt; 0)&quot;&amp;_
+		&quot;  OR (t1.Lokation LIKE &apos;%&apos; AND LENGTH(t2.Lokation) is NULL))&quot;&amp;_
+		&quot; AND ((t1.PersonalID=t2.PersonalID AND LENGTH(t2.PersonalID) &gt; 0)&quot;&amp;_
+		&quot;  OR (t1.PersonalID LIKE &apos;%&apos; AND LENGTH(t2.PersonalID) is NULL))&quot;&amp;_
+		&quot; AND ((t1.ProjektID=t2.ProjektID AND LENGTH(t2.ProjektID) &gt; 0)&quot;&amp;_
+		&quot;  OR (t1.ProjektID LIKE &apos;%&apos; AND LENGTH(t2.ProjektID) is NULL))&quot;)
+End Sub
+
+
+</script:module>

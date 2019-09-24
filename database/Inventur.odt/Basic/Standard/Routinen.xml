@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement as Object
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+Dim oRecord1 as Object,oRecord2 as Object
+Dim vStatus as Variant
+Dim sWert as String,sMenge as String
+Dim sLeistungsbezeichnung as String,sLeistungsID as String
+Global cWarenbestand as currency
+
+Sub Start_Inventur()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+	if oDoc.isReadOnly then
+		Dim oFrame as Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Inventur&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 31)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+		
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Hauptgruppen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Leistungsgruppen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Leistungsstamm_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm&quot;)
+		else
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm_&quot; &amp; iEinstellungsID_lokal)
+		end if
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Inventur&quot;)
+		
+		sSQL1=&quot;update Steuerung set Gesperrt=1 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		Formular_init()					&apos;Initialisierung für Mehrplatzlösung
+		oForm_Steuerung.reload()
+
+	 	StatusBar(False)
+		ToolBar(False)
+	End if
+	FormSize()
+End Sub
+
+Sub Tabelle_updateRow()
+	cWarenbestand=fZahlMitKomma(fsWarenbestand)
+End Sub
+
+Sub Tabelle_reload()
+	if cWarenbestand = 0 then
+		oForm_Warenbestand.reload()
+	end if
+	Bestand_refresh()
+End Sub
+
+Sub Bestand_refresh()
+	oList_Inventurwert.refresh()
+End Sub
+
+Sub Bestandsliste_refresh()
+	oList_Inventurwert.refresh()
+End Sub
+
+Sub nach_Artikelnummer_suchen()
+	Weitersuchen:
+	sLeistungsID=&quot;&quot;
+	sWert=InputBox(&quot;Bitte geben Sie eine Artikelnummer ein!&quot;,sTitle_lokal)
+	sSQL1=&quot;select LeistungsID,Leistungsbezeichnung from &quot;&amp; sLeistungsstamm &amp;&quot; where LeistungsID= &apos;&quot;&amp; sWert &amp;&quot;&apos;&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()	
+		sLeistungsID=oRecord1.getString(1)
+		sLeistungsbezeichnung=oRecord1.getString(2)
+	Wend
+	if sLeistungsID=&quot;&quot; then
+		vStatus=MsgBox(&quot;Es ist kein Artikel mit dieser Nummer vorhanden&quot;+Chr$(13)+Chr$(13)+&quot;Möchten Sie weitersuchen?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			goto Weitersuchen
+		End if
+	else
+		vStatus=MsgBox(&quot;Soll für den Artikel&quot;+Chr$(13)+Chr$(13)+ sLeistungsbezeichnung +Chr$(13)+Chr$(13)+&quot;der aktuelle Bestand geändert werden?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sWert=InputBox(&quot;Bitte geben Sie den aktuellen Bestand für den folgenden Artikel ein!&quot; +Chr$(13)+Chr$(13)+ sLeistungsbezeichnung,sTitle_lokal)
+			sMenge=fZahlMitKomma(sWert)
+			sSQL2=&quot;update &quot;&amp; sLeistungsstamm &amp;&quot; set Warenbestand=&quot;&amp; sMenge &amp;&quot; where LeistungsID= &quot;&amp; sLeistungsID
+			SQL_execute(sSQL2)
+			oForm_Warenbestand.reload()
+		End if
+	End if
+	oList_Inventurwert.refresh()
+End Sub
+
+Sub Bestand_aendern()
+	oList_Leistungsauswahl.commit()
+	oForm_Steuerung.updateRow()
+	sSQL1=&quot;select t1.LeistungsID,t1.Leistungsbezeichnung&quot;&amp;_
+		&quot; from &quot;&amp; sLeistungsstamm &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID = &quot;&amp; iClientID &amp;_
+		&quot; where t1.LeistungsID = t2.LeistungsID&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()	
+		sLeistungsID=oRecord1.getString(1)
+		sLeistungsbezeichnung=oRecord1.getString(2)
+	Wend
+	sWert=InputBox(&quot;Bitte geben Sie den aktuellen Bestand für den folgenden Artikel ein!&quot;+Chr$(13)+Chr$(13)+ sLeistungsbezeichnung,sTitle_lokal)
+	sMenge=fZahlMitKomma(sWert)
+	sSQL2=&quot;update &quot;&amp; sLeistungsstamm &amp;&quot; set Warenbestand=&quot;&amp; sMenge &amp;&quot; where LeistungsID= &apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;
+	SQL_execute(sSQL2)
+	oForm_Warenbestand.reload()
+	oList_Inventurwert.refresh()
+End Sub
+
+Sub Suchstring_setzen()
+	oField_Suchstring.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	Leistungsauswahl_refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Suchstring_ruecksetzen()
+	sSQL1=&quot;update Steuerung set Suchstring = NULL where ClientID = &quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	Leistungsauswahl_refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub List_Hauptgruppenauswahl_refresh()
+	oList_Hauptgruppenauswahl.refresh()
+End Sub
+
+Sub Leistungsauswahl_refresh()
+Dim sSQL1 as String,sSQL2 as String,lCount as Long,oRecord1 as Object
+	sSQL1=&quot;select count(distinct t1.Leistungsbezeichnung,t1.LeistungsID)&quot;&amp;_
+		&quot; from &quot;&amp; sLeistungsstamm &amp;&quot; as t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung as t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; where (((t1.Leistungsgruppe=t2.GruppenID and LENGTH(t2.GruppenID) &gt; 0)&quot;&amp;_
+		&quot; or (t1.Leistungsgruppe like &apos;%&apos; and LENGTH(t2.GruppenID) IS NULL))&quot;&amp;_
+		&quot; and ((concat(t1.LeistungsID,&apos; &apos;,t1.Leistungsbezeichnung,&apos; &apos;,t1.Leistungsbeschreibung) like concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;)&quot;&amp;_
+		&quot; and LENGTH(t2.Suchstring) &gt; 0)&quot;&amp;_
+		&quot; or (concat(t1.LeistungsID,&apos; &apos;,t1.Leistungsbezeichnung,&apos; &apos;,t1.Leistungsbeschreibung) like &apos;%&apos;&quot;&amp;_
+		&quot; and LENGTH(t2.Suchstring) IS NULL))&quot;&amp;_
+		&quot; or t1.LeistungsID=t2.LeistungsID)&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lCount=oRecord1.getInt(1)
+	Wend
+	if lCount &gt; 1000 then
+		MsgBox(&quot;Sie haben &quot;&amp; lCount &amp;_
+			&quot; Artikel ausgewählt!! Bitte wählen Sie eine Artikelgruppe aus oder geben Sie einen genaueren Suchstring ein!&quot;,16,sTitle_lokal)
+		Exit Sub
+	End If
+	oList_Leistungsauswahl.refresh()
+End Sub
+
+Sub List_Leistungsauswahl_refresh()
+	oList_Leistungsauswahl.refresh()
+End Sub
+
+Sub List_Gruppenauswahl_refresh()
+	oList_Gruppenauswahl.refresh()
+End Sub
+
+Sub Steuerung_reload()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub update_Hauptgruppenauswahl()
+	oList_Hauptgruppenauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Gruppenauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub update_Gruppenauswahl()
+	oList_Gruppenauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Gruppenauswahl.refresh()
+	Leistungsauswahl_refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Leistung_uebernehmen()
+	oList_Leistungsauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	Leistungsauswahl_refresh()
+	oForm_Steuerung.reload()
+End sub
+
+Sub SQL_LeistungsID_entfernen()
+	sSQL1=&quot;update Steuerung set LeistungsID=NULL where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
+Sub Maske_schliessen()
+	if oDoc.isReadOnly then
+		SQL_LeistungsID_entfernen
+		sSQL1=&quot;update Steuerung set Gesperrt=0 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+	End if
+
+	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+Sub Print_Inventur()
+	SetUserID(iUserID_lokal)
+	InventurPrint()
+End Sub
+
+
+</script:module>

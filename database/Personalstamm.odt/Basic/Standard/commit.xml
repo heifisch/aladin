@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="commit" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option Explicit
+
+Sub store_PersonalID_old
+	SetDocUserProperty(&quot;oPersonalID_old&quot;, lPersonalID)
+End Sub
+
+Sub SET_PersonalID_new
+	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+	Dim vStatus AS Variant
+	oField_PersonalID.commit()
+	if lPersonalID &lt;&gt; 0 and lPersonalID &lt;&gt; lPersonalID_old then
+		vStatus=MsgBox(&quot;Wollen Sie wirklich die PersonalID ändern?&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
+				 &quot;ACHTUNG!!!&quot;&amp; Chr$(10) &amp;_
+				 &quot;In bestehenden Dokumenten wird die PersonalID NICHT mit geändert!!&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			if lPersonalID_old &lt;&gt; 0 then
+				if lPersonalID_old &lt;&gt; lPersonalID then
+					if fAnzahlDatensaetzePersonal = 0 then
+						sSQL1=&quot;UPDATE &quot;&amp; sPersonal &amp;&quot; SET PersonalID=&quot;&amp; lPersonalID &amp;&quot; WHERE PersonalID=&quot;&amp; lPersonalID_old
+						SQL_execute(sSQL1)
+						sSQL2=&quot;UPDATE Steuerung SET PersonalID=&quot;&amp; lPersonalID &amp;&quot; WHERE ClientID=&quot;&amp; iClientID
+						SQL_execute(sSQL2)
+					else
+						MsgBox(&quot;Die PersonalID ist schon vergeben! Wählen sie bitte eine neue ID!&quot;,16,sTitle_lokal)
+					End if
+					oForm_Steuerung.reload()
+				End if
+			End if
+		elseif vStatus=7 then
+			oForm_Steuerung.reload()
+		End if
+	End if
+End Sub
+
+</script:module>

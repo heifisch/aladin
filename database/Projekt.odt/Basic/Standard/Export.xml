@@ -1,0 +1,1615 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Export" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option Explicit
+
+Sub Datensaetze_importieren()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &gt; 0 then
+			Dim vStatus as Variant
+			Dim iGesperrt as integer
+			Dim iCount as Integer,iCountFormulare as Integer,iCountDatensaetze as Integer
+			Dim oRecord1 as Object
+			Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+			Dim oDialogImportieren as Object,oDialogImportierenModel as Object
+			Dim oOptionAngebote1 as Object,oOptionAuftrag1 as Object,oOptionLieferscheine1 as Object
+			Dim oOptionAufmasze1 as Object,oOptionRechnungen1 as Object,oOptionGutschriften1 as Object
+			Dim oOptionPreisanfragen1 as Object,oOptionBestellungen1 as Object,oOptionAngebote2 as Object
+			Dim oOptionAuftrag2 as Object,oOptionLieferscheine2 as Object,oOptionAufmasze2 as Object
+			Dim oOptionRechnungen2 as Object,oOptionGutschriften2 as Object
+			Dim oOptionPreisanfragen2 as Object,oOptionBestellungen2  as Object
+			Dim oRecordGesperrt as Object
+			if Msg_Schreibschutz=1 then
+				exit Sub
+		 	else
+				GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+				GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+				oDialogImportieren = LoadDialog_Projekt(&quot;Standard&quot;, &quot;Importieren&quot;)
+				oDialogImportierenModel = oDialogImportieren.Model
+				oOptionAngebote1 = oDialogImportierenModel.getByName(&quot;OptionAngebote1&quot;)
+				oOptionAuftrag1 = oDialogImportierenModel.getByName(&quot;OptionAuftrag1&quot;)
+				oOptionLieferscheine1 = oDialogImportierenModel.getByName(&quot;OptionLieferscheine1&quot;)
+				oOptionAufmasze1 = oDialogImportierenModel.getByName(&quot;OptionAufmasze1&quot;)
+				oOptionRechnungen1 = oDialogImportierenModel.getByName(&quot;OptionRechnungen1&quot;)
+				oOptionGutschriften1 = oDialogImportierenModel.getByName(&quot;OptionGutschriften1&quot;)
+				oOptionPreisanfragen1 = oDialogImportierenModel.getByName(&quot;OptionPreisanfragen1&quot;)
+				oOptionBestellungen1 = oDialogImportierenModel.getByName(&quot;OptionBestellungen1&quot;)
+				oOptionAngebote2 = oDialogImportierenModel.getByName(&quot;OptionAngebote2&quot;)
+				oOptionAuftrag2 = oDialogImportierenModel.getByName(&quot;OptionAuftrag2&quot;)
+				oOptionLieferscheine2 = oDialogImportierenModel.getByName(&quot;OptionLieferscheine2&quot;)
+				oOptionAufmasze2 = oDialogImportierenModel.getByName(&quot;OptionAufmasze2&quot;)
+				oOptionRechnungen2 = oDialogImportierenModel.getByName(&quot;OptionRechnungen2&quot;)
+				oOptionGutschriften2 = oDialogImportierenModel.getByName(&quot;OptionGutschriften2&quot;)
+				oOptionPreisanfragen2 = oDialogImportierenModel.getByName(&quot;OptionPreisanfragen2&quot;)
+				oOptionBestellungen2 = oDialogImportierenModel.getByName(&quot;OptionBestellungen2&quot;)
+				
+				oDialogImportieren.Title=sTitle_lokal &amp;&quot; - Datensätze aus folgendem Formular importieren:&quot;
+
+				sSQL1=&quot;SELECT Gesperrt FROM Steuerung&quot;&amp;_
+					&quot; WHERE ClientID &lt;= &quot;&amp; (iUserID_lokal*40) &amp;_
+					&quot; AND ClientID &gt; &quot;&amp; (iUserID_lokal*40)-40 &amp;_
+					&quot; ORDER BY ClientID ASC&quot;
+				wait 1
+				iCountFormulare=0
+				For iCount = 1 to 16
+				oRecordGesperrt=oResultGesperrt(sSQL1)
+				oRecordGesperrt.absolute(iCount)
+				iGesperrt=oRecordGesperrt.getInt(1)
+				if iCount = 1 then 
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+1 then
+						oOptionAngebote1.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 2 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+2 then
+						oOptionAngebote2.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 3 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+3 then
+						oOptionAuftrag1.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 4 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+4 then
+						oOptionAuftrag2.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 5 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+5 then
+						oOptionLieferscheine1.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 6 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+6 then
+						oOptionLieferscheine2.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 7 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+7 then
+						oOptionAufmasze1.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 8 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+8 then
+						oOptionAufmasze2.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 9 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+9 then
+						oOptionRechnungen1.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 10 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+10 then
+						oOptionRechnungen2.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 11 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+11 then
+						oOptionGutschriften1.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if	
+				elseif iCount = 12 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+12 then
+						oOptionGutschriften2.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 13 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+13 then
+						oOptionPreisanfragen1.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 14 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+14 then
+						oOptionPreisanfragen2.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 15 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+15 then
+						oOptionBestellungen1.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				elseif iCount = 16 then
+					if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+16 then
+						oOptionBestellungen2.Enabled=0
+					else
+						iCountFormulare=iCountFormulare+1
+					End if
+				End if	
+				Next iCount
+				if iCountFormulare=0 then
+					MsgBox(&quot;Sie haben noch kein Formular geöffnet aus welchem die Datensätze importiert werden könnten!&quot;,16,sTitle_lokal)
+					Exit Sub
+				End if
+			
+				vStatus = oDialogImportieren.Execute()
+				if vStatus = 0 then
+					exit sub
+				end if
+				if oOptionAngebote1.State=1 OR oOptionAngebote2.State=1 then
+					if oOptionAngebote1.State=1 then 
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+1)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAngebote2_TEMP1(iUserID_lokal))
+					end if
+					if oOptionAngebote2.State=1 then
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+2)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAngebote2_TEMP2(iUserID_lokal))
+					end if
+					if iEinstellungsID_lokal=1 _ 
+						OR InStr(fsTableList,&quot;;Angebote1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+						OR InStr(fsTableList,&quot;;Angebote2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+					then
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Angebote1&quot;)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Angebote2&quot;)
+					else
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Angebote1_&quot; &amp; iEinstellungsID_lokal)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Angebote2_&quot; &amp; iEinstellungsID_lokal)
+					end if
+				elseif oOptionAuftrag1.State=1 OR oOptionAuftrag2.State=1 then
+					if oOptionAuftrag1.State=1 then 
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+3)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAuftragsbestaetigungen2_TEMP1(iUserID_lokal))
+					end if
+					if oOptionAuftrag2.State=1 then
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+4)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAuftragsbestaetigungen2_TEMP2(iUserID_lokal))
+					end if
+					if iEinstellungsID_lokal=1 _ 
+						OR InStr(fsTableList,&quot;;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+						OR InStr(fsTableList,&quot;;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+					then
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Auftragsbestaetigungen1&quot;)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Auftragsbestaetigungen2&quot;)
+					else
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal)
+					end if
+				elseif oOptionLieferscheine1.State=1 OR oOptionLieferscheine2.State=1 then
+					if oOptionLieferscheine1.State=1 then 
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+5)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sLieferscheine2_TEMP1(iUserID_lokal))
+					end if
+					if oOptionLieferscheine2.State=1 then
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+6)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sLieferscheine2_TEMP2(iUserID_lokal))
+					end if
+					if iEinstellungsID_lokal=1 _ 
+						OR InStr(fsTableList,&quot;;Lieferscheine1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+						OR InStr(fsTableList,&quot;;Lieferscheine2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+					then
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Lieferscheine1&quot;)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Lieferscheine2&quot;)
+					else
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Lieferscheine1_&quot; &amp; iEinstellungsID_lokal)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Lieferscheine2_&quot; &amp; iEinstellungsID_lokal)
+					end if
+				elseif oOptionAufmasze1.State=1 OR oOptionAufmasze2.State=1 then
+					if oOptionAufmasze1.State=1 then 
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+7)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAufmasze2_TEMP1(iUserID_lokal))
+					end if
+					if oOptionAufmasze2.State=1 then
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+8)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAufmasze2_TEMP2(iUserID_lokal))
+					end if
+					if iEinstellungsID_lokal=1 _ 
+						OR InStr(fsTableList,&quot;;Aufmasze1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+						OR InStr(fsTableList,&quot;;Aufmasze2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+					then
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Aufmasze1&quot;)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Aufmasze2&quot;)
+					else
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Aufmasze1_&quot; &amp; iEinstellungsID_lokal)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Aufmasze2_&quot; &amp; iEinstellungsID_lokal)
+					end if
+				elseif oOptionRechnungen1.State=1 OR oOptionRechnungen2.State=1 then
+					if oOptionRechnungen1.State=1 then 
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+9)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sRechnungen2_TEMP1(iUserID_lokal))
+					end if
+					if oOptionRechnungen2.State=1 then
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+10)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sRechnungen2_TEMP2(iUserID_lokal))
+					end if
+					if iEinstellungsID_lokal=1 _ 
+						OR InStr(fsTableList,&quot;;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+						OR InStr(fsTableList,&quot;;Rechnungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+					then
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Rechnungen1&quot;)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Rechnungen2&quot;)
+					else
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Rechnungen2_&quot; &amp; iEinstellungsID_lokal)
+					end if
+				elseif oOptionGutschriften1.State=1 OR oOptionGutschriften2.State=1 then
+					if oOptionGutschriften1.State=1 then 
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+11)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sGutschriften2_TEMP1(iUserID_lokal))
+					end if
+					if oOptionGutschriften2.State=1 then
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+12)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sGutschriften2_TEMP2(iUserID_lokal))
+					end if
+					if iEinstellungsID_lokal=1 _ 
+						OR InStr(fsTableList,&quot;;Gutschriften1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+						OR InStr(fsTableList,&quot;;Gutschriften2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+					then
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Gutschriften1&quot;)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Gutschriften2&quot;)
+					else
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Gutschriften1_&quot; &amp; iEinstellungsID_lokal)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Gutschriften2_&quot; &amp; iEinstellungsID_lokal)
+					end if
+				elseif oOptionPreisanfragen1.State=1 OR oOptionPreisanfragen2.State=1 then
+					if oOptionPreisanfragen1.State=1 then 
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+13)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sPreisanfragen2_TEMP1(iUserID_lokal))
+					end if
+					if oOptionPreisanfragen2.State=1 then
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+14)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sPreisanfragen2_TEMP2(iUserID_lokal))
+					end if
+					if iEinstellungsID_lokal=1 _ 
+						OR InStr(fsTableList,&quot;;Preisanfragen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+						OR InStr(fsTableList,&quot;;Preisanfragen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+					then
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Preisanfragen1&quot;)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Preisanfragen2&quot;)
+					else
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Preisanfragen1_&quot; &amp; iEinstellungsID_lokal)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Preisanfragen2_&quot; &amp; iEinstellungsID_lokal)
+					end if
+				elseif oOptionBestellungen1.State=1 OR oOptionBestellungen2.State=1 then
+					if oOptionBestellungen1.State=1 then 
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+15)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sBestellungen2_TEMP1(iUserID_lokal))
+					end if
+					if oOptionBestellungen2.State=1 then
+						SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+16)
+						SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sBestellungen2_TEMP2(iUserID_lokal))
+					end if
+					if iEinstellungsID_lokal=1 _ 
+						OR InStr(fsTableList,&quot;;Bestellungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+						OR InStr(fsTableList,&quot;;Bestellungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+					then
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Bestellungen1&quot;)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Bestellungen2&quot;)
+					else
+						SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Bestellungen1_&quot; &amp; iEinstellungsID_lokal)
+						SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Bestellungen2_&quot; &amp; iEinstellungsID_lokal)
+					end if
+				End if				
+			
+				sSQL1=&quot; SELECT COUNT(*) FROM &quot;&amp; sArbeitstabelle_export
+				oRecord1=oResult(sSQL1)
+				While oRecord1.next()
+					iCountDatensaetze=oRecord1.getInt(1)
+				Wend
+				if iCountDatensaetze=0 then
+					MsgBox(&quot;Es sind keine Datensätze im Formular geladen die importiert werden könnten!&quot;,16,sTitle_lokal)
+					Exit Sub
+				End if
+			
+				sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+					&quot; (DocumentID,LV_Pos,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp;_
+					&quot;Einheit,Menge,Einkaufspreis,Bauzeit,Minutenverrechnungssatz,&quot;&amp;_
+					&quot;Materialaufschlagsatz,Lieferung,Leistung,EP,GP,Pos_TypID)&quot;&amp;_
+					&quot; SELECT distinct &apos;&quot;&amp; lDocumentID &amp;&quot;&apos;,t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
+					&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Einkaufspreis,&quot;&amp;_
+					&quot;t1.Bauzeit,t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz,&quot;&amp;_
+					&quot;t1.Lieferung,t1.Leistung,t1.EP,t1.GP,t1.Pos_TypID FROM &quot;&amp; sArbeitstabelle_export &amp;_
+					&quot; as t1,Steuerung as t2 WHERE t2.ClientID=&quot;&amp; iClientID_export &amp;_
+					&quot; AND t1.DocumentID=t2.DocumentID ORDER BY t1.PositionsID ASC&quot;
+				SQL_execute(sSQL2)
+				oForm_Tabellendaten.reload()
+			End if
+		else
+			MsgBox(&quot;Sie haben noch keinen &quot;&amp; sKontakte &amp;&quot; ausgewählt!&quot;,48,sTitle_lokal)
+		End if
+	else
+		MsgBox(&quot;Sie haben noch keine Document ausgewählt oder angelegt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+Sub Datensaetze_exportieren()
+	Dim vStatus as Variant
+	Dim iGesperrt as integer
+	Dim iCount as Integer,iCountFormulare as Integer,iCountDatensaetze as Integer
+	Dim oRecord1 as Object
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+	Dim oDialogExportieren as Object,oDialogExportierenModel as Object
+	Dim oOptionAngebote1 as Object,oOptionAuftrag1 as Object,oOptionLieferscheine1 as Object
+	Dim oOptionAufmasze1 as Object,oOptionRechnungen1 as Object,oOptionGutschriften1 as Object
+	Dim oOptionPreisanfragen1 as Object,oOptionBestellungen1 as Object,oOptionAngebote2 as Object
+	Dim oOptionAuftrag2 as Object,oOptionLieferscheine2 as Object,oOptionAufmasze2 as Object
+	Dim oOptionRechnungen2 as Object,oOptionGutschriften2 as Object
+	Dim oOptionPreisanfragen2 as Object,oOptionBestellungen2  as Object
+	Dim oRecordGesperrt as Object
+	Dim sDocumentID_import as String,iSchreibschutz_import as Integer
+	
+	sSQL4=&quot; SELECT COUNT(*) FROM &quot;&amp; sArbeitstabelle
+	oRecord1=oResult(sSQL4)
+	While oRecord1.next()
+		iCountDatensaetze=oRecord1.getInt(1)
+	Wend
+	if iCountDatensaetze=0 then
+		MsgBox(&quot;Es sind keine Datensätze im Dokument vorhanden die exportiert werden könnten!&quot;,16,sTitle_lokal)
+		Exit Sub
+	End if
+
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogExportieren = LoadDialog_Projekt(&quot;Standard&quot;, &quot;Exportieren&quot;)
+	oDialogExportierenModel = oDialogExportieren.Model
+	oOptionAngebote1 = oDialogExportierenModel.getByName(&quot;OptionAngebote1&quot;)
+	oOptionAuftrag1 = oDialogExportierenModel.getByName(&quot;OptionAuftrag1&quot;)
+	oOptionLieferscheine1 = oDialogExportierenModel.getByName(&quot;OptionLieferscheine1&quot;)
+	oOptionAufmasze1 = oDialogExportierenModel.getByName(&quot;OptionAufmasze1&quot;)
+	oOptionRechnungen1 = oDialogExportierenModel.getByName(&quot;OptionRechnungen1&quot;)
+	oOptionGutschriften1 = oDialogExportierenModel.getByName(&quot;OptionGutschriften1&quot;)
+	oOptionPreisanfragen1 = oDialogExportierenModel.getByName(&quot;OptionPreisanfragen1&quot;)
+	oOptionBestellungen1 = oDialogExportierenModel.getByName(&quot;OptionBestellungen1&quot;)
+	oOptionAngebote2 = oDialogExportierenModel.getByName(&quot;OptionAngebote2&quot;)
+	oOptionAuftrag2 = oDialogExportierenModel.getByName(&quot;OptionAuftrag2&quot;)
+	oOptionLieferscheine2 = oDialogExportierenModel.getByName(&quot;OptionLieferscheine2&quot;)
+	oOptionAufmasze2 = oDialogExportierenModel.getByName(&quot;OptionAufmasze2&quot;)
+	oOptionRechnungen2 = oDialogExportierenModel.getByName(&quot;OptionRechnungen2&quot;)
+	oOptionGutschriften2 = oDialogExportierenModel.getByName(&quot;OptionGutschriften2&quot;)
+	oOptionPreisanfragen2 = oDialogExportierenModel.getByName(&quot;OptionPreisanfragen2&quot;)
+	oOptionBestellungen2 = oDialogExportierenModel.getByName(&quot;OptionBestellungen2&quot;)
+
+	oDialogExportieren.Title=sTitle_lokal &amp;&quot; - Datensätze in folgendes Formular exportieren:&quot;
+
+	sSQL1=&quot;SELECT Gesperrt FROM Steuerung&quot;&amp;_
+		&quot; WHERE ClientID &lt;= &quot;&amp; (iUserID_lokal*40) &amp;_
+		&quot; AND ClientID &gt; &quot;&amp; (iUserID_lokal*40)-40 &amp;_
+		&quot; ORDER BY ClientID ASC&quot;
+	wait 1
+	iCountFormulare=0
+	For iCount = 1 to 16
+	oRecordGesperrt=oResultGesperrt(sSQL1)
+	oRecordGesperrt.absolute(iCount)
+	iGesperrt=oRecordGesperrt.getInt(1)
+	if iCount = 1 then 
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+1 then
+			oOptionAngebote1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 2 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+2 then
+			oOptionAngebote2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 3 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+3 then
+			oOptionAuftrag1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 4 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+4 then
+			oOptionAuftrag2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 5 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+5 then
+			oOptionLieferscheine1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 6 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+6 then
+			oOptionLieferscheine2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 7 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+7 then
+			oOptionAufmasze1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 8 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+8 then
+			oOptionAufmasze2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 9 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+9 then
+			oOptionRechnungen1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 10 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+10 then
+			oOptionRechnungen2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 11 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+11 then
+			oOptionGutschriften1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if	
+	elseif iCount = 12 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+12 then
+			oOptionGutschriften2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 13 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+13 then
+			oOptionPreisanfragen1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 14 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+14 then
+			oOptionPreisanfragen2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 15 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+15 then
+			oOptionBestellungen1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 16 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+16 then
+			oOptionBestellungen2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	End if	
+	Next iCount
+	if iCountFormulare=0 then
+		MsgBox(&quot;Sie haben noch kein Formular geöffnet, in welches die Datensätze eingefügt werden könnten!&quot;,16,sTitle_lokal)
+		Exit Sub
+	End if
+
+	vStatus = oDialogExportieren.Execute()
+	if vStatus = 0 then
+		exit sub
+	end if
+	if oOptionAngebote1.State=1 OR oOptionAngebote2.State=1 then
+		if oOptionAngebote1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+1)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAngebote2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionAngebote2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+2)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAngebote2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Angebote1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Angebote2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Angebote1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Angebote2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Angebote1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Angebote2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionAuftrag1.State=1 OR oOptionAuftrag2.State=1 then
+		if oOptionAuftrag1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+3)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAuftragsbestaetigungen2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionAuftrag2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+4)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAuftragsbestaetigungen2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Auftragsbestaetigungen1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Auftragsbestaetigungen2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionLieferscheine1.State=1 OR oOptionLieferscheine2.State=1 then
+		if oOptionLieferscheine1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+5)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sLieferscheine2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionLieferscheine2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+6)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sLieferscheine2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Lieferscheine1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Lieferscheine2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Lieferscheine1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Lieferscheine2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Lieferscheine1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Lieferscheine2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionAufmasze1.State=1 OR oOptionAufmasze2.State=1 then
+		if oOptionAufmasze1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+7)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAufmasze2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionAufmasze2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+8)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAufmasze2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Aufmasze1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Aufmasze2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Aufmasze1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Aufmasze2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Aufmasze1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Aufmasze2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionRechnungen1.State=1 OR oOptionRechnungen2.State=1 then
+		if oOptionRechnungen1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+9)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sRechnungen2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionRechnungen2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+10)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sRechnungen2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Rechnungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Rechnungen1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Rechnungen2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Rechnungen2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionGutschriften1.State=1 OR oOptionGutschriften2.State=1 then
+		if oOptionGutschriften1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+11)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sGutschriften2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionGutschriften2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+12)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sGutschriften2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Gutschriften1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Gutschriften2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Gutschriften1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Gutschriften2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Gutschriften1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Gutschriften2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionPreisanfragen1.State=1 OR oOptionPreisanfragen2.State=1 then
+		if oOptionPreisanfragen1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+13)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sPreisanfragen2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionPreisanfragen2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+14)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sPreisanfragen2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Preisanfragen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Preisanfragen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Preisanfragen1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Preisanfragen2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Preisanfragen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Preisanfragen2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionBestellungen1.State=1 OR oOptionBestellungen2.State=1 then
+		if oOptionBestellungen1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+15)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sBestellungen2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionBestellungen2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+16)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sBestellungen2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Bestellungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Bestellungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Bestellungen1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Bestellungen2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Bestellungen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Bestellungen2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	End if
+
+	sSQL2=&quot;SELECT distinct t1.DocumentID,t2.Schreibschutz&quot;&amp;_
+		&quot; FROM Steuerung as t1,&quot;&amp; sTabelle1_import &amp;&quot; as t2&quot;&amp;_
+		&quot; WHERE t1.ClientID=&quot;&amp; iClientID_import &amp;_
+		&quot; AND t2.DocumentID=t1.DocumentID&quot;
+	oRecord1=oResult(sSQL2)
+	While oRecord1.next()
+		sDocumentID_import=oRecord1.getString(1)
+		iSchreibschutz_import=oRecord1.getInt(2)
+	Wend
+	if sDocumentID_import = &quot;&quot; then
+		MsgBox(&quot;Sie haben noch kein Dokument geladen in welches die Datensätze eingefügt werden könnten!&quot;,16,sTitle_lokal)
+		Exit Sub
+	End if
+	if iSchreibschutz_import = 1 then
+		MsgBox(&quot;Das Dokument in welches Sie die Datensätze einfügen wollen ist schreibgeschützt!&quot;&amp; Chr$(13)&amp; Chr$(13)&amp;_
+			&quot;Entfernen Sie erst den Schreibschutz in dem Dokument in das die Datensätze eingefügt werden sollen!&quot;,48,sTitle_lokal)
+		Exit Sub
+	End if
+
+	sSQL3=&quot;INSERT INTO &quot;&amp; sArbeitstabelle_import &amp;_
+		&quot; (DocumentID,LV_Pos,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp;_
+		&quot;Einheit,Menge,Einkaufspreis,Bauzeit,Minutenverrechnungssatz,&quot;&amp;_
+		&quot;Materialaufschlagsatz,Lieferung,Leistung,EP,GP,Pos_TypID)&quot;&amp;_
+		&quot; SELECT distinct &apos;&quot;&amp; sDocumentID_import &amp;&quot;&apos;,t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
+		&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Einkaufspreis,&quot;&amp;_
+		&quot;t1.Bauzeit,t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz,&quot;&amp;_
+		&quot;t1.Lieferung,t1.Leistung,t1.EP,t1.GP,t1.Pos_TypID FROM &quot;&amp; sArbeitstabelle &amp;_
+		&quot; as t1,Steuerung as t2 WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; AND t1.DocumentID=t2.DocumentID ORDER BY t1.PositionsID ASC&quot;
+	SQL_execute(sSQL3)
+
+	MsgBox(&quot;Es wurden &quot;&amp; iCountDatensaetze &amp;&quot; Datensätze eingefügt.&quot;&amp; Chr$(13)&amp; Chr$(13)&amp;_
+		&quot;Betätigen Sie in dem Formular in dem die Datensätze eingefügt wurden, die &gt;&gt; Berechnen &lt;&lt; -Taste!&quot;,48,sTitle_lokal)
+End Sub
+
+Sub Datensatz_exportieren()
+	Dim vStatus as Variant
+	Dim iGesperrt as integer
+	Dim iCount as Integer,iCountFormulare as Integer,iCountDatensaetze as Integer
+	Dim oRecord1 as Object
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+	Dim oDialogExportieren as Object,oDialogExportierenModel as Object
+	Dim oOptionAngebote1 as Object,oOptionAuftrag1 as Object,oOptionLieferscheine1 as Object
+	Dim oOptionAufmasze1 as Object,oOptionRechnungen1 as Object,oOptionGutschriften1 as Object
+	Dim oOptionPreisanfragen1 as Object,oOptionBestellungen1 as Object,oOptionAngebote2 as Object
+	Dim oOptionAuftrag2 as Object,oOptionLieferscheine2 as Object,oOptionAufmasze2 as Object
+	Dim oOptionRechnungen2 as Object,oOptionGutschriften2 as Object
+	Dim oOptionPreisanfragen2 as Object,oOptionBestellungen2  as Object
+	Dim oRecordGesperrt as Object
+	Dim sDocumentID_import as String,iSchreibschutz_import as Integer
+	
+	sSQL4=&quot; SELECT COUNT(*) FROM &quot;&amp; sArbeitstabelle
+	oRecord1=oResult(sSQL4)
+	While oRecord1.next()
+		iCountDatensaetze=oRecord1.getInt(1)
+	Wend
+	if iCountDatensaetze=0 then
+		MsgBox(&quot;Es sind keine Datensätze im Dokument vorhanden die exportiert werden könnten!&quot;,16,sTitle_lokal)
+		Exit Sub
+	End if
+
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+	oDialogExportieren = LoadDialog_Projekt(&quot;Standard&quot;, &quot;Exportieren&quot;)
+	oDialogExportierenModel = oDialogExportieren.Model
+	oOptionAngebote1 = oDialogExportierenModel.getByName(&quot;OptionAngebote1&quot;)
+	oOptionAuftrag1 = oDialogExportierenModel.getByName(&quot;OptionAuftrag1&quot;)
+	oOptionLieferscheine1 = oDialogExportierenModel.getByName(&quot;OptionLieferscheine1&quot;)
+	oOptionAufmasze1 = oDialogExportierenModel.getByName(&quot;OptionAufmasze1&quot;)
+	oOptionRechnungen1 = oDialogExportierenModel.getByName(&quot;OptionRechnungen1&quot;)
+	oOptionGutschriften1 = oDialogExportierenModel.getByName(&quot;OptionGutschriften1&quot;)
+	oOptionPreisanfragen1 = oDialogExportierenModel.getByName(&quot;OptionPreisanfragen1&quot;)
+	oOptionBestellungen1 = oDialogExportierenModel.getByName(&quot;OptionBestellungen1&quot;)
+	oOptionAngebote2 = oDialogExportierenModel.getByName(&quot;OptionAngebote2&quot;)
+	oOptionAuftrag2 = oDialogExportierenModel.getByName(&quot;OptionAuftrag2&quot;)
+	oOptionLieferscheine2 = oDialogExportierenModel.getByName(&quot;OptionLieferscheine2&quot;)
+	oOptionAufmasze2 = oDialogExportierenModel.getByName(&quot;OptionAufmasze2&quot;)
+	oOptionRechnungen2 = oDialogExportierenModel.getByName(&quot;OptionRechnungen2&quot;)
+	oOptionGutschriften2 = oDialogExportierenModel.getByName(&quot;OptionGutschriften2&quot;)
+	oOptionPreisanfragen2 = oDialogExportierenModel.getByName(&quot;OptionPreisanfragen2&quot;)
+	oOptionBestellungen2 = oDialogExportierenModel.getByName(&quot;OptionBestellungen2&quot;)
+	
+	oDialogExportieren.Title=sTitle_lokal &amp;&quot; - Datensatz in folgendes Formular exportieren:&quot;
+
+	sSQL1=&quot;SELECT Gesperrt FROM Steuerung&quot;&amp;_
+		&quot; WHERE ClientID &lt;= &quot;&amp; (iUserID_lokal*40) &amp;_
+		&quot; AND ClientID &gt; &quot;&amp; (iUserID_lokal*40)-40 &amp;_
+		&quot; ORDER BY ClientID ASC&quot;
+	wait 1
+	iCountFormulare=0
+	For iCount = 1 to 16
+	oRecordGesperrt=oResultGesperrt(sSQL1)
+	oRecordGesperrt.absolute(iCount)
+	iGesperrt=oRecordGesperrt.getInt(1)
+	if iCount = 1 then 
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+1 then
+			oOptionAngebote1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 2 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+2 then
+			oOptionAngebote2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 3 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+3 then
+			oOptionAuftrag1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 4 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+4 then
+			oOptionAuftrag2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 5 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+5 then
+			oOptionLieferscheine1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 6 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+6 then
+			oOptionLieferscheine2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 7 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+7 then
+			oOptionAufmasze1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 8 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+8 then
+			oOptionAufmasze2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 9 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+9 then
+			oOptionRechnungen1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 10 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+10 then
+			oOptionRechnungen2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 11 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+11 then
+			oOptionGutschriften1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if	
+	elseif iCount = 12 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+12 then
+			oOptionGutschriften2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 13 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+13 then
+			oOptionPreisanfragen1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 14 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+14 then
+			oOptionPreisanfragen2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 15 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+15 then
+			oOptionBestellungen1.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	elseif iCount = 16 then
+		if iGesperrt = 0 OR iClientID = iClientIDOffset(iUserID_lokal)+16 then
+			oOptionBestellungen2.Enabled=0
+		else
+			iCountFormulare=iCountFormulare+1
+		End if
+	End if	
+	Next iCount
+	if iCountFormulare=0 then
+		MsgBox(&quot;Sie haben noch kein Formular geöffnet in welches die Datensätze eingefügt werden könnten!&quot;,16,sTitle_lokal)
+		Exit Sub
+	End if
+
+	vStatus = oDialogExportieren.Execute()
+	if vStatus = 0 then
+		exit sub
+	end if
+	if oOptionAngebote1.State=1 OR oOptionAngebote2.State=1 then
+		if oOptionAngebote1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+1)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAngebote2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionAngebote2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+2)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAngebote2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Angebote1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Angebote2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Angebote1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Angebote2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Angebote1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Angebote2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionAuftrag1.State=1 OR oOptionAuftrag2.State=1 then
+		if oOptionAuftrag1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+3)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAuftragsbestaetigungen2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionAuftrag2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+4)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAuftragsbestaetigungen2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Auftragsbestaetigungen1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Auftragsbestaetigungen2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionLieferscheine1.State=1 OR oOptionLieferscheine2.State=1 then
+		if oOptionLieferscheine1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+5)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sLieferscheine2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionLieferscheine2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+6)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sLieferscheine2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Lieferscheine1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Lieferscheine2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Lieferscheine1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Lieferscheine2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Lieferscheine1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Lieferscheine2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionAufmasze1.State=1 OR oOptionAufmasze2.State=1 then
+		if oOptionAufmasze1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+7)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAufmasze2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionAufmasze2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+8)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sAufmasze2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Aufmasze1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Aufmasze2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Aufmasze1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Aufmasze2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Aufmasze1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Aufmasze2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionRechnungen1.State=1 OR oOptionRechnungen2.State=1 then
+		if oOptionRechnungen1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+9)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sRechnungen2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionRechnungen2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+10)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sRechnungen2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Rechnungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Rechnungen1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Rechnungen2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Rechnungen2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionGutschriften1.State=1 OR oOptionGutschriften2.State=1 then
+		if oOptionGutschriften1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+11)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sGutschriften2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionGutschriften2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+12)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sGutschriften2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Gutschriften1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Gutschriften2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Gutschriften1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Gutschriften2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Gutschriften1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Gutschriften2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionPreisanfragen1.State=1 OR oOptionPreisanfragen2.State=1 then
+		if oOptionPreisanfragen1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+13)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sPreisanfragen2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionPreisanfragen2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+14)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sPreisanfragen2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Preisanfragen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Preisanfragen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Preisanfragen1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Preisanfragen2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Preisanfragen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Preisanfragen2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	elseif oOptionBestellungen1.State=1 OR oOptionBestellungen2.State=1 then
+		if oOptionBestellungen1.State=1 then 
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+15)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sBestellungen2_TEMP1(iUserID_lokal))
+		end if
+		if oOptionBestellungen2.State=1 then
+			SetDocUserProperty(&quot;oClientID_import&quot;, iClientIDOffset(iUserID_lokal)+16)
+			SetDocUserProperty(&quot;oArbeitstabelle_import&quot;, sBestellungen2_TEMP2(iUserID_lokal))
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Bestellungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			OR InStr(fsTableList,&quot;;Bestellungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Bestellungen1&quot;)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Bestellungen2&quot;)
+		else
+			SetDocUserProperty(&quot;oTabelle1_import&quot;, &quot;Bestellungen1_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oTabelle2_import&quot;, &quot;Bestellungen2_&quot; &amp; iEinstellungsID_lokal)
+		end if
+	End if
+	sSQL2=&quot;SELECT distinct t1.DocumentID,t2.Schreibschutz&quot;&amp;_
+		&quot; FROM Steuerung as t1,&quot;&amp; sTabelle1_import &amp;&quot; as t2&quot;&amp;_
+		&quot; WHERE t1.ClientID=&quot;&amp; iClientID_import &amp;_
+		&quot; AND t2.DocumentID=t1.DocumentID&quot;
+	oRecord1=oResult(sSQL2)
+	While oRecord1.next()
+		sDocumentID_import=oRecord1.getString(1)
+		iSchreibschutz_import=oRecord1.getInt(2)
+	Wend
+	if sDocumentID_import = &quot;&quot; then
+		MsgBox(&quot;Sie haben noch kein Dokument geladen in welches die Datensätze eingefügt werden könnten!&quot;,16,sTitle_lokal)
+		Exit Sub
+	End if
+	if iSchreibschutz_import = 1 then
+		MsgBox(&quot;Das Dokument in welches Sie die Datensätze einfügen wollen ist schreibgeschützt!&quot;&amp; Chr$(13)&amp; Chr$(13)&amp;_
+			&quot;Entfernen Sie erst den Schreibschutz in dem Dokument in das die Datensätze eingefügt werden sollen!&quot;,48,sTitle_lokal)
+		Exit Sub
+	End if
+
+	sSQL3=&quot;INSERT INTO &quot;&amp; sArbeitstabelle_import &amp;_
+		&quot; (DocumentID,LV_Pos,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp;_
+		&quot;Einheit,Menge,Einkaufspreis,Bauzeit,Minutenverrechnungssatz,&quot;&amp;_
+		&quot;Materialaufschlagsatz,Lieferung,Leistung,EP,GP,Pos_TypID)&quot;&amp;_
+		&quot; SELECT &apos;&quot;&amp; sDocumentID_import &amp;&quot;&apos;,t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
+		&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Einkaufspreis,&quot;&amp;_
+		&quot;t1.Bauzeit,t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz,&quot;&amp;_
+		&quot;t1.Lieferung,t1.Leistung,t1.EP,t1.GP,t1.Pos_TypID&quot;&amp;_
+		&quot; FROM &quot;&amp; sArbeitstabelle &amp;&quot; as t1,Steuerung as t2&quot;&amp;_
+		&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; AND t1.DocumentID=t2.DocumentID&quot;&amp;_
+		&quot; AND Pos=&apos;&quot;&amp; fPos_neu &amp;&quot;&apos;&quot;
+	SQL_execute(sSQL3)
+
+	MsgBox(&quot;Es wurde 1 Datensatz eingefügt.&quot;&amp; Chr$(13)&amp; Chr$(13)&amp;_
+		&quot;Betätigen Sie in dem Formular in dem der Datensatz eingefügt wurde, die &gt;&gt; Berechnen &lt;&lt; -Taste!&quot;,48,sTitle_lokal)
+End Sub
+
+Sub Document_exportieren()
+	if lDocumentID &gt; 0 then
+		Dim vStatus as Variant
+		Dim iGesperrt as integer
+		Dim iCount as Integer,iCountFormulare as Integer,iCountDatensaetze as Integer,iCountDatensaetze_export as Integer
+		Dim oRecord1 as Object,oRecord2 as Object
+		Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String,sSQL5 as String,sSQL6 as String
+		Dim oDialogExport as Object,oDialogExportModel as Object
+		Dim oOptionAngebote1 as Object,oOptionAuftrag1 as Object,oOptionLieferscheine1 as Object
+		Dim oOptionAufmasze1 as Object,oOptionRechnungen1 as Object,oOptionGutschriften1 as Object
+		Dim oOptionPreisanfragen1 as Object,oOptionBestellungen1 as Object,oOptionAngebote2 as Object
+		Dim oOptionAuftrag2 as Object,oOptionLieferscheine2 as Object,oOptionAufmasze2 as Object
+		Dim oOptionRechnungen2 as Object,oOptionGutschriften2 as Object
+		Dim oOptionPreisanfragen2 as Object,oOptionBestellungen2  as Object
+		Dim oRecordGesperrt as Object
+		Dim sDocumentID_export as String,iSchreibschutz_export as Integer
+		Dim iDocTypID_export as Integer
+		Dim sBemerkung as String
+	
+		sSQL1=&quot;SELECT COUNT(*) FROM &quot;&amp; sArbeitstabelle
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iCountDatensaetze=oRecord1.getInt(1)
+		Wend
+		if iCountDatensaetze=0 then
+			MsgBox(&quot;Es sind keine Datensätze im Dokument vorhanden die exportiert werden könnten!&quot;,16,sTitle_lokal)
+			Exit Sub
+		End if
+	
+		GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+		GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+		oDialogExport = LoadDialog_Projekt(&quot;Standard&quot;, &quot;Export&quot;)
+		oDialogExportModel = oDialogExport.Model
+		oOptionAngebote1 = oDialogExportModel.getByName(&quot;OptionAngebote1&quot;)
+		oOptionAuftrag1 = oDialogExportModel.getByName(&quot;OptionAuftrag1&quot;)
+		oOptionLieferscheine1 = oDialogExportModel.getByName(&quot;OptionLieferscheine1&quot;)
+		oOptionAufmasze1 = oDialogExportModel.getByName(&quot;OptionAufmasze1&quot;)
+		oOptionRechnungen1 = oDialogExportModel.getByName(&quot;OptionRechnungen1&quot;)
+		oOptionGutschriften1 = oDialogExportModel.getByName(&quot;OptionGutschriften1&quot;)
+		oOptionPreisanfragen1 = oDialogExportModel.getByName(&quot;OptionPreisanfragen1&quot;)
+		oOptionBestellungen1 = oDialogExportModel.getByName(&quot;OptionBestellungen1&quot;)
+		oOptionAngebote2 = oDialogExportModel.getByName(&quot;OptionAngebote2&quot;)
+		oOptionAuftrag2 = oDialogExportModel.getByName(&quot;OptionAuftrag2&quot;)
+		oOptionLieferscheine2 = oDialogExportModel.getByName(&quot;OptionLieferscheine2&quot;)
+		oOptionAufmasze2 = oDialogExportModel.getByName(&quot;OptionAufmasze2&quot;)
+		oOptionRechnungen2 = oDialogExportModel.getByName(&quot;OptionRechnungen2&quot;)
+		oOptionGutschriften2 = oDialogExportModel.getByName(&quot;OptionGutschriften2&quot;)
+		oOptionPreisanfragen2 = oDialogExportModel.getByName(&quot;OptionPreisanfragen2&quot;)
+		oOptionBestellungen2 = oDialogExportModel.getByName(&quot;OptionBestellungen2&quot;)
+
+		oDialogExport.Title=sTitle_lokal &amp;&quot; - aktuelles Dokument exportieren in:&quot;
+
+		sSQL1=&quot;SELECT Gesperrt FROM Steuerung&quot;&amp;_
+			&quot; WHERE ClientID &lt;= &quot;&amp; (iUserID_lokal*40) &amp;_
+			&quot; AND ClientID &gt; &quot;&amp; (iUserID_lokal*40)-40 &amp;_
+			&quot; ORDER BY ClientID ASC&quot;
+		wait 1
+		iCountFormulare=0
+		For iCount = 1 to 16
+		oRecordGesperrt=oResultGesperrt(sSQL1)
+		oRecordGesperrt.absolute(iCount)
+		iGesperrt=oRecordGesperrt.getInt(1)
+		if iCount = 1 then 
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+1 then
+				oOptionAngebote1.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 2 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+2 then
+				oOptionAngebote2.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 3 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+3 then
+				oOptionAuftrag1.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 4 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+4 then
+				oOptionAuftrag2.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 5 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+5 then
+				oOptionLieferscheine1.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 6 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+6 then
+				oOptionLieferscheine2.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 7 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+7 then
+				oOptionAufmasze1.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 8 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+8 then
+				oOptionAufmasze2.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 9 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+9 then
+				oOptionRechnungen1.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 10 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+10 then
+				oOptionRechnungen2.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 11 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+11 then
+				oOptionGutschriften1.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if	
+		elseif iCount = 12 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+12 then
+				oOptionGutschriften2.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 13 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+13 then
+				oOptionPreisanfragen1.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 14 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+14 then
+				oOptionPreisanfragen2.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 15 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+15 then
+				oOptionBestellungen1.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		elseif iCount = 16 then
+			if iGesperrt = 1 OR iClientID = iClientIDOffset(iUserID_lokal)+16 then
+				oOptionBestellungen2.Enabled=0
+			else
+				iCountFormulare=iCountFormulare+1
+			End if
+		End if	
+		Next iCount
+		if iCountFormulare=0 then
+			MsgBox(&quot;Bitte schließen Sie das Formular in welches Sie das Dokument exportieren wollen!&quot;,16,sTitle_lokal)
+			Exit Sub
+		End if
+	
+		vStatus = oDialogExport.Execute()
+		if vStatus = 0 then
+			exit sub
+		end if
+		
+		if oOptionAngebote1.State=1 OR oOptionAngebote2.State=1 then
+			iDocTypID_export=&quot;1&quot;
+			if oOptionAngebote1.State=1 then 
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+1)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAngebote2_TEMP1(iUserID_lokal))
+			end if
+			if oOptionAngebote2.State=1 then
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+2)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAngebote2_TEMP2(iUserID_lokal))
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Angebote1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Angebote2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiBemAngebote_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiSuAngebote_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Angebote1&quot;)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Angebote2&quot;)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemAngebote&quot;)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuAngebote&quot;)
+			else
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Angebote1_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Angebote2_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemAngebote_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuAngebote_&quot; &amp; iEinstellungsID_lokal)
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden&quot;)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden&quot;)
+			else
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal)
+			end if
+		elseif oOptionAuftrag1.State=1 OR oOptionAuftrag2.State=1 then
+			iDocTypID_export=&quot;2&quot;
+			if oOptionAuftrag1.State=1 then 
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+3)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAuftragsbestaetigungen2_TEMP1(iUserID_lokal))
+			end if
+			if oOptionAuftrag2.State=1 then
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+4)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAuftragsbestaetigungen2_TEMP2(iUserID_lokal))
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiBemAuftragsbestaetigungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiSuAuftragsbestaetigungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Auftragsbestaetigungen1&quot;)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Auftragsbestaetigungen2&quot;)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemAuftragsbestaetigungen&quot;)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuAuftragsbestaetigungen&quot;)
+			else
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Auftragsbestaetigungen1_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Auftragsbestaetigungen2_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemAuftragsbestaetigungen_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuAuftragsbestaetigungen_&quot; &amp; iEinstellungsID_lokal)
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden&quot;)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden&quot;)
+			else
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal)
+			end if
+		elseif oOptionLieferscheine1.State=1 OR oOptionLieferscheine2.State=1 then
+			iDocTypID_export=&quot;3&quot;
+			if oOptionLieferscheine1.State=1 then 
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+5)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sLieferscheine2_TEMP1(iUserID_lokal))
+			end if
+			if oOptionLieferscheine2.State=1 then
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+6)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sLieferscheine2_TEMP2(iUserID_lokal))
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Lieferscheine1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Lieferscheine2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiBemLieferscheine_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiSuLieferscheine_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Lieferscheine1&quot;)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Lieferscheine2&quot;)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemLieferscheine&quot;)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuLieferscheine&quot;)
+			else
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Lieferscheine1_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Lieferscheine2_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemLieferscheine_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuLieferscheine_&quot; &amp; iEinstellungsID_lokal)
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden&quot;)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden&quot;)
+			else
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal)
+			end if
+		elseif oOptionAufmasze1.State=1 OR oOptionAufmasze2.State=1 then
+			iDocTypID_export=&quot;4&quot;
+			if oOptionAufmasze1.State=1 then 
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+7)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAufmasze2_TEMP1(iUserID_lokal))
+			end if
+			if oOptionAufmasze2.State=1 then
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+8)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sAufmasze2_TEMP2(iUserID_lokal))
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Aufmasze1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Aufmasze2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiBemAufmasze_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiSuAufmasze_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Aufmasze1&quot;)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Aufmasze2&quot;)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemAufmasze&quot;)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuAufmasze&quot;)
+			else
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Aufmasze1_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Aufmasze2_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemAufmasze_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuAufmasze_&quot; &amp; iEinstellungsID_lokal)
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden&quot;)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden&quot;)
+			else
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal)
+			end if
+		elseif oOptionRechnungen1.State=1 OR oOptionRechnungen2.State=1 then
+			iDocTypID_export=&quot;5&quot;
+			if oOptionRechnungen1.State=1 then 
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+9)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sRechnungen2_TEMP1(iUserID_lokal))
+			end if
+			if oOptionRechnungen2.State=1 then
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+10)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sRechnungen2_TEMP2(iUserID_lokal))
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Rechnungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Rechnungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiBemRechnungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiSuRechnungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Rechnungen1&quot;)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Rechnungen2&quot;)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemRechnungen&quot;)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuRechnungen&quot;)
+			else
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Rechnungen1_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Rechnungen2_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemRechnungen_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuRechnungen_&quot; &amp; iEinstellungsID_lokal)
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden&quot;)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden&quot;)
+			else
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal)
+			end if
+		elseif oOptionGutschriften1.State=1 OR oOptionGutschriften2.State=1 then
+			iDocTypID_export=&quot;6&quot;
+			if oOptionGutschriften1.State=1 then 
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+11)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sGutschriften2_TEMP1(iUserID_lokal))
+			end if
+			if oOptionGutschriften2.State=1 then
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+12)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sGutschriften2_TEMP2(iUserID_lokal))
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Gutschriften1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Gutschriften2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiBemGutschriften_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiSuGutschriften_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Gutschriften1&quot;)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Gutschriften2&quot;)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemGutschriften&quot;)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuGutschriften&quot;)
+			else
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Gutschriften1_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Gutschriften2_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemGutschriften_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuGutschriften_&quot; &amp; iEinstellungsID_lokal)
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden&quot;)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden&quot;)
+			else
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Kunden_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Kunden_&quot; &amp; iEinstellungsID_lokal)
+			end if
+		elseif oOptionPreisanfragen1.State=1 OR oOptionPreisanfragen2.State=1 then
+			iDocTypID_export=&quot;7&quot;
+			if oOptionPreisanfragen1.State=1 then 
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+13)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sPreisanfragen2_TEMP1(iUserID_lokal))
+			end if
+			if oOptionPreisanfragen2.State=1 then
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+14)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sPreisanfragen2_TEMP2(iUserID_lokal))
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Preisanfragen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Preisanfragen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiBemPreisanfragen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiSuPreisanfragen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Preisanfragen1&quot;)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Preisanfragen2&quot;)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemPreisanfragen&quot;)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuPreisanfragen&quot;)
+			else
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Preisanfragen1_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Preisanfragen2_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemPreisanfragen_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuPreisanfragen_&quot; &amp; iEinstellungsID_lokal)
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Ansprechpartner_Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Lieferanten&quot;)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Lieferanten&quot;)
+			else
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Lieferanten_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Lieferanten_&quot; &amp; iEinstellungsID_lokal)
+			end if
+		elseif oOptionBestellungen1.State=1 OR oOptionBestellungen2.State=1 then
+			iDocTypID_export=&quot;8&quot;
+			if oOptionBestellungen1.State=1 then 
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+15)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sBestellungen2_TEMP1(iUserID_lokal))
+			end if
+			if oOptionBestellungen2.State=1 then
+				SetDocUserProperty(&quot;oClientID_export&quot;, iClientIDOffset(iUserID_lokal)+16)
+				SetDocUserProperty(&quot;oArbeitstabelle_export&quot;, sBestellungen2_TEMP2(iUserID_lokal))
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Bestellungen1_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Bestellungen2_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiBemBestellungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+				OR InStr(fsTableList,&quot;;ZwiSuBestellungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Bestellungen1&quot;)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Bestellungen2&quot;)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemBestellungen&quot;)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuBestellungen&quot;)
+			else
+				SetDocUserProperty(&quot;oTabelle1_export&quot;, &quot;Bestellungen1_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oTabelle2_export&quot;, &quot;Bestellungen2_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oBemerkungen_export&quot;, &quot;ZwiBemBestellungen_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oZwischensummen_export&quot;, &quot;ZwiSuBestellungen_&quot; &amp; iEinstellungsID_lokal)
+			end if
+			if iEinstellungsID_lokal=1 _ 
+				OR InStr(fsTableList,&quot;;Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				OR InStr(fsTableList,&quot;;Ansprechpartner_Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			then
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Lieferanten&quot;)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Lieferanten&quot;)
+			else
+				SetDocUserProperty(&quot;oKontakte_export&quot;, &quot;Lieferanten_&quot; &amp; iEinstellungsID_lokal)
+				SetDocUserProperty(&quot;oAnsprechpartner_export&quot;, &quot;Ansprechpartner_Lieferanten_&quot; &amp; iEinstellungsID_lokal)
+			end if
+		End if
+	
+		sSQL6=&quot;SELECT COUNT(*) FROM  &quot;&amp; sArbeitstabelle_export
+		oRecord2=oResult(sSQL6)
+		While oRecord2.next()
+			iCountDatensaetze_export=oRecord2.getInt(1)
+		Wend
+	
+		if iCountDatensaetze_export &gt; 0 then
+			MsgBox(&quot;In der Arbeitstabelle des Ziel-Formulars sind noch ungespeicherte Daten. Schließen Sie nach dem Öffnen das Ziel-Formular und starten Sie den Vorgang erneut!&quot;,16,sTitle_lokal)
+			SET_Option(iUserID_lokal,iClientID_export-iClientIDOffset(iUserID_lokal),0,0)
+		else
+	
+			vStatus=MsgBox(&quot;Wollen Sie die Standard-Bemerkung für dieses Dokument setzen?&quot;,292,sTitle_lokal)
+			if vStatus=6 then &apos;ja
+				sBemerkung=&quot;&apos;&quot;&amp; fBemerkung_export(iDocTypID_export) &amp;&quot;&apos;&quot;
+			elseif vStatus=7 then &apos;nein
+				sBemerkung=&quot;t1.Bemerkung&quot;
+			End if
+	
+			if sKontakte=sKontakte_export then
+				sSQL2=&quot;INSERT INTO &quot;&amp; sTabelle1_export &amp;_
+					&quot;(ProjektID,Document_Name,KontaktID,AnsprechpartnerID,Erstellungsdatum,gueltig_bis,Minutenverrechnungssatz,&quot;&amp;_
+					&quot;Materialaufschlagsatz,Summe_ohne_MwSt,MwSt_Satz,MwSt,Summe_mit_MwSt,&quot;&amp;_
+					&quot;Bemerkung,Pos_Format,Rabatt_Satz,Korrektur_Vorzeichen,Korrektur_Satz,Skonto_Satz,Rabatt,Korrektur,Korrektur_Anlass,Skonto,&quot;&amp;_
+					&quot;Summe_nach_Rabatt,Summe_nach_Korrektur,Summe_nach_Skonto,Skonto_Tage,Faellig_Tage,Materialeinsatz,&quot;&amp;_
+					&quot;Bauzeit_Stunden,Bauzeit_Tage,Leerzeilen,Leistungsempfaenger,Lieferbemerkung&quot;
+				if iDocTypID_export &lt; 7 AND iDocTypID &lt; 7 then
+					sSQL2 = sSQL2 &amp; &quot;,13b,13bText&quot;
+				End if
+				sSQL2 = sSQL2 &amp;&quot;) SELECT t1.ProjektID,t1.Document_Name,t1.KontaktID,t1.AnsprechpartnerID,&quot;&amp;_
+					&quot;date_add(now(),interval 0 day),date_add(now(),interval 0 day),&quot;&amp;_
+					&quot;t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz,t1.Summe_ohne_MwSt,&quot;&amp;_
+					&quot;t1.MwSt_Satz,t1.MwSt,t1.Summe_mit_MwSt,&quot;&amp; sBemerkung &amp;&quot;,t1.Pos_Format,t1.Rabatt_Satz,t1.Korrektur_Vorzeichen,t1.Korrektur_Satz,&quot;&amp;_
+					&quot;t1.Skonto_Satz,t1.Rabatt,t1.Korrektur,t1.Korrektur_Anlass,t1.Skonto,&quot;&amp;_
+					&quot;t1.Summe_nach_Rabatt,t1.Summe_nach_Korrektur,t1.Summe_nach_Skonto,&quot;&amp;_
+					&quot;t1.Skonto_Tage,t1.Faellig_Tage,t1.Materialeinsatz,&quot;&amp;_
+					&quot;t1.Bauzeit_Stunden,t1.Bauzeit_Tage,t1.Leerzeilen,t1.Leistungsempfaenger,t1.Lieferbemerkung&quot;
+				if iDocTypID_export &lt; 7 AND iDocTypID &lt; 7 then
+					sSQL2 = sSQL2 &amp; &quot;,t1.13b,t1.13bText&quot;
+				End if
+				sSQL2 = sSQL2 &amp;&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t1,Steuerung as t2 WHERE t2.ClientID=&quot;&amp; iClientID &amp;&quot; AND t1.DocumentID=t2.DocumentID&quot;
+			else
+				sSQL2=&quot;INSERT INTO &quot;&amp; sTabelle1_export &amp;_
+					&quot;(ProjektID,Document_Name,Erstellungsdatum,gueltig_bis,Minutenverrechnungssatz,&quot;&amp;_
+					&quot;Materialaufschlagsatz,Summe_ohne_MwSt,MwSt_Satz,MwSt,Summe_mit_MwSt,&quot;&amp;_
+					&quot;Bemerkung,Pos_Format,Rabatt_Satz,Korrektur_Vorzeichen,Korrektur_Satz,Skonto_Satz,Rabatt,Korrektur,Korrektur_Anlass,Skonto,&quot;&amp;_
+					&quot;Summe_nach_Rabatt,Summe_nach_Korrektur,Summe_nach_Skonto,Skonto_Tage,Faellig_Tage,Materialeinsatz,&quot;&amp;_
+					&quot;Bauzeit_Stunden,Bauzeit_Tage,Leerzeilen)&quot;&amp;_
+					&quot; SELECT t1.ProjektID,t1.Document_Name,date_add(now(),interval 0 day),date_add(now(),interval 0 day),&quot;&amp;_
+					&quot;t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz,t1.Summe_ohne_MwSt,&quot;&amp;_
+					&quot;t1.MwSt_Satz,t1.MwSt,t1.Summe_mit_MwSt,&quot;&amp; sBemerkung &amp;&quot;,t1.Pos_Format,t1.Rabatt_Satz,t1.Korrektur_Vorzeichen,t1.Korrektur_Satz,&quot;&amp;_
+					&quot;t1.Skonto_Satz,t1.Rabatt,t1.Korrektur,t1.Korrektur_Anlass,t1.Skonto,&quot;&amp;_
+					&quot;t1.Summe_nach_Rabatt,t1.Summe_nach_Korrektur,t1.Summe_nach_Skonto,t1.Skonto_Tage,t1.Faellig_Tage,t1.Materialeinsatz,&quot;&amp;_
+					&quot;t1.Bauzeit_Stunden,t1.Bauzeit_Tage,t1.Leerzeilen FROM &quot;&amp;_
+					sTabelle1 &amp;&quot; as t1,Steuerung as t2 WHERE t2.ClientID=&quot;&amp; iClientID &amp;&quot; AND t1.DocumentID=t2.DocumentID&quot;
+			End if
+	
+			SQL_execute(sSQL2)
+			SQL_Update_Tabelle1_export_DocumentID(1)
+			SQL_Update_Steuerung_export_DocumentID(0)
+			SQL_Update_Document1_Gesperrt_1(sTabelle1_export,lDocumentID_export(0))
+		
+			sSQL3=&quot;INSERT INTO &quot;&amp; sArbeitstabelle_export &amp;_
+				&quot; (DocumentID,Pos,LV_Pos,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp;_
+				&quot;Einheit,Menge,Einkaufspreis,Bauzeit,Minutenverrechnungssatz,&quot;&amp;_
+				&quot;Materialaufschlagsatz,Lieferung,Leistung,EP,GP,Pos_TypID)&quot;&amp;_
+				&quot; SELECT &apos;&quot;&amp; lDocumentID_export(0) &amp;&quot;&apos;,t1.Pos,t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
+				&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Einkaufspreis,&quot;&amp;_
+				&quot;t1.Bauzeit,t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz,&quot;&amp;_
+				&quot;t1.Lieferung,t1.Leistung,t1.EP,t1.GP,t1.Pos_TypID FROM &quot;&amp; sArbeitstabelle &amp;_
+				&quot; as t1,Steuerung as t2 WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
+				&quot; AND t1.DocumentID=t2.DocumentID ORDER BY t1.PositionsID ASC&quot;
+			SQL_execute(sSQL3)
+		
+		
+			sSQL4=&quot;INSERT INTO &quot;&amp; sZwischensummen_export &amp;&quot;(DocumentID,Pos,ZwiSuName,Zwischensumme) &quot;&amp;_
+				&quot;SELECT &apos;&quot;&amp; lDocumentID_export(0) &amp;&quot;&apos;,Pos,ZwiSuName,Zwischensumme FROM &quot;&amp; sZwischensummen &amp;_
+				&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY ZwiSuID ASC&quot;	
+			SQL_execute(sSQL4)
+			
+				
+			sSQL5=&quot;INSERT INTO &quot;&amp; sBemerkungen_export &amp;&quot;(DocumentID,Pos,Bemerkung) &quot;&amp;_
+				&quot;SELECT &apos;&quot;&amp; lDocumentID_export(0) &amp;&quot;&apos;,Pos,Bemerkung FROM &quot;&amp; sBemerkungen &amp;_
+				&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY ZwiBemID ASC&quot;
+			SQL_execute(sSQL5)
+			SET_Option(iUserID_lokal,iClientID_export-iClientIDOffset(iUserID_lokal),1,1)
+		End if
+		iUserID(&quot;Projekt&quot;,iUserID_lokal)
+		Projekt_oeffnen()
+	End if
+End Sub
+</script:module>

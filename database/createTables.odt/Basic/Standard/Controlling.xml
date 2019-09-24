@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Controlling" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+
+Sub SQL_create_Projekt
+	sSQL=&quot;create table Projekte &quot;&amp;_
+		&quot;(ProjektID int(10)not null auto_increment,Projekt_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
+		&quot;Erstellungsdatum date,Baubeginn date,Bauende date,Summe_ohne_MwSt decimal(11,2),MwSt_Satz decimal(4,1) not null default 0,&quot;&amp;_
+		&quot;MwSt decimal(11,2),Summe_mit_MwSt decimal(11,2),Stundenverrechnungssatz decimal(6,2),Materialaufschlagsatz decimal(5,2),&quot;&amp;_
+		&quot;Bemerkung varchar(2000),Status varchar(20)not null default &apos;neu&apos;,&quot;&amp;_
+		&quot;Abrechnung_nach int(1)not null default 0,Gesperrt int(4)not null default 0,primary key(ProjektID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+	if iDatenAnlegen=1 then
+		sSQL=&quot;insert into Projekte(Projekt_Name) values (&apos;- keine Zuordnung -&apos;)&quot;
+		SQL_execute_mysql(sSQL)
+		sSQL=&quot;update Projekte set ProjektID=0&quot;
+		SQL_execute_mysql(sSQL)
+	End If
+End Sub
+
+Sub SQL_create_Controlling()
+	sSQL=&quot;create table Controlling &quot;&amp;_
+		&quot;(PositionsID int(11)not null auto_increment,ProjektID int(10)not null default 0,PersonalID int(10)not null default 0,Erstellungsdatum date not null default 0,&quot;&amp;_
+		&quot;LV_Pos varchar(10) not null default &apos;&apos;,LeistungsID varchar(25) not null default &apos;&apos;,Bestellnummer varchar(25) not null default &apos;&apos;,Leistungsbezeichnung varchar(255),&quot;&amp;_
+		&quot;Leistungsbeschreibung varchar(10000) not null,Einheit varchar(10),Menge decimal(9,2) not null default 0,&quot;&amp;_
+		&quot;Einkaufspreis decimal(11,2) not null default 0,Materialaufschlagsatz decimal(5,2),Bauzeit decimal(9,2) not null default 0,&quot;&amp;_
+		&quot;Minutenverrechnungssatz decimal(7,4),IstZeit decimal(11,2) not null default 0,Lokation varchar(255) not null default &apos;&apos;,&quot;&amp;_
+		&quot;LeistungsTyp int(1) not null default &apos;1&apos;,Abgerechnet int(1) not null default &apos;1&apos;,&quot;&amp;_
+		&quot;primary key(PositionsID)) ENGINE = InnoDB&quot;
+	SQL_execute_mysql(sSQL)
+	if iDatenAnlegen=1 then
+		sSQL=&quot;insert into Controlling(Leistungsbezeichnung) values (&apos;Platzhalter&apos;)&quot;
+		SQL_execute_mysql(sSQL)
+	End if
+	sSQL=&quot;CREATE INDEX Index_ProjektID on Controlling(ProjektID)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+Sub SQL_create_Personal()
+	Use_Aladin
+	sTabelname=&quot;Personal&quot;
+	sSQL=&quot;create table &quot;&amp; sTabelname &amp;_
+		&quot;(PersonalID int(10)not null auto_increment,Anrede varchar(50) not null default &apos;&apos;,Name1 varchar(100)not null default &apos;&apos;,&quot;&amp;_
+		&quot;Titel varchar(50) not null default &apos;&apos;,Vorname varchar(50)not null default &apos;&apos;,Land varchar(4),&quot;&amp;_
+		&quot;PLZ varchar(6),Ort varchar(50) not null default &apos;&apos;,Strasse varchar(50),Hausnummer varchar(10),&quot;&amp;_
+		&quot;Beruf varchar(100),Position varchar(100),Abteilung varchar(100),Kostenstelle varchar(100),&quot;&amp;_
+		&quot;Krankenkasse varchar(50),Versicherungsnummer varchar(50),Steuerklasse char(5),&quot;&amp;_
+		&quot;Kinderfreibetraege decimal(2,1),Religion varchar(50),&quot;&amp;_
+		&quot;Telefon varchar(30),Funktelefon varchar(30),Fax varchar(30),EMail varchar(50),Url varchar(50),&quot;&amp;_
+		&quot;Bank varchar(100),BIC varchar(12),IBAN varchar(30),Bemerkungen varchar(10000),Ordner varchar(10),&quot;&amp;_
+		&quot;Geburtsdatum date,Eintrittsdatum date,Austrittsdatum date,Urlaubsanspruch decimal(3),&quot;&amp;_
+		&quot;Arbeitszeit decimal(5,1),Stunden_Satz decimal(5,2),Verrechnungs_Faktor decimal(5,2) not null default 1,&quot;&amp;_
+		&quot;Status varchar(20),Gesperrt int(4)not null default 0,&quot;&amp;_
+		&quot;primary key(PersonalID))&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
+
+
+</script:module>

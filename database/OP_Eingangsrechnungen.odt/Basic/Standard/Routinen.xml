@@ -1,0 +1,1440 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement AS Object
+Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+Dim oRecord1 AS Object,oRecord2 AS Object
+Dim vStatus AS Variant
+Dim cSkonto_Satz AS currency,iSkonto_Tage AS integer,iFaellig_Tage AS integer
+Dim sRechnungsname AS String,cMwSt_Satz AS currency,sDate AS string,sDatum AS string
+Dim sDay AS String, sMonth AS String, sYear AS String, iRechnungsID AS long
+Dim sZahlungsweise AS String,sMindestangaben AS String
+Dim sAnrede AS String,sTitel AS String,sVorname AS String
+Dim sName1 AS String,sName2 AS String,sName3 AS String,sName4 AS String
+Dim sLand AS String,sPLZ AS String,sOrt AS String
+Dim sStrasse AS String,sHausnummer AS String,sTelefon AS String
+Dim sFunktelefon AS String,sFax AS String,sEMail AS String,sUrl AS String
+Dim sReferenzID AS String,sBemerkung AS String,sOrdner AS String
+
+Sub Rechnung_Anzeigen()
+	Dim oShell as Object,sUrl as String
+	if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) then
+		sUrl=&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+	elseif FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.djvu&quot;) then
+		sUrl=&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.djvu&quot;
+	else
+		oButton_Dokument_ansehen.Enabled=0
+		MsgBox(&quot;Kein Dokument vorhanden!&quot;,16)
+		exit Sub
+	End if
+
+	oShell = createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;)
+	oShell.execute(sUrl,,0)
+End Sub
+
+Sub Taste_Rechnung_Anzeigen()
+	if lDocumentID &gt; 0 then 
+		if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) _
+			OR FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.djvu&quot;) _
+		then
+			oButton_Dokument_ansehen.Enabled=1
+		else
+			oButton_Dokument_ansehen.Enabled=0
+		end if
+		oButton_Scannen.Enabled=1
+	else
+		oButton_Scannen.Enabled=0
+		oButton_Dokument_ansehen.Enabled=0
+	end if
+End Sub
+
+Sub Rechnung_Scannen()
+	if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.djvu&quot;) _
+		or FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) _
+	then
+		vStatus=MsgBox(&quot;Es gibt schon ein abgelegtes Dokument.&quot;&amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+				&quot;Wollen Sie das Scan-Programm trotzdem starten?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			if Len(lDocumentID) &gt; 0 then
+				sDocumentID_Scanner=CStr(lDocumentID)
+			End if
+		
+			Dialog_Scanner()
+		end if
+	else
+		if Len(lDocumentID) &gt; 0 then
+			sDocumentID_Scanner=CStr(lDocumentID)
+		End if
+	
+		Dialog_Scanner()
+	end if
+	Taste_Rechnung_Anzeigen()
+End Sub
+
+Sub Start_OP_Eingangsrechnung()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	reset_Summen()
+
+	if oDoc.isReadOnly then
+		Dim oFrame AS Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+		
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;OP_Eingangsrechnungen&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 32)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+		
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oLieferanten&quot;, &quot;Lieferanten&quot;)
+		else
+			SetDocUserProperty(&quot;oLieferanten&quot;, &quot;Lieferanten_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			OR InStr(fsTableList,&quot;;Eingangsrechnungen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oEingangsrechnungen&quot;, &quot;Eingangsrechnungen&quot;)
+		else
+			SetDocUserProperty(&quot;oEingangsrechnungen&quot;, &quot;Eingangsrechnungen_&quot; &amp; iEinstellungsID_lokal)
+		end if
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - OP-Eingangsrechnungen&quot;)
+		
+		sSQL1=&quot;UPDATE Steuerung SET Gesperrt=1 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+
+		Formular_init()			&apos;Initialisierung für Mehrplatzlösung
+		oForm_Steuerung.reload()
+		Status_setzen_auto()
+
+		oButton_Dokument_ansehen.Enabled=0
+	
+		if iScannerAktiv = 0 then
+			oButton_Scannen.EnableVisible=0
+		else
+			oButton_Scannen.EnableVisible=1
+		end if
+
+		ListAuswahlEnabled()
+		Refresh_Summen()
+
+	 	StatusBar(False)
+		ToolBar(False)
+	End if
+
+	FormSize()
+End Sub
+
+Sub ListAuswahlEnabled()
+	if lDocumentID &gt; 0 then
+		oList_Documentauswahl.Enabled=False
+	else
+		oList_Documentauswahl.Enabled=True
+	End if
+End Sub
+
+Sub Eingangsrechnungen_drucken()
+	Dim oRecord1 AS Object
+	Dim sSQL1 AS String
+	Dim lAnzahlDatensaetze AS Long
+
+	sSQL1=&quot;SELECT COUNT(*) &quot;&amp;_
+		&quot; FROM (&quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN &quot;&amp; sLieferanten &amp;&quot;  AS t3&quot;&amp;_
+		&quot; ON t3.KontaktID=t1.KontaktID)&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+		&quot; WHERE (((YEAR(t1.Rechnungsdatum)=t2.Jahr AND LENGTH(t2.Jahr) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0)))&quot;&amp;_
+		&quot; AND ((MONTH(t1.Rechnungsdatum)=t2.Monat AND LENGTH(t2.Monat) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0)))&quot;&amp;_
+		&quot; AND ((t1.Status=t2.Status AND LENGTH(t2.Status) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Status) IS NULL OR LENGTH(t2.Status)=0)))&quot;&amp;_
+		&quot; AND ((t1.Rechnungsname LIKE concat(&apos;%&apos;,t2.Suchstring,&apos;%&apos;) AND LENGTH(t2.Suchstring) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Suchstring) IS NULL OR LENGTH(t2.Suchstring)=0)))&quot;&amp;_
+		&quot; AND ((t1.KontaktID=t2.LieferantenID AND LENGTH(t2.LieferantenID) &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.LieferantenID) IS NULL OR LENGTH(t2.LieferantenID)=0)))&quot;&amp;_
+		&quot; AND ((t1.RechnungsTypID=t2.Option_2 AND t2.Option_2 &gt; 0)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Option_2) IS NULL OR t2.Option_2=0)))&quot;&amp;_
+		&quot; AND (((t1.gebucht=1 AND t2.Option_1=1) AND t1.Buchhaltung=1)&quot;&amp;_
+		&quot; OR ((t1.gebucht=0 AND t2.Option_1=2) AND t1.Buchhaltung=1)&quot;&amp;_
+		&quot; OR (t1.RechnungsID LIKE &apos;%&apos; AND (LENGTH(t2.Option_1) IS NULL OR t2.Option_1=0)))&quot;&amp;_
+		&quot; OR t1.RechnungsID=t2.DocumentID)&quot;
+		
+
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		lAnzahlDatensaetze=oRecord1.getInt(1)
+	Wend
+
+	if lAnzahlDatensaetze &gt; 150 then
+		vStatus=MsgBox(&quot;Sie haben &quot;&amp; lAnzahlDatensaetze &amp;&quot; Datensätze ausgewählt!&quot;&amp; Chr(13) &amp;&quot;Das kann jetzt lange dauern.&quot;&amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+					&quot;Wollen Sie trotzdem fortfahren?&quot;,36,sTitle_lokal)
+		if vStatus &lt;&gt; 6 then
+			Exit Sub
+		End If
+	End if
+	SetUserID(iUserID_lokal)
+	SET_Option(iUserID_lokal,1,0,0)
+	Zahlungsziele()
+End Sub
+
+Sub Zahlungsziele_drucken()
+	SetUserID(iUserID_lokal)
+	Zahlungsziele()
+End Sub
+
+Sub bezahlt_mit_Skonto()
+	if lDocumentID &gt; 0 then
+		sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET Status=&apos;bezahlt&apos;,Betrag_bezahlt=Betrag_nach_Skonto &quot;&amp;_
+			&quot;WHERE RechnungsID= &apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL1)
+		oForm_Document.reload()
+		Refresh_Summen()
+	End if
+End Sub
+
+Sub bezahlt_ohne_Skonto()
+	if lDocumentID &gt; 0 then
+		sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET Status=&apos;bezahlt&apos;,Betrag_bezahlt=Betrag_mit_MwSt &quot;&amp;_
+			&quot;WHERE RechnungsID= &apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL1)
+		oForm_Document.reload()
+		Refresh_Summen()
+	End if
+End Sub
+
+Sub Lieferantendaten_anzeigen()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &lt;&gt; 0 then
+			Dim sKontaktdaten AS String
+			Dim	oRecordUmsatz AS Object
+			Dim iCount AS Integer
+			
+			if lKontaktID &lt;&gt; 0 then
+				sSQL1=&quot;SELECT DISTINCT Anrede,Titel,Vorname,Name1,Name2,Name3,Name4,Land,PLZ,Ort,Strasse,&quot;&amp;_
+					&quot;Hausnummer,Mindestangaben,Telefon,Funktelefon,Fax,EMail,Url,ReferenzID,Bemerkungen,Ordner,Zahlungsweise&quot;&amp;_
+					&quot; FROM &quot;&amp; sLieferanten &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID
+				oRecord1=oResult(sSQL1)
+				While oRecord1.next()
+					sAnrede=oRecord1.getString(1)
+					sTitel=oRecord1.getString(2)
+					sVorname=oRecord1.getString(3)
+					sName1=oRecord1.getString(4)
+					sName2=oRecord1.getString(5)
+					sName3=oRecord1.getString(6)
+					sName4=oRecord1.getString(7)
+					sLand=oRecord1.getString(8)
+					sPLZ=oRecord1.getString(9)
+					sOrt=oRecord1.getString(10)
+					sStrasse=oRecord1.getString(11)
+					sHausnummer=oRecord1.getString(12)
+					sMindestangaben=oRecord1.getString(13)
+					sTelefon=oRecord1.getString(14)
+					sFunktelefon=oRecord1.getString(15)
+					sFax=oRecord1.getString(16)
+					sEMail=oRecord1.getString(17)
+					sUrl=oRecord1.getString(18)
+					sReferenzID=oRecord1.getString(19)
+					sBemerkung=oRecord1.getString(20)
+					sOrdner=oRecord1.getString(21)
+					sZahlungsweise=oRecord1.getString(22)
+				Wend
+				
+				
+				sKontaktdaten=&quot;    Kontaktnummer:&quot;&amp; Chr(9) &amp; lKontaktID &amp; Chr(13) &amp; Chr(13)
+				if sReferenzID &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp;&quot;   Referenznummer:&quot;&amp; Chr(9) &amp; sReferenzID &amp; Chr(13) &amp; Chr(13)
+				End if
+				if sAnrede &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; sAnrede &amp; Chr(13)
+				End if
+				sKontaktdaten=sKontaktdaten &amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; Chr(9)
+				if sTitel &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; sTitel &amp; &quot; &quot;
+				End if
+				if sVorname &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; sVorname &amp; &quot; &quot;
+				End if
+				if sName1 &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; sName1 &amp; Chr(13)
+				End if
+				if sName2 &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; sName2 &amp; Chr(13)
+				End if
+				if sName3 &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; sName3 &amp; Chr(13)
+				End if
+				if sName4 &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; sName4 &amp; Chr(13)
+				End if
+				if sLand &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; sLand &amp;&quot;-&quot;
+				End if
+				if sPLZ &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; sPLZ &amp; &quot; &quot;
+				End if
+				if sOrt &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; sOrt &amp; Chr(13)
+				End if
+				if sStrasse &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; Chr(9)&amp; sStrasse &amp;&quot; &quot;&amp; sHausnummer &amp; Chr(13)&amp; Chr(13)
+				End if
+				if sMindestangaben &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; sMindestangaben &amp; Chr(13)&amp; Chr(13)
+				End if
+				if sZahlungsweise &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; &quot;Zahlungsweise:&quot;&amp; Chr(9)&amp; sZahlungsweise &amp; Chr(13)&amp; Chr(13)
+				End if
+				if sTelefon &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp;  &quot; Telefon:&quot;&amp; Chr(9)&amp; sTelefon &amp; Chr(13)
+				End if
+				if sFax &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; &quot;      Fax:&quot;&amp; Chr(9)&amp; sFax &amp; Chr(13)
+				End if
+				if sFunktelefon &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; &quot;   Mobil:&quot;&amp; Chr(9)&amp; sFunktelefon &amp; Chr(13)
+				End if
+				if sEMail &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; &quot;   Email:&quot;&amp; Chr(9)&amp; sEMail &amp; Chr(13)
+				End if
+				if sUrl &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; &quot;       Url:&quot;&amp; Chr(9)&amp; sUrl &amp; Chr(13)&amp; Chr(13)
+				End if
+				if sBemerkung &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; &quot;Bemerkungen:&quot; &amp; Chr(13) &amp; sBemerkung &amp; Chr(13)&amp; Chr(13)
+				End if
+				if sOrdner &lt;&gt; &quot;&quot; then
+					sKontaktdaten=sKontaktdaten &amp; &quot;Ordner:&quot;&amp; Chr(9)&amp; sOrdner &amp; Chr(13)
+				End if
+				
+				sSQL2=&quot;SELECT COALESCE(SUM(Betrag_ohne_MwSt),0)&quot;&amp;_
+					&quot; FROM &quot;&amp; sEingangsrechnungen &amp;_
+					&quot; WHERE KontaktID=&quot;&amp; lKontaktID &amp;_
+				&quot; UNION ALL SELECT COALESCE(SUM(Betrag_ohne_MwSt),0)&quot;&amp;_
+					&quot; FROM &quot;&amp; sEingangsrechnungen &amp;_
+					&quot; WHERE KontaktID=&quot;&amp; lKontaktID &amp;_
+					&quot; AND YEAR(Rechnungsdatum)=YEAR(NOW())&quot; &amp;_
+				&quot; UNION ALL SELECT COALESCE(SUM(Betrag_ohne_MwSt),0)&quot;&amp;_
+					&quot; FROM &quot;&amp; sEingangsrechnungen &amp;_
+					&quot; WHERE KontaktID=&quot;&amp; lKontaktID &amp;_
+					&quot; AND YEAR(Rechnungsdatum)=YEAR(NOW()- INTERVAL 1 YEAR)&quot;
+		
+				iCount=1
+				Do While 3 &gt;= iCount
+					oRecordUmsatz=oResult_Scroll(sSQL2)
+					oRecordUmsatz.absolute(iCount)
+					if iCount=1 then
+						sKontaktdaten=sKontaktdaten &amp; Chr(13) &amp; &quot;Gesamtumsatz:  &quot;
+					elseif iCount=2 then
+						sKontaktdaten=sKontaktdaten &amp; &quot;Umsatz Jahr:     &quot;
+					elseif iCount=3 then
+						sKontaktdaten=sKontaktdaten &amp; &quot;Umsatz Vorjahr: &quot;
+					end if
+					
+					sKontaktdaten=sKontaktdaten &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(oRecordUmsatz.getString(1))) &amp;&quot; &quot;&amp; sWaehrung &amp; Chr(13)
+					iCount=iCount+1
+				Loop
+				
+				MsgBox(sKontaktdaten,64,sTitle_lokal &amp;&quot; Lieferantendaten&quot;)
+			End if
+		End If
+	End If
+End Sub
+
+Sub List_Monat_refresh()
+	oList_Monat.commit()
+End Sub
+
+Sub Monat_uebernehmen()
+	oList_Monat.commit()
+	oForm_Steuerung.updateRow()
+	Ausgaben_nicht_Buchhaltung_Jahr()
+	Netto_Ausgaben_Buchhaltung_Jahr()
+	alle_Ausgaben_Jahr()
+	Ausgaben_nicht_Buchhaltung_Monat()
+	Netto_Ausgaben_Buchhaltung_Monat()
+	alle_Ausgaben_Monat()
+	Ausgaben_nicht_Buchhaltung_bis_Monat()
+	Netto_Ausgaben_Buchhaltung_bis_Monat()
+	alle_Ausgaben_bis_Monat()
+End Sub
+
+Sub List_Kalenderjahr_refresh()
+	oList_Kalenderjahr.refresh()
+End Sub
+
+Sub Kalenderjahr_uebernehmen()
+	oList_Kalenderjahr.commit()
+	oForm_Steuerung.updateRow()
+	Ausgaben_nicht_Buchhaltung_Jahr()
+	Netto_Ausgaben_Buchhaltung_Jahr()
+	alle_Ausgaben_Jahr()
+	Ausgaben_nicht_Buchhaltung_Monat()
+	Netto_Ausgaben_Buchhaltung_Monat()
+	alle_Ausgaben_Monat()
+	Ausgaben_nicht_Buchhaltung_bis_Monat()
+	Netto_Ausgaben_Buchhaltung_bis_Monat()
+	alle_Ausgaben_bis_Monat()
+End Sub
+
+Sub Rechnung_loeschen()
+	if lDocumentID = 0 then
+		MsgBox(&quot;Sie haben noch keine Rechnung ausgewählt!&quot;,16,sTitle_lokal)
+	else
+		vStatus=MsgBox(&quot;Soll die aktuelle Eingangsrechnung gelöscht werden?&quot;&amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+			&quot;Wenn &quot;&amp; Chr(34) &amp;&quot;Ja&quot;&amp; Chr(34) &amp;&quot; ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+			&quot;Wollen Sie trotzdem fortfahren?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) _
+				OR FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.djvu&quot;) _
+			then
+				vStatus=MsgBox(&quot;Soll auch das vorhandene, abgelegte Dokument gelöscht werden?&quot;&amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+					&quot;Wenn &quot;&amp; Chr(34) &amp;&quot;Ja&quot;&amp; Chr(34) &amp;&quot; ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+					&quot;Wollen Sie trotzdem fortfahren?&quot;,36,sTitle_lokal)
+				If vStatus=6 then
+					RmDir &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID)
+				End if
+			End If
+			sSQL1=&quot;delete FROM &quot;&amp; sEingangsrechnungen &amp;&quot; WHERE RechnungsID= &apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+			SQL_execute(sSQL1)
+			SQL_Reset_AutoIncrement(sEingangsrechnungen)
+			SQL_DocumentID_entfernen()
+			Refresh_Summen()
+			oList_Documentauswahl.refresh()
+			oForm_Steuerung.reload()
+			oForm_Steuerung.reset()
+			Taste_Rechnung_Anzeigen()
+		End if
+	End if
+	ListAuswahlEnabled()
+End Sub
+
+Sub Rechnung_kopieren()
+	if lDocumentID = 0 then
+		MsgBox(&quot;Sie haben noch keine Rechnung ausgewählt!&quot;,16,sTitle_lokal)
+	else
+		Dim sSQL1 AS String,sSQL2 AS String
+		Dim iKontaktID AS Integer
+		Dim sRechnungsName AS String
+		Dim sBetragOhneMwSt AS String,sMwStSatz AS String,sMwSt AS String,sBetragMitMwSt AS String
+		Dim sSkontoSatz AS String,sSkonto AS String,sBetragNachSkonto AS String
+		Dim iKasse AS Integer
+		Dim iBuchhaltungLieferant AS Integer
+		Dim iRechnungsTypID AS Integer
+		Dim oRecordEingangsRechnung AS Object
+		Form_Lieferantendaten_reload()
+		sSQL1=&quot;SELECT t1.KontaktID,t1.Rechnungsname,&quot;&amp;_
+			&quot;t1.Betrag_ohne_MwSt,t1.MwSt_Satz,t1.MwSt,t1.Betrag_mit_MwSt,&quot;&amp;_
+			&quot;t1.Skonto_Satz,t1.Skonto,t1.Betrag_nach_Skonto,&quot;&amp;_
+			&quot;t1.Kasse,t1.Buchhaltung,t1.RechnungsTypID &quot;&amp;_
+			&quot;FROM &quot;&amp; sEingangsrechnungen &amp;&quot; as t1 &quot;&amp;_
+			&quot;WHERE t1.RechnungsID=&quot;&amp; lDocumentID
+		oRecordEingangsRechnung=oResult(sSQL1)
+		While oRecordEingangsRechnung.next()
+			iKontaktID=oRecordEingangsRechnung.getLong(1)
+			sRechnungsName=oRecordEingangsRechnung.getString(2)
+			sBetragOhneMwSt=oRecordEingangsRechnung.getString(3)
+			sMwStSatz=oRecordEingangsRechnung.getString(4)
+			sMwSt=oRecordEingangsRechnung.getString(5)
+			sBetragMitMwSt=oRecordEingangsRechnung.getString(6)
+			sSkontoSatz=oRecordEingangsRechnung.getString(7)
+			sSkonto=oRecordEingangsRechnung.getString(8)
+			sBetragNachSkonto=oRecordEingangsRechnung.getString(9)
+			iKasse=oRecordEingangsRechnung.getLong(10)
+			iBuchhaltungLieferant=oRecordEingangsRechnung.getLong(11)
+			iRechnungsTypID=oRecordEingangsRechnung.getLong(12)
+		Wend
+
+		sRechnungsName=InputBox(&quot;Wollen Sie die aktuelle Eingangsrechnung mit folgendem Namen kopieren?&quot;,sTitle_lokal,sRechnungsName)
+		if sRechnungsName &lt;&gt; &quot;&quot; then
+			sSQL2=&quot;insert into &quot;&amp; sEingangsrechnungen &amp;&quot; (RechnungsID,Rechnungsname,KontaktID,Status,&quot;&amp;_
+				&quot;Betrag_ohne_MwSt,MwSt_Satz,MwSt,Betrag_mit_MwSt,&quot;&amp;_
+				&quot;Skonto_Satz,Skonto,Betrag_nach_Skonto,&quot;&amp;_
+				&quot;Kasse,Buchhaltung,RechnungsTypID)&quot;&amp;_
+				&quot; values(&quot;&amp; flDocumentID_import &amp;&quot;+1,&apos;&quot;&amp; fsConvertApostroph(sRechnungsname) &amp;&quot;&apos;,&quot;&amp; iKontaktID &amp;&quot;,&apos;berechnet&apos;,&quot;&amp;_
+				&quot;&apos;&quot;&amp; sBetragOhneMwSt &amp;&quot;&apos;,&apos;&quot;&amp; sMwStSatz &amp;&quot;&apos;,&apos;&quot;&amp; sMwSt &amp;&quot;&apos;,&apos;&quot;&amp; sBetragMitMwSt &amp;&quot;&apos;,&apos;&quot;&amp; sSkontoSatz &amp;&quot;&apos;,&apos;&quot;&amp; sSkonto &amp;&quot;&apos;,&apos;&quot;&amp; sBetragNachSkonto &amp;&quot;&apos;,&quot;&amp;_
+				iKasse &amp;&quot;,&quot;&amp; iBuchhaltungLieferant &amp;&quot;,&quot;&amp; iRechnungsTypID &amp;&quot;)&quot;
+			SQL_execute(sSQL2)
+			SQL_update_Steuerung_DocumentID_last()
+			oList_Documentauswahl.refresh()
+			Refresh_Summen()
+			oList_Documentauswahl.refresh()
+			oForm_Steuerung.reload()
+			oForm_Steuerung.reset()
+			Rechtschreibung()
+			oDocView.getControl(oField_Rechnungsnummer).setFocus()
+			Taste_Rechnung_Anzeigen()
+			if iScannerAktiv = 1 then
+				if NOT FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID)) then
+					MkDir &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID)
+				End if
+				sDocumentID_Scanner=CStr(lDocumentID)
+				StorePathToPdfEingangsRechnungToClipBoard()
+			End If	
+		End if
+	End if
+	ListAuswahlEnabled()
+End Sub
+
+Sub Lieferanten_refresh()
+	oList_Lieferanten.refresh()
+End Sub
+
+Sub Rechnung_uebernehmen()
+	Daten_uebernehmen_2()
+	oList_Documentauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+	SQL_KontaktID_uebernehmen()
+	Refresh_Summen()	
+	Taste_Rechnung_Anzeigen()
+	ListAuswahlEnabled()
+	if iScannerAktiv = 1 then
+		sDocumentID_Scanner=CStr(lDocumentID)
+		StorePathToPdfEingangsRechnungToClipBoard()
+	End If
+End sub
+
+Sub Daten_uebernehmen_2()
+	On Error Goto ErrorHandle
+	if lDocumentID &lt;&gt; 0 then
+		nochmal:
+		if lKontaktID = 0 then
+			MsgBox(&quot;Sie haben noch keinen Lieferanten für den aktuellen Datensatz ausgewählt!&quot;,16,sTitle_lokal)
+			stop
+		End if	
+		if sField_Erstellungsdatum = &quot;&quot; then
+			sDate=InputBox(&quot;Geben Sie bitte noch das Erstellungsdatum für den aktuellen Datensatz ein!&quot;,sTitle_lokal)
+			if sDate = &quot;&quot; then
+				ErrorHandle:
+				vStatus=MsgBox(&quot;Sie haben immer noch kein gültiges Datum eingegeben!&quot;,37,sTitle_lokal)
+				if vStatus=4 then
+					goto nochmal
+				elseif vStatus=2 then
+					stop
+				End if
+			End if
+			sYear=YEAR(DateValue(sDate))
+			sMonth=MONTH(DateValue(sDate))
+			sDay=DAY(DateValue(sDate))
+			if len(sMonth) &lt; 2 then
+				sMonth=&quot;0&quot; &amp; MONTH(DateValue(sDate))
+			End if
+			if len(sDay) &lt; 2 then
+				sDay=&quot;0&quot; &amp; DAY(DateValue(sDate))
+			End if
+			sDatum = sYear &amp; sMonth &amp; sDay
+			oField_Erstellungsdatum.date=sDatum
+			oField_Erstellungsdatum.commit()
+			Datum_setzen()
+			wait 300
+		End if
+		if Trim(sField_Rechnungsnummer) = &quot;&quot; AND iBuchhaltung=1 then
+			MsgBox(&quot;Sie haben noch keine Rechnungsnummer angegeben!&quot;,16,sTitle_lokal)
+			stop
+		End if	
+		oForm_Document.updateRow()
+		SQL_DocumentID_entfernen()
+	End if
+End Sub
+
+Sub Filter_reset()
+	SQL_Steuerung_reset()
+	oList_Filter_Monat.refresh()
+	oList_Filter_Status.refresh()
+	oList_Filter_Lieferant.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+	oForm_Steuerung.reset()
+End Sub
+
+Sub Filter_Jahr_setzen()
+	oList_Filter_Jahr.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Filter_Monat.refresh()
+	oList_Filter_Status.refresh()
+	oList_Filter_Lieferant.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_Monat_setzen()
+	oList_Filter_Monat.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Filter_Monat.refresh()
+	oList_Filter_Status.refresh()
+	oList_Filter_Lieferant.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_Status_setzen()
+	oList_Filter_Status.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Filter_Status.refresh()
+	oList_Filter_Lieferant.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_Lieferant_setzen()
+	oList_Filter_Lieferant.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Filter_Lieferant.refresh()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_RechnungsTyp_setzen()
+	oList_Filter_RechnungsTyp.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Filter_gebucht_setzen()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub List_Filter_Jahr_refresh()
+	oList_Filter_Jahr.refresh()
+End Sub
+
+Sub List_Filter_Monat_refresh()
+	oList_Filter_Monat.refresh()
+End Sub
+
+Sub List_Filter_Status_refresh()
+	oList_Filter_Status.refresh()
+End Sub
+
+Sub List_Filter_Lieferant_refresh()
+	oList_Filter_Lieferant.refresh()
+End Sub
+
+Sub List_Rechnungsname_refresh()
+	oList_Documentauswahl.refresh()
+End Sub
+
+Sub Form_Lieferantendaten_reload()
+	oList_Lieferanten.commit()
+	oForm_Document.updateRow()
+	wait 1
+	oForm_Lieferantendaten.reload()
+End Sub
+
+Sub Lieferantendaten_setzen()
+	if lDocumentID &lt;&gt; 0 then
+		Dim sSQL1 AS String,sSQL2 AS String
+		Dim iBuchhaltungLieferant AS Integer
+		Dim iRechnungsTypID AS Integer
+		Dim oRecordBuchhaltung AS Object
+		Form_Lieferantendaten_reload()
+		sSQL1=&quot;SELECT Buchhaltung,RechnungsTypID FROM &quot;&amp; sLieferanten &amp;&quot;  WHERE KontaktID=&quot;&amp; lKontaktID
+		oRecordBuchhaltung=oResult(sSQL1)
+		While oRecordBuchhaltung.next()
+			iBuchhaltungLieferant=oRecordBuchhaltung.getLong(1)
+			iRechnungsTypID=oRecordBuchhaltung.getLong(2)
+		Wend
+		sSQL2=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET&quot;&amp;_
+			&quot; Buchhaltung=&quot;&amp; iBuchhaltungLieferant &amp;&quot;,&quot;&amp;_
+			&quot; RechnungsTypID=&quot;&amp; iRechnungsTypID &amp;_
+			&quot; WHERE RechnungsID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL2)
+	End If
+End Sub
+
+Sub Datum_bezahlt_setzen()
+	If lDocumentID &lt;&gt; 0 then
+		oField_bezahlt_am.commit()
+		oForm_Document.updateRow()
+	End If
+End Sub
+
+Sub update_Bank()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &lt;&gt; 0 then
+			oField_Bank.commit()
+			oForm_Lieferantendaten.updateRow()
+		End If
+	End If
+End Sub
+
+Sub update_BIC()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &lt;&gt; 0 then
+			oField_BIC.commit()
+			oForm_Lieferantendaten.updateRow()
+		End If
+	End If
+End Sub
+
+Sub update_IBAN()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &lt;&gt; 0 then
+			oField_IBAN.commit()
+			oForm_Lieferantendaten.updateRow()
+		End If
+	End If
+End Sub
+
+Sub update_Telefon()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &lt;&gt; 0 then
+			oField_Telefon.commit()
+			oForm_Lieferantendaten.updateRow()
+		End If
+	End If
+End Sub
+
+Sub update_Fax()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &lt;&gt; 0 then
+			oField_Fax.commit()
+			oForm_Lieferantendaten.updateRow()
+		End If
+	End If
+End Sub
+
+Sub update_Ordner()
+	if lDocumentID &lt;&gt; 0 then
+		if lKontaktID &lt;&gt; 0 then
+			oField_Ordner.commit()
+			oForm_Lieferantendaten.updateRow()
+		End If
+	End If
+End Sub
+
+Sub Betrag_bezahlt_setzen()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Betrag_bezahlt.commit()
+		oForm_Document.updateRow()
+		oList_Documentauswahl.refresh()
+		Refresh_Summen()
+	End If
+End Sub
+
+Sub Betrag_mit_MwSt_setzen()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Betrag_mit_MwSt.commit()
+		oForm_Document.updateRow()
+	End If
+End Sub
+
+Sub Status_setzen()
+	if lDocumentID &lt;&gt; 0 then
+		oList_Status.commit()
+		oForm_Document.updateRow()
+		Refresh_Summen()
+	End If
+End Sub
+
+Sub Daten_uebernehmen()
+&apos;	On Error Goto ErrorHandle
+	if lDocumentID &lt;&gt; 0 then
+		nochmal:
+		if lKontaktID = 0 then
+			MsgBox(&quot;Sie haben noch keinen Lieferanten ausgewählt!&quot;,16,sTitle_lokal)
+			stop
+		End if	
+		if sField_Erstellungsdatum = &quot;&quot; then
+			sDate=InputBox(&quot;Geben Sie bitte das Erstellungsdatum ein!&quot;,sTitle_lokal)
+			if sDate = &quot;&quot; then
+				ErrorHandle:
+				vStatus=MsgBox(&quot;Sie haben immer noch kein gültiges Datum eingegeben!&quot;,37,sTitle_lokal)
+				if vStatus=4 then
+					goto nochmal
+				elseif vStatus=2 then
+					stop
+				End if
+			End if
+			sYear=YEAR(DateValue(sDate))
+			sMonth=MONTH(DateValue(sDate))
+			sDay=DAY(DateValue(sDate))
+			if len(sMonth) &lt; 2 then
+				sMonth=&quot;0&quot; &amp; MONTH(DateValue(sDate))
+			End if
+			if len(sDay) &lt; 2 then
+				sDay=&quot;0&quot; &amp; DAY(DateValue(sDate))
+			End if
+			sDatum = sYear &amp; sMonth &amp; sDay
+			oField_Erstellungsdatum.date=sDatum
+			oField_Erstellungsdatum.commit()
+			Datum_setzen()
+			wait 300
+		End if
+		if Trim(sField_Rechnungsnummer) = &quot;&quot; AND iBuchhaltung=1 then
+			MsgBox(&quot;Sie haben noch keine Rechnungsnummer angegeben!&quot;,16,sTitle_lokal)
+			stop
+		End if	
+		if iScannerAktiv = 1 then
+			if NOT FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) _
+				AND NOT FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.djvu&quot;) _
+			then
+				vStatus=MsgBox(&quot;Sie haben noch kein Dokument abgelegt!&quot;&amp; Chr(13) &amp; Chr(13) &amp;&quot;Wollen Sie ein Dokument einscannen (Ja/Nein)?&quot;&amp; Chr(13) &amp; Chr(13) &amp;&quot;Oder wollen Sie das Speichern des Datensatzes abbrechen (Abbrechen)?&quot;,35,sTitle_lokal)
+				if vStatus=6 then
+					Rechnung_Scannen()
+					stop
+				elseif vStatus=2 then
+					stop
+				End if
+			End If
+		End if
+		oForm_Document.updateRow()
+		SQL_DocumentID_entfernen()
+		Refresh_Summen()
+		oList_Filter_Monat.refresh()
+		oList_Filter_Status.refresh()
+		oList_Filter_Lieferant.refresh()
+		oList_Documentauswahl.refresh()
+		oForm_Steuerung.reload()
+		oForm_Steuerung.reset()
+		Taste_Rechnung_Anzeigen()
+	End if
+	ListAuswahlEnabled()
+End Sub
+
+Sub Maske_schliessen()
+	if oDoc.isReadOnly then	
+		Daten_uebernehmen()	
+		SQL_Steuerung_reset()
+		SQL_DocumentID_entfernen()
+		SQL_leerer_Datensatz_entfernen()
+		sSQL1=&quot;UPDATE Steuerung SET Gesperrt=0 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+	End if
+ 	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+Sub neue_Rechnung()
+	if lDocumentID &lt;&gt; 0 then
+		vStatus=MsgBox(&quot;Sie haben die vorhanden Eingangsrechnung noch nicht gespeichert!&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+			&quot;Wollen Sie dies jetzt tun?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			Daten_uebernehmen()
+		elseif vStatus=7 then
+			exit sub
+		End if
+	End if
+	Filter_reset()
+nochmal:
+	sRechnungsname=InputBox(&quot;Geben Sie die Bezeichnung für die Rechnung &gt;&gt; &quot;&amp; flDocumentID_import + 1 &amp;&quot; &lt;&lt; ein!&quot;,sTitle_lokal)
+	if sRechnungsname = &quot;&quot; then
+		vStatus=MsgBox(&quot;Sie haben noch keine Bezeichnung eingegeben!&quot;,37,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+	sSQL1=&quot;INSERT INTO &quot;&amp; sEingangsrechnungen &amp;&quot; (RechnungsID,Rechnungsname,KontaktID,Status)&quot;&amp;_
+		&quot; VALUES(&quot;&amp; flDocumentID_import &amp;&quot;+1,&apos;&quot;&amp; fsConvertApostroph(sRechnungsname) &amp;&quot;&apos;,0,&apos;berechnet&apos;)&quot;
+	SQL_execute(sSQL1)
+	SQL_update_Steuerung_DocumentID_last()
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+	oForm_Steuerung.reset()
+	Rechtschreibung()
+	Taste_Rechnung_Anzeigen()
+	ListAuswahlEnabled()
+	if iScannerAktiv = 1 then
+		if NOT FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID)) then
+			MkDir &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID)
+		End if
+		sDocumentID_Scanner=CStr(lDocumentID)
+		StorePathToPdfEingangsRechnungToClipBoard()
+	End If	
+End Sub
+
+Sub Betrag_berechnen()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Betrag_ohne_MwSt.commit()
+		oForm_Document.updateRow()
+		sSQL1=&quot;SELECT Skonto_Satz,Zahlungsweise,MwSt_Satz FROM &quot;&amp; sLieferanten &amp;&quot;  WHERE KontaktID=&apos;&quot;&amp; lKontaktID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			cSkonto_Satz=oRecord1.getString(1)
+			sZahlungsweise=oRecord1.getString(2)
+			cMwSt_Satz=oRecord1.getString(3)
+		Wend
+		sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;_
+			&quot; SET MwSt_Satz=&quot;&amp; cMwSt_Satz &amp;&quot;,MwSt=Betrag_ohne_MwSt*MwSt_Satz/100,&quot;&amp;_
+			&quot;Betrag_mit_MwSt=Betrag_ohne_MwSt+MwSt,Status=&apos;&quot;&amp; sZahlungsweise &amp;&quot;&apos; WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL1)
+		if cSkonto_Satz &lt;&gt; &quot;&quot; AND cSkonto_Satz &lt;&gt; 0 then		
+			sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;_
+				&quot; SET Skonto_Satz=&quot;&amp; cSkonto_Satz &amp;_
+				&quot;, Skonto=Betrag_mit_MwSt*Skonto_Satz/100,Betrag_nach_Skonto=Betrag_mit_MwSt-Skonto WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+			SQL_execute(sSQL1)
+		Elseif cSkonto_Satz = 0 then
+			sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET Skonto=NULL,Betrag_nach_Skonto=NULL WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+			SQL_execute(sSQL1)
+		End if
+		oForm_Document.reload()
+	End If
+End Sub
+
+Sub Betrag_berechnen_MwSt_Satz_UPDATE()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Betrag_ohne_MwSt.commit()
+		oField_MwSt_Satz.commit()
+		oForm_Document.updateRow()
+		sSQL2=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;_
+			&quot; SET MwSt=Betrag_ohne_MwSt*MwSt_Satz/100,Betrag_mit_MwSt=Betrag_ohne_MwSt+MwSt WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL2)
+		Skonto_berechnen()
+		oForm_Document.reload()
+	End If
+End Sub
+
+Sub Betrag_berechnen_MwSt_UPDATE()
+	if lDocumentID &lt;&gt; 0 then
+		oField_MwSt.commit()
+		oForm_Document.updateRow()
+		sSQL2=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;_
+			&quot; SET Betrag_mit_MwSt=Betrag_ohne_MwSt+MwSt WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL2)
+		Skonto_berechnen()
+		oForm_Document.reload()
+	End If
+End Sub
+
+Sub Skonto_berechnen()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Skonto_Satz.commit()
+		oForm_Document.updateRow()
+		if oField_Skonto_Satz.BoundField.float = 0 then
+			sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET Skonto=NULL,Betrag_nach_Skonto=NULL,Skonto_bis=NULL WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;	
+		else
+			sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;_
+				&quot; SET Skonto=Betrag_mit_MwSt*Skonto_Satz/100,&quot;&amp;_
+				&quot;Betrag_nach_Skonto=Betrag_mit_MwSt-Skonto WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+		End if
+		SQL_execute(sSQL1)
+		oForm_Document.reload()
+	end If
+End Sub
+
+Sub Betrag_berechnen_Skonto_UPDATE()
+	if lDocumentID &lt;&gt; 0 then
+		oField_Skonto.commit()
+		oForm_Document.updateRow()
+		sSQL2=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;_
+			&quot; SET Betrag_nach_Skonto=Betrag_mit_MwSt-Skonto WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL2)
+		oForm_Document.reload()
+	End If
+End Sub
+
+Sub Datum_setzen()
+	If lDocumentID &lt;&gt; 0 then
+		oField_Erstellungsdatum.commit()
+		oForm_Document.updateRow()
+		sSQL1=&quot;SELECT Faellig_Tage,Skonto_Tage FROM &quot;&amp; sLieferanten &amp;&quot;  WHERE KontaktID=&apos;&quot;&amp; lKontaktID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iFaellig_Tage=oRecord1.getInt(1)
+			iSkonto_Tage=oRecord1.getInt(2)
+		Wend
+		sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot;&quot;&amp;_
+			&quot; SET faellig=(DATE_ADD(Rechnungsdatum,INTERVAL &quot;&amp; iFaellig_Tage &amp;&quot; DAY)) WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL1)
+		if iSkonto_Tage &lt;&gt; &quot;&quot; AND iSkonto_Tage &lt;&gt; 0 then		
+			sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot;&quot;&amp;_
+				&quot; SET Skonto_bis=(DATE_ADD(Rechnungsdatum,INTERVAL &quot;&amp; iSkonto_Tage &amp;&quot; DAY)) WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
+			SQL_execute(sSQL1)
+		End if
+		oForm_Document.reload()
+	End If
+End Sub
+
+Sub Status_setzen_auto()
+	SQL_Status_skontofaehig()
+	SQL_Status_berechnet()
+	SQL_Status_faellig()
+	Taste_Rechnung_Anzeigen()
+End Sub
+
+Sub Filter_Suchstring_setzen()
+	oField_Suchstring.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Documentauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Refresh_Summen()
+	Summe_nach_Skontoabzug()
+	Summe_nach_Skontoabzug_entsprechend_Status()
+	Summe_ohne_Skontoabzug()
+	Summe_aller_offenen_Verbindlichkeiten()
+	Ausgaben_nicht_Buchhaltung_aktuelles_Jahr()
+	Netto_Ausgaben_Buchhaltung_aktuelles_Jahr()
+	alle_Ausgaben_aktuelles_Jahr()
+	Ausgaben_nicht_Buchhaltung_aktueller_Monat()
+	Netto_Ausgaben_Buchhaltung_aktueller_Monat()
+	alle_Ausgaben_aktueller_Monat()
+	Ausgaben_nicht_Buchhaltung_Jahr()
+	Netto_Ausgaben_Buchhaltung_Jahr()
+	alle_Ausgaben_Jahr()
+	Ausgaben_nicht_Buchhaltung_Monat()
+	Netto_Ausgaben_Buchhaltung_Monat()
+	alle_Ausgaben_Monat()
+	Ausgaben_nicht_Buchhaltung_bis_Monat()
+	Netto_Ausgaben_Buchhaltung_bis_Monat()
+	alle_Ausgaben_bis_Monat()
+End Sub
+
+Sub Summe_nach_Skontoabzug()
+	Dim sSumme AS String 
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_nach_Skonto),2)&quot;&amp;_
+			&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t1.KontaktID=t2.KontaktID AND t1.Status &lt;&gt; &apos;bezahlt&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sSumme=oRecord1.getString(1)
+		Wend
+		if CDbl(sSumme)=0 then
+			oField_Summe_nach_Skontoabzug.Label=&quot;&quot;
+		else
+			sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+			oField_Summe_nach_Skontoabzug.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+		End if
+	else
+		oField_Summe_nach_Skontoabzug.Label=&quot;&quot;
+	End if
+End Sub
+
+Sub Summe_nach_Skontoabzug_entsprechend_Status()
+	Dim sSumme AS String 
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;SELECT&quot;&amp;_
+			&quot; (SELECT ROUND(SUM(t1.Betrag_nach_Skonto),2)&quot;&amp;_
+			&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t1.KontaktID=t2.KontaktID AND t1.Status = &apos;skontofähig&apos;)&quot;&amp;_
+			&quot; +&quot;&amp;_
+			&quot; (SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+			&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t1.KontaktID=t2.KontaktID&quot;&amp;_
+			&quot; AND (t1.Status &lt;&gt; &apos;bezahlt&apos; AND t1.Status &lt;&gt; &apos;skontofähig&apos;))&quot;&amp;_
+			&quot; AS Summe&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sSumme=oRecord1.getString(1)
+		Wend
+		if CDbl(sSumme)=0 then
+			oField_Summe_nach_Skontoabzug_entsprechend_Status.Label=&quot;&quot;
+		else
+			sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+			oField_Summe_nach_Skontoabzug_entsprechend_Status.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+		End if
+	else
+		oField_Summe_nach_Skontoabzug_entsprechend_Status.Label=&quot;&quot;
+	End if
+End Sub
+
+Sub Summe_ohne_Skontoabzug()
+	Dim sSumme AS String 
+	if lDocumentID &lt;&gt; 0 then
+		sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+			&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+			&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+			&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
+			&quot; WHERE t1.KontaktID=t2.KontaktID AND t1.Status &lt;&gt; &apos;bezahlt&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sSumme=oRecord1.getString(1)
+		Wend
+		if CDbl(sSumme)=0 then
+			oField_Summe_ohne_Skontoabzug.Label=&quot;&quot;
+		else
+			sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+			oField_Summe_ohne_Skontoabzug.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+		End if
+	else
+		oField_Summe_ohne_Skontoabzug.Label=&quot;&quot;
+	End if
+End Sub
+
+Sub Summe_aller_offenen_Verbindlichkeiten()
+	Dim sSumme AS String
+	sSQL1=&quot;SELECT ROUND(SUM(Betrag_mit_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; WHERE Status &lt;&gt;&apos;bezahlt&apos;&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Summe_aller_offenen_Verbindlichkeiten.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Summe_aller_offenen_Verbindlichkeiten.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Ausgaben_nicht_Buchhaltung_aktuelles_Jahr()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=YEAR(NOW())&quot;&amp;_
+		&quot; AND t1.Buchhaltung=0&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Ausgaben_nicht_Buchhaltung_aktuelles_Jahr.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Ausgaben_nicht_Buchhaltung_aktuelles_Jahr.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Netto_Ausgaben_Buchhaltung_aktuelles_Jahr()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_ohne_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=YEAR(NOW())&quot;&amp;_
+		&quot; AND t1.Buchhaltung=1&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Netto_Ausgaben_Buchhaltung_aktuelles_Jahr.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Netto_Ausgaben_Buchhaltung_aktuelles_Jahr.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub alle_Ausgaben_aktuelles_Jahr()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=YEAR(NOW())&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_alle_Ausgaben_aktuelles_Jahr.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_alle_Ausgaben_aktuelles_Jahr.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Ausgaben_nicht_Buchhaltung_aktueller_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE (YEAR(t1.Rechnungsdatum)=YEAR(NOW())&quot;&amp;_
+		&quot; AND MONTH(t1.Rechnungsdatum)=MONTH(NOW()))&quot;&amp;_
+		&quot; AND t1.Buchhaltung=0&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Ausgaben_nicht_Buchhaltung_aktueller_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Ausgaben_nicht_Buchhaltung_aktueller_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Netto_Ausgaben_Buchhaltung_aktueller_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_ohne_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE (YEAR(t1.Rechnungsdatum)=YEAR(NOW())&quot;&amp;_
+		&quot; AND MONTH(t1.Rechnungsdatum)=MONTH(NOW()))&quot;&amp;_
+		&quot; AND t1.Buchhaltung=1&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Netto_Ausgaben_Buchhaltung_aktueller_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Netto_Ausgaben_Buchhaltung_aktueller_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub alle_Ausgaben_aktueller_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE (YEAR(t1.Rechnungsdatum)=YEAR(NOW())&quot;&amp;_
+		&quot; AND MONTH(t1.Rechnungsdatum)=MONTH(NOW()))&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_alle_Ausgaben_aktueller_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_alle_Ausgaben_aktueller_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Ausgaben_nicht_Buchhaltung_Jahr()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND t1.Buchhaltung=0&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Ausgaben_nicht_Buchhaltung_Jahr.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Ausgaben_nicht_Buchhaltung_Jahr.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Netto_Ausgaben_Buchhaltung_Jahr()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_ohne_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND t1.Buchhaltung=1&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Netto_Ausgaben_Buchhaltung_Jahr.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Netto_Ausgaben_Buchhaltung_Jahr.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub alle_Ausgaben_Jahr()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=t2.GruppenID&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_alle_Ausgaben_Jahr.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_alle_Ausgaben_Jahr.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Ausgaben_nicht_Buchhaltung_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Rechnungsdatum)=t2.HauptgruppenID&quot;&amp;_
+		&quot; AND t1.Buchhaltung=0&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Ausgaben_nicht_Buchhaltung_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Ausgaben_nicht_Buchhaltung_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Netto_Ausgaben_Buchhaltung_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_ohne_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Rechnungsdatum)=t2.HauptgruppenID&quot;&amp;_
+		&quot; AND t1.Buchhaltung=1&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Netto_Ausgaben_Buchhaltung_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Netto_Ausgaben_Buchhaltung_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub alle_Ausgaben_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Rechnungsdatum)=t2.HauptgruppenID&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_alle_Ausgaben_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_alle_Ausgaben_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Ausgaben_nicht_Buchhaltung_bis_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Rechnungsdatum)&lt;=t2.HauptgruppenID&quot;&amp;_
+		&quot; AND t1.Buchhaltung=0&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Ausgaben_nicht_Buchhaltung_bis_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Ausgaben_nicht_Buchhaltung_bis_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub Netto_Ausgaben_Buchhaltung_bis_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_ohne_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Rechnungsdatum)&lt;=t2.HauptgruppenID&quot;&amp;_
+		&quot; AND t1.Buchhaltung=1&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_Netto_Ausgaben_Buchhaltung_bis_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_Netto_Ausgaben_Buchhaltung_bis_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub alle_Ausgaben_bis_Monat()
+	Dim sSumme AS String 
+	sSQL1=&quot;SELECT ROUND(SUM(t1.Betrag_mit_MwSt),2)&quot;&amp;_
+		&quot; FROM &quot;&amp; sEingangsrechnungen &amp;&quot; AS t1&quot;&amp;_
+		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
+		&quot; ON t2.ClientID= &quot;&amp; iClientID &amp;_
+		&quot; WHERE YEAR(t1.Rechnungsdatum)=t2.GruppenID&quot;&amp;_
+		&quot; AND MONTH(t1.Rechnungsdatum)&lt;=t2.HauptgruppenID&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sSumme=oRecord1.getString(1)
+	Wend
+	if CDbl(sSumme)=0 then
+		oField_alle_Ausgaben_bis_Monat.Label=&quot;&quot;
+	else
+		sSumme=fTausenderpunkt(fZahlMitPunkt(sSumme))
+		oField_alle_Ausgaben_bis_Monat.Label=sSumme &amp; &quot; &quot; &amp; sWaehrung
+	End if
+End Sub
+
+Sub reset_Summen()
+	oField_Summe_nach_Skontoabzug.Label=&quot;&quot;
+	oField_Summe_nach_Skontoabzug_entsprechend_Status.Label=&quot;&quot;
+	oField_Summe_ohne_Skontoabzug.Label=&quot;&quot;
+	oField_Summe_aller_offenen_Verbindlichkeiten.Label=&quot;&quot;
+	oField_Ausgaben_nicht_Buchhaltung_aktuelles_Jahr.Label=&quot;&quot;
+	oField_Netto_Ausgaben_Buchhaltung_aktuelles_Jahr.Label=&quot;&quot;
+	oField_alle_Ausgaben_aktuelles_Jahr.Label=&quot;&quot;
+	oField_Ausgaben_nicht_Buchhaltung_Jahr.Label=&quot;&quot;
+	oField_Netto_Ausgaben_Buchhaltung_Jahr.Label=&quot;&quot;
+	oField_alle_Ausgaben_Jahr.Label=&quot;&quot;
+	oField_Ausgaben_nicht_Buchhaltung_Monat.Label=&quot;&quot;
+	oField_Netto_Ausgaben_Buchhaltung_Monat.Label=&quot;&quot;
+	oField_alle_Ausgaben_Monat.Label=&quot;&quot;
+	oField_Ausgaben_nicht_Buchhaltung_aktueller_Monat.Label=&quot;&quot;
+	oField_Netto_Ausgaben_Buchhaltung_aktueller_Monat.Label=&quot;&quot;
+	oField_alle_Ausgaben_aktueller_Monat.Label=&quot;&quot;
+	oField_Ausgaben_nicht_Buchhaltung_bis_Monat.Label=&quot;&quot;
+	oField_Netto_Ausgaben_Buchhaltung_bis_Monat.Label=&quot;&quot;
+	oField_alle_Ausgaben_bis_Monat.Label=&quot;&quot;
+End Sub
+
+Sub Rechtschreibung()
+	if lDocumentID &lt;&gt; 0 then
+		if fbSpellCheck(oField_Rechnungsname.BoundField.String,&quot;Rechnungsname&quot;) = False then exit sub
+	End if
+End Sub
+
+
+
+</script:module>

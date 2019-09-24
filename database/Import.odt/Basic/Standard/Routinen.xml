@@ -1,0 +1,938 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement as Object
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+Dim oRecord1 as Object,oRecord2 as Object
+Dim vStatus as Variant
+Dim sWert as String,sMenge as String
+Dim sLeistungsbezeichnung as String,sLeistungsID as String
+
+Sub Start_Import()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+	if oDoc.isReadOnly then
+		Dim oFrame as Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+		
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Import&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 35)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+		
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Hauptgruppen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Leistungsgruppen_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Leistungsstamm_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm&quot;)
+		else
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen_&quot; &amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Leistungsstamm_Import_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oLeistungsstamm_Import&quot;, &quot;Leistungsstamm_Import&quot;)
+		else
+			SetDocUserProperty(&quot;oLeistungsstamm_Import&quot;, &quot;Leistungsstamm_Import_&quot; &amp; iEinstellungsID_lokal)
+		end if
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Import&quot;)
+
+		sSQL1=&quot;update Steuerung set Gesperrt=1 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		Formular_init()			&apos;Initialisierung für Mehrplatzlösung
+		oForm_Steuerung.reload()
+
+	 	StatusBar(False)
+		ToolBar(False)
+	End if
+	FormSize()
+End Sub
+
+Sub Replace_Einheit()
+	if Len(sField_Einheit_Soll) &gt; 0 and Len(sField_Einheit_Ist) &gt; 0 then
+		sSQL1=&quot;update &quot;&amp; sLeistungsstamm_Import &amp;&quot; set Einheit=&apos;&quot;&amp; sField_Einheit_Soll &amp;&quot;&apos; where Einheit=&apos;&quot;&amp; sField_Einheit_Ist &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL1)
+	elseif Len(sField_Einheit_Soll) &gt; 0 and Len(sField_Einheit_Ist) = 0 then
+		sSQL1=&quot;update &quot;&amp; sLeistungsstamm_Import &amp;&quot; set Einheit=&apos;&quot;&amp; sField_Einheit_Soll &amp;&quot;&apos;&quot;
+		SQL_execute(sSQL1)
+	End if
+	oForm_Import.reload()
+End Sub
+
+Sub Leistungen_uebernehmen
+	sSQL1=&quot;insert into &quot;&amp; sLeistungsstamm &amp;&quot;(*) select * from &quot;&amp; sLeistungsstamm_Import
+	SQL_execute(sSQL1)
+End Sub
+
+Sub Import_Daten()
+	Dim iAnzahlFiles as Integer,iCountFiles as Integer,iSet_T as Integer
+	Dim aFileURL()
+	Dim sFileURL as String
+	Dim sFolderURL as String
+	Dim oInputStream as Object
+	Dim oTextInputStream as Object
+	Dim oFileAccessService  as Object
+	Dim oFilePicker as Object
+	Dim vStatus as Variant,vStatusFilePicker as Variant,sRabatt as String, cRabatt as Currency
+	Dim sDateiTyp as String,sLine as String,iDatensatz as Integer
+	Dim sLeistungsID as String,sLeistungsbezeichnung as String,sEinheit as String,sBestellnummer as String
+	Dim sLeistungsbeschreibung as String,sOrdnungsZahl as String,sString as String,sLeistungsID_new as String
+	Dim sLeistungsbeschreibung_T as String,sBeschreibungsID_T as String
+	Dim sLeistungsID_nach as String,sBestellnummer_nach as String,sKuerzel_vor_LeistungsID as String,sKuerzel_vor_Bezeichnung as String
+	Dim sZeile_auslassen_1 as String,sZeile_auslassen_2 as String,sZeile_auslassen_3 as String
+	Dim oRecord1 as Object,iCount as Integer,iLeistungsID_vorhanden as Integer,iCountProgress as Integer
+	Dim sPreis as String,sEinkaufspreis as String,sListenpreis as String,cPreis as Currency,lPreis as Long
+	Dim sDelim() As String
+	Dim aLineA(),aLineB(),aLineD(),aLineT(),aLineP()
+	Dim oProgressbar as Object
+	Dim sLeistungsID1 as String,sLeistungsID2 as String,sLeistungsID3 as String
+	Dim lListenpreis1 as Long,lListenpreis2 as Long,lListenpreis3 as Long
+	Dim lEinkaufspreis1 as Long,lEinkaufspreis2 as Long,lEinkaufspreis3 as Long
+	Dim initArgs(0)
+	Dim iUmbruch as Integer,iWortTrennung as Integer,iLeistung as Integer,iBemerkung as Integer
+	
+	initArgs(0)=0
+	
+	iCountProgress=0
+	
+	oProgressbar = oDoc.GetCurrentController.GetFrame.CreateStatusIndicator
+	oFilePicker = createUnoService(&quot;com.sun.star.ui.dialogs.FilePicker&quot;)
+	
+	nochmal:
+	oFilePicker.Initialize(initArgs)
+	
+	oFilePicker.MultiSelectionMode=&quot;True&quot;
+	vStatusFilePicker=oFilePicker.execute
+
+	if vStatusFilePicker=0 then
+		vStatus=MsgBox(&quot;Sie haben noch keine Datei ausgewählt!&quot;,37,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+	
+	aFileURL() = oFilePicker.Files()
+	iAnzahlFiles=UBound(aFileURL())
+	
+	if sField_LeistungsID_nach &lt;&gt; &quot;&quot; then
+		sLeistungsID_nach=sField_LeistungsID_nach
+	else
+		sLeistungsID_nach=&quot;&quot;
+	End if
+	if sField_Bestellnummer_nach &lt;&gt; &quot;&quot; then
+		sBestellnummer_nach=sField_Bestellnummer_nach
+	else
+		sBestellnummer_nach=&quot;&quot;
+	End if
+	if sField_Kuerzel_vor_LeistungsID &lt;&gt; &quot;&quot; then
+		sKuerzel_vor_LeistungsID=sField_Kuerzel_vor_LeistungsID
+		if iCheckBox_Kuerzel_vor_Bezeichnung=0 then
+			sKuerzel_vor_Bezeichnung=&quot;&quot;
+		elseif iCheckBox_Kuerzel_vor_Bezeichnung=1 then
+			sKuerzel_vor_Bezeichnung=sField_Kuerzel_vor_LeistungsID &amp; &quot; &quot;
+		end if
+	else
+		sKuerzel_vor_LeistungsID=&quot;&quot;
+		sKuerzel_vor_Bezeichnung=&quot;&quot;
+	End if
+	if sField_Zeile_auslassen_1 &lt;&gt; &quot;&quot; then
+		sZeile_auslassen_1=sField_Zeile_auslassen_1
+	else
+		sZeile_auslassen_1=&quot;&quot;
+	End if
+	if sField_Zeile_auslassen_2 &lt;&gt; &quot;&quot; then
+		sZeile_auslassen_2=sField_Zeile_auslassen_2
+	else
+		sZeile_auslassen_2=&quot;&quot;
+	End if
+	if sField_Zeile_auslassen_3 &lt;&gt; &quot;&quot; then
+		sZeile_auslassen_3=sField_Zeile_auslassen_3
+	else
+		sZeile_auslassen_3=&quot;&quot;
+	End if
+	
+	iCountFiles=1
+	Do While iAnzahlFiles+1 &gt; iCountFiles or (iCountFiles=1 and iAnzahlFiles=0)
+		oProgressbar.Start(&quot;&quot;, 100)
+		oTextInputStream = CreateUnoService(&quot;com.sun.star.io.TextInputStream&quot;)
+		oFileAccessService = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+		sFileURL=aFileURL(0)
+		if iAnzahlFiles &gt; 0 then
+			sFileURL=sFileURL &amp; aFileURL(iCountFiles)
+		End if
+		
+		sDateiTyp=Right(sFileURL,3)
+		
+		If NOT oFileAccessService.exists(sFileURL) then
+			MsgBox &quot;Kann folgende Datei nicht lesen: &quot; &amp; sFileURL
+		 	Exit Sub
+		End If
+		
+		oInputStream = oFileAccessService.openFileRead(sFileURL)	
+		oTextInputStream.setInputStream(oInputStream)
+		
+		oTextInputStream.setEncoding(sList_Encoding)
+		if LCase(sDateiTyp)=&quot;d81&quot; then
+			iBemerkung = 0
+			iUmbruch = 0 
+			iWortTrennung = 0
+			iLeistung = 0
+			Do While Not oTextInputStream.isEOF
+				
+				sLine=oTextInputStream.readLine
+			
+				if Left(sLine,2) = &quot;20&quot; then
+					iBemerkung = 1
+				elseif Left(sLine,2) = &quot;21&quot; then
+					iBemerkung = 0
+					if sOrdnungsZahl &lt;&gt; &quot;&quot; then
+						iCount=0
+						sLeistungsID_new = sLeistungsID
+						Do
+							iCount=iCount+1
+							sSQL1=&quot;select count(LeistungsID) from &quot;&amp; sLeistungsstamm_Import &amp;&quot; where LeistungsID=&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID_new &amp;&quot;&apos;&quot;
+							oRecord1=oResult(sSQL1)
+							While oRecord1.next()
+								iLeistungsID_vorhanden=oRecord1.getLong(1)
+							Wend
+							if iLeistungsID_vorhanden = 1 then
+								sLeistungsID_new=sLeistungsID &amp; CStr(iCount)
+							End if 
+						Loop While iLeistungsID_vorhanden=1
+						sLeistungsID=sLeistungsID_new
+			
+						oProgressbar.Value = iCountProgress
+			
+						if iCountProgress &gt;= 100 then
+							iCountProgress = 0
+						End if
+						
+						if iCountProgress &lt; 100 then
+							iCountProgress=iCountProgress+1
+						else
+							iCountProgress = 0
+						End if
+						
+						if iCheckBox_BestellNr_vor_Bezeichnung=1 and sBestellnummer &lt;&gt; &quot;&quot; then
+							sLeistungsbezeichnung = sBestellnummer &amp;&quot; &quot;&amp; sLeistungsbezeichnung
+						end if
+						if iCheckBox_BestellNr_nach_Bezeichnung=1 and sBestellnummer &lt;&gt; &quot;&quot; then
+							sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; sBestellnummer
+						end if
+			
+						sSQL2=&quot;insert into &quot;&amp; sLeistungsstamm_Import &amp;_
+							&quot; (LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit)&quot;&amp;_
+							&quot; values (&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+							sKuerzel_vor_Bezeichnung &amp; fsConvertApostroph(RTrim(LTrim(sLeistungsbezeichnung))) &amp;&quot;&apos;,&apos;&quot;&amp;_
+							fsConvertApostroph(RTrim(LTrim(sLeistungsbeschreibung))) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;)&quot;
+						SQL_execute(sSQL2)
+					End if
+					sOrdnungsZahl = Mid(sLine,3,8)
+					sEinheit = Trim(Mid(sLine,35,10))
+					if Len(sLeistungsID_nach) = 0 then
+						sLeistungsID=sOrdnungsZahl
+					End if
+					sLeistungsID = &quot;&quot;
+					sBestellnummer = &quot;&quot;
+					sLeistungsbezeichnung = &quot;&quot;
+					sLeistungsbeschreibung = &quot;&quot;
+	
+				elseif Left(sLine,2) = &quot;24&quot; then
+					iLeistung = 1
+					iUmbruch = 0
+					sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Chr$(10) &amp;  Chr$(10) &amp;_
+					fZahlMitPunkt(RTrim(Mid(sLine,6,8)) &amp;&quot;.&quot;&amp; RTrim(Mid(sLine,14,3))) &amp;&quot; &quot;&amp; RTrim(Mid(sLine,17,6))
+			
+				elseif Left(sLine,2) = &quot;25&quot; and iLeistung = 0 then
+						
+					if sLeistungsbezeichnung = &quot;&quot; then
+						if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+							sLeistungsbezeichnung = Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+							iWortTrennung=1
+						else
+							sLeistungsbezeichnung = Trim(Mid(sLine,3,72))
+							iWortTrennung=0
+						End if
+					else
+						if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+							if iWortTrennung = 0 then
+								sLeistungsbezeichnung = sLeistungsbezeichnung &amp; &quot; &quot; &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+							elseif iWortTrennung = 1 then
+								sLeistungsbezeichnung = sLeistungsbezeichnung &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+							end if
+							iWortTrennung=1
+						else
+							if iWortTrennung = 0 then
+								sLeistungsbezeichnung = sLeistungsbezeichnung &amp; &quot; &quot; &amp; Trim(Mid(sLine,3,72))
+							elseif iWortTrennung = 1 then
+								sLeistungsbezeichnung = sLeistungsbezeichnung &amp; Trim(Mid(sLine,3,72))
+							End if
+							iWortTrennung=0
+						End if
+					End if
+			
+				elseif Left(sLine,2) = &quot;25&quot; and iLeistung = 1 then
+					if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+						if iWortTrennung = 0 then
+							sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+						elseif iWortTrennung = 1 then
+							sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+						end if
+						iWortTrennung=1
+					else
+						if iWortTrennung = 0 then
+							sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; Trim(Mid(sLine,3,72))
+						elseif iWortTrennung = 1 then
+							sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Trim(Mid(sLine,3,72))
+						End if
+						iWortTrennung=0
+					End if
+			
+				elseif Left(sLine,2) = &quot;26&quot; and iBemerkung = 0 then
+					sString=Trim(Mid(sLine,3,72))
+					
+					if (Instr(sString,sLeistungsID_nach) &gt; 0 and Len(sLeistungsID_nach) &gt; 0) _
+						or (Instr(sString,sBestellnummer_nach) &gt; 0 and Len(sBestellnummer_nach) &gt; 0) then
+			
+						if Instr(sString,sLeistungsID_nach) &gt; 0 and Len(sLeistungsID_nach) &gt; 0 then
+							sLeistungsID = fsLeerzeichenErsetzen(Trim(Mid(sString,Len(sLeistungsID_nach)+Instr(sString,sLeistungsID_nach))))
+						End if
+						if Instr(sString,sBestellnummer_nach) &gt; 0 and Len(sBestellnummer_nach) &gt; 0 then
+							sBestellnummer = Trim(Mid(sString,Len(sBestellnummer_nach)+Instr(sString,sBestellnummer_nach)))
+						End if
+					
+					elseif (Instr(sString,sZeile_auslassen_1) &gt; 0 and Len(sZeile_auslassen_1) &gt; 0) _
+						or (Instr(sString,sZeile_auslassen_2) &gt; 0 and Len(sZeile_auslassen_2) &gt; 0) _
+						or (Instr(sString,sZeile_auslassen_3) &gt; 0 and Len(sZeile_auslassen_3) &gt; 0) then
+							wait 0
+					else
+						if sLeistungsbeschreibung = &quot;&quot; then
+							if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+								sLeistungsbeschreibung = Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+								iWortTrennung=1
+							else
+								sLeistungsbeschreibung = Trim(Mid(sLine,3,72))
+								iWortTrennung=0
+							End if
+						else
+							if Right(Trim(Mid(sLine,3,72)),1) = &quot;-&quot; then
+								if iWortTrennung = 0 then
+									if Instr(sLine,&quot;:&quot;) &gt; 0 or iUmbruch = 1 then
+										sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Chr$(10) &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+										if Instr(sLine,&quot;:&quot;) &gt; 0 then
+											iUmbruch = 1
+										else
+											iUmbruch = 0
+										End if
+									else
+										select Case Left(Trim(Mid(sLine,3,72)),1)
+										Case &quot;-&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;0&quot;
+											sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Chr$(10) &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+											iUmbruch = 1
+										Case Else
+											sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+											iUmbruch = 0
+										End Select
+									End if
+								elseif iWortTrennung = 1 then
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Left(Trim(Mid(sLine,3,72)),Len(Trim(Mid(sLine,3,72)))-1)
+								end if
+								iWortTrennung=1
+							else
+								if iWortTrennung = 0 then
+									if Instr(sLine,&quot;:&quot;) &gt; 0 or iUmbruch = 1	then
+										sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Chr$(10) &amp; Trim(Mid(sLine,3,72))
+										if Instr(sLine,&quot;:&quot;) &gt; 0 then
+											iUmbruch=1
+										else
+											iUmbruch=0
+										End if
+									else
+										select Case Left(Trim(Mid(sLine,3,72)),1)
+										Case &quot;-&quot;,&quot;1&quot;,&quot;2&quot;,&quot;3&quot;,&quot;4&quot;,&quot;5&quot;,&quot;6&quot;,&quot;7&quot;,&quot;8&quot;,&quot;9&quot;,&quot;0&quot;
+											sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Chr$(10) &amp; Trim(Mid(sLine,3,72))
+											iUmbruch = 1
+										Case Else
+											sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; Trim(Mid(sLine,3,72))
+											iUmbruch = 0
+										End Select
+									End if
+								elseif iWortTrennung = 1 then
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; Trim(Mid(sLine,3,72))
+								End if
+								iWortTrennung=0
+							End if
+						End if
+					End if
+					iLeistung = 0
+				End if	
+			Loop
+			oTextInputStream.closeInput()
+		
+			iCount=0
+			sLeistungsID_new = sLeistungsID
+			Do
+				iCount=iCount+1
+				sSQL1=&quot;select count(LeistungsID) from &quot;&amp; sLeistungsstamm_Import &amp;&quot; where LeistungsID=&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID_new &amp;&quot;&apos;&quot;
+					oRecord1=oResult(sSQL1)
+				While oRecord1.next()
+					iLeistungsID_vorhanden=oRecord1.getLong(1)
+				Wend
+				if iLeistungsID_vorhanden = 1 then
+					sLeistungsID_new=sLeistungsID &amp; CStr(iCount)
+				End if 
+			Loop While iLeistungsID_vorhanden=1
+			
+			sLeistungsID=sLeistungsID_new
+		
+			sSQL2=&quot;insert into &quot;&amp; sLeistungsstamm_Import &amp;_
+				&quot; (LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit)&quot;&amp;_
+				&quot; values (&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+				sKuerzel_vor_Bezeichnung &amp; fsConvertApostroph(RTrim(LTrim(sLeistungsbezeichnung))) &amp;&quot;&apos;,&apos;&quot;&amp;_
+				fsConvertApostroph(RTrim(LTrim(sLeistungsbeschreibung))) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;)&quot;
+			SQL_execute(sSQL2)
+		
+		elseif Instr(LCase(sFileURL),&quot;datanorm&quot;) then
+		
+			sRabatt=InputBox(&quot;Geben Sie hier, für die Berechnung Ihrer Einkaufspreise, den Rabattsatz in [%] auf den Listenpreis ein!&quot;,sTitle_lokal,&quot;0&quot;)
+			if sRabatt=&quot;&quot; then 
+				sRabatt= &quot;0&quot; 
+			end if
+			cRabatt=sRabatt
+			
+			Do While Not oTextInputStream.isEOF
+				sLine=oTextInputStream.readLine
+				if Left(sLine,1) = &quot;A&quot; then
+					if sOrdnungsZahl &lt;&gt; &quot;&quot; then
+						iCount=0
+						sLeistungsID_new = sLeistungsID
+						Do
+							iCount=iCount+1
+							sSQL1=&quot;select count(LeistungsID) from &quot;&amp; sLeistungsstamm_Import &amp;&quot; where LeistungsID=&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID_new &amp;&quot;&apos;&quot;
+							oRecord1=oResult(sSQL1)
+							While oRecord1.next()
+								iLeistungsID_vorhanden=oRecord1.getLong(1)
+							Wend
+							if iLeistungsID_vorhanden = 1 then
+								sLeistungsID_new=sLeistungsID &amp; CStr(iCount)
+							End if 
+						Loop While iLeistungsID_vorhanden=1
+						sLeistungsID=sLeistungsID_new
+			
+						oProgressbar.Value = iCountProgress
+			
+						if iCountProgress &gt;= 100 then
+							iCountProgress = 0
+						End if
+							
+						if iCountProgress &lt; 100 then
+							iCountProgress=iCountProgress+1
+						else
+							iCountProgress = 0
+						End if
+						
+						if sLeistungsbeschreibung_T &lt;&gt; &quot;&quot; then
+							sLeistungsbeschreibung = sLeistungsbeschreibung_T
+						End if
+		
+						if iCheckBox_BestellNr_vor_Bezeichnung=1 and sBestellnummer &lt;&gt; &quot;&quot; then
+							sLeistungsbezeichnung = sBestellnummer &amp;&quot; &quot;&amp; sLeistungsbezeichnung
+						end if
+						if iCheckBox_BestellNr_nach_Bezeichnung=1 and sBestellnummer &lt;&gt; &quot;&quot; then
+							sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; sBestellnummer
+						end if
+							
+						sSQL2=&quot;insert into &quot;&amp; sLeistungsstamm_Import &amp;_
+							&quot; (LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Einkaufspreis,Listenpreis)&quot;&amp;_
+							&quot; values (&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+							sKuerzel_vor_Bezeichnung &amp; fsConvertString(Trim(sLeistungsbezeichnung)) &amp;&quot;&apos;,&apos;&quot;&amp;_
+							Trim(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&apos;&quot;&amp; sEinkaufspreis &amp;&quot;&apos;,&apos;&quot;&amp; sListenPreis &amp;&quot;&apos;)&quot;
+						SQL_execute(sSQL2)
+						sLeistungsID = &quot;&quot;
+						sBestellnummer = &quot;&quot;
+						sOrdnungsZahl = &quot;&quot;
+						sEinheit = &quot;&quot;
+						sLeistungsbezeichnung = &quot;&quot;
+						sLeistungsbeschreibung = &quot;&quot;
+						sEinkaufspreis = &quot;&quot;
+						sListenPreis = &quot;&quot;
+					End if
+					
+					if CountCharsInString(sLine,&quot;;&quot;,1) = 13 then
+						aLineA=Split(sLine,&quot;;&quot;)
+						sOrdnungsZahl = Trim(aLineA(2))
+						if iCheckBox_Feld_Tauschen = 0 then
+							if Len(Trim(aLineA(4))) &gt; 1 then
+								sLeistungsbezeichnung = Trim(aLineA(4))
+							End if
+							if Len(Trim(aLineA(5))) &gt; 1 then
+								if sLeistungsbezeichnung &lt;&gt; &quot;&quot; then
+									sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; Trim(aLineA(5))
+								else
+									sLeistungsbezeichnung = Trim(aLineA(5))
+								end if
+							End if
+						elseif iCheckBox_Feld_Tauschen = 1 then
+							if Len(Trim(aLineA(5))) &gt; 1 then
+								sLeistungsbezeichnung = Trim(aLineA(5))
+							End if
+							if Len(Trim(aLineA(4))) &gt; 1 then
+								if sLeistungsbezeichnung &lt;&gt; &quot;&quot; then
+									sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; Trim(aLineA(4))
+								else
+									sLeistungsbezeichnung = Trim(aLineA(4))
+								end if
+							End if
+						end if
+				
+						if Trim(aLineA(12)) &lt;&gt; sBeschreibungsID_T then
+							sBeschreibungsID_T = &quot;&quot;
+							sLeistungsbeschreibung_T = &quot;&quot;
+						End if
+						sEinheit = Trim(aLineA(8))
+						sPreis = Trim(aLineA(9))
+					elseif CountCharsInString(sLine,&quot;;&quot;,1) = 29 then
+						aLineA=Split(sLine,&quot;;&quot;)
+						sOrdnungsZahl = Trim(aLineA(2))
+						if iCheckBox_Feld_Tauschen = 0 then
+							if Len(Trim(aLineA(3))) &gt; 1 then
+								sLeistungsbezeichnung = Trim(aLineA(3))
+							End if
+							if Len(Trim(aLineA(4))) &gt; 1 then
+								if sLeistungsbezeichnung &lt;&gt; &quot;&quot; then
+									sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; Trim(aLineA(4))
+								else
+									sLeistungsbezeichnung = Trim(aLineA(4))
+								end if
+							End if
+						elseif iCheckBox_Feld_Tauschen = 1 then
+							if Len(Trim(aLineA(4))) &gt; 1 then
+								sLeistungsbezeichnung = Trim(aLineA(4))
+							End if
+							if Len(Trim(aLineA(3))) &gt; 1 then
+								if sLeistungsbezeichnung &lt;&gt; &quot;&quot; then
+									sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; Trim(aLineA(3))
+								else
+									sLeistungsbezeichnung = Trim(aLineA(3))
+								end if
+							End if
+						end if
+						if Trim(aLineA(23)) &lt;&gt; sBeschreibungsID_T then
+							sBeschreibungsID_T = &quot;&quot;
+							sLeistungsbeschreibung_T = &quot;&quot;
+						End if
+						sEinheit = Trim(aLineA(5))
+						sPreis = Trim(aLineA(8))
+					elseif CountCharsInString(sLine,&quot;;&quot;,1) = 19 then
+						aLineA=Split(sLine,&quot;;&quot;)
+						sOrdnungsZahl = Trim(aLineA(2))
+						if iCheckBox_Feld_Tauschen = 0 then
+							if Len(Trim(aLineA(3))) &gt; 1 then
+								sLeistungsbezeichnung = Trim(aLineA(3))
+							End if
+							if Len(Trim(aLineA(4))) &gt; 1 then
+								if sLeistungsbezeichnung &lt;&gt; &quot;&quot; then
+									sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; Trim(aLineA(4))
+								else
+									sLeistungsbezeichnung = Trim(aLineA(4))
+								end if
+							End if
+						elseif iCheckBox_Feld_Tauschen = 1 then
+							if Len(Trim(aLineA(4))) &gt; 1 then
+								sLeistungsbezeichnung = Trim(aLineA(4))
+							End if
+							if Len(Trim(aLineA(3))) &gt; 1 then
+								if sLeistungsbezeichnung &lt;&gt; &quot;&quot; then
+									sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; Trim(aLineA(3))
+								else
+									sLeistungsbezeichnung = Trim(aLineA(3))
+								end if
+							End if
+						end if
+						sEinheit = Trim(aLineA(5))
+					End if
+					
+					sLeistungsID=fsReplace(sOrdnungsZahl,&quot;-&quot;,&quot;&quot;)
+					sBestellnummer=sOrdnungsZahl
+					lPreis=CLng(sPreis)
+					
+					if sPreis &lt;&gt; &quot;&quot; and sPreis &lt;&gt; &quot;0&quot; then
+		&apos;				sEinkaufspreis=CStr(CCur(fZahlMitKomma(sPreis))*(100-cRabatt)/10000)
+						sEinkaufspreis=CStr((lPreis*(100-cRabatt)/10000)+0.0055)
+						if Len(sPreis) &gt; 2 then
+							sListenPreis=Left(sPreis,Len(sPreis)-2)&amp;&quot;.&quot;&amp; Right(sPreis,2)
+						else
+							sListenPreis=&quot;0.&quot; &amp; sPreis
+						end if
+					end if
+					
+					
+				elseif Left(sLine,1) = &quot;B&quot; then
+					aLineB=Split(sLine,&quot;;&quot;)
+					if Trim(aLineB(3)) &lt;&gt; &quot;&quot; then
+						if CountCharsInString(sLeistungsbezeichnung,Trim(aLineB(3)),1) = 0 then
+							sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; Trim(aLineB(3))
+						End if
+					End if
+					if Trim(aLineB(4)) &lt;&gt; &quot;&quot; then
+						if CountCharsInString(sLeistungsbezeichnung,Trim(aLineB(4)),1) = 0 then
+							sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; Trim(aLineB(4))
+						End if
+					End if
+				elseif Left(sLine,1) = &quot;D&quot; then
+					if CountCharsInString(sLine,&quot;;&quot;,1) = 6 then
+						aLineD=Split(sLine,&quot;;&quot;)
+						if Trim(aLineD(5)) &lt;&gt; &quot;&quot; then
+							if sLeistungsbeschreibung = &quot;&quot; then
+								sLeistungsbeschreibung = fsConvertString(fsInTrim(Trim(aLineD(5))))
+							else
+								if Left(Trim(aLineD(5)),1) = &quot;-&quot; _
+									or InStr(Trim(aLineD(5)),&quot;:&quot;) &gt; 0 _
+									or InStr(Trim(aLineD(5)),&quot;  &quot;) &gt; 0 _
+									or InStr(1,Trim(aLineD(5)),&quot;technische daten&quot;,1) &gt; 0 _
+								then
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot;\n&quot; &amp; fsConvertString(fsInTrim(Trim(aLineD(5))))
+								else
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; fsConvertString(fsInTrim(Trim(aLineD(5))))
+								end if
+							End if
+						End if
+					elseif CountCharsInString(sLine,&quot;;&quot;,1) = 7 then
+						aLineD=Split(sLine,&quot;;&quot;)
+						if Trim(aLineD(5)) &lt;&gt; &quot;&quot; then
+							if sLeistungsbeschreibung = &quot;&quot; then
+								sLeistungsbeschreibung = fsConvertString(fsInTrim(Trim(aLineD(5))))
+							else
+								if Left(Trim(aLineD(5)),1) = &quot;-&quot; _
+									or InStr(Trim(aLineD(5)),&quot;:&quot;) &gt; 0 _
+									or InStr(Trim(aLineD(5)),&quot;  &quot;) &gt; 0 _
+									or InStr(1,Trim(aLineD(5)),&quot;technische daten&quot;,1) &gt; 0 _
+								then
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot;\n&quot; &amp; fsConvertString(fsInTrim(Trim(aLineD(5))))
+								else
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; fsConvertString(fsInTrim(Trim(aLineD(5))))
+								end if
+							End if
+						End if
+					elseif CountCharsInString(sLine,&quot;;&quot;,1) = 11 then
+						aLineD=Split(sLine,&quot;;&quot;)
+						if Trim(aLineD(6)) &lt;&gt; &quot;&quot; then
+							if sLeistungsbeschreibung = &quot;&quot; then
+								sLeistungsbeschreibung = fsConvertString(fsInTrim(Trim(aLineD(6))))
+							else
+								if Left(Trim(aLineD(6)),1) = &quot;-&quot; _
+									or InStr(Trim(aLineD(6)),&quot;:&quot;) &gt; 0 _
+									or InStr(Trim(aLineD(6)),&quot;  &quot;) &gt; 0 _
+									or InStr(1,Trim(aLineD(6)),&quot;technische daten&quot;,1) &gt; 0 _
+								then
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot;\n&quot; &amp; fsConvertString(fsInTrim(Trim(aLineD(6))))
+								else
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; fsConvertString(fsInTrim(Trim(aLineD(6))))
+								end if
+							End if
+						End if
+						if Trim(aLineD(10)) &lt;&gt; &quot;&quot; then
+							if sLeistungsbeschreibung = &quot;&quot; then
+								sLeistungsbeschreibung = fsConvertString(fsInTrim(Trim(aLineD(10))))
+							else
+								if Left(Trim(aLineD(10)),1) = &quot;-&quot; _
+									or InStr(Trim(aLineD(10)),&quot;:&quot;) &gt; 0 _
+									or InStr(Trim(aLineD(10)),&quot;  &quot;) &gt; 0 _
+									or InStr(1,Trim(aLineD(10)),&quot;technische daten&quot;,1) &gt; 0 _
+								then
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot;\n&quot; &amp; fsConvertString(fsInTrim(Trim(aLineD(10))))
+								else
+									sLeistungsbeschreibung = sLeistungsbeschreibung &amp; &quot; &quot; &amp; fsConvertString(fsInTrim(Trim(aLineD(10))))
+								end if
+							End if
+						End if
+					End if		
+				elseif Left(sLine,1) = &quot;T&quot; then
+					if CountCharsInString(sLine,&quot;;&quot;,1) = 10 then
+						aLineT=Split(sLine,&quot;;&quot;)
+						if Trim(aLineT(2)) &lt;&gt; sBeschreibungsID_T then
+							if sOrdnungsZahl &lt;&gt; &quot;&quot; then
+								iCount=0
+								sLeistungsID_new = sLeistungsID
+								Do
+									iCount=iCount+1
+									sSQL1=&quot;select count(LeistungsID) from &quot;&amp; sLeistungsstamm_Import &amp;&quot; where LeistungsID=&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID_new &amp;&quot;&apos;&quot;
+									oRecord1=oResult(sSQL1)
+									While oRecord1.next()
+										iLeistungsID_vorhanden=oRecord1.getLong(1)
+									Wend
+									if iLeistungsID_vorhanden = 1 then
+										sLeistungsID_new=sLeistungsID &amp; CStr(iCount)
+									End if 
+								Loop While iLeistungsID_vorhanden=1
+								sLeistungsID=sLeistungsID_new
+					
+								if sLeistungsbeschreibung_T &lt;&gt; &quot;&quot; then
+									sLeistungsbeschreibung = sLeistungsbeschreibung_T
+								End if
+								
+								if iCheckBox_BestellNr_vor_Bezeichnung=1 and sBestellnummer &lt;&gt; &quot;&quot; then
+									sLeistungsbezeichnung = sBestellnummer &amp;&quot; &quot;&amp; sLeistungsbezeichnung
+								end if
+								if iCheckBox_BestellNr_nach_Bezeichnung=1 and sBestellnummer &lt;&gt; &quot;&quot; then
+									sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; sBestellnummer
+								end if
+									
+								sSQL2=&quot;insert into &quot;&amp; sLeistungsstamm_Import &amp;_
+									&quot; (LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Einkaufspreis,Listenpreis)&quot;&amp;_
+									&quot; values (&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+								sKuerzel_vor_Bezeichnung &amp; fsConvertString(Trim(sLeistungsbezeichnung)) &amp;&quot;&apos;,&apos;&quot;&amp;_
+								Trim(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&apos;&quot;&amp; sEinkaufspreis &amp;&quot;&apos;,&apos;&quot;&amp; sListenPreis &amp;&quot;&apos;)&quot;
+								SQL_execute(sSQL2)
+								sOrdnungsZahl = &quot;&quot;
+								sEinheit = &quot;&quot;
+								sLeistungsbezeichnung = &quot;&quot;
+								sLeistungsbeschreibung = &quot;&quot;
+								sEinkaufspreis = &quot;&quot;
+								sListenPreis = &quot;&quot;
+							End if
+							sBeschreibungsID_T = &quot;&quot;
+							sLeistungsbeschreibung_T = &quot;&quot;
+						End if
+						if Trim(aLineT(2)) &lt;&gt; &quot;&quot; then 
+							sBeschreibungsID_T = fsConvertString(fsInTrim(Trim(aLineT(2))))
+						End if
+						if Trim(aLineT(6)) &lt;&gt; &quot;&quot; then
+							if sLeistungsbeschreibung_T = &quot;&quot; then
+								sLeistungsbeschreibung_T = fsConvertString(fsInTrim(Trim(aLineT(6))))
+							else
+								if Left(Trim(aLineT(6)),1) = &quot;-&quot; _
+									or InStr(Trim(aLineT(6)),&quot;:&quot;) &gt; 0 _
+									or InStr(Trim(aLineT(6)),&quot;  &quot;) &gt; 0 _
+									or InStr(1,Trim(aLineT(6)),&quot;technische daten&quot;,1) &gt; 0 _
+								then
+									sLeistungsbeschreibung_T = sLeistungsbeschreibung_T &amp; &quot;\n&quot; &amp; fsConvertString(fsInTrim(Trim(aLineT(6))))
+								else
+									sLeistungsbeschreibung_T = sLeistungsbeschreibung_T &amp; &quot; &quot; &amp; fsConvertString(fsInTrim(Trim(aLineT(6))))
+								end if
+							End if
+						End if
+					elseif CountCharsInString(sLine,&quot;;&quot;,1) = 6 then
+						aLineT=Split(sLine,&quot;;&quot;)
+						if Trim(aLineT(2)) &lt;&gt; sBeschreibungsID_T then
+							if sOrdnungsZahl &lt;&gt; &quot;&quot; then
+								iCount=0
+								sLeistungsID_new = sLeistungsID
+								Do
+									iCount=iCount+1
+									sSQL1=&quot;select count(LeistungsID) from &quot;&amp; sLeistungsstamm_Import &amp;&quot; where LeistungsID=&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID_new &amp;&quot;&apos;&quot;
+									oRecord1=oResult(sSQL1)
+									While oRecord1.next()
+										iLeistungsID_vorhanden=oRecord1.getLong(1)
+									Wend
+									if iLeistungsID_vorhanden = 1 then
+										sLeistungsID_new=sLeistungsID &amp; CStr(iCount)
+									End if 
+								Loop While iLeistungsID_vorhanden=1
+								sLeistungsID=sLeistungsID_new
+					
+								if sLeistungsbeschreibung_T &lt;&gt; &quot;&quot; then
+									sLeistungsbeschreibung = sLeistungsbeschreibung_T
+								End if
+								
+								if iCheckBox_BestellNr_vor_Bezeichnung=1 and sBestellnummer &lt;&gt; &quot;&quot; then
+									sLeistungsbezeichnung = sBestellnummer &amp;&quot; &quot;&amp; sLeistungsbezeichnung
+								end if
+								if iCheckBox_BestellNr_nach_Bezeichnung=1 and sBestellnummer &lt;&gt; &quot;&quot; then
+									sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; sBestellnummer
+								end if
+									
+								sSQL2=&quot;insert into &quot;&amp; sLeistungsstamm_Import &amp;_
+									&quot; (LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Einkaufspreis,Listenpreis)&quot;&amp;_
+									&quot; values (&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+								sKuerzel_vor_Bezeichnung &amp; fsConvertString(Trim(sLeistungsbezeichnung)) &amp;&quot;&apos;,&apos;&quot;&amp;_
+								Trim(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&apos;&quot;&amp; sEinkaufspreis &amp;&quot;&apos;,&apos;&quot;&amp; sListenPreis &amp;&quot;&apos;)&quot;
+								SQL_execute(sSQL2)
+								sOrdnungsZahl = &quot;&quot;
+								sEinheit = &quot;&quot;
+								sLeistungsbezeichnung = &quot;&quot;
+								sLeistungsbeschreibung = &quot;&quot;
+								sEinkaufspreis = &quot;&quot;
+								sListenPreis = &quot;&quot;
+							End if
+							sBeschreibungsID_T = &quot;&quot;
+							sLeistungsbeschreibung_T = &quot;&quot;
+						End if
+						if Trim(aLineT(2)) &lt;&gt; &quot;&quot; then 
+							sBeschreibungsID_T = fsConvertString(fsInTrim(Trim(aLineT(2))))
+						End if
+						if Trim(aLineT(5)) &lt;&gt; &quot;&quot; then
+							if sLeistungsbeschreibung_T = &quot;&quot; then
+								sLeistungsbeschreibung_T = fsConvertString(fsInTrim(Trim(aLineT(5))))
+							else
+								if Left(Trim(aLineT(5)),1) = &quot;-&quot; _
+									or InStr(Trim(aLineT(5)),&quot;:&quot;) &gt; 0 _
+									or InStr(Trim(aLineT(5)),&quot;  &quot;) &gt; 0 _
+									or InStr(1,Trim(aLineT(5)),&quot;technische daten&quot;,1) &gt; 0 _
+								then
+									sLeistungsbeschreibung_T = sLeistungsbeschreibung_T &amp; &quot;\n&quot; &amp; fsConvertString(fsInTrim(Trim(aLineT(5))))
+								else
+									sLeistungsbeschreibung_T = sLeistungsbeschreibung_T &amp; &quot; &quot; &amp; fsConvertString(fsInTrim(Trim(aLineT(5))))
+								end if
+							End if
+						End if		
+					End if
+				End if
+			Loop
+			oTextInputStream.closeInput()
+			iCount=0
+			sLeistungsID_new = sLeistungsID
+			Do
+				iCount=iCount+1
+				sSQL1=&quot;select count(LeistungsID) from &quot;&amp; sLeistungsstamm_Import &amp;&quot; where LeistungsID=&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID_new &amp;&quot;&apos;&quot;
+					oRecord1=oResult(sSQL1)
+				While oRecord1.next()
+					iLeistungsID_vorhanden=oRecord1.getLong(1)
+				Wend
+				if iLeistungsID_vorhanden = 1 then
+					sLeistungsID_new=sLeistungsID &amp; CStr(iCount)
+				End if 
+			Loop While iLeistungsID_vorhanden=1
+			sLeistungsID=sLeistungsID_new
+		
+			if sLeistungsbeschreibung_T &lt;&gt; &quot;&quot; then
+				sLeistungsbeschreibung = sLeistungsbeschreibung_T
+			End if
+		
+			if iCheckBox_BestellNr_vor_Bezeichnung=1 and sBestellnummer &lt;&gt; &quot;&quot; then
+				sLeistungsbezeichnung = sBestellnummer &amp;&quot; &quot;&amp; sLeistungsbezeichnung
+			end if
+			if iCheckBox_BestellNr_nach_Bezeichnung=1 and sBestellnummer &lt;&gt; &quot;&quot; then
+				sLeistungsbezeichnung = sLeistungsbezeichnung &amp;&quot; &quot;&amp; sBestellnummer
+			end if
+		
+			sSQL2=&quot;insert into &quot;&amp; sLeistungsstamm_Import &amp;_
+				&quot; (LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Einkaufspreis,Listenpreis)&quot;&amp;_
+				&quot; values (&apos;&quot;&amp; sKuerzel_vor_LeistungsID &amp;&quot;_&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
+			sKuerzel_vor_Bezeichnung &amp; fsConvertString(Trim(sLeistungsbezeichnung)) &amp;&quot;&apos;,&apos;&quot;&amp;_
+			Trim(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&apos;&quot;&amp; sEinkaufspreis &amp;&quot;&apos;,&apos;&quot;&amp; sListenPreis &amp;&quot;&apos;)&quot;
+			SQL_execute(sSQL2)
+		
+		elseif Instr(LCase(sFileURL),&quot;datpreis&quot;) then
+		
+		Do While Not oTextInputStream.isEOF
+			sLine=oTextInputStream.readLine
+			if Left(sLine,1) = &quot;P&quot; then
+				aLineP=Split(sLine,&quot;;&quot;)
+				if Trim(aLineD(2)) &lt;&gt; &quot;&quot; then
+					sLeistungsID1=Trim(aLineD(2))
+					if Trim(aLineD(3)) = 1 then
+						lListenpreis1=Trim(aLineD(4))
+					elseif Trim(aLineD(3)) = 2 then
+						lEinkaufspreis1=Trim(aLineD(4))
+					End if
+				End if
+				if Trim(aLineD(11)) &lt;&gt; &quot;&quot; then
+					sLeistungsID2=Trim(aLineD(11))
+					if Trim(aLineD(12)) = 1 then
+						lListenpreis2=Trim(aLineD(13))
+					elseif Trim(aLineD(12)) = 2 then
+						lEinkaufspreis2=Trim(aLineD(13))
+					End if
+				End if
+				if Trim(aLineD(20)) &lt;&gt; &quot;&quot; then
+					sLeistungsID3=Trim(aLineD(20))
+					if Trim(aLineD(21)) = 1 then
+						lListenpreis3=Trim(aLineD(22))
+					elseif Trim(aLineD(21)) = 2 then
+						lEinkaufspreis3=Trim(aLineD(22))
+					End if
+				End if
+			End if
+		Loop
+		
+		
+		End if
+	
+		sOrdnungsZahl = &quot;&quot;
+		sEinheit = &quot;&quot;
+		sLeistungsbezeichnung = &quot;&quot;
+		sLeistungsbeschreibung = &quot;&quot;
+		sEinkaufspreis = &quot;&quot;
+		sListenPreis = &quot;&quot;
+		iCountFiles=iCountFiles+1
+	Loop
+
+	oProgressbar.End
+	oForm_Import.reload()
+End Sub
+
+Sub Gruppe_setzen()
+	sSQL1=&quot;update &quot;&amp; sLeistungsstamm_Import &amp;&quot; set Leistungsgruppe=&apos;&quot;&amp; lGruppenID &amp;&quot;&apos;&quot;
+	SQL_execute(sSQL1)
+	oForm_Import.reload()
+End Sub
+
+Sub Leistungen_loeschen()
+	sSQL1=&quot;delete from &quot;&amp; sLeistungsstamm_Import
+	SQL_execute(sSQL1)
+	oForm_Import.reload()
+End Sub
+
+Sub Leistungen_einfuegen()
+	sSQL1=&quot;insert into &quot;&amp; sLeistungsstamm &amp;&quot; select * from &quot;&amp; sLeistungsstamm_Import
+	SQL_execute(sSQL1)
+End Sub
+
+Sub List_Hauptgruppenauswahl_refresh()
+	oList_Hauptgruppenauswahl.refresh()
+End Sub
+
+Sub List_Gruppenauswahl_refresh()
+	oList_Gruppenauswahl.refresh()
+End Sub
+
+Sub Steuerung_reload()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub update_Hauptgruppenauswahl()
+	oList_Hauptgruppenauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Gruppenauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub update_Gruppenauswahl()
+	oList_Gruppenauswahl.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Gruppenauswahl.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Maske_schliessen()
+	if oDoc.isReadOnly then
+		sSQL1=&quot;update Steuerung set Gesperrt=0 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+	End if
+	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+</script:module>

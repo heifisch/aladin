@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Pos" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+Option Explicit
+
+Sub Pos_kopieren
+	Pos_kopieren_sub(0)
+End Sub
+
+Sub Pos_kopieren_loeschen
+	Pos_kopieren_sub(1)
+End Sub
+
+Sub Pos_kopieren_sub(iReset as Integer)
+	Dim iMaxPos as integer
+	Dim sLV_Pos_alt as String,sLV_Pos_neu as String
+	Dim oRecord1 as Object
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+	Dim iPos as integer,iRowNumber as Integer
+	iPos=fPos_neu()
+	iRowNumber=oForm_Tabellendaten.getRow()
+	if iPos &gt; 0 OR iReset = 1 OR iVorgang_cp = 1 then
+		if iReset = 0 then
+			if iVorgang_cp = 0 then
+				sSQL1=&quot;SELECT LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,Einkaufspreis,&quot;&amp;_
+					&quot;Bauzeit,Minutenverrechnungssatz,Materialaufschlagsatz,Pos_TypID FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos=&quot;&amp; iPos
+				oRecord1=oResult(sSQL1)
+				While oRecord1.next()	
+					SetDocUserProperty(&quot;oLeistungsID_cp&quot;, oRecord1.getString(1))
+					SetDocUserProperty(&quot;oBestellnummer_cp&quot;, oRecord1.getString(2))
+					SetDocUserProperty(&quot;oLeistungsbezeichnung_cp&quot;, oRecord1.getString(3))
+					SetDocUserProperty(&quot;oLeistungsbeschreibung_cp&quot;, oRecord1.getString(4))
+					SetDocUserProperty(&quot;oEinheit_cp&quot;, oRecord1.getString(5))
+					SetDocUserProperty(&quot;oMenge_cp&quot;, oRecord1.getString(6))
+					SetDocUserProperty(&quot;oEinkaufspreis_cp&quot;, oRecord1.getString(7))
+					SetDocUserProperty(&quot;oBauzeit_cp&quot;, oRecord1.getString(8))
+					SetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;, oRecord1.getString(9))
+					SetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;, oRecord1.getString(10))
+					SetDocUserProperty(&quot;oPos_TypID_cp&quot;, oRecord1.getInt(11))
+				Wend
+				SetDocUserProperty(&quot;oVorgang_cp&quot;, &quot;1&quot;)
+				oButton_Pos_kopieren.Label=&quot;Einfügen&quot;
+				oButton_Pos_kopieren.TextColor=16711680
+				oButton_Pos_kopieren.HelpText=&quot;Den aktuellen Datensatz einfügen: &quot;&amp; sLeistungsbezeichnung_cp &amp;&quot;  &quot;									
+			elseif iVorgang_cp = 1 then
+				SetDocUserProperty(&quot;oPos_neu&quot;, fPos_neu)
+				iMaxPos=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+				if iPos = iMaxPos then
+					sSQL3=&quot;SELECT LV_Pos FROM &quot;&amp; sArbeitstabelle &amp;_
+						&quot; WHERE Pos = &apos;&quot;&amp; iPos &amp;&quot;&apos;&quot;
+					iPos = iPos+1
+				else
+					sSQL3=&quot;SELECT LV_Pos FROM &quot;&amp; sArbeitstabelle &amp;_
+						&quot; WHERE Pos = &apos;&quot;&amp; iPos - 1 &amp;&quot;&apos;&quot;
+					sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+						&quot; SET Pos=Pos+1 WHERE Pos+0 &gt;= &quot;&amp; iPos &amp;&quot; ORDER BY Pos DESC&quot;
+					SQL_execute(sSQL1)
+				End if
+				oRecord1=oResult(sSQL3)
+				While oRecord1.next()
+					sLV_Pos_alt= oRecord1.getString(1)
+				Wend
+				if sLV_Pos_alt &lt;&gt; &quot;&quot; AND sLV_Pos_alt &lt;&gt; &quot;0&quot; then
+					sLV_Pos_neu = fLV_Pos(sLV_Pos_alt)
+				else
+					sLV_Pos_neu = &quot;&quot;
+				End if
+				sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+					&quot;(Pos,LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,&quot;&amp;_
+					&quot;Einkaufspreis,Bauzeit,Minutenverrechnungssatz,Materialaufschlagsatz,Pos_TypID)&quot;&amp;_
+					&quot; VALUES (&apos;&quot;&amp; iPos &amp;&quot;&apos;,&apos;&quot;&amp; sLV_Pos_neu &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID_cp &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer_cp &amp;_
+					&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung_cp) &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung_cp) &amp;_
+					&quot;&apos;,&apos;&quot;&amp; sEinheit_cp &amp;&quot;&apos;,&quot;&amp; cMenge_cp &amp;&quot;,&quot;&amp; cEinkaufspreis_cp &amp;&quot;,&quot;&amp; cBauzeit_cp &amp;&quot;,&quot;&amp; cMinutenverechnungssatz_cp &amp;_
+					&quot;,&quot; &amp; cMaterialaufschlagsatz_cp &amp;&quot;,&quot;&amp; iPos_TypID_cp &amp;&quot;)&quot;
+				SQL_execute(sSQL2)
+				oForm_Tabellendaten.reload()
+				oForm_Tabellendaten.last()
+				if iPos &lt; iMaxPos then
+					oForm_Tabellendaten.first()
+					SQL_Update_Pos_Zwischensumme_Pos_einfuegen()
+					SQL_Update_Pos_Zwischenbemerkung_Pos_einfuegen()
+					oForm_Bemerkungen.reload()
+					oForm_Zwischensummen.reload()
+					oForm_Tabellendaten.absolute(iRowNumber+1)
+				End if
+				SetDocUserProperty(&quot;oVorgang_cp&quot;, &quot;1&quot;)
+			End if
+		elseif iReset = 1 then
+	&apos;		sSQL2=&quot;SELECT &apos;&apos;&quot;
+	&apos;		oRecord1=oResult(sSQL2)
+			SetDocUserProperty(&quot;oLeistungsID_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oBestellnummer_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oLeistungsbezeichnung_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oLeistungsbeschreibung_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oEinheit_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMenge_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oEinkaufspreis_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oBauzeit_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oPos_TypID_cp&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oVorgang_cp&quot;, &quot;0&quot;)
+			oButton_Pos_kopieren.Label=&quot;Kopieren&quot;
+			oButton_Pos_kopieren.TextColor=16777215
+			oButton_Pos_kopieren.HelpText=&quot;Den aktuellen Datensatz kopieren.&quot;
+		End if
+	else
+		MsgBox(&quot;Sie haben noch keine Position ausgewählt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+Sub Pos_verschieben
+	Pos_verschieben_sub(0)
+End Sub
+
+Sub Pos_verschieben_loeschen
+	Pos_verschieben_sub(1)
+End Sub
+
+Sub Pos_verschieben_sub(iReset as Integer)
+	Dim iMaxPos as integer
+	Dim sLV_Pos_alt as String,sLV_Pos_neu as String
+	Dim oRecord1 as Object
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
+	Dim iPos as integer,iRowNumber as Integer,iCount_MAX as Integer
+	iPos=fPos_neu()
+	iRowNumber=oForm_Tabellendaten.getRow()
+	if iPos &gt; 0 OR iReset = 1 OR iVorgang_mv = 1 then
+		if iReset = 0 then
+			if iVorgang_mv = 0 then
+				sSQL1=&quot;SELECT LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,Einkaufspreis,Bauzeit,&quot;&amp;_
+					&quot;Minutenverrechnungssatz,Materialaufschlagsatz,Pos_TypID FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos=&quot;&amp; iPos
+				oRecord1=oResult(sSQL1)
+				While oRecord1.next()	
+					SetDocUserProperty(&quot;oLeistungsID_mv&quot;, oRecord1.getString(1))
+					SetDocUserProperty(&quot;oBestellnummer_mv&quot;, oRecord1.getString(2))
+					SetDocUserProperty(&quot;oLeistungsbezeichnung_mv&quot;, oRecord1.getString(3))
+					SetDocUserProperty(&quot;oLeistungsbeschreibung_mv&quot;, oRecord1.getString(4))
+					SetDocUserProperty(&quot;oEinheit_mv&quot;, oRecord1.getString(5))
+					SetDocUserProperty(&quot;oMenge_mv&quot;, oRecord1.getString(6))
+					SetDocUserProperty(&quot;oEinkaufspreis_mv&quot;, oRecord1.getString(7))
+					SetDocUserProperty(&quot;oBauzeit_mv&quot;, oRecord1.getString(8))
+					SetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;, oRecord1.getString(9))
+					SetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;, oRecord1.getString(10))
+					SetDocUserProperty(&quot;oPos_TypID_mv&quot;, oRecord1.getInt(11))
+				Wend
+				SetDocUserProperty(&quot;oVorgang_mv&quot;, &quot;1&quot;)
+				oButton_Pos_verschieben.Label=&quot;Einfügen&quot;
+				oButton_Pos_verschieben.TextColor=16711680
+				oButton_Pos_verschieben.HelpText=&quot;Den aktuellen Datensatz einfügen: &quot;&amp; sLeistungsbezeichnung_mv &amp;&quot;  &quot;
+				sSQL2=&quot;DELETE FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos=&quot;&amp; iPos
+				SQL_execute(sSQL2)
+				Zwischensummen_Pos_neu()
+				Bemerkung_Pos_neu()
+				SQL_PositionsID_entfernen()
+				SQL_Datensaetze_Tabelle2_entfernen()
+				SQL_Reset_AutoIncrement(sTabelle2)
+				SQL_Datensaetze_Tabelle2_einfuegen()
+				SQL_Arbeitstabelle_leeren()
+				SQL_Reset_AutoIncrement(sArbeitstabelle)
+				SQL_Pos_entfernen()
+				SQL_Arbeitstabelle_fuellen()
+				oForm_Tabellendaten.reload()
+				oForm_Tabellendaten.last()
+				iCount_MAX=fAnzahl_Datensaetze(sArbeitstabelle,lDocumentID)				
+				if iRowNumber &gt; iCount_MAX then
+					oForm_Tabellendaten.first()
+					oForm_Tabellendaten.absolute(iRowNumber-1)
+				else
+					oForm_Tabellendaten.first()
+					oForm_Tabellendaten.absolute(iRowNumber)
+				End if
+			elseif iVorgang_mv = 1 then
+				SetDocUserProperty(&quot;oPos_neu&quot;, fPos_neu)
+				iMaxPos=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
+				if iPos = iMaxPos then
+					sSQL3=&quot;SELECT LV_Pos FROM &quot;&amp; sArbeitstabelle &amp;_
+						&quot; WHERE Pos = &apos;&quot;&amp; iPos &amp;&quot;&apos;&quot;
+					iPos = iPos + 1
+				else
+					sSQL3=&quot;SELECT LV_Pos FROM &quot;&amp; sArbeitstabelle &amp;_
+						&quot; WHERE Pos = &apos;&quot;&amp; iPos - 1 &amp;&quot;&apos;&quot;
+					sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+						&quot; SET Pos=Pos+1 WHERE Pos+0 &gt;= &quot;&amp; iPos &amp;&quot; ORDER BY Pos DESC&quot;
+					SQL_execute(sSQL1)
+				End if
+				oRecord1=oResult(sSQL3)
+				While oRecord1.next()
+					sLV_Pos_alt= oRecord1.getString(1)
+				Wend
+				if sLV_Pos_alt &lt;&gt; &quot;&quot; AND sLV_Pos_alt &lt;&gt; &quot;0&quot; then
+					sLV_Pos_neu = fLV_Pos(sLV_Pos_alt)
+				else
+					sLV_Pos_neu = &quot;&quot;
+				End if
+				
+				sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
+					&quot;(Pos,LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,&quot;&amp;_
+					&quot;Einkaufspreis,Bauzeit,Minutenverrechnungssatz,Materialaufschlagsatz,Pos_TypID)&quot;&amp;_
+					&quot; VALUES (&quot;&amp; iPos &amp;&quot;,&apos;&quot;&amp; sLV_Pos_neu &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID_mv &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer_mv &amp;_
+					&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung_mv) &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung_mv) &amp;_
+					&quot;&apos;,&apos;&quot;&amp; sEinheit_mv &amp;&quot;&apos;,&quot;&amp; cMenge_mv &amp;&quot;,&quot;&amp; cEinkaufspreis_mv &amp;&quot;,&quot;&amp; cBauzeit_mv &amp;&quot;,&quot;&amp; cMinutenverechnungssatz_mv &amp;_
+					&quot;,&quot; &amp; cMaterialaufschlagsatz_mv &amp;&quot;,&quot;&amp; iPos_TypID_mv &amp;&quot;)&quot;
+				SQL_execute(sSQL2)
+				oForm_Tabellendaten.reload()
+				oForm_Tabellendaten.last()
+				if iPos &lt; iMaxPos then
+					oForm_Tabellendaten.first()
+					SQL_Update_Pos_Zwischensumme_Pos_einfuegen()
+					SQL_Update_Pos_Zwischenbemerkung_Pos_einfuegen()
+					oForm_Bemerkungen.reload()
+					oForm_Zwischensummen.reload()
+					oForm_Tabellendaten.absolute(iRowNumber)
+				End if
+				SetDocUserProperty(&quot;oVorgang_mv&quot;, &quot;1&quot;)
+			End if
+		elseif iReset = 1 then
+			SetDocUserProperty(&quot;oLeistungsID_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oBestellnummer_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oLeistungsbezeichnung_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oLeistungsbeschreibung_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oEinheit_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMenge_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oEinkaufspreis_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oBauzeit_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oPos_TypID_mv&quot;, &quot;&quot;)
+			SetDocUserProperty(&quot;oVorgang_mv&quot;, &quot;0&quot;)
+			oButton_Pos_verschieben.Label=&quot;Ausschneiden&quot;
+			oButton_Pos_verschieben.TextColor=16777215
+			oButton_Pos_verschieben.HelpText=&quot;Den aktuellen Datensatz ausschneiden.&quot;
+		End if
+	else
+		MsgBox(&quot;Sie haben noch keine Position ausgewählt!&quot;,48,sTitle_lokal)
+	End if
+End Sub
+
+</script:module>

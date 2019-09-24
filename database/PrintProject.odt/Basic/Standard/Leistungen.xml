@@ -1,0 +1,634 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Leistungen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+&apos;option explicit
+
+
+&apos;Global vViewCursor AS Variant
+
+Sub Leistungen()
+	Dim sPos AS String,iPos_TypID AS integer
+	Dim sLeistungsbezeichnung AS String,sLeistungsbeschreibung AS String,sEinheit AS String
+	Dim sMenge AS String,sLieferung AS String,sLeistung AS String,sEP AS String,sBestellnummer AS String
+	Dim sGP AS String,cGP AS Currency,cUebertrag AS Currency,sUebertrag AS String
+	Dim iPosLeistung AS Integer,iPosZwiSum AS Integer,iPosZwiBem AS Integer,iPosTypID AS Integer
+	Dim iCountLeistung AS Integer,iCountZwiSum AS Integer,iCountZwiBem AS Integer,iCountInsert AS Integer,iCountInsertCarry AS Integer
+	Dim iSelectLeistung AS Integer,iSelectZwiSum AS Integer,iSelectZwiBem AS Integer
+	Dim iInsertCarry AS Integer,sPosTyp AS String
+	Dim sZwiSumName AS String,sZwiSum AS String,sLeistungstext AS String,sBemerkung AS String
+	Dim oCursorZwiSum AS Object,oCursorZwiBem AS Object,oCursorAltPos AS Object
+	Dim oCursorDocTyp1 AS Object,oCursorDocTyp2 AS Object
+	Dim oRangeAltPos AS Object,oRangeZwiSum AS Object
+	Dim vColumns AS Variant,vColumnPos AS Variant
+	Dim iPageCountBefore AS Integer,iPageCountCarry AS Integer
+	Dim iPageNumber AS Integer
+	Dim iEP_Ueberschrift AS integer
+	Dim oTables AS Object
+	Dim vTableKopf1 AS Variant,vTableKopf2 AS Variant
+	Dim vTableLeistungen AS Variant,vRowsLeistungen AS Variant
+	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+	Dim sTabZwiSum AS String,sTabZwiBem AS String
+	Dim iAnzahlLeistungen AS integer,iAnzahlZwiSum AS integer,iAnzahlZwiBem AS integer,iAnzahlAltPos AS integer
+	Dim oRecordLeistungen AS Object,oRecordZwiSum AS Object,oRecordZwiBem AS Object
+	Dim oStyleFamilies AS Object,oPageStyles AS Object,oPageStyle_1 AS Object,oPageStyle_2 AS Object
+	Dim afsInsertCarryReturn(1) AS String
+	Dim vViewCursor AS Variant
+	Dim iAZ AS Integer
+	
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
+	oTables = oDoc.getTextTables
+	vTableLeistungen = oTables.getByName(&quot;Leistungen&quot;)
+	vRowsLeistungen = vTableLeistungen.getRows()
+	vViewCursor = oDoc.CurrentController.getViewCursor()
+	oStyleFamilies= oDoc.getStyleFamilies()
+	oPageStyles = oStyleFamilies.getByName(&quot;PageStyles&quot;)
+	oPageStyle_1 = oPageStyles.getByName(&quot;Erste Seite&quot;)
+	oPageStyle_2 = oPageStyles.getByName(&quot;Standard&quot;)
+	iEP_Ueberschrift = 0
+	iAZ=0
+
+	SELECT case iDocument_TypID
+		case 1
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiSuAngebote_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiBemAngebote_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiSum = &quot;ZwiSuAngebote&quot;
+				sTabZwiBem = &quot;ZwiBemAngebote&quot;
+			else
+				sTabZwiSum = &quot;ZwiSuAngebote_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiBem = &quot;ZwiBemAngebote_&quot;&amp; iEinstellungsID_lokal
+			end if
+			iAnzahlZwiSum = fAnzahlDatensaetze(sTabZwiSum,lDocumentID)
+		case 2
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiSuAuftragsbestaetigungen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiBemAuftragsbestaetigungen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiSum = &quot;ZwiSuAuftragsbestaetigungen&quot;
+				sTabZwiBem = &quot;ZwiBemAuftragsbestaetigungen&quot;
+			else
+				sTabZwiSum = &quot;ZwiSuAuftragsbestaetigungen_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiBem = &quot;ZwiBemAuftragsbestaetigungen_&quot;&amp; iEinstellungsID_lokal
+			end if
+			iAnzahlZwiSum = fAnzahlDatensaetze(sTabZwiSum,lDocumentID)
+		case 3
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemLieferscheine_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiSuLieferscheine_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemLieferscheine&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemLieferscheine_&quot;&amp; iEinstellungsID_lokal
+			end if
+			if ifPrintPreis = 0 then
+				iAnzahlZwiSum = 0
+			elseif ifPrintPreis = 1 then
+				if iEinstellungsID_lokal=1 _ 
+					or InStr(fsTableList,&quot;;ZwiBemLieferscheine_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+					or InStr(fsTableList,&quot;;ZwiSuLieferscheine_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				then
+					sTabZwiSum = &quot;ZwiSuLieferscheine&quot;
+				else
+					sTabZwiSum = &quot;ZwiSuLieferscheine_&quot;&amp; iEinstellungsID_lokal
+				end if
+				iAnzahlZwiSum = fAnzahlDatensaetze(sTabZwiSum,lDocumentID)
+			End if		
+		case 4
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemAufmasze_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiSuAufmasze_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemAufmasze&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemAufmasze_&quot;&amp; iEinstellungsID_lokal
+			end if
+			if ifPrintPreis = 0 then
+				iAnzahlZwiSum = 0
+			elseif ifPrintPreis = 1 then
+				if iEinstellungsID_lokal=1 _ 
+					or InStr(fsTableList,&quot;;ZwiBemAufmasze_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+					or InStr(fsTableList,&quot;;ZwiSuAufmasze_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				then
+					sTabZwiSum = &quot;ZwiSuAufmasze&quot;
+				else
+					sTabZwiSum = &quot;ZwiSuAufmasze_&quot;&amp; iEinstellungsID_lokal
+				end if
+				iAnzahlZwiSum = fAnzahlDatensaetze(sTabZwiSum,lDocumentID)
+			End if		
+		case 5
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiSuRechnungen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiBemRechnungen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiSum = &quot;ZwiSuRechnungen&quot;
+				sTabZwiBem = &quot;ZwiBemRechnungen&quot;
+			else
+				sTabZwiSum = &quot;ZwiSuRechnungen_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiBem = &quot;ZwiBemRechnungen_&quot;&amp; iEinstellungsID_lokal
+			end if
+			iAnzahlZwiSum = fAnzahlDatensaetze(sTabZwiSum,lDocumentID)
+		case 6
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiSuGutschriften_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+				or InStr(fsTableList,&quot;;ZwiBemGutschriften_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiSum = &quot;ZwiSuGutschriften&quot;
+				sTabZwiBem = &quot;ZwiBemGutschriften&quot;
+			else
+				sTabZwiSum = &quot;ZwiSuGutschriften_&quot;&amp; iEinstellungsID_lokal
+				sTabZwiBem = &quot;ZwiBemGutschriften_&quot;&amp; iEinstellungsID_lokal
+			end if
+			iAnzahlZwiSum = fAnzahlDatensaetze(sTabZwiSum,lDocumentID)
+		case 7
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemPreisanfragen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemPreisanfragen&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemPreisanfragen_&quot;&amp; iEinstellungsID_lokal
+			end if
+			iAnzahlZwiSum = 0
+		case 8
+			if iEinstellungsID_lokal=1 _ 
+				or InStr(fsTableList,&quot;;ZwiBemBestellungen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
+			then
+				sTabZwiBem = &quot;ZwiBemBestellungen&quot;
+			else
+				sTabZwiBem = &quot;ZwiBemBestellungen_&quot;&amp; iEinstellungsID_lokal
+			end if
+			iAnzahlZwiSum = 0
+	End SELECT		
+	
+	iAnzahlLeistungen = fAnzahlDatensaetze(sDrucker2_TEMP(iUserID_lokal),lDocumentID)
+	
+	&apos;if iAnzahlLeistungen &gt; 0 then
+		iAnzahlZwiBem = fAnzahlDatensaetze(sTabZwiBem,lDocumentID)
+	&apos;else
+	&apos;	iAnzahlZwiBem = 0
+	&apos;End if
+	
+	iAnzahlAltPos = fAnzahlDatensaetzeAltPos(iUserID_lokal)
+	
+	if iAnzahlLeistungen &gt; 0 then
+	sSQL1=&quot;SELECT DISTINCT t1.PosID,t1.Pos,t1.Pos_TypID,t1.Bestellnummer,t2.Pos_Typ,t1.Leistungsbezeichnung,&quot;&amp;_
+		&quot;t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Lieferung,t1.Leistung,t1.EP,t1.GP,t1.GP&quot;&amp;_
+		&quot; FROM &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; AS t1,Pos_Typ AS t2&quot;&amp;_
+		&quot; WHERE t2.Pos_TypID=t1.Pos_TypID ORDER BY t1.PosID ASC&quot;
+	End if
+	
+	if iAnzahlZwiSum &gt; 0 then
+	sSQL2=&quot;SELECT DISTINCT Pos,ZwiSuName,Zwischensumme &quot;&amp;_
+		&quot;FROM &quot;&amp; sTabZwiSum &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC&quot;
+	End if
+	
+	if iAnzahlZwiBem &gt; 0 then
+	sSQL3=&quot;SELECT DISTINCT Pos,Bemerkung &quot;&amp;_
+		&quot;FROM &quot;&amp; sTabZwiBem &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC, ZwiBemID ASC&quot;
+	End if
+	
+	iCountZwiSum = 1
+	iCountZwiBem = 1
+	iCountLeistung = 1
+	iCountinsert = 2
+	iCountInsertCarry = 0
+	iPageCountCarry = 0
+	iSelectZwiBem = 1
+	iSelectZwiSum = 1
+	iSelectLeistung = 1
+	cUebertrag = 0
+	
+	if iDocument_TypID &gt; 6 or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 0) then
+		vTableLeistungen.getCellByName(&quot;E1&quot;).String=&quot;&quot;
+		vTableLeistungen.getCellByName(&quot;F1&quot;).String=&quot;&quot;
+	End if
+	
+		
+	Do While iAnzahlZwiSum &gt;= iCountZwiSum _
+		or iAnzahlZwiBem &gt;= iCountZwiBem _
+		or iAnzahlLeistungen &gt;= iCountLeistung
+	
+		if iSelectZwiBem = 1 then
+			if iAnzahlZwiBem &gt;= iCountZwiBem then
+				oRecordZwiBem=oResult_ZwiBem(sSQL3)
+				oRecordZwiBem.absolute(iCountZwiBem)
+				iPosZwiBem = oRecordZwiBem.getLong(1)
+				sBemerkung = oRecordZwiBem.getString(2)
+				iSelectZwiBem = 0
+			else
+				iSelectZwiBem = 0
+				iPosZwiBem = 9999
+			End if
+		End if
+	
+		if iSelectZwiSum = 1 then
+			if iAnzahlZwiSum &gt;= iCountZwiSum then
+				oRecordZwiSum=oResult_ZwiSum(sSQL2)
+				oRecordZwiSum.absolute(iCountZwiSum)
+				iPosZwiSum = oRecordZwiSum.getLong(1)
+				sZwiSumName = oRecordZwiSum.getString(2)
+				sZwiSum = oRecordZwiSum.getString(3)
+				iSelectZwiSum = 0
+			else
+				iSelectZwiSum = 0
+				iPosZwiSum = 9999
+			End if
+		End if
+	
+		if iSelectLeistung = 1 then
+			if iAnzahlLeistungen &gt;= iCountLeistung then
+				oRecordLeistungen=oResult_Leistungen(sSQL1)
+				oRecordLeistungen.absolute(iCountLeistung)
+				iPosLeistung = oRecordLeistungen.getLong(1)
+				sPos = oRecordLeistungen.getString(2)
+				iPosTypID = oRecordLeistungen.getString(3)
+				sBestellnummer = oRecordLeistungen.getString(4)
+				sPosTyp = oRecordLeistungen.getString(5)
+				sLeistungsbezeichnung = oRecordLeistungen.getString(6)
+				sLeistungsbeschreibung = oRecordLeistungen.getString(7)
+				sEinheit = oRecordLeistungen.getString(8)
+				sMenge = oRecordLeistungen.getString(9)
+				sLieferung = oRecordLeistungen.getString(10)
+				sLeistung = oRecordLeistungen.getString(11)
+				sEP = oRecordLeistungen.getString(12)
+				sGP = oRecordLeistungen.getString(13)
+				cGP = CCur(oRecordLeistungen.getFloat(14))
+				iSelectLeistung = 0
+			else
+				iSelectLeistung = 0
+				iPosLeistung = 9999
+			End if	
+		End if
+		
+		if iPosZwiBem &gt; 0 _
+			AND iPosZwiBem &lt;= iPosZwiSum _
+			AND iPosZwiBem &lt;= iPosLeistung _
+		then
+	&apos;Bemerkung einfügen
+	
+			if iPageCountCarry = 0 then
+				iPageCountBefore=1
+			else
+				iPageCountBefore=iPageCountCarry
+			end if
+	
+			vRowsLeistungen.insertByIndex(iCountInsert,1)
+			vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
+			oCursorZwiBem=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
+			oCursorZwiBem.CharWeight=com.sun.star.awt.FontWeight.BOLD
+			vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=sBemerkung
+			vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).TopBorderDistance=100
+			if iDocument_TypID &lt; 7 AND iDocument_TypID &lt;&gt; 3 AND iDocument_TypID &lt;&gt; 4 then
+	
+				afsInsertCarryReturn=Split(fsInsertCarry(iPageCountBefore,iCountInsert,0),&quot;;&quot;)
+				iInsertCarry = CInt(Trim(afsInsertCarryReturn(0))
+				iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1))
+	
+				if iInsertCarry = 0 then
+					iCountInsert=iCountInsert + 1
+					iSelectZwiBem = 1
+				elseif iInsertCarry = 1 then
+					sUebertrag = fTausenderpunkt(fZahlMitPunkt(Left((CStr(cUebertrag)),Len(CStr(cUebertrag))-2)))
+					if iCountLeistung &gt; 1 then
+						iCountInsert=fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,0) + 1
+					else
+						iCountInsert = iCountInsert + 1
+					end if
+					iSelectZwiBem = 1
+				End if
+			Else
+				iCountInsert=iCountInsert + 1
+				iSelectZwiBem = 1
+			End if
+			iCountZwiBem=iCountZwiBem + 1
+		elseif iPosZwiBem = 0 then
+			iCountZwiBem=iCountZwiBem + 1
+			iSelectZwiBem = 1
+		elseif iPosZwiSum &gt; 0 AND iPosZwiSum &lt; iPosZwiBem AND iPosZwiSum &lt; iPosLeistung then
+			if iDocument_TypID &lt; 3 _
+				or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 1) _
+				or (iDocument_TypID &lt; 7 AND iDocument_TypID &gt; 4) _
+			then
+	&apos; Zwischensumme einfügen
+	
+				if iPageCountCarry = 0 then
+					iPageCountBefore=1
+				else
+					iPageCountBefore=iPageCountCarry
+				end if
+		
+				vRowsLeistungen.insertByIndex(iCountInsert,1)
+				vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
+				oCursorZwiSum=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
+				oCursorZwiSum.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				oCursorZwiSum.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+				oCursorZwiSum=vTableLeistungen.createCursorByCellName(&quot;D&quot; &amp; iCountInsert)
+				oCursorZwiSum.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				oCursorZwiSum.paraAdjust = com.sun.star.style.ParagraphAdjust.LEFT
+				vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=&quot;Zwischensumme: &quot; &amp; sZwiSumName
+				vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sZwiSum))
+				vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).BottomBorderDistance=100
+				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).LeftBorderDistance=0
+				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).RightBorderDistance=0
+	
+				afsInsertCarryReturn=Split(fsInsertCarry(iPageCountBefore,iCountInsert,0),&quot;;&quot;)
+				iInsertCarry = CInt(Trim(afsInsertCarryReturn(0))
+				iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1))
+	
+				if iInsertCarry = 0 then
+					iCountInsert=iCountInsert + 1
+					iCountZwiSum=iCountZwiSum + 1
+					iSelectZwiSum = 1
+				elseif iInsertCarry = 1 then
+					sUebertrag = fTausenderpunkt(fZahlMitPunkt(Left((CStr(cUebertrag)),Len(CStr(cUebertrag))-2)))
+					if iCountLeistung &gt; 1 then
+						iCountInsert=fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,0) + 1
+					else
+						iCountInsert = iCountInsert + 1
+					end if
+					iCountZwiSum=iCountZwiSum + 1
+					iSelectZwiSum = 1
+				End if
+			End if
+		elseif iPosZwiSum = 0 then
+			iCountZwiSum=iCountZwiSum + 1
+			iSelectZwiSum = 1
+		elseif iPosLeistung &gt; 0 AND iPosLeistung &lt;= iPosZwiSum  AND iPosLeistung &lt; iPosZwiBem then
+	&apos; Leistung einfügen
+	
+			if iPosTypID = 4 AND iAZ = 0 then
+				vRowsLeistungen.insertByIndex(iCountInsert,1)
+				vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
+				Dim oBorderLine AS New com.sun.star.table.BorderLine
+					oBorderLine.Color=1
+					oBorderLine.OuterLineWidth=2
+					oBorderLine.InnerLineWidth=2
+				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).BottomBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorderDistance=80
+				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).BottomBorderDistance=80
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;A&quot; &amp; iCountInsert)
+				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).TopBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).BottomBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).TopBorderDistance=80
+				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).BottomBorderDistance=80
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
+				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.LEFT
+				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).TopBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).BottomBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).TopBorderDistance=80
+				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).BottomBorderDistance=80
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;C&quot; &amp; iCountInsert)
+				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).TopBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).BottomBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).TopBorderDistance=80
+				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).BottomBorderDistance=80
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;D&quot; &amp; iCountInsert)
+				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).TopBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).BottomBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).TopBorderDistance=80
+				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).BottomBorderDistance=80
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;E&quot; &amp; iCountInsert)
+				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).TopBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).BottomBorder=oBorderLine
+				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).TopBorderDistance=80
+				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).BottomBorderDistance=80
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
+				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+				vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=&quot;Abschlagsrechnungen&quot;
+				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).LeftBorderDistance=0
+				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).RightBorderDistance=0
+				vTableLeistungen.getCellByName(&quot;C&quot; &amp; iCountInsert).String=&quot;ohne MwSt&quot;
+				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).LeftBorderDistance=0
+				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).RightBorderDistance=0
+				vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=&quot;MwSt&quot;
+				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).LeftBorderDistance=0
+				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).RightBorderDistance=0
+				vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=&quot;mit MwSt&quot;
+				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).LeftBorderDistance=0
+				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).RightBorderDistance=0
+				iAZ = 1
+				iCountInsert=iCountInsert+1
+			elseif iPosTypID &lt; 4 then
+				iAZ = 0
+			End if
+			
+			if iPageCountCarry = 0 then
+				iPageCountBefore=1
+			else
+				iPageCountBefore=iPageCountCarry
+			end if
+	
+			sLeistungstext=&quot;&quot;
+			if ifBestellnummer = 1 AND sBestellnummer &lt;&gt; &quot;&quot; then
+				sLeistungstext = sBestellnummer &amp; Chr(10)
+			End if
+			if ifLeistungsbezeichnung = 1 AND sLeistungsbezeichnung &lt;&gt; &quot;&quot; then
+				sLeistungstext = sLeistungstext &amp; sLeistungsbezeichnung
+			End if
+			if ifLeistungsbeschreibung = 1 then
+				if sLeistungsbeschreibung = &quot;&quot; AND ifLeistungsbezeichnung = 0 then
+					if sLeistungstext = &quot;&quot; then
+						sLeistungstext = sLeistungsbezeichnung
+					else
+						sLeistungstext = sLeistungstext &amp; Chr(10) &amp; sLeistungsbezeichnung
+					End if
+				elseif sLeistungsbeschreibung &lt;&gt; &quot;&quot; then
+					if sLeistungstext = &quot;&quot; then
+						sLeistungstext = sLeistungsbeschreibung
+					else
+						sLeistungstext = sLeistungstext &amp; Chr(10) &amp; sLeistungsbeschreibung
+					End if
+				End if
+			End if
+			if ifLiefuLeist = 1 then
+				sLeistungstext = sLeistungstext &amp; Chr(10) &amp;_
+				&quot;Lieferung: &quot; &amp; fTausenderpunkt(fZahlMitPunkt(sLieferung)) &amp; Chr(9) &amp;_
+				&quot;Leistung: &quot; &amp; fTausenderpunkt(fZahlMitPunkt(sLeistung))
+			End if
+	
+			vRowsLeistungen.insertByIndex(iCountInsert,1)
+			vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
+	
+			if iPosTypID &gt; 1 AND iPosTypID &lt; 4 then
+				sLeistungstext = sPosTyp &amp; Chr(10) &amp; sLeistungstext
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;A&quot; &amp; iCountInsert)
+				oCursorAltPos.CharPosture = com.sun.star.awt.FontSlant.ITALIC
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
+				oCursorAltPos.CharPosture = com.sun.star.awt.FontSlant.ITALIC
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;C&quot; &amp; iCountInsert)
+				oCursorAltPos.CharPosture = com.sun.star.awt.FontSlant.ITALIC
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;D&quot; &amp; iCountInsert)
+				oCursorAltPos.CharPosture = com.sun.star.awt.FontSlant.ITALIC
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;E&quot; &amp; iCountInsert)
+				oCursorAltPos.CharPosture = com.sun.star.awt.FontSlant.ITALIC
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
+				oCursorAltPos.CharPosture = com.sun.star.awt.FontSlant.ITALIC
+			elseif iPosTypID = 4 then
+	&apos;			sLeistungstext = sPosTyp &amp; Chr(10) &amp; sLeistungstext
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;A&quot; &amp; iCountInsert)
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
+	&apos;			oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).TopBorderDistance=100
+				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).BottomBorderDistance=100
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;C&quot; &amp; iCountInsert)
+	&apos;			oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;D&quot; &amp; iCountInsert)
+	&apos;			oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;E&quot; &amp; iCountInsert)
+	&apos;			oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
+				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
+				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+			End if
+	
+			if iPosTypID &lt; 4 then
+				vTableLeistungen.getCellByName(&quot;A&quot; &amp; iCountInsert).String=sPos
+				vTableLeistungen.getCellByName(&quot;C&quot; &amp; iCountInsert).String=sEinheit
+			End if
+	
+			vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=sLeistungstext
+	
+			if iPosTypID &lt; 4 then
+				if sMenge &lt;&gt; &quot;&quot; then
+					vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sMenge))
+				End if
+			else
+				vTableLeistungen.getCellByName(&quot;C&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sEP))
+			End if
+	
+			if iDocument_TypID = 8 then
+				if sEP &lt;&gt; &quot;&quot; then
+					if iEP_Ueberschrift = 0 then
+						vTableLeistungen.getCellByName(&quot;E1&quot;).String=&quot;EP in €&quot;
+						iEP_Ueberschrift = 1
+					End if
+					if iPosTypID &lt; 4 then
+						vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sEP))
+					else
+						vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sLeistung))
+					End if
+					
+					if iDocument_TypID = 2 then
+						if sGP &lt;&gt; &quot;&quot; then
+							if iPosTypID = 1 then
+								vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sGP))
+							elseif iPosTypID = 4 then
+								vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sGP))
+							elseif iPosTypID &gt; 1  AND iPosTypID &lt; 4 then
+								vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=&quot;(&quot; &amp; fTausenderpunkt(fZahlMitPunkt(sGP)) &amp; &quot;)&quot;
+							End if
+						End if
+					End if
+				End if
+			elseif iDocument_TypID &lt; 3 _
+				or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 1) _
+				or (iDocument_TypID &lt; 7 AND iDocument_TypID &gt; 4) _
+			then
+				if iPosTypID &lt; 4 then
+					vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sEP))
+				else
+					vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sLeistung))
+				End if
+				if iPosTypID = 1 then
+					vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sGP))
+				elseif iPosTypID = 4 then
+					vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sGP))
+				elseif iPosTypID &gt; 1  AND iPosTypID &lt; 4 then
+					vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=&quot;(&quot; &amp; fTausenderpunkt(fZahlMitPunkt(sGP)) &amp; &quot;)&quot;
+				End if
+			End if
+			
+			if iDocument_TypID &lt; 3 _
+				or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 1) _
+				or (iDocument_TypID &lt; 7 AND iDocument_TypID &gt; 4) _
+			then
+	
+				afsInsertCarryReturn=Split(fsInsertCarry(iPageCountBefore,iCountInsert,0),&quot;;&quot;)
+				iInsertCarry = CInt(Trim(afsInsertCarryReturn(0))
+				iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1))
+				
+				if iInsertCarry = 0 then
+					iCountInsert=iCountInsert + 1
+					iSelectLeistung = 1
+					if iPosTypID = 1 then
+						cUebertrag = cUebertrag	+ cGP
+						iCountInsertCarry = iCountInsert
+					End if
+				elseif iInsertCarry = 1 then
+					sUebertrag = fTausenderpunkt(fZahlMitPunkt(Left((CStr(cUebertrag)),Len(CStr(cUebertrag))-2)))
+					if iCountLeistung &gt; 1 then
+						iCountInsert=fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,0) + 1
+					else
+						iCountInsert = iCountInsert + 1
+					End if
+					if iPosTypID = 1 then
+						cUebertrag = cUebertrag	+ cGP
+						iCountInsertCarry = iCountInsert
+					End if
+					iSelectLeistung = 1
+				End if
+			Else		
+				iCountInsert=iCountInsert + 1
+				iSelectLeistung = 1
+			End if	
+			iCountLeistung=iCountLeistung + 1		
+		End if
+	
+	Loop
+
+&apos;	vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
+	vRowsLeistungen.removeByIndex(iCountInsert-1,1)
+	iCountInsert = iCountInsert-1
+	if iAnzahlLeistungen &gt; 1 then
+		afsInsertCarryReturn=Split(fsInsertCarry(iPageCountBefore,iCountInsert,1),&quot;;&quot;)
+		iInsertCarry = CInt(Trim(afsInsertCarryReturn(0))
+		iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1))
+		
+		if iDocument_TypID &lt; 3 _
+			or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 1) _
+			or (iDocument_TypID &lt; 7 AND iDocument_TypID &gt; 4) _
+		then
+			if fiPageCount &gt; iPageCountCarry AND iInsertCarry = 1 then
+	 			if iCountInsertCarry = iCountInsert+1 then
+	 				cUebertrag=cUebertrag-cGP
+	 			End if
+				sUebertrag = fTausenderpunkt(fZahlMitPunkt(Left((CStr(cUebertrag)),Len(CStr(cUebertrag))-2)))
+				fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,1)
+			End if
+		End if
+	End if
+	
+	if iPrint_Typ = 1 then
+		vTableKopf1 = oTables.getByName(&quot;Kopf1&quot;)
+		oCursorDocTyp1 = vTableKopf1.createCursorByCellName(&quot;A1.1.2&quot;)
+		oCursorDocTyp1.gotoEnd(true) 
+		oCursorDocTyp1.CharContoured = False
+	
+		vTableKopf2 = oTables.getByName(&quot;Kopf2&quot;)
+		oCursorDocTyp2 = vTableKopf2.createCursorByCellName(&quot;A1.1.2&quot;)
+		oCursorDocTyp2.gotoEnd(true) 
+		oCursorDocTyp2.CharContoured = False
+	End if
+	vViewCursor.jumpToLastPage()
+	vViewCursor.jumpToEndOfPage()
+End Sub
+
+
+</script:module>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="0" dlg:id="Scanner" dlg:left="110" dlg:top="80" dlg:width="150" dlg:height="190" dlg:closeable="true" dlg:moveable="true" dlg:title="Scanner">
+ <dlg:styles>
+  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff"/>
+  <dlg:style dlg:style-id="1" dlg:background-color="0x99ccff" dlg:border="simple" dlg:font-name="Standard" dlg:font-stylename="Fett" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="2" dlg:border="simple"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0x99ccff" dlg:font-height="11" dlg:font-weight="150"/>
+ </dlg:styles>
+ <dlg:bulletinboard>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="0" dlg:id="Option_Color" dlg:tab-index="0" dlg:left="15" dlg:top="18" dlg:width="50" dlg:height="10" dlg:value="Color" dlg:checked="true"/>
+   <dlg:radio dlg:style-id="0" dlg:id="Option_Grayscale" dlg:tab-index="1" dlg:left="15" dlg:top="28" dlg:width="50" dlg:height="10" dlg:value="Grayscale"/>
+   <dlg:radio dlg:style-id="0" dlg:id="Option_Lineart" dlg:tab-index="2" dlg:left="15" dlg:top="38" dlg:width="50" dlg:height="10" dlg:value="Lineart"/>
+  </dlg:radiogroup>
+  <dlg:titledbox dlg:id="Frame_Scan_Modus" dlg:tab-index="3" dlg:left="10" dlg:top="8" dlg:width="60" dlg:height="45">
+   <dlg:title dlg:value="Scan-Modus"/>
+  </dlg:titledbox>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="0" dlg:id="Option_Front" dlg:tab-index="5" dlg:left="83" dlg:top="18" dlg:width="50" dlg:height="10" dlg:value="Front" dlg:checked="true"/>
+   <dlg:radio dlg:style-id="0" dlg:id="Option_Duplex" dlg:tab-index="6" dlg:left="83" dlg:top="28" dlg:width="50" dlg:height="10" dlg:value="Duplex"/>
+   <dlg:radio dlg:style-id="0" dlg:id="Option_Back" dlg:tab-index="7" dlg:left="83" dlg:top="38" dlg:width="50" dlg:height="10" dlg:value="Back"/>
+  </dlg:radiogroup>
+  <dlg:titledbox dlg:id="Frame_Source" dlg:tab-index="8" dlg:left="78" dlg:top="8" dlg:width="60" dlg:height="45">
+   <dlg:title dlg:value="Scan-Source"/>
+  </dlg:titledbox>
+  <dlg:radiogroup>
+   <dlg:radio dlg:style-id="0" dlg:id="Option_Custom" dlg:tab-index="12" dlg:left="15" dlg:top="108" dlg:width="35" dlg:height="10" dlg:value="Custom"/>
+   <dlg:radio dlg:style-id="0" dlg:id="Option_A4" dlg:tab-index="9" dlg:left="15" dlg:top="78" dlg:width="35" dlg:height="10" dlg:value="DIN A4" dlg:checked="true"/>
+   <dlg:radio dlg:style-id="0" dlg:id="Option_A5" dlg:tab-index="10" dlg:left="15" dlg:top="88" dlg:width="35" dlg:height="10" dlg:value="DIN A5"/>
+   <dlg:radio dlg:style-id="0" dlg:id="Option_A6" dlg:tab-index="11" dlg:left="15" dlg:top="98" dlg:width="35" dlg:height="10" dlg:value="DIN A6"/>
+  </dlg:radiogroup>
+  <dlg:numericfield dlg:id="NumericField2" dlg:tab-index="14" dlg:left="162" dlg:top="89" dlg:width="0" dlg:height="2"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label_Width" dlg:tab-index="16" dlg:left="60" dlg:top="97" dlg:width="30" dlg:height="8" dlg:value="Width" dlg:align="center"/>
+  <dlg:text dlg:style-id="0" dlg:id="Label_Height" dlg:tab-index="17" dlg:left="100" dlg:top="97" dlg:width="30" dlg:height="8" dlg:value="Height" dlg:align="center"/>
+  <dlg:titledbox dlg:id="Frame_Format" dlg:tab-index="18" dlg:left="10" dlg:top="66" dlg:width="129" dlg:height="57">
+   <dlg:title dlg:value="Scan-Format"/>
+  </dlg:titledbox>
+  <dlg:text dlg:style-id="0" dlg:id="Label_Resolution" dlg:tab-index="19" dlg:left="60" dlg:top="79" dlg:width="40" dlg:height="8" dlg:value="Resolution: " dlg:align="right"/>
+  <dlg:fixedline dlg:id="FixedLine1" dlg:tab-index="22" dlg:left="47" dlg:top="78" dlg:width="5" dlg:height="25" dlg:align="vertical"/>
+  <dlg:fixedline dlg:id="FixedLine2" dlg:tab-index="23" dlg:left="60" dlg:top="91" dlg:width="70" dlg:height="5"/>
+  <dlg:progressmeter dlg:style-id="1" dlg:id="Progress_Scanner" dlg:tab-index="24" dlg:left="0" dlg:top="180" dlg:width="150" dlg:height="10" dlg:value="0"/>
+  <dlg:numericfield dlg:style-id="2" dlg:id="Field_Heigth" dlg:tab-index="15" dlg:left="100" dlg:top="106" dlg:width="30" dlg:height="10" dlg:decimal-accuracy="0" dlg:value="0" dlg:value-min="0" dlg:value-max="400" dlg:spin="true"/>
+  <dlg:numericfield dlg:style-id="2" dlg:id="Field_Resolution" dlg:tab-index="4" dlg:left="100" dlg:top="78" dlg:width="29" dlg:height="10" dlg:decimal-accuracy="0" dlg:value="300" dlg:value-min="0" dlg:value-max="1200" dlg:spin="true"/>
+  <dlg:numericfield dlg:style-id="2" dlg:id="Field_Width" dlg:tab-index="13" dlg:left="60" dlg:top="106" dlg:width="30" dlg:height="10" dlg:decimal-accuracy="0" dlg:value="0" dlg:value-min="0" dlg:value-max="215" dlg:spin="true"/>
+  <dlg:button dlg:style-id="1" dlg:id="Button_Scannen" dlg:tab-index="20" dlg:left="10" dlg:top="136" dlg:width="50" dlg:height="17" dlg:value="Scannen">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:ALADIN.Scanner.Scannen?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+  <dlg:button dlg:style-id="1" dlg:id="Button_Exit" dlg:tab-index="21" dlg:left="104" dlg:top="136" dlg:width="35" dlg:height="17" dlg:value="Schließen" dlg:button-type="cancel"/>
+  <dlg:text dlg:style-id="3" dlg:id="Field_Status" dlg:tab-index="25" dlg:left="5" dlg:top="165" dlg:width="140" dlg:height="15" dlg:value="Scanner" dlg:align="center"/>
+  <dlg:button dlg:style-id="1" dlg:id="Button_Loeschen" dlg:tab-index="26" dlg:left="65" dlg:top="136" dlg:width="35" dlg:height="17" dlg:value="Löschen">
+   <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:ALADIN.Scanner.ScanDocument_loeschen?language=Basic&amp;location=application" script:language="Script"/>
+  </dlg:button>
+ </dlg:bulletinboard>
+</dlg:window>

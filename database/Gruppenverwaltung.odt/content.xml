@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:officeooo="http://openoffice.org/2009/office" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2">
+  <office:scripts>
+    <office:event-listeners>
+      <script:event-listener script:language="ooo:script" script:event-name="dom:load" xlink:href="vnd.sun.star.script:Standard.Routinen.Start_Leistungsgruppen?language=Basic&amp;location=document" xlink:type="simple"/>
+      <script:event-listener script:language="ooo:script" script:event-name="office:prepare-unload" xlink:href="vnd.sun.star.script:Standard.Routinen.Maske_schliessen?language=Basic&amp;location=document" xlink:type="simple"/>
+    </office:event-listeners>
+  </office:scripts>
+  <office:font-face-decls>
+    <style:font-face style:name="Arial1" svg:font-family="Arial, Helvetica"/>
+    <style:font-face style:name="Arial2" svg:font-family="Arial" style:font-adornments="Standard" style:font-family-generic="swiss"/>
+    <style:font-face style:name="Bitstream Vera Sans" svg:font-family="'Bitstream Vera Sans'" style:font-pitch="variable"/>
+    <style:font-face style:name="Lucidasans" svg:font-family="Lucidasans" style:font-pitch="variable"/>
+    <style:font-face style:name="Times New Roman" svg:font-family="'Times New Roman'" style:font-family-generic="roman" style:font-pitch="variable"/>
+    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-adornments="Standard" style:font-family-generic="swiss" style:font-pitch="variable"/>
+  </office:font-face-decls>
+  <office:automatic-styles>
+    <style:style style:name="P1" style:family="paragraph">
+      <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial2" fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P2" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="start"/>
+      <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial" fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P3" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="start"/>
+      <style:text-properties fo:color="#4c4c4c" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="P4" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="center"/>
+      <style:text-properties fo:color="#ffffff" style:font-name="Arial2" fo:font-size="14pt" fo:font-style="normal" fo:font-weight="normal"/>
+    </style:style>
+    <style:style style:name="gr1" style:family="graphic">
+      <style:graphic-properties style:protect="position size" style:run-through="foreground" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page" draw:wrap-influence-on-position="once-concurrent" style:flow-with-text="false"/>
+    </style:style>
+    <style:style style:name="gr2" style:family="graphic">
+      <style:graphic-properties fo:border="solid #000000" style:protect="position size"/>
+    </style:style>
+    <style:style style:name="gr3" style:family="graphic">
+      <style:graphic-properties style:protect="position size" style:run-through="foreground"/>
+    </style:style>
+    <style:style style:name="gr4" style:family="graphic">
+      <style:graphic-properties fo:background-color="#ffffff" fo:border="solid #000000"/>
+    </style:style>
+    <style:style style:name="gr5" style:family="graphic">
+      <style:graphic-properties fo:background-color="#99ccff" fo:border="solid #000000"/>
+    </style:style>
+    <style:style style:name="gr6" style:family="graphic">
+      <style:graphic-properties fo:background-color="#00b8ff" style:protect="position size"/>
+    </style:style>
+  </office:automatic-styles>
+  <office:body>
+    <office:text>
+      <office:forms form:automatic-focus="false" form:apply-design-mode="false">
+        <form:form form:name="Form_Steuerung" form:command="select * from Steuerung where ClientID=0" form:datasource="ALADIN" form:allow-deletes="false" form:allow-inserts="false" form:apply-filter="true" form:navigation-mode="none" form:tab-cycle="current" form:control-implementation="ooo:com.sun.star.form.component.Form" office:target-frame="">
+          <form:properties>
+            <form:property form:property-name="PropertyChangeNotificationEnabled" office:value-type="boolean" office:boolean-value="true"/>
+            <form:property form:property-name="TargetURL" office:value-type="string" office:string-value=""/>
+            <form:property form:property-name="URL" office:value-type="string" office:string-value=""/>
+          </form:properties>
+          <form:form form:name="Form_Hauptgruppen" form:command="select * from Hauptgruppen order by HauptgruppenID ASC" form:datasource="ALADIN" form:allow-deletes="false" form:allow-inserts="false" form:apply-filter="true" form:navigation-mode="none" form:tab-cycle="current" form:control-implementation="ooo:com.sun.star.form.component.Form" office:target-frame="">
+            <form:properties>
+              <form:property form:property-name="PropertyChangeNotificationEnabled" office:value-type="boolean" office:boolean-value="true"/>
+              <form:property form:property-name="TargetURL" office:value-type="string" office:string-value=""/>
+              <form:property form:property-name="URL" office:value-type="string" office:string-value=""/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:rowchange" xlink:href="vnd.sun.star.script:Standard.Routinen.List_Hauptgruppen_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+            <form:grid form:name="Grid_Hauptgruppen" form:control-implementation="ooo:com.sun.star.form.component.GridControl" xml:id="control1" form:id="control1">
+              <form:properties>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="com.sun.star.form.control.GridControl"/>
+              </form:properties>
+              <form:column form:name="HauptgruppenID" form:control-implementation="ooo:NumericField" form:label="HauptgruppenID">
+                <form:formatted-text xml:id="control2" form:id="control2" form:readonly="true" form:data-field="HauptgruppenID" form:input-required="false" form:min-value="-1000000000" form:max-value="1000000000">
+                  <form:properties>
+                    <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="DecimalAccuracy" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.NumericField"/>
+                    <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="Width" office:value-type="float" office:value="373"/>
+                  </form:properties>
+                </form:formatted-text>
+              </form:column>
+              <form:column form:name="Hauptgruppenbezeichnung" form:control-implementation="ooo:TextField" form:label="Hauptgruppenbezeichnung">
+                <form:text xml:id="control3" form:id="control3" form:data-field="Hauptgruppenname" form:input-required="false" form:convert-empty-to-null="true">
+                  <form:properties>
+                    <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
+                    <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="Width" office:value-type="float" office:value="1496"/>
+                  </form:properties>
+                </form:text>
+              </form:column>
+            </form:grid>
+          </form:form>
+          <form:form form:name="Form_Leistungsgruppen" form:command="select * from Leistungsgruppen where HauptgruppenID like :f order by GruppenID ASC" form:datasource="ALADIN" form:allow-deletes="false" form:allow-inserts="false" form:apply-filter="true" form:navigation-mode="none" form:tab-cycle="current" form:control-implementation="ooo:com.sun.star.form.component.Form" office:target-frame="" form:master-fields="&quot;HauptgruppenID&quot;" form:detail-fields="&quot;f&quot;">
+            <form:properties>
+              <form:property form:property-name="PropertyChangeNotificationEnabled" office:value-type="boolean" office:boolean-value="true"/>
+              <form:property form:property-name="TargetURL" office:value-type="string" office:string-value=""/>
+              <form:property form:property-name="URL" office:value-type="string" office:string-value=""/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:rowchange" xlink:href="vnd.sun.star.script:Standard.Routinen.Column_HauptgruppenID_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+            <form:grid form:name="Grid_Leistungsgruppen" form:control-implementation="ooo:com.sun.star.form.component.GridControl" xml:id="control4" form:id="control4">
+              <form:properties>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="com.sun.star.form.control.GridControl"/>
+              </form:properties>
+              <form:column form:name="GruppenID" form:control-implementation="ooo:NumericField" form:label="GruppenID">
+                <form:formatted-text xml:id="control5" form:id="control5" form:readonly="true" form:data-field="GruppenID" form:input-required="false" form:min-value="-1000000000" form:max-value="1000000000">
+                  <form:properties>
+                    <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="DecimalAccuracy" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.NumericField"/>
+                    <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                  </form:properties>
+                </form:formatted-text>
+              </form:column>
+              <form:column form:name="Leistungsgruppenname" form:control-implementation="ooo:TextField" form:label="Leistungsgruppenname">
+                <form:text xml:id="control6" form:id="control6" form:max-length="255" form:data-field="Gruppenname" form:input-required="false" form:convert-empty-to-null="true">
+                  <form:properties>
+                    <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
+                    <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="Width" office:value-type="float" office:value="1230"/>
+                  </form:properties>
+                </form:text>
+              </form:column>
+              <form:column form:name="HauptgruppenID" form:control-implementation="ooo:ListBox" form:label="HauptgruppenID">
+                <form:listbox xml:id="control7" form:id="control7" form:size="10" form:data-field="HauptgruppenID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct HauptgruppenID,HauptgruppenID from Hauptgruppen order by HauptgruppenID ASC">
+                  <form:properties>
+                    <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                    <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+                    <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+                    <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+                    <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+                    <form:property form:property-name="Width" office:value-type="float" office:value="378"/>
+                  </form:properties>
+                </form:listbox>
+              </form:column>
+            </form:grid>
+          </form:form>
+          <form:fixed-text form:name="Label_Hauptgruppen" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control8" form:id="control8" form:label="Hauptgruppen" form:for="control9"/>
+          <form:listbox form:name="List_Hauptgruppen" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control9" form:id="control9" form:dropdown="true" form:tab-stop="true" form:size="30" form:tab-index="1" form:data-field="HauptgruppenID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct Hauptgruppenname,HauptgruppenID from Hauptgruppen order by HauptgruppenID ASC">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.Routinen.Hauptgruppe_uebernehmen?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:listbox>
+          <form:fixed-text form:name="Label_Leistungsgruppen" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control10" form:id="control10" form:label="Leistungsgruppen"/>
+          <form:listbox form:name="List_Leistungsgruppen" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control11" form:id="control11" form:dropdown="true" form:tab-stop="true" form:size="30" form:tab-index="1" form:data-field="GruppenID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct t1.Gruppenname,t1.GruppenID from Leistungsgruppen as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=0 where ((t1.HauptgruppenID=t2.HauptgruppenID and t2.HauptgruppenID IS NOT NULL) or (t1.HauptgruppenID like '%' and t2.HauptgruppenID IS NULL)) order by t1.GruppenID ASC">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
+              <form:list-property form:property-name="DefaultSelection" office:value-type="float"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.Routinen.Leistungsgruppe_uebernehmen?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:listbox>
+          <form:fixed-text form:name="Label_HauptgruppenID" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control12" form:id="control12" form:label="HauptgruppenID" form:for="control13"/>
+          <form:formatted-text form:name="Field_HauptgruppenID" form:control-implementation="ooo:com.sun.star.form.component.NumericField" xml:id="control13" form:id="control13" form:readonly="true" form:tab-stop="true" form:tab-index="1" form:data-field="HauptgruppenID" form:input-required="false" form:min-value="-1000000000" form:max-value="1000000000">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DecimalAccuracy" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.NumericField"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+            </form:properties>
+          </form:formatted-text>
+          <form:fixed-text form:name="Label_LeistungsgruppenID" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control14" form:id="control14" form:label="LeistungsgruppenID" form:for="control15"/>
+          <form:formatted-text form:name="Field_LeistungsgruppenID" form:control-implementation="ooo:com.sun.star.form.component.NumericField" xml:id="control15" form:id="control15" form:readonly="true" form:tab-stop="true" form:tab-index="1" form:data-field="GruppenID" form:input-required="false" form:min-value="-1000000000" form:max-value="1000000000">
+            <form:properties>
+              <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DecimalAccuracy" office:value-type="float" office:value="0"/>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.NumericField"/>
+              <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+            </form:properties>
+          </form:formatted-text>
+          <form:button form:name="Button_LeistungsgruppenID_aendern" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control16" form:id="control16" form:label="&lt;-- ändern" office:target-frame="" form:delay-for-repeat="PT0.500000000S" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+              <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.LeistungsgruppenID_aendern?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:button>
+          <form:button form:name="Button_HauptgruppenID_aendern" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control17" form:id="control17" form:label="&lt;-- ändern" office:target-frame="" form:delay-for-repeat="PT0.500000000S" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+              <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.HauptgruppenID_aendern?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:button>
+          <form:button form:name="Button_Hauptgruppe_neu" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control18" form:id="control18" form:label="&lt;-- neu" office:target-frame="" form:delay-for-repeat="PT0.500000000S" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+              <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.neue_Hauptgruppe?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:button>
+          <form:button form:name="Button_Leistungsgruppe_neu" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control19" form:id="control19" form:label="&lt;-- neu" office:target-frame="" form:delay-for-repeat="PT0.500000000S" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+              <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.neue_Leistungsgruppe?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:button>
+          <form:button form:name="Button_Hauptgruppe_reset" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control20" form:id="control20" form:label="reset" office:target-frame="" form:delay-for-repeat="PT0.500000000S" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+              <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.Hauptgruppenauswahl_ruecksetzen?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:button>
+          <form:button form:name="Button_HauptgruppenID_loeschen" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control21" form:id="control21" form:label="&lt;-- löschen" office:target-frame="" form:delay-for-repeat="PT0.500000000S" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+              <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.Hauptgruppe_loeschen?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:button>
+          <form:button form:name="Button_LeistungsgruppenID_loeschen" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control22" form:id="control22" form:label="&lt;-- löschen" office:target-frame="" form:delay-for-repeat="PT0.500000000S" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+              <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.Leistungsgruppe_loeschen?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:button>
+          <form:button form:name="Button_Leistungen_loeschen" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control23" form:id="control23" form:label="Leistungen löschen" office:target-frame="" form:delay-for-repeat="PT0.500000000S" form:image-position="center">
+            <form:properties>
+              <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
+              <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
+              <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Leistungen der eingestellten Gruppe aus dem Leistungsstamm löschen."/>
+            </form:properties>
+            <office:event-listeners>
+              <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.Leistungen_loeschen?language=Basic&amp;location=document" xlink:type="simple"/>
+            </office:event-listeners>
+          </form:button>
+        </form:form>
+      </office:forms>
+      <text:sequence-decls>
+        <text:sequence-decl text:display-outline-level="0" text:name="Illustration"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Table"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Text"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Drawing"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Figure"/>
+      </text:sequence-decls>
+      <text:user-field-decls>
+        <text:user-field-decl office:value-type="string" office:string-value="AngebotsID" text:name="DB_FieldName_0"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_0"/>
+        <text:user-field-decl office:value-type="string" office:string-value="10" text:name="DB_FieldLen_0"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Angebotsname" text:name="DB_FieldName_1"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_1"/>
+        <text:user-field-decl office:value-type="string" office:string-value="250" text:name="DB_FieldLen_1"/>
+        <text:user-field-decl office:value-type="string" office:string-value="KundenID" text:name="DB_FieldName_2"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_2"/>
+        <text:user-field-decl office:value-type="string" office:string-value="50" text:name="DB_FieldLen_2"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Angebotsdatum" text:name="DB_FieldName_3"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_3"/>
+        <text:user-field-decl office:value-type="string" office:string-value="12" text:name="DB_FieldLen_3"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Minutenverrechnungssatz" text:name="DB_FieldName_4"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_4"/>
+        <text:user-field-decl office:value-type="string" office:string-value="6" text:name="DB_FieldLen_4"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Materialaufschlagsatz" text:name="DB_FieldName_5"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_5"/>
+        <text:user-field-decl office:value-type="string" office:string-value="100" text:name="DB_FieldLen_5"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Angebotssumme" text:name="DB_FieldName_6"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_6"/>
+        <text:user-field-decl office:value-type="string" office:string-value="9" text:name="DB_FieldLen_6"/>
+        <text:user-field-decl office:value-type="string" office:string-value="MwSt_Satz" text:name="DB_FieldName_7"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_7"/>
+        <text:user-field-decl office:value-type="string" office:string-value="10" text:name="DB_FieldLen_7"/>
+        <text:user-field-decl office:value-type="string" office:string-value="MwSt" text:name="DB_FieldName_8"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_8"/>
+        <text:user-field-decl office:value-type="string" office:string-value="10" text:name="DB_FieldLen_8"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Angebotssumme_mit_MwSt" text:name="DB_FieldName_9"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_9"/>
+        <text:user-field-decl office:value-type="string" office:string-value="10" text:name="DB_FieldLen_9"/>
+        <text:user-field-decl office:value-type="string" office:string-value="gueltig_bis" text:name="DB_FieldName_10"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_10"/>
+        <text:user-field-decl office:value-type="string" office:string-value="10" text:name="DB_FieldLen_10"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Status" text:name="DB_FieldName_11"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FieldType_11"/>
+        <text:user-field-decl office:value-type="string" office:string-value="0" text:name="DB_FieldLen_11"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="Form_Version"/>
+        <text:user-field-decl office:value-type="string" office:string-value="2" text:name="DB_FormType"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_DataNumber"/>
+        <text:user-field-decl office:value-type="string" office:string-value="0" text:name="DB_FieldPos"/>
+        <text:user-field-decl office:value-type="string" office:string-value="12" text:name="DB_FieldCount"/>
+        <text:user-field-decl office:value-type="string" office:string-value="ALADIN" text:name="DB_Name"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Angebote1" text:name="DB_Table"/>
+        <text:user-field-decl office:value-type="string" office:string-value="" text:name="DB_Query_Name"/>
+        <text:user-field-decl office:value-type="string" office:string-value="1" text:name="DB_FormInit"/>
+        <text:user-field-decl office:value-type="string" office:string-value="" text:name="DB_ReadOnlyField"/>
+        <text:user-field-decl office:value-type="string" office:string-value="111111111111" text:name="DB_InputUsed"/>
+      </text:user-field-decls>
+      <draw:g text:anchor-type="page" text:anchor-page-number="1" draw:z-index="0" draw:style-name="gr1">
+        <draw:control draw:style-name="gr2" draw:text-style-name="P1" svg:width="20.217cm" svg:height="5.74cm" svg:x="0.499cm" svg:y="9.946cm" draw:control="control4"/>
+        <draw:control draw:style-name="gr2" draw:text-style-name="P1" svg:width="20.217cm" svg:height="6.741cm" svg:x="0.527cm" svg:y="0.499cm" draw:control="control1"/>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr4" draw:text-style-name="P2" svg:width="17.222cm" svg:height="0.5cm" svg:x="0.527cm" svg:y="7.93cm" draw:control="control9"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="17.222cm" svg:height="0.5cm" svg:x="0.527cm" svg:y="7.429cm" draw:control="control8"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr4" draw:text-style-name="P2" svg:width="17.222cm" svg:height="0.5cm" svg:x="0.499cm" svg:y="16.436cm" draw:control="control11"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="17.222cm" svg:height="0.5cm" svg:x="0.499cm" svg:y="15.935cm" draw:control="control10"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr4" draw:text-style-name="P2" svg:width="5.241cm" svg:height="0.5cm" svg:x="0.499cm" svg:y="9.193cm" draw:control="control13"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="5.241cm" svg:height="0.5cm" svg:x="0.499cm" svg:y="8.692cm" draw:control="control12"/>
+        </draw:g>
+        <draw:g draw:style-name="gr3">
+          <draw:control draw:style-name="gr4" draw:text-style-name="P2" svg:width="5.241cm" svg:height="0.5cm" svg:x="0.499cm" svg:y="17.683cm" draw:control="control15"/>
+          <draw:control draw:style-name="gr5" draw:text-style-name="P3" svg:width="5.241cm" svg:height="0.5cm" svg:x="0.499cm" svg:y="17.182cm" draw:control="control14"/>
+        </draw:g>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P4" svg:width="3.744cm" svg:height="1.003cm" svg:x="5.99cm" svg:y="17.178cm" draw:control="control16"/>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P4" svg:width="3.744cm" svg:height="1.003cm" svg:x="5.99cm" svg:y="8.694cm" draw:control="control17"/>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P4" svg:width="2.745cm" svg:height="1.003cm" svg:x="17.999cm" svg:y="7.429cm" draw:control="control18"/>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P4" svg:width="2.745cm" svg:height="1.003cm" svg:x="17.97cm" svg:y="15.933cm" draw:control="control19"/>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P4" svg:width="2.745cm" svg:height="1.003cm" svg:x="17.97cm" svg:y="8.698cm" draw:control="control20"/>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P4" svg:width="3.744cm" svg:height="1.003cm" svg:x="10.232cm" svg:y="8.694cm" draw:control="control21"/>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P4" svg:width="3.744cm" svg:height="1.003cm" svg:x="10.234cm" svg:y="17.18cm" draw:control="control22"/>
+        <draw:control draw:style-name="gr6" draw:text-style-name="P4" svg:width="6.49cm" svg:height="1.003cm" svg:x="14.227cm" svg:y="17.178cm" draw:control="control23"/>
+      </draw:g>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+      <text:p text:style-name="FieldContent"/>
+    </office:text>
+  </office:body>
+</office:document-content>

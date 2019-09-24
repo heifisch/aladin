@@ -1,0 +1,395 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement as Object
+Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as string
+Dim oRecord1 as Object,oRecord2 as Object
+Dim vStatus as Variant
+Dim lNewID as long,iCount as integer,sLeistungsgruppenname as string
+Dim sHauptgruppennummer as String,sHauptgruppenname as String
+
+Sub Start_Leistungsgruppen()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+	if oDoc.isReadOnly then
+		Dim oFrame as Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Gruppenverwaltung&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 29)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+		
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Hauptgruppen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Leistungsgruppen_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+			or InStr(fsTableList,&quot;;Leistungsstamm_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen&quot;)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm&quot;)
+		else
+			SetDocUserProperty(&quot;oHauptgruppen&quot;, &quot;Hauptgruppen_&quot;&amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsgruppen&quot;, &quot;Leistungsgruppen_&quot;&amp; iEinstellungsID_lokal)
+			SetDocUserProperty(&quot;oLeistungsstamm&quot;, &quot;Leistungsstamm_&quot;&amp; iEinstellungsID_lokal)
+		end if
+		
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+		
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Gruppenverwaltung&quot;)
+
+		sSQL1=&quot;update Steuerung set Gesperrt=1 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		Formular_init()				&apos;Initialisierung für Mehrplatzlösung
+		oForm_Steuerung.reload()
+		
+	 	StatusBar(False)
+		ToolBar(False)
+	End if
+	FormSize()
+End Sub
+
+Sub Column_HauptgruppenID_refresh()
+	oColumn_HauptgruppenID.refresh()
+End Sub
+
+Sub List_Hauptgruppen_refresh()
+	oList_Hauptgruppen.refresh()
+End Sub
+
+Sub List_Leistungsgruppen_refresh()
+	oList_Leistungsgruppen.refresh()
+End Sub
+
+Sub Hauptgruppe_loeschen()
+	if sHauptgruppenID &lt;&gt; &quot;&quot; and CLng(sHauptgruppenID) &gt; 0 then
+		vStatus=MsgBox(&quot;Soll die aktuelle Hauptgruppe gelöscht und die zugehörigen Leistungsgruppen&quot;&amp;_
+			&quot; nach &gt; 0 &lt; verschoben werden?&quot;&amp; Chr$(13)&amp; Chr$(13)&amp; Chr$(13) &amp;_
+			&quot;Wenn Ja ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+			&quot;Wollen Sie trotzdem fortfahren?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sSQL1=&quot;update &quot;&amp; sLeistungsgruppen &amp;&quot; set HauptgruppenID=&apos;0&apos; where HauptgruppenID=&apos;&quot;&amp; sHauptgruppenID &amp;&quot;&apos;&quot;
+			sSQL2=&quot;delete from &quot;&amp; sHauptgruppen &amp;&quot; where HauptgruppenID= &apos;&quot;&amp; sHauptgruppenID &amp;&quot;&apos;&quot;
+			SQL_execute(sSQL1)
+			SQL_execute(sSQL2)
+			Hauptgruppenauswahl_ruecksetzen()
+			oList_Hauptgruppen.refresh()
+			oList_Leistungsgruppen.refresh()
+			oForm_Steuerung.reload()
+		End if
+	End if
+End Sub
+
+Sub Leistungsgruppe_loeschen()
+	if sLeistungsgruppenID &lt;&gt; &quot;&quot; and CLng(sLeistungsgruppenID) &gt; 0 then
+		vStatus=MsgBox(&quot;Soll die aktuelle Leistungsgruppe gelöscht und die zugehörigen Leistungen&quot;&amp;_
+			&quot; nach &gt; 0 &lt; verschoben werden?&quot;&amp; Chr$(13)&amp; Chr$(13)&amp; Chr$(13) &amp;_
+			&quot;Wenn Ja ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+			&quot;Wollen Sie trotzdem fortfahren?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sSQL1=&quot;update &quot;&amp; sLeistungsstamm &amp;&quot; set Leistungsgruppe=&apos;0&apos; where Leistungsgruppe=&apos;&quot;&amp; sLeistungsgruppenID &amp;&quot;&apos;&quot;
+			sSQL2=&quot;delete from &quot;&amp; sLeistungsgruppen &amp;&quot; where GruppenID= &apos;&quot;&amp; sLeistungsgruppenID &amp;&quot;&apos;&quot;
+			sSQL3=&quot;update Steuerung set GruppenID=NULL where ClientID=&quot;&amp; iClientID
+			SQL_execute(sSQL1)
+			SQL_execute(sSQL2)
+			SQL_execute(sSQL3)
+			oList_Leistungsgruppen.refresh()
+			oForm_Steuerung.reload()
+		End if
+	End if
+End Sub
+
+Sub Leistungen_loeschen()
+	if sLeistungsgruppenID &lt;&gt; &quot;&quot; and CLng(sLeistungsgruppenID) &gt; 0 then
+		vStatus=MsgBox(&quot;Sollen alle Leistungen der aktuelle Leistungsgruppe: &quot;&amp;_
+			Chr$(13) &amp; fSelected_Item(oList_Leistungsgruppen)&amp;&quot; : &quot;&amp; sLeistungsgruppenID &amp; Chr$(13)&amp;_
+			&quot; gelöscht werden?&quot;&amp; Chr$(13)&amp; Chr$(13)&amp; Chr$(13) &amp;_
+			&quot;Wenn Ja ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+			&quot;Wollen Sie trotzdem fortfahren?&quot;,36,sTitle_lokal)
+		if vStatus=6 then
+			sSQL1=&quot;delete from &quot;&amp; sLeistungsstamm &amp;&quot; where Leistungsgruppe=&apos;&quot;&amp; sLeistungsgruppenID &amp;&quot;&apos;&quot;
+			SQL_execute(sSQL1)
+		End if
+	End if
+End Sub
+
+Sub Hauptgruppenauswahl_ruecksetzen()
+	sSQL1=&quot;update Steuerung set GruppenID = NULL, HauptgruppenID = NULL where ClientID=&quot;&amp; iClientID 
+	SQL_execute(sSQL1)
+	oList_Leistungsgruppen.refresh()	
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Hauptgruppe_uebernehmen()
+	oList_Hauptgruppen.commit()
+	oForm_Steuerung.updateRow()
+	sSQL1=&quot;update Steuerung set GruppenID = NULL where ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+	oList_Leistungsgruppen.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Leistungsgruppe_uebernehmen()
+	oList_Leistungsgruppen.commit()
+	oForm_Steuerung.updateRow()
+	wait 10
+	oList_Leistungsgruppen.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Leistungsgruppe_aendern()
+	oColumn_HauptgruppenID.commit()
+	oForm_Leistungsgruppen.updateRow()
+	wait 10
+	oList_Leistungsgruppen.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub HauptgruppenID_aendern()
+On Error Goto ErrorHandle
+	if sHauptgruppenID &lt;&gt; &quot;&quot; and sHauptgruppenID &lt;&gt; &quot;%&quot; then
+nochmal_ID:
+		lNewID=InputBox(&quot;Geben Sie bitte eine neue Hauptgruppennummer ein!&quot;,sTitle_lokal)
+		if lNewID = &quot;&quot; or lNewID = 0 then
+			vStatus=MsgBox(&quot;Sie haben noch keine neue Hauptgruppennummer eingegeben!&quot;,53,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal_ID
+			elseif vStatus=2 then
+				stop
+			End if
+		Elseif Len(lNewID) &gt; 10 then
+ErrorHandle:
+			vStatus=MsgBox(&quot;Sie haben eine zu lange Hauptgruppennummer eingegeben!&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+				&quot;Es sind max. 10 Ziffern erlaubt!&quot;,53,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal_ID
+			elseif vStatus=2 then
+				stop
+			End if
+		End if
+		sSQL1=&quot;select count(HauptgruppenID) from &quot;&amp; sHauptgruppen &amp;&quot; where HauptgruppenID=&apos;&quot;&amp; lNewID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iCount=oRecord1.getInt(1)
+		Wend
+		if iCount &gt;= 1 then
+			vStatus=MsgBox(&quot;Diese Nummer ist schon vergeben.&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+				&quot;Bitte benutzen Sie eine neue Hauptgruppennummer&quot;,53,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal_ID
+			elseif vStatus=2 then
+				stop
+			End if
+		elseif iCount = 0 then
+			sSQL2=&quot;update &quot;&amp; sHauptgruppen &amp;&quot; set HauptgruppenID=&quot;&amp; lNewID &amp;&quot; where HauptgruppenID=&apos;&quot;&amp; sHauptgruppenID &amp;&quot;&apos;&quot;
+			sSQL3=&quot;update &quot;&amp; sLeistungsgruppen &amp;&quot; set HauptgruppenID=&quot;&amp; lNewID &amp;&quot; where HauptgruppenID=&apos;&quot;&amp; sHauptgruppenID &amp;&quot;&apos;&quot;
+			sSQL4=&quot;update Steuerung set HauptgruppenID=&quot;&amp; lNewID &amp;&quot; where ClientID=&quot;&amp; iClientID 
+		End if
+		SQL_execute(sSQL2)
+		SQL_execute(sSQL3)
+		SQL_execute(sSQL4)
+		oColumn_HauptgruppenID.refresh()
+		oList_Leistungsgruppen.refresh()
+		oForm_Steuerung.reload()
+	else
+		MsgBox(&quot;Sie haben noch keine Hauptgruppe ausgewählt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub LeistungsgruppenID_aendern()
+On Error Goto ErrorHandle
+	if sLeistungsgruppenID &lt;&gt; &quot;&quot; then
+nochmal_ID:
+		lNewID=InputBox(&quot;Geben Sie bitte eine neue Leistungsgruppennummer ein!&quot;,sTitle_lokal)
+		if lNewID = &quot;&quot; or lNewID = 0  then
+			vStatus=MsgBox(&quot;Sie haben noch keine neue Leistungsgruppennummer eingegeben!&quot;,53,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal_ID
+			elseif vStatus=2 then
+				stop
+			End if
+		Elseif Len(lNewID) &gt; 10 then
+ErrorHandle:
+			vStatus=MsgBox(&quot;Sie haben eine zu lange Leistungsgruppennummer eingegeben!&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+				&quot;Es sind max. 10 Ziffern erlaubt!&quot;,53,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal_ID
+			elseif vStatus=2 then
+				stop
+			End if
+		End if
+		sSQL1=&quot;select count(GruppenID) from &quot;&amp; sLeistungsgruppen &amp;&quot; where GruppenID=&apos;&quot;&amp; lNewID &amp;&quot;&apos;&quot;
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			iCount=oRecord1.getInt(1)
+		Wend
+		if iCount &gt;= 1 then
+			vStatus=MsgBox(&quot;Diese Nummer ist schon vergeben.&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+				&quot;Bitte benutzen Sie eine neue Leistungsgruppennummer&quot;,53,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal_ID
+			elseif vStatus=2 then
+				stop
+			End if
+		elseif iCount = 0 then
+			sSQL2=&quot;update &quot;&amp; sLeistungsgruppen &amp;&quot; set GruppenID=&quot;&amp; lNewID &amp;&quot; where GruppenID=&apos;&quot;&amp; sLeistungsgruppenID &amp;&quot;&apos;&quot;
+			sSQL3=&quot;update &quot;&amp; sLeistungsstamm &amp;&quot; set Leistungsgruppe=&quot;&amp; lNewID &amp;&quot; where Leistungsgruppe=&apos;&quot;&amp; sLeistungsgruppenID &amp;&quot;&apos;&quot;
+			sSQL4=&quot;update Steuerung set GruppenID=&quot;&amp; lNewID &amp;&quot; where ClientID=&quot;&amp; iClientID 
+		End if
+		SQL_execute(sSQL2)
+		SQL_execute(sSQL3)
+		SQL_execute(sSQL4)
+		oList_Leistungsgruppen.refresh()
+		oForm_Steuerung.reload()
+	else
+		MsgBox(&quot;Sie haben noch keine Leistungsgruppe ausgewählt!&quot;,16,sTitle_lokal)
+	End if
+End Sub
+
+Sub neue_Hauptgruppe()
+	On Error Goto ErrorHandle
+nochmal_Bez:
+	sHauptgruppenname=InputBox(&quot;Geben Sie bitte den Hauptgruppennamen ein!&quot;,sTitle_lokal)
+	if sHauptgruppenname = &quot;&quot; then
+		vStatus=MsgBox(&quot;Sie haben noch keine Hauptgruppennamen eingegeben!&quot;,53,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal_Bez
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+nochmal_ID:
+	lNewID=InputBox(&quot;Geben Sie bitte eine neue Hauptgruppennummer ein!&quot;,sTitle_lokal)
+	if lNewID = &quot;&quot; or lNewID = 0 then
+		vStatus=MsgBox(&quot;Sie haben noch keine gültige Hauptgruppennummer eingegeben!&quot;,53,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal_ID
+		elseif vStatus=2 then
+			exit sub
+		End if
+	Elseif Len(lNewID) &gt; 10 then
+ErrorHandle:
+		vStatus=MsgBox(&quot;Sie haben eine zu lange Hauptgruppennummer eingegeben!&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+			&quot;Es sind max. 10 Ziffern erlaubt!&quot;,53,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal_ID
+		elseif vStatus=2 then
+			stop
+		End if
+	End if
+	sSQL1=&quot;select count(HauptgruppenID) from &quot;&amp; sHauptgruppen &amp;&quot; where HauptgruppenID=&apos;&quot;&amp; lNewID &amp;&quot;&apos;&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iCount=oRecord1.getInt(1)
+	Wend
+	if iCount &gt;= 1 then
+		vStatus=MsgBox(&quot;Diese Nummer ist schon vergeben.&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+			&quot;Bitte benutzen Sie eine neue Hauptgruppennummer!&quot;,53,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal_ID
+		elseif vStatus=2 then
+			stop
+		End if
+	elseif iCount = 0 then
+		sSQL2=&quot;insert into &quot;&amp; sHauptgruppen &amp;&quot; (HauptgruppenID,Hauptgruppenname)&quot;&amp;_
+			&quot; values (&apos;&quot;&amp; lNewID &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sHauptgruppenname) &amp;&quot;&apos;)&quot;
+		SQL_execute(sSQL2)
+	End if
+	sSQL3=&quot;update Steuerung set HauptgruppenID =&apos;&quot;&amp; lNewID &amp;&quot;&apos; where ClientID = &quot;&amp; iClientID
+	SQL_execute(sSQL3)
+	oColumn_HauptgruppenID.refresh()
+	oList_Hauptgruppen.refresh()
+	oList_Leistungsgruppen.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub neue_Leistungsgruppe()
+On Error Goto ErrorHandle
+nochmal_Bez:
+	sHauptgruppenname=&quot;&quot;
+	sSQL1=&quot;select t1.HauptgruppenID,t2.Hauptgruppenname from Steuerung as t1,&quot;&amp; sHauptgruppen &amp;&quot; as t2&quot;&amp;_
+		&quot; where t1.ClientID=&quot;&amp; iClientID &amp;&quot; and t2.HauptgruppenID=t1.HauptgruppenID&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		sHauptgruppennummer=oRecord1.getString(1)
+		sHauptgruppenname=oRecord1.getString(2)
+	Wend
+	if sHauptgruppenname = &quot;&quot; then
+		MsgBox(&quot;Sie haben noch keine Hauptgruppe für die neue Leistungsgruppe ausgewählt!&quot;,16,sTitle_lokal)
+		Stop
+	else
+		sLeistungsgruppenname=InputBox(&quot;Name für neue Leistungsgruppe in Hauptgruppe:&quot;&amp;_
+			Chr$(13)&amp; Chr$(13)&amp; Chr$(13) &amp;&quot;&gt;&gt; &quot;&amp; sHauptgruppenname &amp;&quot; &lt;&lt;&quot;,sTitle_lokal)
+		if sLeistungsgruppenname = &quot;&quot; then
+			vStatus=MsgBox(&quot;Sie haben noch keine Leistungsgruppennamen eingegeben!&quot;,53,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal_Bez
+			elseif vStatus=2 then
+				exit sub
+			End if
+		End if
+	End if
+nochmal_ID:
+	lNewID=InputBox(&quot;Geben Sie bitte eine neue Leistungsgruppennummer ein!&quot;,sTitle_lokal)
+	if lNewID = &quot;&quot; or lNewID = 0 then
+		vStatus=MsgBox(&quot;Sie haben noch keine gültige Leistungsgruppennummer eingegeben!&quot;,53,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal_ID
+		elseif vStatus=2 then
+			exit sub
+		End if
+	Elseif Len(lNewID) &gt; 10 then
+ErrorHandle:
+		vStatus=MsgBox(&quot;Sie haben eine zu lange Leistungsgruppennummer eingegeben!&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+			&quot;Es sind max. 10 Ziffern erlaubt!&quot;,53,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal_ID
+		elseif vStatus=2 then
+			stop
+		End if
+	End if
+	sSQL1=&quot;select count(GruppenID) from &quot;&amp; sLeistungsgruppen &amp;&quot; where GruppenID=&apos;&quot;&amp; lNewID &amp;&quot;&apos;&quot;
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		iCount=oRecord1.getInt(1)
+	Wend
+	if iCount &gt;= 1 then
+		vStatus=MsgBox(&quot;Diese Nummer ist schon vergeben.&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
+			&quot;Bitte benutzen Sie eine neue Leistungsgruppennummer!&quot;,53,sTitle_lokal)
+			if vStatus=4 then
+				goto nochmal_ID
+			elseif vStatus=2 then
+				stop
+			End if
+	elseif iCount = 0 then
+		sSQL2=&quot;insert into &quot;&amp; sLeistungsgruppen &amp;&quot; (GruppenID,Gruppenname,HauptgruppenID)&quot;&amp;_
+			&quot; values (&apos;&quot;&amp; lNewID &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsgruppenname) &amp;&quot;&apos;,&apos;&quot;&amp; sHauptgruppennummer &amp;&quot;&apos;)&quot;
+		SQL_execute(sSQL2)
+	End if
+	sSQL3=&quot;update Steuerung set GruppenID =&apos;&quot;&amp; lNewID &amp;&quot;&apos; where ClientID = &quot;&amp; iClientID
+	SQL_execute(sSQL3)
+	oList_Leistungsgruppen.refresh()
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Maske_schliessen()
+	if oDoc.isReadOnly then
+		Hauptgruppenauswahl_ruecksetzen()
+		sSQL1=&quot;update Steuerung set Gesperrt=0 where ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+	End if
+	
+ 	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+</script:module>

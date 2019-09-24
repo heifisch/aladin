@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Function" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement as Object
+Dim sSQL as String
+
+Sub Start
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+End Sub
+
+Function oDoc as Object
+oDoc=thiscomponent
+End Function
+
+Function oForm as Object
+oForm=oDoc.DrawPage.Forms(0)
+End Function
+
+Function oConnection_mysql as Object
+On Error Goto ErrorHandler
+	Dim vDatabaseContext As Variant,oAccess as Object
+	Dim vInteractionHandler as Variant
+	vDatabaseContext = createUnoService(&quot;com.sun.star.sdb.DatabaseContext&quot;)
+	if vDatabaseContext.hasByName(&quot;MySQL&quot;) = &quot;False&quot; then
+		MsgBox &quot;Sie haben möglicherweise noch nicht die Datenquelle &quot;&amp; Chr$(13) &amp;_
+				&quot;&gt;&gt; MySQL &lt;&lt; eingerichtet!&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+				&quot;Achtung!! Groß-Kleinschreibung beachten!&quot;,16,&quot;Fehler&quot;
+	Stop
+	Exit Function
+	End if
+	oAccess = vDatabaseContext.getByName(&quot;MySQL&quot;)
+nochmal:
+	If Not oAccess.IsPasswordRequired Then
+		oConnection_mysql = oAccess.getConnection(&quot;&quot;,&quot;&quot;)
+	Else
+		vInteractionHandler = createUnoService(&quot;com.sun.star.sdb.InteractionHandler&quot;)
+		oConnection_mysql = oAccess.ConnectWithCompletion(vInteractionHandler)
+	End If
+	Exit Function
+ErrorHandler:
+	Reset
+	MsgBox &quot;Sie haben nicht das richtige Passwort eingegeben!&quot;,16,&quot;Fehler&quot;
+    goto nochmal
+End Function
+
+Sub SQL_execute_mysql(sSQL as String)
+	Dim oStatement as Object
+	oStatement=oConnection_mysql.createStatement()
+	oStatement.EscapeProcessing = FALSE
+	oStatement.execute(sSQL)
+End Sub
+
+Function oResult_mysql1(sSQL as String)as Object
+	Dim oStatement as Object
+	oStatement=oConnection_mysql.createStatement()
+	oStatement.ResultSetType = com.sun.star.sdbc.ResultSetType.FORWARD_ONLY 
+	oStatement.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
+	oStatement.EscapeProcessing = FALSE
+	oResult_mysql1=oStatement.executeQuery(sSQL)
+End Function
+
+Function oResult_mysql2(sSQL as String)as Object
+	Dim oStatement as Object
+	oStatement=oConnection_mysql.createStatement()
+	oStatement.ResultSetType = com.sun.star.sdbc.ResultSetType.FORWARD_ONLY 
+	oStatement.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
+	oStatement.EscapeProcessing = FALSE
+	oResult_mysql2=oStatement.executeQuery(sSQL)
+End Function
+
+Function oResult_Scroll_mysql(sSQL as String)as Object
+	Dim oStatement as Object
+	oStatement=oConnection_mysql.createStatement()
+	oStatement.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_SENSITIVE
+	oStatement.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
+	oStatement.EscapeProcessing = FALSE
+	oResult_Scroll_mysql=oStatement.executeQuery(sSQL)
+End Function
+
+</script:module>

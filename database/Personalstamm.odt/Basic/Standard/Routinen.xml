@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Routinen" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Dim oStatement AS Object
+Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+Dim oRecord1 AS Object,oRecord2 AS Object
+Dim vStatus AS Variant
+Dim sName1 AS String,sName AS String
+
+Sub Start_Personal()
+	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+
+	if oDoc.isReadOnly then
+		Dim oFrame AS Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+		
+		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Personalstamm&quot;))
+		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 27)
+		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+		
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Personal_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oPersonal&quot;, &quot;Personal&quot;	)
+		else
+			SetDocUserProperty(&quot;oPersonal&quot;, &quot;Personal_&quot; &amp; iEinstellungsID_lokal)
+		end if
+		if iEinstellungsID_lokal=1 _ 
+			or InStr(fsTableList,&quot;;Lieferanten_&quot; &amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _
+		then
+			SetDocUserProperty(&quot;oLieferanten&quot;, &quot;Lieferanten&quot;	)
+		else
+			SetDocUserProperty(&quot;oLieferanten&quot;, &quot;Lieferanten_&quot; &amp; iEinstellungsID_lokal)
+		end if
+
+		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+		
+		oFrame = StarDesktop.getCurrentFrame()
+		oFrame.setTitle(sTitle_lokal &amp;&quot; - Personalstamm&quot;)
+		
+		sSQL1=&quot;UPDATE Steuerung SET Gesperrt=1 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		Formular_init()
+		oForm_Steuerung.reload()
+
+	 	StatusBar(False)
+		ToolBar(False)
+	End if
+	FormSize()
+End Sub
+
+Sub Personalauswahl_refresh()
+	oList_Personalauswahl.refresh()
+End Sub
+
+Sub Fields_commit()
+	oField_PersonalID.commit()
+	oField_Stunden_Satz.commit()
+End Sub
+
+Sub Personal_loeschen()
+if lPersonalID &lt;&gt; 0 then
+	vStatus=MsgBox(&quot;Soll der aktuelle Mitarbeiter gelöscht werden?&quot;&amp; Chr$(13) &amp; Chr$(13) &amp; Chr$(13) &amp;_
+		&quot;Wenn Ja ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+		&quot;Wollen Sie trotzdem fortfahren?&quot;,36)
+	if vStatus=6 then
+		sSQL1=&quot;DELETE FROM &quot;&amp; sPersonal &amp;&quot; WHERE PersonalID= &quot;&amp; lPersonalID
+		SQL_execute(sSQL1)
+		SQL_PersonalID_entfernen
+		oForm_Steuerung.reload()
+	End if
+End if
+End Sub
+
+Sub Personal_uebernehmen()
+	oList_Personalauswahl.commit()
+	oForm_Steuerung.updateRow()
+	oForm_Steuerung.reload()
+End sub
+
+Sub Personaldaten_speichern()
+	if lPersonalID &lt;&gt; 0 then
+		Fields_commit()
+		oForm_Personaldaten.updateRow()
+		SQL_PersonalID_entfernen()
+		oForm_Steuerung.reload()
+		oForm_Steuerung.reset()
+	End if
+End Sub
+
+
+Sub Maske_schliessen()
+	if oDoc.isReadOnly then
+		if lPersonalID &lt;&gt; 0 then
+			Personaldaten_speichern
+		End if
+		sSQL1=&quot;UPDATE Steuerung SET Gesperrt=0 WHERE ClientID=&quot;&amp; iClientID
+		SQL_execute(sSQL1)
+		SQL_PersonalID_entfernen
+	End if
+	StatusBar(True,oDoc)
+	ToolBar(True,oDoc)
+End Sub
+
+Sub neuer_Mitarbeiter()
+nochmal:
+	sName1=InputBox(&quot;Geben Sie bitte den Personalnamen ein!&quot;,sTitle_lokal)
+	if sName1 = &quot;&quot; then
+		vStatus=MsgBox(&quot;Sie haben noch keine Namen eingegeben!&quot;,37,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+
+	sSQL1=&quot;INSERT INTO &quot;&amp; sPersonal &amp;&quot; (Name1) VALUES(&apos;&quot;&amp; fsConvertApostroph(sName1) &amp;&quot;&apos;)&quot;
+	SQL_execute(sSQL1)
+	SQL_UPDATE_Steuerung_PersonalID
+	oForm_Steuerung.reload()
+End Sub
+
+Sub Name1_umbenennen()
+if lPersonalID &lt;&gt; 0 then
+nochmal:
+	sName1=InputBox(&quot;Geben Sie bitte den Personalnamen ein!&quot;&amp;_
+			 Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal &amp; &quot; Name 1&quot;,fName1)
+	if sName1 = &quot;&quot; then
+		vStatus=MsgBox(&quot;Sie haben noch keine Namen eingegeben!&quot;,37,sTitle_lokal)
+		if vStatus=4 then
+			goto nochmal
+		elseif vStatus=2 then
+			exit sub
+		End if
+	End if
+	sSQL1=&quot;UPDATE &quot;&amp; sPersonal &amp;&quot; SET Name1=&apos;&quot;&amp; fsConvertApostroph(sName1) &amp;&quot;&apos; WHERE PersonalID=&quot;&amp; lPersonalID
+	SQL_execute(sSQL1)
+	oForm_Steuerung.reload()
+End if
+End Sub
+
+Sub Lieferant_aus_Mitarbeiter()
+	if lPersonalID &lt;&gt; 0 then
+		sSQL1=&quot;INSERT INTO &quot;&amp; sLieferanten &amp;_
+			&quot;(Anrede,Name1,Titel,Vorname,Land,PLZ,Ort,Strasse,Hausnummer,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bank,BLZ,Konto,Bemerkungen,Ordner,Erstkontakt) &quot;&amp;_
+			&quot;SELECT DISTINCT &quot;&amp;_
+			&quot;Anrede,Name1,Titel,Vorname,Land,PLZ,Ort,Strasse,Hausnummer,&quot;&amp;_
+			&quot;Telefon,Funktelefon,Fax,EMail,Url,Bank,BLZ,Konto,Bemerkungen,Ordner,Eintrittsdatum &quot;&amp;_
+			&quot;FROM &quot;&amp; sPersonal &amp;&quot; WHERE PersonalID=&quot;&amp; lPersonalID
+		SQL_execute(sSQL1)
+		MsgBox(&quot;Es ist ein Mitarbeiter in den Lieferantenstamm kopiert worden!&quot;,64,sTitle_lokal)
+	End if
+End Sub
+
+</script:module>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Control" script:language="StarBasic">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Function iStartoption as Integer
+	iStartoption=GetDocUserProperty(&quot;oStartoption&quot;)
+End Function
+
+Function iUnloaded as Integer
+	iUnloaded=GetDocUserProperty(&quot;oUnloaded&quot;)
+End Function
+
+Function iExport as Integer
+	iExport=GetDocUserProperty(&quot;oExport&quot;)
+End Function
+
+Function iDocTypID as Integer
+	iDocTypID=GetDocUserProperty(&quot;oDocTypID&quot;)
+End Function
+
+Function iClientID as Integer
+	iClientID=GetDocUserProperty(&quot;oClientID&quot;)
+End Function
+
+Function iClientID_export as integer
+	iClientID_export=GetDocUserProperty(&quot;oClientID_export&quot;)
+End Function
+
+Function sProjekte as String
+	sProjekte=GetDocUserProperty(&quot;oProjekte&quot;)
+End Function
+
+Function sSerienbrief_Listen as String
+	sSerienbrief_Listen=GetDocUserProperty(&quot;oSerienbrief_Listen&quot;)
+End Function
+
+Function sKorrespondenz as String
+	sKorrespondenz=GetDocUserProperty(&quot;oKorrespondenz&quot;)
+End Function
+
+Function sKorrespondenz_export as String
+	sKorrespondenz_export=GetDocUserProperty(&quot;oKorrespondenz_export&quot;)
+End Function
+
+Function sKorrespondenz_old as String
+	sKorrespondenz_old=GetDocUserProperty(&quot;oKorrespondenz_old&quot;)
+End Function
+
+Function sKontakte as String
+	sKontakte=GetDocUserProperty(&quot;oKontakte&quot;)
+End Function
+
+Function sKontakte_export as String
+	sKontakte_export=GetDocUserProperty(&quot;oKontakte_export&quot;)
+End Function
+
+Function sKontakte_old as String
+	sKontakte_old=GetDocUserProperty(&quot;oKontakte_old&quot;)
+End Function
+
+Function sAnsprechpartner as String
+	sAnsprechpartner=GetDocUserProperty(&quot;oAnsprechpartner&quot;)
+End Function
+
+Function sAnsprechpartner_export as String
+	sAnsprechpartner_export=GetDocUserProperty(&quot;oAnsprechpartner_export&quot;)
+End Function
+
+Function sAnsprechpartner_old as String
+	sAnsprechpartner_old=GetDocUserProperty(&quot;oAnsprechpartner_old&quot;)
+End Function
+
+Function lDocumentID_imp2 as Long
+	lDocumentID_imp2=GetDocUserProperty(&quot;oDocumentID_imp2&quot;)
+End Function
+
+Function lDocumentID_exp2 as Long
+	lDocumentID_exp2=GetDocUserProperty(&quot;oDocumentID_exp2&quot;)
+End Function
+
+Function lDocumentID_old as Long
+	lDocumentID_old=GetDocUserProperty(&quot;oDocumentID_old&quot;)
+End Function
+
+Function iEinstellungsID_lokal as Integer
+	iEinstellungsID_lokal=GetDocUserProperty(&quot;oEinstellungsID_lokal&quot;)
+End Function
+
+Function iUserID_lokal as Integer
+	iUserID_lokal=GetDocUserProperty(&quot;oUserID_lokal&quot;)
+End Function
+
+Function lKontaktID_old as Long
+	lKontaktID_old=GetDocUserProperty(&quot;oKontaktID_old&quot;)
+End Function
+
+Function sTitle_lokal as String
+	 sTitle_lokal=GetDocUserProperty(&quot;oTitle_lokal&quot;)
+End Function
+
+</script:module>
