@@ -1284,7 +1284,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.commit.Preisauswahl_commit?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:listbox>
-          <form:button form:name="Button_ruecksetzen" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control132" form:id="control132" form:label="X" form:printable="false" form:tab-stop="false" office:target-frame="" form:image-data="../../../../../../../ALADIN/office52/user/gallery/Xweiß_blau_mini.gif" form:delay-for-repeat="P0D" form:image-position="center">
+          <form:button form:name="Button_ruecksetzen" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control132" form:id="control132" form:label="X" form:printable="false" form:tab-stop="false" office:target-frame="" form:image-data="../../../../../ALADIN/office52/user/gallery/Xweiß_blau_mini.gif" form:delay-for-repeat="P0D" form:image-position="center">
             <form:properties>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
               <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>

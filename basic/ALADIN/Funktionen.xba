@@ -369,15 +369,17 @@ Function fsConvertString(sString as String) as String
 End Function
 
 Sub SQL_execute(sSQL as String) as Object
-&apos;On Error Goto ErrorHandler
+On Error Goto ErrorHandler
 	Dim oStatement as Object
 	oStatement=oConnection.createStatement()
 	oStatement.EscapeProcessing = FALSE
 	oStatement.execute(sSQL)
 Exit Sub
 ErrorHandler:
-	MsgBox &quot;Sie haben möglicherweise nicht das richtige Passwort eingegeben,&quot;&amp;_
-			&quot; oder die notwendigen Rechte in der Datenbank sind nicht gesetzt!&quot;,16,&quot;Fehler&quot;
+	MsgBox sSQL
+
+&apos;	MsgBox &quot;Sie haben möglicherweise nicht das richtige Passwort eingegeben,&quot;&amp;_
+&apos;			&quot; oder die notwendigen Rechte in der Datenbank sind nicht gesetzt!&quot;,16,&quot;Fehler&quot;
 	Stop
 	Exit Sub
 end Sub

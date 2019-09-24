@@ -726,13 +726,13 @@ Sub Zwischensummen_berechnen()
 	if iCount_MAX = 0 then 
 		exit Sub
 	else
-		Dim cZwischensumme as currency,cBauzeitStunden as currency,cMaterialeinsatz as currency
+		Dim sZwischensumme as String,sBauzeitStunden as String,sMaterialeinsatz as String
 		sSQL1=&quot;SELECT Pos FROM &quot;&amp; sZwischensummen &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC&quot;
 	End if
 	if iCount_MAX = 1 then 
-		cZwischensumme=0
-		cBauzeitStunden=0
-		cMaterialeinsatz=0
+		sZwischensumme=0
+		sBauzeitStunden=0
+		sMaterialeinsatz=0
 		oRecord1=oResult(sSQL1)
 		While oRecord1.next()
 			iPos=oRecord1.getInt(1)
@@ -742,23 +742,25 @@ Sub Zwischensummen_berechnen()
 		oRecord2=oResult(sSQL2)
 		While oRecord2.next()
 			if oRecord2.getInt(5)=1 then
-				cZwischensumme=oRecord2.getString(1)
-				cBauzeitStunden=oRecord2.getString(3)
-				cMaterialeinsatz=oRecord2.getString(4)
+				sZwischensumme=oRecord2.getString(1)
+				sBauzeitStunden=oRecord2.getString(3)
+				sMaterialeinsatz=oRecord2.getString(4)
 			elseif oRecord2.getInt(5)=4 then
-				cZwischensumme=oRecord2.getString(2)
+				sZwischensumme=oRecord2.getString(2)
 			End if
 		Wend
-		sSQL3=&quot;UPDATE &quot;&amp; sZwischensummen &amp;&quot; SET Zwischensumme=&quot;&amp; cZwischensumme &amp;_
-			&quot;,Bauzeit_Stunden=&quot;&amp; cBauzeitStunden &amp;&quot;,Materialeinsatz=&quot;&amp; cMaterialeinsatz &amp;_
-			&quot; WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; iPos
+		sSQL3=&quot;UPDATE &quot;&amp; sZwischensummen &amp;_
+			&quot; SET Zwischensumme=&apos;&quot;&amp; sZwischensumme &amp;_
+			&quot;&apos;,Bauzeit_Stunden=&apos;&quot;&amp; sBauzeitStunden &amp;_
+			&quot;&apos;,Materialeinsatz=&apos;&quot;&amp; sMaterialeinsatz &amp;_
+			&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; AND Pos=&quot;&amp; iPos
 		SQL_execute(sSQL3)
 	elseif iCount_MAX &gt; 1 then 
 		iPos_alt=0
 		For iCount = 1 to iCount_MAX
-			cZwischensumme=0
-			cBauzeitStunden=0
-			cMaterialeinsatz=0
+			sZwischensumme=0
+			sBauzeitStunden=0
+			sMaterialeinsatz=0
 			oRecord1=oResult_Scroll(sSQL1)
 			oRecord1.absolute(iCount)
 			iPos=oRecord1.getInt(1)
@@ -767,16 +769,18 @@ Sub Zwischensummen_berechnen()
 			oRecord2=oResult(sSQL2)
 			While oRecord2.next()
 				if oRecord2.getInt(5)=1 then
-					cZwischensumme=oRecord2.getString(1)
-					cBauzeitStunden=oRecord2.getString(3)
-					cMaterialeinsatz=oRecord2.getString(4)
+					sZwischensumme=oRecord2.getString(1)
+					sBauzeitStunden=oRecord2.getString(3)
+					sMaterialeinsatz=oRecord2.getString(4)
 				elseif oRecord2.getInt(5)=4 then
-					cZwischensumme=oRecord2.getString(2)
+					sZwischensumme=oRecord2.getString(2)
 				End if
 			Wend
-			sSQL3=&quot;UPDATE &quot;&amp; sZwischensummen &amp;&quot; SET Zwischensumme=&quot;&amp; cZwischensumme &amp;_
-				&quot;,Bauzeit_Stunden=&quot;&amp; cBauzeitStunden &amp;&quot;,Materialeinsatz=&quot;&amp; cMaterialeinsatz &amp;_
-				&quot; WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; iPos
+			sSQL3=&quot;UPDATE &quot;&amp; sZwischensummen &amp;_
+				&quot; SET Zwischensumme=&apos;&quot;&amp; sZwischensumme &amp;_
+				&quot;&apos;,Bauzeit_Stunden=&apos;&quot;&amp; sBauzeitStunden &amp;_
+				&quot;&apos;,Materialeinsatz=&apos;&quot;&amp; sMaterialeinsatz &amp;_
+				&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; AND Pos=&quot;&amp; iPos
 			SQL_execute(sSQL3)
 		iPos_alt=iPos
 		Next iCount
