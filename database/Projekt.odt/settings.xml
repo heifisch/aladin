@@ -4,8 +4,8 @@
     <config:config-item-set config:name="ooo:view-settings">
       <config:config-item config:name="ViewAreaTop" config:type="long">501</config:config-item>
       <config:config-item config:name="ViewAreaLeft" config:type="long">501</config:config-item>
-      <config:config-item config:name="ViewAreaWidth" config:type="long">23153</config:config-item>
-      <config:config-item config:name="ViewAreaHeight" config:type="long">27862</config:config-item>
+      <config:config-item config:name="ViewAreaWidth" config:type="long">50431</config:config-item>
+      <config:config-item config:name="ViewAreaHeight" config:type="long">26936</config:config-item>
       <config:config-item config:name="ShowRedlineChanges" config:type="boolean">false</config:config-item>
       <config:config-item config:name="InBrowseMode" config:type="boolean">true</config:config-item>
       <config:config-item-map-indexed config:name="Views">
@@ -15,8 +15,8 @@
           <config:config-item config:name="ViewTop" config:type="long">1242</config:config-item>
           <config:config-item config:name="VisibleLeft" config:type="long">501</config:config-item>
           <config:config-item config:name="VisibleTop" config:type="long">501</config:config-item>
-          <config:config-item config:name="VisibleRight" config:type="long">23652</config:config-item>
-          <config:config-item config:name="VisibleBottom" config:type="long">28362</config:config-item>
+          <config:config-item config:name="VisibleRight" config:type="long">50931</config:config-item>
+          <config:config-item config:name="VisibleBottom" config:type="long">27436</config:config-item>
           <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
           <config:config-item config:name="ViewLayoutColumns" config:type="short">1</config:config-item>
           <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
@@ -103,7 +103,7 @@
       <config:config-item config:name="EmbedAsianScriptFonts" config:type="boolean">true</config:config-item>
       <config:config-item config:name="TabAtLeftIndentForParagraphsInList" config:type="boolean">false</config:config-item>
       <config:config-item config:name="PrintRightPages" config:type="boolean">true</config:config-item>
-      <config:config-item config:name="Rsid" config:type="int">7571573</config:config-item>
+      <config:config-item config:name="Rsid" config:type="int">7687273</config:config-item>
       <config:config-item config:name="MathBaselineAlignment" config:type="boolean">false</config:config-item>
       <config:config-item config:name="MsWordCompTrailingBlanks" config:type="boolean">false</config:config-item>
       <config:config-item config:name="InvertBorderSpacing" config:type="boolean">false</config:config-item>

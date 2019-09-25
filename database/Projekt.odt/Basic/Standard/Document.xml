@@ -164,7 +164,7 @@ Sub Document_kopieren_Zwischensummen()
 	if iCount_MAX=0 then 
 		exit Sub
 	else
-		Dim cZwischensumme as currency
+		Dim sZwischensumme as String
 		sSQL1=&quot;SELECT Pos,ZwiSuName,Zwischensumme FROM &quot;&amp; sZwischensummen &amp;_
 			&quot; WHERE DocumentID=&quot;&amp; lDocumentID_old &amp;&quot; ORDER BY Pos ASC&quot;
 	End if	
@@ -173,10 +173,10 @@ Sub Document_kopieren_Zwischensummen()
 		While oRecord1.next()
 			iPos=oRecord1.getInt(1)
 			sBezeichnung=oRecord1.getString(2)
-			cZwischensumme=oRecord1.getString(3)
+			sZwischensumme=oRecord1.getString(3)
 		Wend
 		sSQL2=&quot;INSERT INTO &quot;&amp; sZwischensummen &amp;&quot;(DocumentID,Pos,ZwiSuName,Zwischensumme)&quot;&amp;_
-			&quot; VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; iPos &amp;&quot;,&apos;&quot;&amp; fsConvertApostroph(sBezeichnung) &amp;&quot;&apos;,&quot;&amp; cZwischensumme &amp;&quot;)&quot;
+			&quot; VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; iPos &amp;&quot;,&apos;&quot;&amp; fsConvertApostroph(sBezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp; sZwischensumme &amp;&quot;&apos;)&quot;
 		SQL_execute(sSQL2)
 	elseif iCount_MAX&gt;1 then 
 		For iCount = 1 to iCount_MAX
@@ -184,9 +184,9 @@ Sub Document_kopieren_Zwischensummen()
 			oRecord1.absolute(iCount)
 			iPos=oRecord1.getInt(1)
 			sBezeichnung=oRecord1.getString(2)
-			cZwischensumme=oRecord1.getString(3)
+			sZwischensumme=oRecord1.getString(3)
 			sSQL2=&quot;INSERT INTO &quot;&amp; sZwischensummen &amp;&quot;(DocumentID,Pos,ZwiSuName,Zwischensumme)&quot;&amp;_
-				&quot; VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; iPos &amp;&quot;,&apos;&quot;&amp; fsConvertApostroph(sBezeichnung) &amp;&quot;&apos;,&quot;&amp; cZwischensumme &amp;&quot;)&quot;
+				&quot; VALUES (&quot;&amp; lDocumentID &amp;&quot;,&quot;&amp; iPos &amp;&quot;,&apos;&quot;&amp; fsConvertApostroph(sBezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp; sZwischensumme &amp;&quot;&apos;)&quot;
 			SQL_execute(sSQL2)
 		Next iCount
 	End if
