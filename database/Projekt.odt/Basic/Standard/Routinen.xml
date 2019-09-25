@@ -18,9 +18,6 @@ Dim sLV_Pos_alt as String,sLV_Pos_neu as String,sLeerzeilen as String
 Dim sLeistungsgruppe as String,sBauzeit as String,sEinkaufspreis as String,sListenpreis as String
 Dim sLeistungsID_old as String
 Dim sLieferant_1 as String,sLieferant_2 as String,sLieferant_3 as String
-Dim cRabatt_Satz as currency,cSkonto_Satz as currency,cMwSt_Satz as currency
-Dim cStundenverrechnungssatz as currency
-Dim cMinutenverechnungssatz as currency,cMaterialaufschlagsatz as currency
 Dim iCount as integer,iCount_MAX as integer,iGesperrt as integer
 Dim sMwSt_Satz as String
 Dim sLeistungsID as string,sDocument_Name as String,sBestellnummer as String
