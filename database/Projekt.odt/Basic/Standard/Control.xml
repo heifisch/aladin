@@ -187,29 +187,29 @@ Function sEinheit_cp as String
 	sEinheit_cp=GetDocUserProperty(&quot;oEinheit_cp&quot;)
 End Function
 
-Function cMenge_cp as Currency
-&apos;	cMenge_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMenge_cp&quot;))
-	cMenge_cp=CCur(GetDocUserProperty(&quot;oMenge_cp&quot;))
+Function sMenge_cp as String
+&apos;	sMenge_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMenge_cp&quot;))
+	sMenge_cp=GetDocUserProperty(&quot;oMenge_cp&quot;)
 End Function
 
-Function cEinkaufspreis_cp as Currency
-&apos;	cEinkaufspreis_cp=fZahlMitKomma(GetDocUserProperty(&quot;oEinkaufspreis_cp&quot;))
-	cEinkaufspreis_cp=CCur(GetDocUserProperty(&quot;oEinkaufspreis_cp&quot;))
+Function sEinkaufspreis_cp as String
+&apos;	sEinkaufspreis_cp=fZahlMitKomma(GetDocUserProperty(&quot;oEinkaufspreis_cp&quot;))
+	sEinkaufspreis_cp=GetDocUserProperty(&quot;oEinkaufspreis_cp&quot;)
 End Function
 
-Function cBauzeit_cp as Currency
-&apos;	cBauzeit_cp=fZahlMitKomma(GetDocUserProperty(&quot;oBauzeit_cp&quot;))
-	cBauzeit_cp=CCur(GetDocUserProperty(&quot;oBauzeit_cp&quot;))
+Function sBauzeit_cp as String
+&apos;	sBauzeit_cp=fZahlMitKomma(GetDocUserProperty(&quot;oBauzeit_cp&quot;))
+	sBauzeit_cp=GetDocUserProperty(&quot;oBauzeit_cp&quot;)
 End Function
 
-Function cMinutenverechnungssatz_cp as Currency
-&apos;	cMinutenverechnungssatz_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;))
-	cMinutenverechnungssatz_cp=CCur(GetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;))
+Function sMinutenverechnungssatz_cp as String
+&apos;	sMinutenverechnungssatz_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;))
+	sMinutenverechnungssatz_cp=GetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;)
 End Function
 
-Function cMaterialaufschlagsatz_cp as Currency
-&apos;	cMaterialaufschlagsatz_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;))
-	cMaterialaufschlagsatz_cp=CCur(GetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;))
+Function sMaterialaufschlagsatz_cp as String
+&apos;	sMaterialaufschlagsatz_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;))
+	sMaterialaufschlagsatz_cp=GetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;)
 End Function
 
 Function iPos_TypID_cp as Integer
@@ -236,29 +236,29 @@ Function sEinheit_mv as String
 	sEinheit_mv=GetDocUserProperty(&quot;oEinheit_mv&quot;)
 End Function
 
-Function cMenge_mv as Currency
-&apos;	cMenge_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMenge_mv&quot;))
-	cMenge_mv=CCur(GetDocUserProperty(&quot;oMenge_mv&quot;))
+Function sMenge_mv as String
+&apos;	sMenge_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMenge_mv&quot;))
+	sMenge_mv=GetDocUserProperty(&quot;oMenge_mv&quot;)
 End Function
 
-Function cEinkaufspreis_mv as Currency
-&apos;	cEinkaufspreis_mv=fZahlMitKomma(GetDocUserProperty(&quot;oEinkaufspreis_mv&quot;))
-	cEinkaufspreis_mv=CCur(GetDocUserProperty(&quot;oEinkaufspreis_mv&quot;))
+Function sEinkaufspreis_mv as String
+&apos;	sEinkaufspreis_mv=fZahlMitKomma(GetDocUserProperty(&quot;oEinkaufspreis_mv&quot;))
+	sEinkaufspreis_mv=GetDocUserProperty(&quot;oEinkaufspreis_mv&quot;)
 End Function
 
-Function cBauzeit_mv as Currency
-&apos;	cBauzeit_mv=fZahlMitKomma(GetDocUserProperty(&quot;oBauzeit_mv&quot;))
-	cBauzeit_mv=CCur(GetDocUserProperty(&quot;oBauzeit_mv&quot;))
+Function sBauzeit_mv as String
+&apos;	sBauzeit_mv=fZahlMitKomma(GetDocUserProperty(&quot;oBauzeit_mv&quot;))
+	sBauzeit_mv=GetDocUserProperty(&quot;oBauzeit_mv&quot;)
 End Function
 
-Function cMinutenverechnungssatz_mv as Currency
-&apos;	cMinutenverechnungssatz_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;))
-	cMinutenverechnungssatz_mv=CCur(GetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;))
+Function sMinutenverechnungssatz_mv as String
+&apos;	sMinutenverechnungssatz_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;))
+	sMinutenverechnungssatz_mv=GetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;)
 End Function
 
-Function cMaterialaufschlagsatz_mv as Currency
-&apos;	cMaterialaufschlagsatz_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;))
-	cMaterialaufschlagsatz_mv=CCur(GetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;))
+Function sMaterialaufschlagsatz_mv as String
+&apos;	sMaterialaufschlagsatz_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;))
+	sMaterialaufschlagsatz_mv=GetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;)
 End Function
 
 Function iPos_TypID_mv as Integer
