@@ -33,8 +33,8 @@
  <manifest:file-entry manifest:full-path="Basic/Standard/refreshs.xml" manifest:media-type="text/xml"/>
  <manifest:file-entry manifest:full-path="Basic/Standard/Routinen.xml" manifest:media-type="text/xml"/>
  <manifest:file-entry manifest:full-path="Basic/Standard/SQL_Anweisungen.xml" manifest:media-type="text/xml"/>
- <manifest:file-entry manifest:full-path="Configurations2/menubar/menubar.xml" manifest:media-type=""/>
  <manifest:file-entry manifest:full-path="Configurations2/accelerator/current.xml" manifest:media-type=""/>
+ <manifest:file-entry manifest:full-path="Configurations2/menubar/menubar.xml" manifest:media-type=""/>
  <manifest:file-entry manifest:full-path="Configurations2/" manifest:media-type="application/vnd.sun.xml.ui.configuration"/>
  <manifest:file-entry manifest:full-path="Configurations/toolboxlayout.xml" manifest:media-type=""/>
  <manifest:file-entry manifest:full-path="Configurations/functionbar.xml" manifest:media-type=""/>
