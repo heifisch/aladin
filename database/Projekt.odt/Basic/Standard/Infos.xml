@@ -62,17 +62,17 @@ Sub Aufwand_anzeigen()
 					Chr$(13)&amp; Chr$(13) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp;_
 		            &quot;ohne MwST&quot; &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp;&quot;MwSt&quot;&amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp;&quot;mit MwSt&quot;&amp; Chr$(13) &amp;_
 		            &quot;Rechnungssumme  &quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
-		            					fTausenderpunkt(fZahlMitPunkt(sSumme_ohne_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
-		            					fTausenderpunkt(fZahlMitPunkt(sSumme_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
-		            					fTausenderpunkt(fZahlMitPunkt(sSumme_mit_MwSt)) &amp; &quot; €&quot; &amp; Chr$(13)&amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sSumme_ohne_MwSt)) &amp; &quot; &quot;&amp; sWaehrung &amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sSumme_MwSt)) &amp; &quot; &quot;&amp; sWaehrung &amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sSumme_mit_MwSt)) &amp; &quot; &quot;&amp; sWaehrung &amp; Chr$(13)&amp;_
 		            &quot;./. Abschlagszahlungen   &quot;&amp;_
-		            					fTausenderpunkt(fZahlMitPunkt(sAZ_ohne_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
-		            					fTausenderpunkt(fZahlMitPunkt(sAZ_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
-		            					fTausenderpunkt(fZahlMitPunkt(sAZ_mit_MwSt)) &amp; &quot; €&quot; &amp; Chr$(13) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sAZ_ohne_MwSt)) &amp; &quot; &quot;&amp; sWaehrung &amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sAZ_MwSt)) &amp; &quot; &quot;&amp; sWaehrung &amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sAZ_mit_MwSt)) &amp; &quot; &quot;&amp; sWaehrung &amp; Chr$(13) &amp;_
 		            &quot;Restbetrag  &quot;&amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp; Chr$(9) &amp;_
-		            					fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_ohne_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
-		            					fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_MwSt)) &amp; &quot; €&quot;&amp; Chr$(9) &amp; Chr$(9) &amp;_
-		            					fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_mit_MwSt)) &amp; &quot; €&quot;
+		            					fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_ohne_MwSt)) &amp; &quot; &quot;&amp; sWaehrung &amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_MwSt)) &amp; &quot; &quot;&amp; sWaehrung &amp; Chr$(9) &amp; Chr$(9) &amp;_
+		            					fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_mit_MwSt)) &amp; &quot; &quot;&amp; sWaehrung
 		  else
 		  	sRechnungen=&quot;&quot;
 		  End if
@@ -122,8 +122,8 @@ Dim sLeistungsdaten as String
 		sLeistungsdaten = sLeistungsdaten &amp;_
 			  &quot;              Einheit:&quot;&amp; Chr$(9)&amp; sEinheit &amp;Chr$(13)&amp;_
 			  &quot;             Bauzeit:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sBauzeit) &amp;&quot; Minuten &quot; &amp;Chr$(13)&amp;_
-			  &quot;    Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
-			  &quot;        Listenpreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sListenpreis) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
+			  &quot;    Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; &quot;&amp; sWaehrung &amp;Chr$(13)&amp;_
+			  &quot;        Listenpreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sListenpreis) &amp;&quot; &quot;&amp; sWaehrung &amp;Chr$(13)&amp;_
 			  &quot;  Warenbestand:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sWarenbestand) &amp;&quot; &quot;&amp; sEinheit &amp;Chr$(13)
 		MsgBox(sLeistungsdaten,64,sTitle_lokal &amp;&quot; Leistungsdaten&quot;)
 	End if
