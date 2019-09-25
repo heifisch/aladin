@@ -438,19 +438,11 @@ Function fDocument_TypID as integer
 	Wend
 End Function
 
-Function fSkonto_Tage as integer
+Function fSkonto_Tage_ as integer
 	sSQL1=&quot;SELECT Skonto_Tage FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
 	oRecord1=oResult(sSQL1)
 	While oRecord1.next()
 		fSkonto_Tage=oRecord1.getInt(1)
-	Wend
-End Function
-
-Function fSkonto_Satz as single
-	sSQL1=&quot;SELECT Skonto_Satz FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
-	oRecord1=oResult(sSQL1)
-	While oRecord1.next()
-		fSkonto_Satz=oRecord1.getString(1)
 	Wend
 End Function
 
@@ -459,14 +451,6 @@ Function fSumme_mit_MwSt as string
 	oRecord1=oResult(sSQL1)
 	While oRecord1.next()
 		fSumme_mit_MwSt=oRecord1.getString(1)
-	Wend
-End Function
-
-Function fSkonto as string
-	sSQL1=&quot;SELECT Skonto FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
-	oRecord1=oResult(sSQL1)
-	While oRecord1.next()
-		fSkonto=oRecord1.getString(1)
 	Wend
 End Function
 
