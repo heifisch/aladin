@@ -188,27 +188,22 @@ Function sEinheit_cp as String
 End Function
 
 Function sMenge_cp as String
-&apos;	sMenge_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMenge_cp&quot;))
 	sMenge_cp=GetDocUserProperty(&quot;oMenge_cp&quot;)
 End Function
 
 Function sEinkaufspreis_cp as String
-&apos;	sEinkaufspreis_cp=fZahlMitKomma(GetDocUserProperty(&quot;oEinkaufspreis_cp&quot;))
 	sEinkaufspreis_cp=GetDocUserProperty(&quot;oEinkaufspreis_cp&quot;)
 End Function
 
 Function sBauzeit_cp as String
-&apos;	sBauzeit_cp=fZahlMitKomma(GetDocUserProperty(&quot;oBauzeit_cp&quot;))
 	sBauzeit_cp=GetDocUserProperty(&quot;oBauzeit_cp&quot;)
 End Function
 
 Function sMinutenverechnungssatz_cp as String
-&apos;	sMinutenverechnungssatz_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;))
 	sMinutenverechnungssatz_cp=GetDocUserProperty(&quot;oMinutenverechnungssatz_cp&quot;)
 End Function
 
 Function sMaterialaufschlagsatz_cp as String
-&apos;	sMaterialaufschlagsatz_cp=fZahlMitKomma(GetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;))
 	sMaterialaufschlagsatz_cp=GetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;)
 End Function
 
@@ -237,27 +232,22 @@ Function sEinheit_mv as String
 End Function
 
 Function sMenge_mv as String
-&apos;	sMenge_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMenge_mv&quot;))
 	sMenge_mv=GetDocUserProperty(&quot;oMenge_mv&quot;)
 End Function
 
 Function sEinkaufspreis_mv as String
-&apos;	sEinkaufspreis_mv=fZahlMitKomma(GetDocUserProperty(&quot;oEinkaufspreis_mv&quot;))
 	sEinkaufspreis_mv=GetDocUserProperty(&quot;oEinkaufspreis_mv&quot;)
 End Function
 
 Function sBauzeit_mv as String
-&apos;	sBauzeit_mv=fZahlMitKomma(GetDocUserProperty(&quot;oBauzeit_mv&quot;))
 	sBauzeit_mv=GetDocUserProperty(&quot;oBauzeit_mv&quot;)
 End Function
 
 Function sMinutenverechnungssatz_mv as String
-&apos;	sMinutenverechnungssatz_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;))
 	sMinutenverechnungssatz_mv=GetDocUserProperty(&quot;oMinutenverechnungssatz_mv&quot;)
 End Function
 
 Function sMaterialaufschlagsatz_mv as String
-&apos;	sMaterialaufschlagsatz_mv=fZahlMitKomma(GetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;))
 	sMaterialaufschlagsatz_mv=GetDocUserProperty(&quot;oMaterialaufschlagsatz_mv&quot;)
 End Function
 

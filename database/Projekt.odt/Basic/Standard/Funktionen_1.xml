@@ -471,20 +471,12 @@ Function fSkonto_Tage as integer
 	fSkonto_Tage=oField_Skonto_Tage.BoundField.short
 End Function
 
-Function sStundensatz_Kontakt as single
-	sStundensatz_Kontakt=oField_Stundensatz_Kontakt.BoundField.float
+Function sMVS as String
+	sMVS=fsReplace(CStr(oField_MVS.BoundField.float),&quot;,&quot;,&quot;.&quot;)
 End Function
 
-Function sStundensatz_Projekt as single
-	sStundensatz_Projekt=oField_Stundensatz_Projekt.BoundField.float
-End Function
-
-Function cMVS as currency
-	cMVS=oField_MVS.BoundField.float
-End Function
-
-Function cMAS as currency
-	cMAS=oField_MAS.Boundfield.float
+Function sMAS as String
+	sMAS=fsReplace(CStr(oField_MAS.Boundfield.float),&quot;,&quot;,&quot;.&quot;)
 End Function
 
 Function iOption_Schreibschutz as integer

@@ -96,7 +96,7 @@ Sub Blanko_Datensatz()
 			iMaxPos_1=iMax_Datensatz(sArbeitstabelle,&quot;Pos&quot;)
 		nochmal:
 			sLeistungsbezeichnung=InputBox(&quot;Geben Sie bitte eine neue Leistungsbezeichnung ein!&quot;&amp;_
-			 Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal &amp; &quot; Blanko&quot;)
+				Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal &amp; &quot; Blanko&quot;)
 			if sLeistungsbezeichnung = &quot;&quot; then
 				vStatus=MsgBox(&quot;Sie haben noch keine Leistungsbezeichnung eingegeben!&quot;,37,sTitle_lokal)
 				if vStatus=4 then
@@ -150,9 +150,7 @@ Sub Blanko_Datensatz()
 				&quot;Bauzeit,Einkaufspreis,Minutenverrechnungssatz,Materialaufschlagsatz)&quot;&amp;_
 				&quot; VALUES (&apos;&quot;&amp; iPos_neu &amp;&quot;&apos;,&apos;&quot;&amp; sLV_Pos_neu &amp;&quot;&apos;,&apos;&quot;&amp; lDocumentID &amp;_
 				&quot;&apos;,&apos;0&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;_
-				&quot;&apos;,&apos;&quot;&amp; sMenge &amp;&quot;&apos;,&apos;0&apos;,&apos;0&apos;,&apos;&quot;&amp;_
-				Left(cMVS+&quot;0.0055&quot;,Len(cMVS)-2) &amp;&quot;&apos;,&apos;&quot;&amp;_
-				Left(cMAS+&quot;0.0055&quot;,Len(cMAS)-2) &amp;&quot;&apos;)&quot;
+				&quot;&apos;,&apos;&quot;&amp; sMenge &amp;&quot;&apos;,&apos;0&apos;,&apos;0&apos;,&apos;&quot;&amp; sMVS &amp;&quot;&apos;,&apos;&quot;&amp; sMAS &amp;&quot;&apos;)&quot;
 			SQL_execute(sSQL2)
 			oForm_Tabellendaten.reload()
 			oForm_Tabellendaten.last()
@@ -798,9 +796,9 @@ Sub MVS_uebernehmen()
 	if lDocumentID &gt; 0 then
 		oField_MVS.commit()
 		oForm_Document.updateRow()
-		sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Minutenverrechnungssatz=&quot;&amp; cMVS &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+		sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Minutenverrechnungssatz=&apos;&quot;&amp; sMVS &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
 		SQL_execute(sSQL1)
-		Document_berechnen
+		Document_berechnen()
 	else
 		MsgBox(&quot;Sie haben noch kein Dokument ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
 	End if
@@ -810,9 +808,9 @@ Sub MAS_uebernehmen()
 	if lDocumentID &gt; 0 then
 		oField_MAS.commit()
 		oForm_Document.updateRow()
-		sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Materialaufschlagsatz=&quot;&amp; cMAS &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+		sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Materialaufschlagsatz=&apos;&quot;&amp; sMAS &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
 		SQL_execute(sSQL1)
-		Document_berechnen
+		Document_berechnen()
 	else
 		MsgBox(&quot;Sie haben noch kein Dokument ausgewählt oder angelegt!&quot;,48,sTitle_lokal)
 	End if
@@ -831,7 +829,7 @@ Sub MVS_dynamisch()
 		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Minutenverrechnungssatz=Minutenverrechnungssatz*&quot;&amp; sFaktor &amp;_
 			&quot; WHERE DocumentID=&quot;&amp; lDocumentID 
 		SQL_execute(sSQL2)
-		Document_berechnen
+		Document_berechnen()
 	else
 		MsgBox(&quot;Sie haben noch kein Dokument ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
 	End if
@@ -850,7 +848,7 @@ Sub MAS_dynamisch()
 		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Materialaufschlagsatz=Materialaufschlagsatz*&quot;&amp; sFaktor &amp;_
 			&quot; WHERE DocumentID=&quot;&amp; lDocumentID 
 		SQL_execute(sSQL2)
-		Document_berechnen
+		Document_berechnen()
 	else
 		MsgBox(&quot;Sie haben noch kein Dokument ausgewählt oder angelegt!&quot;,16,sTitle_lokal)
 	End if
