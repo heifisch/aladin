@@ -5,7 +5,7 @@ EXTRACT_DIR="./_extract_${TIMESTAMP}"
 
 find -L . \( -path "${EXTRACT_DIR}" -o -path "./database/temp" -o -path "./TEST" \) -prune -o -type d -exec mkdir -pv ${EXTRACT_DIR}/{} ';'
 
-for f in ` find -L . \( -path "${EXTRACT_DIR}" -o -path "./database/temp" -o -path "./TEST" \) -prune -o -type f -print `
+for f in ` find -L . \( -path "${EXTRACT_DIR}" -o -path "./database/temp" -o -path "./TEST" -o -name ".~lock.*" \) -prune -o -type f -print `
 do
 
 DESTPATH=${EXTRACT_DIR}` echo ${f} | sed -e 's/^\.//g'`
