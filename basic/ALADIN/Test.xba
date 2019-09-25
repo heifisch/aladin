@@ -13,6 +13,27 @@ Option explicit
 	Global vConfiguration as Variant
 	Global vControllerManager as Variant
 
+Sub Test_CDec()
+	Dim cErgebnis as Currency
+	Dim sErgebnis as String
+	Dim cWert1 as Currency
+	Dim cWert2 as Currency
+	Dim iErgebnis as Integer
+	Dim nErgebnis as Single
+		
+		cWert1=0
+		cWert2=4.5
+		
+		cErgebnis =cWert1-cWert2
+		iErgebnis=CInt(cErgebnis)
+		sErgebnis=CStr(cErgebnis)
+		nErgebnis=CSng(cErgebnis)
+		
+		
+	print cErgebnis
+	print CCur(nErgebnis)
+End Sub
+
 Sub Test_CCur()
 	Dim cErgebnis as Currency
 	Dim sErgebnis as String
@@ -36,6 +57,7 @@ Sub Test_Currency()
 	Dim sSQL as String
 	Dim oRecord as Object
 	Dim cErgebnis as Currency
+	Dim sngErgebnis as Single
 	Dim sErgebnis as String
 	Dim cWert1 as Currency
 	Dim cWert2 as Currency
@@ -44,11 +66,14 @@ Sub Test_Currency()
 	oRecord=oResult(sSQL)
 	While oRecord.next()
 &apos;		cErgebnis=oRecord.getFloat(1)
+		sngErgebnis=oRecord.getString(1)
 		sErgebnis=oRecord.getString(1)
 	Wend
 
 	print sErgebnis
-	print cErgebnis
+	print sngErgebnis
+	
+	exit sub
 		
 		cWert1=0
 		cWert2=4.5

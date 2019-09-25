@@ -438,20 +438,30 @@ End Sub
 
 Sub Kontaktdaten_setzen()
 	Dim i13b as Integer,s13bText as String
+	Dim sRabatt_Satz as String
+	Dim sSkonto_Satz as String
+	Dim sMwSt_Satz as String
+	Dim sMaterialaufschlagsatz as String
+	Dim sStundenverrechnungssatz as String
+
 	i13b=0
 	if InStr(sKontakte,&quot;Kunden&quot;) &gt; 0 then
-		sSQL1=&quot;SELECT t1.Rabatt_Satz,t1.Skonto_Satz,t1.MwST_Satz,t1.Materialaufschlagsatz,t1.Stundenverrechnungssatz,&quot;&amp;_
+		sSQL1=&quot;SELECT COALESCE(t1.Rabatt_Satz,0),&quot;&amp;_
+			&quot;COALESCE(t1.Skonto_Satz,0),&quot;&amp;_
+			&quot;COALESCE(t1.MwST_Satz,0),&quot;&amp;_
+			&quot;COALESCE(t1.Materialaufschlagsatz,0),&quot;&amp;_
+			&quot;COALESCE(t1.Stundenverrechnungssatz,0),&quot;&amp;_
 			&quot;t1.Skonto_Tage,t1.Faellig_Tage,t1.13b,t2.13bText AS Text &quot;&amp;_
 			&quot;FROM &quot;&amp; sKontakte &amp;&quot; as t1,Einstellungen as t2 &quot;&amp;_
 			&quot;WHERE t1.KontaktID=&quot;&amp; lKontaktID &amp;_
 			&quot; AND t2.EinstellungsID=&quot;&amp; iEinstellungsID_lokal
 		oRecord1=oResult(sSQL1)
 		While oRecord1.next()
-			cRabatt_Satz=oRecord1.getString(1)		
-			cSkonto_Satz=oRecord1.getString(2)
-			cMwSt_Satz=oRecord1.getString(3)
-			cMaterialaufschlagsatz=oRecord1.getString(4)
-			cStundenverrechnungssatz=oRecord1.getString(5)
+			sRabatt_Satz=oRecord1.getString(1)
+			sSkonto_Satz=oRecord1.getString(2)
+			sMwSt_Satz=oRecord1.getString(3)
+			sMaterialaufschlagsatz=oRecord1.getString(4)
+			sStundenverrechnungssatz=oRecord1.getString(5)
 			iSkonto_Tage=oRecord1.getInt(6)
 			iFaellig_Tage=oRecord1.getInt(7)
 			i13b=oRecord1.getInt(8)
@@ -460,16 +470,16 @@ Sub Kontaktdaten_setzen()
 
 		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
 			&quot; SET AnsprechpartnerID=NULL&quot;&amp;_
-			&quot;,Rabatt_Satz=&quot;&amp; cRabatt_Satz &amp;_
-			&quot;,Skonto_Satz=&quot;&amp; cSkonto_Satz &amp;_
-			&quot;,MwSt_Satz=&quot;&amp; cMwSt_Satz &amp;_
+			&quot;,Rabatt_Satz=&quot;&amp; sRabatt_Satz &amp;_
+			&quot;,Skonto_Satz=&quot;&amp; sSkonto_Satz &amp;_
+			&quot;,MwSt_Satz=&quot;&amp; sMwSt_Satz &amp;_
 			&quot;,Skonto_Tage=&quot;&amp; iSkonto_Tage &amp;_
 			&quot;,Faellig_Tage=&quot;&amp; iFaellig_Tage &amp;_
-			&quot;,Materialaufschlagsatz=&quot;&amp; cMaterialaufschlagsatz &amp;_
+			&quot;,Materialaufschlagsatz=&quot;&amp; sMaterialaufschlagsatz &amp;_
 			&quot;,Erstellungsdatum=(date_add(now(),interval 0 month))&quot;
 
 		if InStr(sTabelle1,&quot;Angebote1&quot;)&gt;0 then 	
-			if cSkonto_Satz = 0 OR iSkonto_Tage = 0 then
+			if CSng(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day))&quot;&amp;_
 					&quot;,Skonto_bis=NULL &quot;&amp;_
 					&quot;,13b=&quot;&amp; i13b &amp;_
@@ -481,7 +491,7 @@ Sub Kontaktdaten_setzen()
 					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
 			End if
 		elseif InStr(sTabelle1,&quot;Rechnungen1&quot;)&gt;0 then
-			if cSkonto_Satz = 0 OR iSkonto_Tage = 0 then
+			if CSng(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iFaellig_Tage &amp;&quot; day))&quot;&amp;_
 					&quot;,Skonto_bis=NULL&quot;&amp;_
 					&quot;,13b=&quot;&amp; i13b &amp;_
@@ -493,7 +503,7 @@ Sub Kontaktdaten_setzen()
 					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
 			End if
 		else
-			if cSkonto_Satz = 0 OR iSkonto_Tage = 0 then
+			if CSng(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(now(),interval 0 day))&quot;&amp;_
 					&quot;,Skonto_bis=NULL&quot;&amp;_
 					&quot;,13b=&quot;&amp; i13b &amp;_
@@ -504,25 +514,26 @@ Sub Kontaktdaten_setzen()
 					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
 			End if
 		End if
-		if CCur(oField_MVS.BoundField.string) &gt; 0 then
-			if CCur(oField_MVS.BoundField.string) &lt;&gt; CCur(cStundenverrechnungssatz/60) then
+		if CSng(oField_MVS.BoundField.string) &gt; 0 then
+			if CSng(oField_MVS.BoundField.string) &lt;&gt; CSng(sStundenverrechnungssatz)/60 then
 				vStatus=MsgBox(&quot;Möchten Sie, aus dem in den Stamm-Daten gespeicherten Stundenverrechnungssatz, den Minutenverrechnungssatz(MVS) berechnen und diesen im Dokument verwenden?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
 					&quot;Achtung!!! Vorhandene Positionen werden nicht geändert.&quot;&amp; Chr(10)&amp;_
 					&quot;Für diese, kann durch drücken auf &quot;&amp; chr(34) &amp;&quot;Minutenverrechnungssatz übernehmen&quot;&amp; chr(34) &amp;&quot; der Wert &quot;&amp; chr(34) &amp;&quot;MVS&quot;&amp; chr(34) &amp;&quot; geändert werden&quot;,36,sTitle_lokal)
 				if vStatus=6 then
-					oField_MVS.value=cStundenverrechnungssatz/60
+					oField_MVS.value=CSng(sStundenverrechnungssatz)/60
 					oField_MVS.commit()
 					oForm_Document.updateRow()
 				End if
 			End if
 		else
-			oField_MVS.value=cStundenverrechnungssatz/60
+			oField_MVS.value=CSng(sStundenverrechnungssatz)/60
 			oField_MVS.commit()
 			oForm_Document.updateRow()
 		End if
 	else
 		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET AnsprechpartnerID=NULL WHERE DocumentID=&quot;&amp; lDocumentID	
 	End if
+
 	SQL_execute(sSQL2)
 	if iDocTypID &lt; 7 then
 		if i13b=0 then
@@ -536,23 +547,22 @@ Sub Kontaktdaten_setzen()
 End Sub
 
 Sub Datum_setzen_manuel()
+	Dim sSkonto_Satz as String
+
 	if lKontaktID &gt; 0 then
 		if InStr(sKontakte,&quot;Kunden&quot;) &gt; 0 then
-			sSQL1=&quot;SELECT Rabatt_Satz,Skonto_Satz,Materialaufschlagsatz,Stundenverrechnungssatz,&quot;&amp;_
+			sSQL1=&quot;SELECT COALESCE(Skonto_Satz,0),&quot;&amp;_
 				&quot;Skonto_Tage,Faellig_Tage&quot;&amp;_
 				&quot; FROM &quot;&amp; sKontakte &amp;_
 				&quot; WHERE KontaktID=&quot;&amp; lKontaktID
 			oRecord1=oResult(sSQL1)
 			While oRecord1.next()
-				cRabatt_Satz=oRecord1.getString(1)		
-				cSkonto_Satz=oRecord1.getString(2)		
-				cMaterialaufschlagsatz=oRecord1.getString(3)
-				cStundenverrechnungssatz=oRecord1.getString(4)
-				iSkonto_Tage=oRecord1.getInt(5)
-				iFaellig_Tage=oRecord1.getInt(6)
+				sSkonto_Satz=oRecord1.getString(1)		
+				iSkonto_Tage=oRecord1.getInt(2)
+				iFaellig_Tage=oRecord1.getInt(3)
 			Wend
 			if InStr(sTabelle1,&quot;Angebote1&quot;)&gt;0 then 	
-				if cSkonto_Satz = 0 OR iSkonto_Tage = 0 then
+				if CSng(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 					sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
 						&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day))&quot;&amp;_
 						&quot;,Skonto_bis=NULL&quot;&amp;_
@@ -565,7 +575,7 @@ Sub Datum_setzen_manuel()
 				End if
 				SQL_execute(sSQL2)
 			elseif InStr(sTabelle1,&quot;Rechnungen1&quot;)&gt;0 then
-				if cSkonto_Satz = 0 OR iSkonto_Tage = 0 then
+				if CSng(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 					sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
 						&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; fFaellig_Tage &amp;&quot; day))&quot;&amp;_
 						&quot;,Skonto_bis=NULL&quot;&amp;_

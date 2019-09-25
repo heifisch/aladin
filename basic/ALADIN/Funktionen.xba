@@ -426,12 +426,18 @@ Function oResult_Scroll(sSQL as String)as Object
 End Function
 
 Function oResult(sSQL as String)as Object
+On Error Goto ErrorHandler
 	Dim oStatement as Object
 	oStatement=oConnection.createStatement()
 	oStatement.ResultSetType = com.sun.star.sdbc.ResultSetType.FORWARD_ONLY 
 	oStatement.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
 	oStatement.EscapeProcessing = FALSE
 	oResult=oStatement.executeQuery(sSQL)
+	Exit Function
+ErrorHandler:
+	MsgBox sSQL
+	Stop
+	Exit Function
 End Function
 
 Function oResult_Leistungen(sSQL as String)as Object
