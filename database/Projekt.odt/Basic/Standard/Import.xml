@@ -53,7 +53,7 @@ Sub Import_d83_exec(oFilePicker as Object)
 	Dim sDateiTyp as String,sLine as String,iDatensatz as Integer,sTitelName as String,lMaxPos as Long
 	Dim sLeistungsID as String,sLeistungsbezeichnung as String,sEinheit as String,sBestellnummer as String
 	Dim sLeistungsbeschreibung as String,sOrdnungsZahl as String,sString as String
-	Dim cMenge as Currency,sBemerkung as String,iBemerkung as Integer,sZwiSuName as String,iZwiSuName as Integer
+	Dim sMenge as String,sBemerkung as String,iBemerkung as Integer,sZwiSuName as String,iZwiSuName as Integer
 	Dim oRecord1 as Object,iCount as Integer,iCountProgress as Integer,iTitelName as Integer
 	Dim sDelim() As String
 	Dim oProgressbar as Object
@@ -118,12 +118,12 @@ Sub Import_d83_exec(oFilePicker as Object)
 						sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
 							&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
 							&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
-						fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
-						fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+							fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
+							fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&apos;&quot;&amp; sMenge &amp;&quot;&apos;)&quot;
 						SQL_execute(sSQL2)
 			
 						sOrdnungsZahl = &quot;&quot;
-						cMenge = &quot;&quot;
+						sMenge = &quot;&quot;
 						sEinheit = &quot;&quot;
 						sLeistungsID = &quot;&quot;
 						sBestellnummer = &quot;&quot;
@@ -173,12 +173,12 @@ Sub Import_d83_exec(oFilePicker as Object)
 						sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
 							&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
 							&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
-						fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
-						fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+							fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
+							fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&apos;&quot;&amp; sMenge &amp;&quot;&apos;)&quot;
 						SQL_execute(sSQL2)
 			
 						sOrdnungsZahl = &quot;&quot;
-						cMenge = &quot;&quot;
+						sMenge = &quot;&quot;
 						sEinheit = &quot;&quot;
 						sLeistungsID = &quot;&quot;
 						sBestellnummer = &quot;&quot;
@@ -230,12 +230,12 @@ Sub Import_d83_exec(oFilePicker as Object)
 						sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
 							&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
 							&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
-						fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
-						fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+							fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
+							fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&apos;&quot;&amp; sMenge &amp;&quot;&apos;)&quot;
 						SQL_execute(sSQL2)
 			
 						sOrdnungsZahl = &quot;&quot;
-						cMenge = &quot;&quot;
+						sMenge = &quot;&quot;
 						sEinheit = &quot;&quot;
 						sLeistungsID = &quot;&quot;
 						sBestellnummer = &quot;&quot;
@@ -278,7 +278,7 @@ Sub Import_d83_exec(oFilePicker as Object)
 						else
 							sOrdnungsZahl = Trim(Mid(sLine,3,2) &amp;&quot;.&quot;&amp; Trim(Mid(sLine,7,4
 						End if
-						cMenge = CCur(RTrim(Mid(sLine,24,8)) &amp;&quot;.&quot;&amp; RTrim(Mid(sLine,32,3)))
+						sMenge = RTrim(Mid(sLine,24,8)) &amp;&quot;.&quot;&amp; RTrim(Mid(sLine,32,3))
 						sEinheit = RTrim(Mid(sLine,35,6))
 						sLeistungsID=sOrdnungsZahl
 						sBestellnummer=sOrdnungsZahl
@@ -294,7 +294,7 @@ Sub Import_d83_exec(oFilePicker as Object)
 							&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
 							&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
 							fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
-							fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+							fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&apos;&quot;&amp; sMenge &amp;&quot;&apos;)&quot;
 						SQL_execute(sSQL2)
 		
 						if Len(Trim(Mid(sLine,3,4))) &gt; 2 then
@@ -302,7 +302,7 @@ Sub Import_d83_exec(oFilePicker as Object)
 						else
 							sOrdnungsZahl = Trim(Mid(sLine,3,2) &amp;&quot;.&quot;&amp; Trim(Mid(sLine,7,4
 						End if
-						cMenge = CCur(RTrim(Mid(sLine,24,8)) &amp;&quot;.&quot;&amp; RTrim(Mid(sLine,32,3)))
+						sMenge = RTrim(Mid(sLine,24,8)) &amp;&quot;.&quot;&amp; RTrim(Mid(sLine,32,3))
 						sEinheit = RTrim(Mid(sLine,35,6))
 						sLeistungsID=sOrdnungsZahl
 						sBestellnummer=sOrdnungsZahl
@@ -519,11 +519,11 @@ Sub Import_d83_exec(oFilePicker as Object)
 							&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
 							&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
 							fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
-							fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+							fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&apos;&quot;&amp; sMenge &amp;&quot;&apos;)&quot;
 						SQL_execute(sSQL2)
 					
 						sOrdnungsZahl = &quot;&quot;
-						cMenge = &quot;&quot;
+						sMenge = &quot;&quot;
 						sEinheit = &quot;&quot;
 						sLeistungsID = &quot;&quot;
 						sBestellnummer = &quot;&quot;
@@ -551,14 +551,14 @@ Sub Import_d83_exec(oFilePicker as Object)
 &apos;						&quot; (LV_Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge)&quot;&amp;_
 &apos;						&quot; VALUES (&apos;&quot;&amp; sOrdnungsZahl &amp;&quot;&apos;,&quot;&amp; lDocumentID &amp;&quot;,&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp;_
 &apos;						fsConvertString(sLeistungsbezeichnung) &amp;&quot;&apos;,&apos;&quot;&amp;_
-&apos;						fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&quot;&amp; cMenge &amp;&quot;)&quot;
+&apos;						fsConvertString(sLeistungsbeschreibung) &amp;&quot;&apos;,&apos;&quot;&amp; sEinheit &amp;&quot;&apos;,&apos;&quot;&amp; sMenge &amp;&quot;&apos;)&quot;
 &apos;						SQL_execute(sSQL2)
 				
 		End if
 				
 		sOrdnungsZahl = &quot;&quot;
 		sEinheit = &quot;&quot;
-		cMenge = 0
+		sMenge = 0
 		sLeistungsbezeichnung = &quot;&quot;
 		sLeistungsbeschreibung = &quot;&quot;
 		
