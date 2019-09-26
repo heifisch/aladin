@@ -7,36 +7,37 @@
 REM  *****  BASIC  *****
 &apos;option explicit
 
-&apos;Global vViewCursor as Variant
+
+&apos;Global vViewCursor AS Variant
 
 Sub Leistungen()
-	Dim sPos as String,iPos_TypID as integer
-	Dim sLeistungsbezeichnung as String,sLeistungsbeschreibung as String,sEinheit as String
-	Dim sMenge as String,sLieferung as String,sLeistung as String,sEP as String,sBestellnummer as String
-	Dim sGP as String,cGP as currency,cUebertrag as currency,sUebertrag as String
-	Dim iPosLeistung as Integer,iPosZwiSum as Integer,iPosZwiBem as Integer,iPosTypID as Integer
-	Dim iCountLeistung as integer,iCountZwiSum as integer,iCountZwiBem as integer,iCountInsert as Integer,iCountInsertCarry as Integer
-	Dim iSelectLeistung as Integer,iSelectZwiSum as Integer,iSelectZwiBem as Integer
-	Dim iInsertCarry as Integer,sPosTyp as String
-	Dim sZwiSumName as String,sZwiSum as String,sLeistungstext as String,sBemerkung as String
-	Dim oCursorZwiSum as Object,oCursorZwiBem as Object,oCursorAltPos as Object
-	Dim oCursorDocTyp1 as Object,oCursorDocTyp2 as Object
-	Dim oRangeAltPos as Object,oRangeZwiSum as Object
-	Dim vColumns as Variant,vColumnPos as Variant
-	Dim iPageCountBefore as Integer,iPageCountCarry as Integer
-	Dim iPageNumber as Integer
-	Dim iEP_Ueberschrift as integer
-	Dim oTables as Object
-	Dim vTableKopf1 as Variant,vTableKopf2 as Variant
-	Dim vTableLeistungen as Variant,vRowsLeistungen as Variant
-	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
-	Dim sTabZwiSum as String,sTabZwiBem as String
-	Dim iAnzahlLeistungen as integer,iAnzahlZwiSum as integer,iAnzahlZwiBem as integer,iAnzahlAltPos as integer
-	Dim oRecordLeistungen as Object,oRecordZwiSum as Object,oRecordZwiBem as Object
-	Dim oStyleFamilies as Object,oPageStyles as Object,oPageStyle_1 as Object,oPageStyle_2 as Object
-	Dim afsInsertCarryReturn(1) as String
-	Dim vViewCursor as Variant
-	Dim iAZ as Integer
+	Dim sPos AS String,iPos_TypID AS integer
+	Dim sLeistungsbezeichnung AS String,sLeistungsbeschreibung AS String,sEinheit AS String
+	Dim sMenge AS String,sLieferung AS String,sLeistung AS String,sEP AS String,sBestellnummer AS String
+	Dim sGP AS String,sUebertrag AS String,sSQL_Uebertrag AS String
+	Dim iPosLeistung AS Integer,iPosZwiSum AS Integer,iPosZwiBem AS Integer,iPosTypID AS Integer
+	Dim iCountLeistung AS Integer,iCountZwiSum AS Integer,iCountZwiBem AS Integer,iCountInsert AS Integer,iCountInsertCarry AS Integer
+	Dim iSelectLeistung AS Integer,iSelectZwiSum AS Integer,iSelectZwiBem AS Integer
+	Dim iInsertCarry AS Integer,sPosTyp AS String
+	Dim sZwiSumName AS String,sZwiSum AS String,sLeistungstext AS String,sBemerkung AS String
+	Dim oCursorZwiSum AS Object,oCursorZwiBem AS Object,oCursorAltPos AS Object
+	Dim oCursorDocTyp1 AS Object,oCursorDocTyp2 AS Object
+	Dim oRangeAltPos AS Object,oRangeZwiSum AS Object
+	Dim vColumns AS Variant,vColumnPos AS Variant
+	Dim iPageCountBefore AS Integer,iPageCountCarry AS Integer
+	Dim iPageNumber AS Integer
+	Dim iEP_Ueberschrift AS integer
+	Dim oTables AS Object
+	Dim vTableKopf1 AS Variant,vTableKopf2 AS Variant
+	Dim vTableLeistungen AS Variant,vRowsLeistungen AS Variant
+	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
+	Dim sTabZwiSum AS String,sTabZwiBem AS String
+	Dim iAnzahlLeistungen AS integer,iAnzahlZwiSum AS integer,iAnzahlZwiBem AS integer,iAnzahlAltPos AS Integer
+	Dim oRecordLeistungen AS Object,oRecordZwiSum AS Object,oRecordZwiBem AS Object
+	Dim oStyleFamilies AS Object,oPageStyles AS Object,oPageStyle_1 AS Object,oPageStyle_2 AS Object
+	Dim afsInsertCarryReturn(1) AS String
+	Dim vViewCursor AS Variant
+	Dim iAZ AS Integer
 	
 	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
 	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
@@ -51,7 +52,7 @@ Sub Leistungen()
 	iEP_Ueberschrift = 0
 	iAZ=0
 
-	select case iDocument_TypID
+	SELECT case iDocument_TypID
 		case 1
 			if iEinstellungsID_lokal=1 _ 
 				or InStr(fsTableList,&quot;;ZwiSuAngebote_&quot;&amp; iEinstellungsID_lokal &amp; &quot;;&quot;) = 0 _ 
@@ -162,7 +163,7 @@ Sub Leistungen()
 				sTabZwiBem = &quot;ZwiBemBestellungen_&quot;&amp; iEinstellungsID_lokal
 			end if
 			iAnzahlZwiSum = 0
-	End Select		
+	End SELECT		
 	
 	iAnzahlLeistungen = fAnzahlDatensaetze(sDrucker2_TEMP(iUserID_lokal),lDocumentID)
 	
@@ -175,34 +176,34 @@ Sub Leistungen()
 	iAnzahlAltPos = fAnzahlDatensaetzeAltPos(iUserID_lokal)
 	
 	if iAnzahlLeistungen &gt; 0 then
-	sSQL1=&quot;select distinct t1.PosID,t1.Pos,t1.Pos_TypID,t1.Bestellnummer,t2.Pos_Typ,t1.Leistungsbezeichnung,&quot;&amp;_
-		&quot;t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Lieferung,t1.Leistung,t1.EP,t1.GP,t1.GP&quot;&amp;_
-		&quot; from &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; as t1,Pos_Typ as t2&quot;&amp;_
-		&quot; where t2.Pos_TypID=t1.Pos_TypID order by t1.PosID ASC&quot;
+	sSQL1=&quot;SELECT DISTINCT t1.PosID,t1.Pos,t1.Pos_TypID,t1.Bestellnummer,t2.Pos_Typ,t1.Leistungsbezeichnung,&quot;&amp;_
+		&quot;t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Lieferung,t1.Leistung,t1.EP,t1.GP&quot;&amp;_
+		&quot; FROM &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; AS t1,Pos_Typ AS t2&quot;&amp;_
+		&quot; WHERE t2.Pos_TypID=t1.Pos_TypID ORDER BY t1.PosID ASC&quot;
 	End if
 	
 	if iAnzahlZwiSum &gt; 0 then
-	sSQL2=&quot;select distinct Pos,ZwiSuName,Zwischensumme &quot;&amp;_
-		&quot;from &quot;&amp; sTabZwiSum &amp;&quot; where DocumentID=&quot;&amp; lDocumentID &amp;&quot; order by Pos ASC&quot;
+	sSQL2=&quot;SELECT DISTINCT Pos,ZwiSuName,Zwischensumme &quot;&amp;_
+		&quot;FROM &quot;&amp; sTabZwiSum &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC&quot;
 	End if
 	
 	if iAnzahlZwiBem &gt; 0 then
-	sSQL3=&quot;select distinct Pos,Bemerkung &quot;&amp;_
-		&quot;from &quot;&amp; sTabZwiBem &amp;&quot; where DocumentID=&quot;&amp; lDocumentID &amp;&quot; order by Pos ASC, ZwiBemID ASC&quot;
+	sSQL3=&quot;SELECT DISTINCT Pos,Bemerkung &quot;&amp;_
+		&quot;FROM &quot;&amp; sTabZwiBem &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC, ZwiBemID ASC&quot;
 	End if
 	
-		iCountZwiSum = 1
-		iCountZwiBem = 1
-		iCountLeistung = 1
-		iCountinsert = 2
-		iCountInsertCarry = 0
-		iPageCountCarry = 0
-		iSelectZwiBem = 1
-		iSelectZwiSum = 1
-		iSelectLeistung = 1
-		cUebertrag = 0
+	iCountZwiSum = 1
+	iCountZwiBem = 1
+	iCountLeistung = 1
+	iCountinsert = 2
+	iCountInsertCarry = 0
+	iPageCountCarry = 0
+	iSelectZwiBem = 1
+	iSelectZwiSum = 1
+	iSelectLeistung = 1
+	sSQL_Uebertrag = &quot;0&quot;
 	
-	if iDocument_TypID &gt; 6 or ((iDocument_TypID = 3 or iDocument_TypID = 4) and ifPrintPreis = 0) then
+	if iDocument_TypID &gt; 6 or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 0) then
 		vTableLeistungen.getCellByName(&quot;E1&quot;).String=&quot;&quot;
 		vTableLeistungen.getCellByName(&quot;F1&quot;).String=&quot;&quot;
 	End if
@@ -238,7 +239,7 @@ Sub Leistungen()
 				iPosZwiSum = 9999
 			End if
 		End if
-		
+	
 		if iSelectLeistung = 1 then
 			if iAnzahlLeistungen &gt;= iCountLeistung then
 				oRecordLeistungen=oResult_Leistungen(sSQL1)
@@ -256,7 +257,6 @@ Sub Leistungen()
 				sLeistung = oRecordLeistungen.getString(11)
 				sEP = oRecordLeistungen.getString(12)
 				sGP = oRecordLeistungen.getString(13)
-				cGP = oRecordLeistungen.getString(14)
 				iSelectLeistung = 0
 			else
 				iSelectLeistung = 0
@@ -265,8 +265,8 @@ Sub Leistungen()
 		End if
 		
 		if iPosZwiBem &gt; 0 _
-			and iPosZwiBem &lt;= iPosZwiSum _
-			and iPosZwiBem &lt;= iPosLeistung _
+			AND iPosZwiBem &lt;= iPosZwiSum _
+			AND iPosZwiBem &lt;= iPosLeistung _
 		then
 	&apos;Bemerkung einfügen
 	
@@ -282,7 +282,7 @@ Sub Leistungen()
 			oCursorZwiBem.CharWeight=com.sun.star.awt.FontWeight.BOLD
 			vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=sBemerkung
 			vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).TopBorderDistance=100
-			if iDocument_TypID &lt; 7 and iDocument_TypID &lt;&gt; 3 and iDocument_TypID &lt;&gt; 4 then
+			if iDocument_TypID &lt; 7 AND iDocument_TypID &lt;&gt; 3 AND iDocument_TypID &lt;&gt; 4 then
 	
 				afsInsertCarryReturn=Split(fsInsertCarry(iPageCountBefore,iCountInsert,0),&quot;;&quot;)
 				iInsertCarry = CInt(Trim(afsInsertCarryReturn(0))
@@ -292,7 +292,7 @@ Sub Leistungen()
 					iCountInsert=iCountInsert + 1
 					iSelectZwiBem = 1
 				elseif iInsertCarry = 1 then
-					sUebertrag = fTausenderpunkt(fZahlMitPunkt(Left((CStr(cUebertrag)),Len(CStr(cUebertrag))-2)))
+					sUebertrag = fTausenderpunkt(fZahlMitPunkt(sSQL_Uebertrag))
 					if iCountLeistung &gt; 1 then
 						iCountInsert=fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,0) + 1
 					else
@@ -308,10 +308,10 @@ Sub Leistungen()
 		elseif iPosZwiBem = 0 then
 			iCountZwiBem=iCountZwiBem + 1
 			iSelectZwiBem = 1
-		elseif iPosZwiSum &gt; 0 and iPosZwiSum &lt; iPosZwiBem and iPosZwiSum &lt; iPosLeistung then
+		elseif iPosZwiSum &gt; 0 AND iPosZwiSum &lt; iPosZwiBem AND iPosZwiSum &lt; iPosLeistung then
 			if iDocument_TypID &lt; 3 _
-				or ((iDocument_TypID = 3 or iDocument_TypID = 4) and ifPrintPreis = 1) _
-				or (iDocument_TypID &lt; 7 and iDocument_TypID &gt; 4) _
+				or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 1) _
+				or (iDocument_TypID &lt; 7 AND iDocument_TypID &gt; 4) _
 			then
 	&apos; Zwischensumme einfügen
 	
@@ -344,7 +344,7 @@ Sub Leistungen()
 					iCountZwiSum=iCountZwiSum + 1
 					iSelectZwiSum = 1
 				elseif iInsertCarry = 1 then
-					sUebertrag = fTausenderpunkt(fZahlMitPunkt(Left((CStr(cUebertrag)),Len(CStr(cUebertrag))-2)))
+					sUebertrag = fTausenderpunkt(fZahlMitPunkt(sSQL_Uebertrag))
 					if iCountLeistung &gt; 1 then
 						iCountInsert=fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,0) + 1
 					else
@@ -357,16 +357,19 @@ Sub Leistungen()
 		elseif iPosZwiSum = 0 then
 			iCountZwiSum=iCountZwiSum + 1
 			iSelectZwiSum = 1
-		elseif iPosLeistung &gt; 0 and iPosLeistung &lt;= iPosZwiSum  and iPosLeistung &lt; iPosZwiBem then
+		elseif iPosLeistung &gt; 0 AND iPosLeistung &lt;= iPosZwiSum  AND iPosLeistung &lt; iPosZwiBem then
 	&apos; Leistung einfügen
 	
-			if iPosTypID = 4 and iAZ = 0 then
+			if iPosTypID = 4 AND iAZ = 0 then
 				vRowsLeistungen.insertByIndex(iCountInsert,1)
 				vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
-				Dim oBorderLine as New com.sun.star.table.BorderLine
+				Dim oBorderLine AS New com.sun.star.table.BorderLine2
 					oBorderLine.Color=1
-					oBorderLine.OuterLineWidth=2
-					oBorderLine.InnerLineWidth=2
+&apos;					oBorderLine.InnerLineWidth=2
+&apos;					oBorderLine.LineDistance=2
+					oBorderLine.LineStyle=7
+					oBorderLine.LineWidth=5
+&apos;					oBorderLine.OuterLineWidth=2
 				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorder=oBorderLine
 				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).BottomBorder=oBorderLine
 				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorderDistance=80
@@ -432,14 +435,14 @@ Sub Leistungen()
 			end if
 	
 			sLeistungstext=&quot;&quot;
-			if ifBestellnummer = 1 and sBestellnummer &lt;&gt; &quot;&quot; then
+			if ifBestellnummer = 1 AND sBestellnummer &lt;&gt; &quot;&quot; then
 				sLeistungstext = sBestellnummer &amp; Chr(10)
 			End if
-			if ifLeistungsbezeichnung = 1 and sLeistungsbezeichnung &lt;&gt; &quot;&quot; then
+			if ifLeistungsbezeichnung = 1 AND sLeistungsbezeichnung &lt;&gt; &quot;&quot; then
 				sLeistungstext = sLeistungstext &amp; sLeistungsbezeichnung
 			End if
 			if ifLeistungsbeschreibung = 1 then
-				if sLeistungsbeschreibung = &quot;&quot; and ifLeistungsbezeichnung = 0 then
+				if sLeistungsbeschreibung = &quot;&quot; AND ifLeistungsbezeichnung = 0 then
 					if sLeistungstext = &quot;&quot; then
 						sLeistungstext = sLeistungsbezeichnung
 					else
@@ -462,7 +465,7 @@ Sub Leistungen()
 			vRowsLeistungen.insertByIndex(iCountInsert,1)
 			vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
 	
-			if iPosTypID &gt; 1 and iPosTypID &lt; 4 then
+			if iPosTypID &gt; 1 AND iPosTypID &lt; 4 then
 				sLeistungstext = sPosTyp &amp; Chr(10) &amp; sLeistungstext
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;A&quot; &amp; iCountInsert)
 				oCursorAltPos.CharPosture = com.sun.star.awt.FontSlant.ITALIC
@@ -530,15 +533,15 @@ Sub Leistungen()
 								vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sGP))
 							elseif iPosTypID = 4 then
 								vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sGP))
-							elseif iPosTypID &gt; 1  and iPosTypID &lt; 4 then
+							elseif iPosTypID &gt; 1  AND iPosTypID &lt; 4 then
 								vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=&quot;(&quot; &amp; fTausenderpunkt(fZahlMitPunkt(sGP)) &amp; &quot;)&quot;
 							End if
 						End if
 					End if
 				End if
 			elseif iDocument_TypID &lt; 3 _
-				or ((iDocument_TypID = 3 or iDocument_TypID = 4) and ifPrintPreis = 1) _
-				or (iDocument_TypID &lt; 7 and iDocument_TypID &gt; 4) _
+				or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 1) _
+				or (iDocument_TypID &lt; 7 AND iDocument_TypID &gt; 4) _
 			then
 				if iPosTypID &lt; 4 then
 					vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sEP))
@@ -549,14 +552,14 @@ Sub Leistungen()
 					vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sGP))
 				elseif iPosTypID = 4 then
 					vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sGP))
-				elseif iPosTypID &gt; 1  and iPosTypID &lt; 4 then
+				elseif iPosTypID &gt; 1  AND iPosTypID &lt; 4 then
 					vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=&quot;(&quot; &amp; fTausenderpunkt(fZahlMitPunkt(sGP)) &amp; &quot;)&quot;
 				End if
 			End if
 			
 			if iDocument_TypID &lt; 3 _
-				or ((iDocument_TypID = 3 or iDocument_TypID = 4) and ifPrintPreis = 1) _
-				or (iDocument_TypID &lt; 7 and iDocument_TypID &gt; 4) _
+				or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 1) _
+				or (iDocument_TypID &lt; 7 AND iDocument_TypID &gt; 4) _
 			then
 	
 				afsInsertCarryReturn=Split(fsInsertCarry(iPageCountBefore,iCountInsert,0),&quot;;&quot;)
@@ -567,18 +570,18 @@ Sub Leistungen()
 					iCountInsert=iCountInsert + 1
 					iSelectLeistung = 1
 					if iPosTypID = 1 then
-						cUebertrag = cUebertrag	+ cGP
+						sSQL_Uebertrag = sSQL_Result(sSQL_Uebertrag &amp;&quot;+&quot;&amp; sGP)
 						iCountInsertCarry = iCountInsert
 					End if
 				elseif iInsertCarry = 1 then
-					sUebertrag = fTausenderpunkt(fZahlMitPunkt(Left((CStr(cUebertrag)),Len(CStr(cUebertrag))-2)))
+					sUebertrag = fTausenderpunkt(fZahlMitPunkt(sSQL_Uebertrag))
 					if iCountLeistung &gt; 1 then
 						iCountInsert=fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,0) + 1
 					else
 						iCountInsert = iCountInsert + 1
 					End if
 					if iPosTypID = 1 then
-						cUebertrag = cUebertrag	+ cGP
+						sSQL_Uebertrag = sSQL_Result(sSQL_Uebertrag &amp;&quot;+&quot;&amp; sGP)
 						iCountInsertCarry = iCountInsert
 					End if
 					iSelectLeistung = 1
@@ -601,14 +604,14 @@ Sub Leistungen()
 		iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1))
 		
 		if iDocument_TypID &lt; 3 _
-			or ((iDocument_TypID = 3 or iDocument_TypID = 4) and ifPrintPreis = 1) _
-			or (iDocument_TypID &lt; 7 and iDocument_TypID &gt; 4) _
+			or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 1) _
+			or (iDocument_TypID &lt; 7 AND iDocument_TypID &gt; 4) _
 		then
-			if fiPageCount &gt; iPageCountCarry and iInsertCarry = 1 then
+			if fiPageCount &gt; iPageCountCarry AND iInsertCarry = 1 then
 	 			if iCountInsertCarry = iCountInsert+1 then
-	 				cUebertrag=cUebertrag-cGP
+					sSQL_Uebertrag = sSQL_Result(sSQL_Uebertrag &amp;&quot;-&quot;&amp; sGP)
 	 			End if
-				sUebertrag = fTausenderpunkt(fZahlMitPunkt(Left((CStr(cUebertrag)),Len(CStr(cUebertrag))-2)))
+				sUebertrag = fTausenderpunkt(fZahlMitPunkt(sSQL_Uebertrag))
 				fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,1)
 			End if
 		End if
@@ -627,14 +630,7 @@ Sub Leistungen()
 	End if
 	vViewCursor.jumpToLastPage()
 	vViewCursor.jumpToEndOfPage()
-
 End Sub
-
-
-
-
-
-
 
 
 </script:module>

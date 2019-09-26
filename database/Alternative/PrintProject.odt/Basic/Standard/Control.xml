@@ -7,88 +7,100 @@
 REM  *****  BASIC  *****
 option explicit
 
-Function oDoc as Object
+Function oDoc AS Object
 	oDoc = thisComponent 
 End Function
 
-Function iEinstellungsID_lokal as Integer
+Function iEinstellungsID_lokal AS Integer
 	iEinstellungsID_lokal=GetDocUserProperty(&quot;oEinstellungsID_lokal&quot;)
 End Function
 
-Function iUserID_lokal as Integer
+Function iAbschlagsZahlung AS Integer
+	iAbschlagsZahlung=GetDocUserProperty(&quot;oAbschlagsZahlung&quot;)
+End Function
+
+Function iDocumentArchiviert AS Integer
+	iDocumentArchiviert=GetDocUserProperty(&quot;oDocumentArchiviert&quot;)
+End Function
+
+Function iUserID_lokal AS Integer
 	iUserID_lokal=GetDocUserProperty(&quot;oUserID_lokal&quot;)
 End Function
 
-Function iClientID as Integer
+Function iClientID AS Integer
 	iClientID=GetDocUserProperty(&quot;oClientID&quot;)
 End Function
 
-Function sDocumentID_mit_Praefix as String
-	sDocumentID_mit_Praefix=GetDocUserProperty(&quot;oDocumentID_mit_Praefix&quot;)
+Function sPraefix AS String
+	sPraefix=GetDocUserProperty(&quot;oPraefix&quot;)
 End Function
 
-Function sDocument_Name as String
+Function sPraefixArchiv AS String
+	sPraefixArchiv=GetDocUserProperty(&quot;oPraefixArchiv&quot;)
+End Function
+
+Function sDocument_Name AS String
 	sDocument_Name=GetDocUserProperty(&quot;oDocument_Name&quot;)
 End Function
 
-Function sDocument_Typ as String
+Function sDocument_Typ AS String
 	sDocument_Typ=GetDocUserProperty(&quot;oDocument_Typ&quot;)
 End Function
 
-Function sBetreff as String
+Function sBetreff AS String
 	sBetreff=GetDocUserProperty(&quot;oBetreff&quot;)
 End Function
 
-Function sFax_Empfaenger as String
+Function sFax_Empfaenger AS String
 	sFax_Empfaenger=GetDocUserProperty(&quot;oFax_Empfaenger&quot;)
 End Function
 
-Function sEMail_Empfaenger as String
+Function sEMail_Empfaenger AS String
 	sEMail_Empfaenger=GetDocUserProperty(&quot;oEMail_Empfaenger&quot;)
 End Function
 
-Function sEMail as String
+Function sEMail AS String
 	sEMail=GetDocUserProperty(&quot;oEMail&quot;)
 End Function
 
-Function lDocumentID as Long
+Function lDocumentID AS Long
 	lDocumentID=GetDocUserProperty(&quot;oDocumentID&quot;)
 End Function
 
-Function iDocument_TypID as Integer
+Function iDocument_TypID AS Integer
 	iDocument_TypID=GetDocUserProperty(&quot;oDocument_TypID&quot;)
 End Function
 
-Function iPrint_Typ as Integer
+Function iPrint_Typ AS Integer
 	iPrint_Typ=GetDocUserProperty(&quot;oPrint_Typ&quot;)
 End Function
 
-Function ifLiefuLeist as Integer
+Function ifLiefuLeist AS Integer
 	ifLiefuLeist=GetDocUserProperty(&quot;ifLiefuLeist&quot;)
 End Function
 
-Function ifLeistungsbezeichnung as Integer
+Function ifLeistungsbezeichnung AS Integer
 	ifLeistungsbezeichnung=GetDocUserProperty(&quot;ifLeistungsbezeichnung&quot;)
 End Function
 
-Function ifLeistungsbeschreibung as Integer
+Function ifLeistungsbeschreibung AS Integer
 	ifLeistungsbeschreibung=GetDocUserProperty(&quot;ifLeistungsbeschreibung&quot;)
 End Function
 
-Function ifBestellnummer as Integer
+Function ifBestellnummer AS Integer
 	ifBestellnummer=GetDocUserProperty(&quot;ifBestellnummer&quot;)
 End Function
 
-Function ifPrintPreis as Integer
+Function ifPrintPreis AS Integer
 	ifPrintPreis=GetDocUserProperty(&quot;ifPrintPreis&quot;)
 End Function
 
-Function sTitle_lokal as String
+Function sTitle_lokal AS String
 	 sTitle_lokal=GetDocUserProperty(&quot;oTitle_lokal&quot;)
 End Function
 
-Function GetDocUserProperty(sPropertyName as String) As String
-	Dim oUserProps As Object
+Function GetDocUserProperty(sPropertyName AS String) AS String
+	Dim oUserProps AS Object
 &apos;	On Error Resume Next
 	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
 	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
