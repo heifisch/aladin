@@ -2,9 +2,9 @@
 
 DEST_DIR="../TEST"
 
-find . \( -name "*.odt" -o -name "*.ott" -o -name "*.ods" \) -prune -o -type d -exec mkdir -pv ${DEST_DIR}/{} ';'
+find . \( -name "*.odt" -o -name "*.ott" -o -name "*.ods" -o -path "./.git" \) -prune -o -type d -exec mkdir -pv ${DEST_DIR}/{} ';'
 
-for f in ` find . \( -name "*.odt" -o -name "*.ott" -o -name "*.ods" \) -prune -o -type f -print `
+for f in ` find . \( -name "*.odt" -o -name "*.ott" -o -name "*.ods" -o -path "./.git" \) -prune -o -type f -print `
 do
   DESTPATH=${DEST_DIR}` echo ${f} | sed -e 's/^\.//g'`
   cp ${f} ${DESTPATH}
