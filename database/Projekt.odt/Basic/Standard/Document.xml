@@ -347,7 +347,7 @@ Sub Document_berechnen()
 			sMwSt_Satz_Msg=fZahlMitPunkt(sMwSt_Satz_aktuell) &amp;&quot;%&quot;
 		end if
 		if iDocTypID &lt; 7 then
-			if CDbl(sMwSt_Satz) &lt;&gt; CDbl(sMwSt_Satz_aktuell) then
+			if CDbl_with_Dot(sMwSt_Satz) &lt;&gt; CDbl_with_Dot(sMwSt_Satz_aktuell) then
 				vStatus=MsgBox(&quot;Der im zu berechnenden Dokument eingetragene MwSt-Satz von &quot;&amp;_
 					fZahlMitPunkt(sMwSt_Satz) &amp;&quot;% entspricht nicht der Voreinstellung!&quot;&amp; Chr$(10) &amp; Chr$(10) &amp;_
 					&quot;Soll der MwSt-Satz von &quot;&amp; fZahlMitPunkt(sMwSt_Satz) &amp;&quot;% in diesem Dokument durch die Voreinstellung von &quot;&amp;_

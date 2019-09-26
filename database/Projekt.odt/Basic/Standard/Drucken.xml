@@ -138,19 +138,19 @@ Sub Druck_vorbereiten()
 	Dim sAbteilung_Ansprechpartner as String
 	Dim sMwSt_Satz as String,sSkonto_Satz as String
 	Dim sRabatt_Satz as String,sKorrektur_Satz as String
-	Dim sSumme_ohne_MwSt as String,sMwSt as String,cMwSt as Currency
+	Dim sSumme_ohne_MwSt as String,sMwSt as String
 	Dim sRabatt as String,sSumme_nach_Rabatt as String
 	Dim sKorrektur_Vorzeichen as String,sKorrektur as String,sSumme_nach_Korrektur as String,sSumme_mit_MwSt as String
-	Dim cSumme_nach_Korrektur as Currency,cSumme_mit_MwSt as Currency
 	Dim sSkonto as String
-	Dim cAZ_ohne_MwSt as Currency,cAZ_MwSt as Currency,cAZ_mit_MwSt as Currency
-	Dim cZahlbetrag_ohne_MwSt as Currency,cZahlbetrag_MwSt as Currency,cZahlbetrag_mit_MwSt as Currency
 	Dim sRechnungsbetrag as String,sAbschlagszahlungen as String,sRestbetrag as String
 	Dim iSkonto_Tage as integer,iFaellig_Tage as integer
 	Dim sPos as String,sIfKontaktID as String,sIfReferenzID as String
 	Dim sEP as String,sGP as String,sProjektName as String,sDocumentName as String
 	Dim sNummern as String,s13bText as String
 	Dim sErstellungsdatum as String,sGueltigBis as String,sSkontoBis as String
+	Dim sAZ_ohne_MwSt as String,sAZ_MwSt as String,sAZ_mit_MwSt as String
+	Dim sZahlbetrag_ohne_MwSt as String,sZahlbetrag_MwSt as String,sZahlbetrag_mit_MwSt as String
+	Dim sSQL_MwSt as String,sSQL_Summe_mit_MwSt as String
 	
 	if check_AZ = 6 then
 		if lDocumentID &lt;&gt; 0 then
@@ -244,15 +244,15 @@ Sub Druck_vorbereiten()
 					sSumme_nach_Rabatt=oRecord1.getString(31)
 					sKorrektur_Vorzeichen=oRecord1.getString(32)
 					sKorrektur=oRecord1.getString(33)
-					cSumme_nach_Korrektur=oRecord1.getString(34)
-					cMwSt=oRecord1.getString(35)
-					cSumme_mit_MwSt=oRecord1.getString(36)
-					cAZ_ohne_MwSt=oRecord1.getString(37)
-					cAZ_Mwst=oRecord1.getString(38)
-					cAZ_mit_MwSt=oRecord1.getString(39)
-					cZahlbetrag_ohne_MwSt=oRecord1.getString(40)
-					cZahlbetrag_Mwst=oRecord1.getString(41)
-					cZahlbetrag_mit_Mwst=oRecord1.getString(42)
+					sSumme_nach_Korrektur=oRecord1.getString(34)
+					sMwSt=oRecord1.getString(35)
+					sSumme_mit_MwSt=oRecord1.getString(36)
+					sAZ_ohne_MwSt=oRecord1.getString(37)
+					sAZ_MwSt=oRecord1.getString(38)
+					sAZ_mit_MwSt=oRecord1.getString(39)
+					sZahlbetrag_ohne_MwSt=oRecord1.getString(40)
+					sZahlbetrag_Mwst=oRecord1.getString(41)
+					sZahlbetrag_mit_Mwst=oRecord1.getString(42)
 					sSkonto=oRecord1.getString(43)
 					sErstellungsdatum=oRecord1.getString(44)
 					sGueltigBis=oRecord1.getString(45)
@@ -383,7 +383,7 @@ Sub Druck_vorbereiten()
 				elseif iDocument_TypID = 5 then
 					if iSkonto_Tage &gt; 0 AND sSkonto_Satz &gt; &quot;0.0&quot; then
 						sSchlusstext = &quot;t2.Schluss_Text1,&apos;\nZahlbar bis zum &quot;&amp; fConvDatum(sSkontoBis) &amp;&quot; mit &apos;,&apos;&quot;&amp; fZahlMitPunkt(sSkonto_Satz) &amp;_
-						&quot;% Skonto aus &apos;,&apos;&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cZahlbetrag_mit_MwSt))) &amp;_
+						&quot;% Skonto aus &apos;,&apos;&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_mit_MwSt)) &amp;_
 						&quot; &quot;&amp; sWaehrung &amp;&quot;&apos;,&apos; = &apos;,&apos;&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sSkonto)) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;&apos;,&apos;\nsonst bis &quot;&amp; fConvDatum(sGueltigBis) &amp;&quot; ohne Abzug&apos;&quot;							
 					elseif iSkonto_Tage = 0 OR sSkonto_Satz = &quot;0.0&quot; then
 						sSchlusstext = &quot;t2.Schluss_Text1,&apos;\nZahlbar bis zum &quot;&amp; fConvDatum(sGueltigBis) &amp;&quot; ohne Abzug&apos;&quot;
@@ -549,29 +549,33 @@ Sub Druck_vorbereiten()
 						sKorrektur = &quot;zuzüglich &quot;&amp; fZahlMitPunkt(sKorrektur_Satz) &amp;&quot;% &apos;,t1.Korrektur_Anlass,&apos;\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sKorrektur)) &amp;&quot; &quot;&amp; sWaehrung
 					End if
 				End if
-				sSumme_nach_Korrektur = fTausenderpunkt(fZahlMitPunkt(CStr(cSumme_nach_Korrektur))) &amp;&quot; &quot;&amp; sWaehrung
-		
-				if cAZ_mit_MwSt = 0 then
+				
+				sSumme_nach_Korrektur = fTausenderpunkt(fZahlMitPunkt(sSumme_nach_Korrektur)) &amp;&quot; &quot;&amp; sWaehrung
+				sMwSt = fTausenderpunkt(fZahlMitPunkt(sMwSt)) &amp;&quot; &quot;&amp; sWaehrung
+				sSumme_mit_MwSt = fTausenderpunkt(fZahlMitPunkt(sSumme_mit_MwSt)) &amp;&quot; &quot;&amp; sWaehrung
+				
+				if CDbl_with_Dot(sAZ_mit_MwSt) = 0 then
 					sRechnungsbetrag = &quot;&quot;
 					sAbschlagszahlungen = &quot;&quot;
 					sRestbetrag = &quot;&quot;
-					sMwSt = &quot;concat(&apos;+&quot;&amp; fsReplace(sMwSt_Satz,&quot;.&quot;,&quot;,&quot;) &amp;&quot;% gesetzliche MwSt\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cMwSt))) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;&apos;)&quot;
-					sSumme_mit_MwSt = &quot;concat(t2.Summe_mit_MwSt,&apos;\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cSumme_mit_MwSt))) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;&apos;)&quot;
+					
+					sSQL_MwSt = &quot;concat(&apos;+&quot;&amp; fsReplace(sMwSt_Satz,&quot;.&quot;,&quot;,&quot;) &amp;&quot;% gesetzliche MwSt\t&quot;&amp; sMwSt &amp;&quot;&apos;)&quot;
+					sSQL_Summe_mit_MwSt = &quot;concat(t2.Summe_mit_MwSt,&apos;\t&quot;&amp; sSumme_mit_MwSt &amp;&quot;&apos;)&quot;
 				else
 				
-					sRechnungsbetrag = &quot;Rechnungssumme\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cSumme_nach_Korrektur))) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;\t&quot;&amp;_
-														fTausenderpunkt(fZahlMitPunkt(CStr(cMwSt))) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;\t&quot;&amp;_
-														fTausenderpunkt(fZahlMitPunkt(CStr(cSumme_mit_MwSt))) &amp;&quot; &quot;&amp; sWaehrung
+					sRechnungsbetrag = &quot;Rechnungssumme\t&quot;&amp; sSumme_nach_Korrektur &amp;&quot;\t&quot;&amp;_
+														fTausenderpunkt(fZahlMitPunkt(sMwSt)) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;\t&quot;&amp;_
+														sSumme_mit_MwSt
 		
-					sAbschlagszahlungen = &quot;./. Abschlagszahlungen\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cAZ_ohne_MwSt))) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;\t&quot;&amp;_
-														fTausenderpunkt(fZahlMitPunkt(CStr(cAZ_MwSt))) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;\t&quot;&amp;_
-														fTausenderpunkt(fZahlMitPunkt(CStr(cAZ_mit_MwSt))) &amp;&quot; &quot;&amp; sWaehrung
+					sAbschlagszahlungen = &quot;./. Abschlagszahlungen\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sAZ_ohne_MwSt)) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;\t&quot;&amp;_
+														fTausenderpunkt(fZahlMitPunkt(sAZ_MwSt)) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;\t&quot;&amp;_
+														fTausenderpunkt(fZahlMitPunkt(sAZ_mit_MwSt)) &amp;&quot; &quot;&amp; sWaehrung
 														
-					sRestbetrag = &quot;verbleibende Restzahlung\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cZahlbetrag_ohne_MwSt))) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;\t&quot;&amp;_
-														fTausenderpunkt(fZahlMitPunkt(CStr(cZahlbetrag_MwSt))) &amp;&quot; &quot;&amp; sWaehrung
+					sRestbetrag = &quot;verbleibende Restzahlung\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_ohne_MwSt)) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;\t&quot;&amp;_
+														fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_MwSt)) &amp;&quot; &quot;&amp; sWaehrung
 														
-					sMwSt = &quot;concat(&apos;\tohne MwSt\t+&quot;&amp; fsReplace(sMwSt_Satz,&quot;.&quot;,&quot;,&quot;) &amp;&quot;% MwSt\tmit MwSt&apos;)&quot;
-					sSumme_mit_MwSt = &quot;concat(&apos;&quot;&amp; fTausenderpunkt(fZahlMitPunkt(CStr(cZahlbetrag_mit_MwSt))) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;&apos;)&quot;
+					sSQL_MwSt = &quot;concat(&apos;\tohne MwSt\t+&quot;&amp; fsReplace(sMwSt_Satz,&quot;.&quot;,&quot;,&quot;) &amp;&quot;% MwSt\tmit MwSt&apos;)&quot;
+					sSQL_Summe_mit_MwSt = &quot;concat(&apos;&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sZahlbetrag_mit_MwSt)) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;&apos;)&quot;
 				End if
 			
 				if lProjektID &gt; 0 AND fsConvertString(sDocumentName) &lt;&gt; fsConvertString(sProjektName) then
@@ -591,7 +595,7 @@ Sub Druck_vorbereiten()
 					&quot;&apos;&quot;&amp; ifLiefuLeist &amp;&quot;&apos;,&quot;&amp; sDocumentName &amp;&quot;,t1.Document_Name,concat(&quot;&amp; sNummern &amp;&quot;),&apos;&quot;&amp; sEMail &amp;&quot;&apos;,&apos;&quot;&amp; sFax &amp;&quot;&apos;,&quot;&amp;_
 					&quot;concat(&apos;Zwischensumme Leistungen\t&quot;&amp; fTausenderpunkt(fZahlMitPunkt(sSumme_ohne_MwSt)) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot;&apos;),&quot;&amp;_
 					&quot;&apos;&quot;&amp; sRabatt &amp;&quot;&apos;,concat(&apos;\t&apos;,&apos;&quot;&amp; sSumme_nach_Rabatt &amp;&quot;&apos;),concat(&apos;&quot;&amp; sKorrektur &amp;&quot;&apos;),&quot;&amp;_
-					&quot;concat(t2.Summe_ohne_MwSt,&apos;\t&quot;&amp; sSumme_nach_Korrektur &amp;&quot;&apos;),&quot;&amp; sMwSt &amp;&quot;,&quot;&amp; sSumme_mit_MwSt &amp;&quot;,&quot;&amp;_
+					&quot;concat(t2.Summe_ohne_MwSt,&apos;\t&quot;&amp; sSumme_nach_Korrektur &amp;&quot;&apos;),&quot;&amp; sSQL_MwSt &amp;&quot;,&quot;&amp; sSQL_Summe_mit_MwSt &amp;&quot;,&quot;&amp;_
 					&quot;concat(&apos;&quot;&amp; sRechnungsbetrag &amp;&quot;&apos;),concat(&apos;&quot;&amp; sAbschlagszahlungen &amp;&quot;&apos;),concat(&apos;&quot;&amp; sRestbetrag &amp;&quot;&apos;),&quot;&amp;_
 					&quot;t1.Bemerkung,concat(&quot;&amp; sSchlusstext &amp;&quot;),&quot;&amp;_
 					&quot;concat(&apos;&quot;&amp; sAnschrift &amp;&quot;&apos;),&apos;&quot;&amp; fsConvertApostroph(sMindestangaben) &amp;&quot;&apos;,t1.Leistungsempfaenger,t1.Lieferbemerkung,&quot;&amp;_

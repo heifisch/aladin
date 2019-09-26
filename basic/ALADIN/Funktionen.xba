@@ -724,6 +724,10 @@ Function fTausenderpunkt(sWert1 as String) as String
 	end if
 End Function
 
+Function CDbl_with_Dot(sWert as String) as Double
+	CDbl_with_Dot = CDbl(fsReplace(sWert,&quot;.&quot;,&quot;,&quot;))
+End Function
+
 Function fConvDatum(sInput as String) as String
 	sInput = Left(sInput,10)
 	if sInput &lt;&gt; &quot;&quot; then

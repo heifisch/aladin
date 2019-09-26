@@ -474,7 +474,7 @@ Sub Kontaktdaten_setzen()
 			&quot;,Erstellungsdatum=(date_add(now(),interval 0 month))&quot;
 
 		if InStr(sTabelle1,&quot;Angebote1&quot;)&gt;0 then 	
-			if CDbl(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
+			if CDbl_with_Dot(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day))&quot;&amp;_
 					&quot;,Skonto_bis=NULL &quot;&amp;_
 					&quot;,13b=&quot;&amp; i13b &amp;_
@@ -486,7 +486,7 @@ Sub Kontaktdaten_setzen()
 					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
 			End if
 		elseif InStr(sTabelle1,&quot;Rechnungen1&quot;)&gt;0 then
-			if CDbl(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
+			if CDbl_with_Dot(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iFaellig_Tage &amp;&quot; day))&quot;&amp;_
 					&quot;,Skonto_bis=NULL&quot;&amp;_
 					&quot;,13b=&quot;&amp; i13b &amp;_
@@ -498,7 +498,7 @@ Sub Kontaktdaten_setzen()
 					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
 			End if
 		else
-			if CDbl(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
+			if CDbl_with_Dot(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(now(),interval 0 day))&quot;&amp;_
 					&quot;,Skonto_bis=NULL&quot;&amp;_
 					&quot;,13b=&quot;&amp; i13b &amp;_
@@ -509,19 +509,20 @@ Sub Kontaktdaten_setzen()
 					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
 			End if
 		End if
-		if CDbl(oField_MVS.BoundField.string) &gt; 0 then
-			if CDbl(oField_MVS.BoundField.string) &lt;&gt; CDbl(sStundenverrechnungssatz)/60 then
+	
+		if CDbl_with_Dot(oField_MVS.BoundField.string) &gt; 0 then
+			if CDbl_with_Dot(oField_MVS.BoundField.string) &lt;&gt; CDbl_with_Dot(sStundenverrechnungssatz)/60 then
 				vStatus=MsgBox(&quot;Möchten Sie, aus dem in den Stamm-Daten gespeicherten Stundenverrechnungssatz, den Minutenverrechnungssatz(MVS) berechnen und diesen im Dokument verwenden?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
 					&quot;Achtung!!! Vorhandene Positionen werden nicht geändert.&quot;&amp; Chr(10)&amp;_
 					&quot;Für diese, kann durch drücken auf &quot;&amp; chr(34) &amp;&quot;Minutenverrechnungssatz übernehmen&quot;&amp; chr(34) &amp;&quot; der Wert &quot;&amp; chr(34) &amp;&quot;MVS&quot;&amp; chr(34) &amp;&quot; geändert werden&quot;,36,sTitle_lokal)
 				if vStatus=6 then
-					oField_MVS.value=CDbl(sStundenverrechnungssatz)/60
+					oField_MVS.value=CDbl_with_Dot(sStundenverrechnungssatz)/60
 					oField_MVS.commit()
 					oForm_Document.updateRow()
 				End if
 			End if
 		else
-			oField_MVS.value=CDbl(sStundenverrechnungssatz)/60
+			oField_MVS.value=CDbl_with_Dot(sStundenverrechnungssatz)/60
 			oField_MVS.commit()
 			oForm_Document.updateRow()
 		End if
@@ -557,7 +558,7 @@ Sub Datum_setzen_manuel()
 				iFaellig_Tage=oRecord1.getInt(3)
 			Wend
 			if InStr(sTabelle1,&quot;Angebote1&quot;)&gt;0 then 	
-				if CDbl(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
+				if CDbl_with_Dot(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 					sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
 						&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day))&quot;&amp;_
 						&quot;,Skonto_bis=NULL&quot;&amp;_
@@ -570,7 +571,7 @@ Sub Datum_setzen_manuel()
 				End if
 				SQL_execute(sSQL2)
 			elseif InStr(sTabelle1,&quot;Rechnungen1&quot;)&gt;0 then
-				if CDbl(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
+				if CDbl_with_Dot(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 					sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
 						&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; fFaellig_Tage &amp;&quot; day))&quot;&amp;_
 						&quot;,Skonto_bis=NULL&quot;&amp;_
