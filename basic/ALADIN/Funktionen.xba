@@ -485,6 +485,14 @@ Function oResultGesperrt(sSQL as String)as Object
 	oResultGesperrt=oStatement.executeQuery(sSQL)
 End Function
 
+Function sSQL_Result(sSelect as String) as String
+	Dim oRecord as Object
+	oRecord = oResult(&quot;SELECT &quot;&amp; sSelect)
+	While oRecord.next()
+			sSQL_Result=oRecord.getString(1)
+	Wend
+End Function
+
 Function iMax_Datensatz(sTabelle as String,sCol as String) as String
 	Dim oRecord1 as Object
 	Dim sSQL1 as String
@@ -693,13 +701,13 @@ Function fTausenderpunkt(sWert1 as String) as String
 	Dim sWertOhneKomma as string,sWertNachKomma as String
 	Dim iPosKomma as Integer,iAnzahlZeichen as integer,iPosPunkt as integer	
 	Dim sTeilString1 as String,sTeilString2 as String,sErgebnis as string
-	Dim iMinus_2 as Integer,sWert as String
+	Dim bMinus as Boolean,sWert as String
 	sWert = sWert1
 	if Mid(sWert,1,1)= &quot;-&quot; then
 		sWert = Mid(sWert,2)
-		iMinus_2 = 1
+		bMinus = True
 	else
-		iMinus_2 = 0
+		bMinus = False
 	end if
 	iPosKomma=Instr(sWert,&quot;,&quot;) 
 	if iPosKomma = 0 Then 
@@ -716,8 +724,8 @@ Function fTausenderpunkt(sWert1 as String) as String
 			&quot;.&quot;&amp; Mid(sWertOhneKomma,iAnzahlZeichen-iPosPunkt+1)
 			iPosPunkt=iPosPunkt+3
 		Loop
-	end if	
-	if iMinus_2 = 1 then
+	end if
+	if bMinus then
 		fTausenderpunkt = &quot;-&quot; &amp; sWertOhneKomma &amp; sWertNachKomma
 	else
 		fTausenderpunkt=sWertOhneKomma &amp; sWertNachKomma
