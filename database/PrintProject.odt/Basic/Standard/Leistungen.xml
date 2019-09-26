@@ -363,10 +363,13 @@ Sub Leistungen()
 			if iPosTypID = 4 AND iAZ = 0 then
 				vRowsLeistungen.insertByIndex(iCountInsert,1)
 				vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
-				Dim oBorderLine AS New com.sun.star.table.BorderLine
+				Dim oBorderLine AS New com.sun.star.table.BorderLine2
 					oBorderLine.Color=1
-					oBorderLine.OuterLineWidth=2
-					oBorderLine.InnerLineWidth=2
+&apos;					oBorderLine.InnerLineWidth=2
+&apos;					oBorderLine.LineDistance=2
+					oBorderLine.LineStyle=7
+					oBorderLine.LineWidth=5
+&apos;					oBorderLine.OuterLineWidth=2
 				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorder=oBorderLine
 				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).BottomBorder=oBorderLine
 				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorderDistance=80
