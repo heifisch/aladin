@@ -659,14 +659,14 @@ End Function
 Function fZahlMitPunkt(sWert0 as String) As String 
 	Dim iPosKomma as Integer,iAnzahlZeichen as integer,iPosPunkt as integer
 	Dim sTeilString1 as String,sTeilString2 as String,sErgebnis as string
-	Dim iMinus_1 as Integer
+	Dim bMinus as Boolean
 	Dim sWert as String
 	sWert=sWert0
 	if Mid(sWert,1,1) = &quot;-&quot; then
 		sWert = Mid(sWert,2)
-		iMinus_1 = 1
+		bMinus = True
 	else
-		iMinus_1 = 0
+		bMinus = False
 	end if
 	if sWert = &quot;&quot; OR sWert = &quot;0&quot; OR sWert = &quot;0.0&quot; OR sWert = &quot;0.00&quot; OR sWert = &quot;0.000&quot; OR sWert = &quot;0.0000&quot; then
 		fZahlMitPunkt=&quot;0,00&quot;
@@ -688,7 +688,7 @@ Function fZahlMitPunkt(sWert0 as String) As String
 				sTeilString1 = &quot;0&quot;
 			end if
 			sErgebnis = sTeilString1 &amp; &quot;,&quot; &amp; sTeilString2 
-			if iMinus_1 = 1 then
+			if bMinus then
 				fZahlMitPunkt = &quot;-&quot; &amp; sErgebnis 
 			else
 				fZahlMitPunkt = sErgebnis 

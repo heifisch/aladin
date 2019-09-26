@@ -14,7 +14,7 @@ Sub Leistungen()
 	Dim sPos AS String,iPos_TypID AS integer
 	Dim sLeistungsbezeichnung AS String,sLeistungsbeschreibung AS String,sEinheit AS String
 	Dim sMenge AS String,sLieferung AS String,sLeistung AS String,sEP AS String,sBestellnummer AS String
-	Dim sGP AS String,sUebertrag AS String
+	Dim sGP AS String,sUebertrag AS String,sSQL_Uebertrag AS String
 	Dim iPosLeistung AS Integer,iPosZwiSum AS Integer,iPosZwiBem AS Integer,iPosTypID AS Integer
 	Dim iCountLeistung AS Integer,iCountZwiSum AS Integer,iCountZwiBem AS Integer,iCountInsert AS Integer,iCountInsertCarry AS Integer
 	Dim iSelectLeistung AS Integer,iSelectZwiSum AS Integer,iSelectZwiBem AS Integer
@@ -38,7 +38,6 @@ Sub Leistungen()
 	Dim afsInsertCarryReturn(1) AS String
 	Dim vViewCursor AS Variant
 	Dim iAZ AS Integer
-	Dim dblUebertrag AS Double
 	
 	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
 	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
@@ -202,7 +201,7 @@ Sub Leistungen()
 	iSelectZwiBem = 1
 	iSelectZwiSum = 1
 	iSelectLeistung = 1
-	dblUebertrag = 0
+	sSQL_Uebertrag = &quot;0&quot;
 	
 	if iDocument_TypID &gt; 6 or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 0) then
 		vTableLeistungen.getCellByName(&quot;E1&quot;).String=&quot;&quot;
@@ -293,7 +292,7 @@ Sub Leistungen()
 					iCountInsert=iCountInsert + 1
 					iSelectZwiBem = 1
 				elseif iInsertCarry = 1 then
-					sUebertrag = fTausenderpunkt(CStr(dblUebertrag))
+					sUebertrag = fTausenderpunkt(fZahlMitPunkt(sSQL_Uebertrag))
 					if iCountLeistung &gt; 1 then
 						iCountInsert=fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,0) + 1
 					else
@@ -345,7 +344,7 @@ Sub Leistungen()
 					iCountZwiSum=iCountZwiSum + 1
 					iSelectZwiSum = 1
 				elseif iInsertCarry = 1 then
-					sUebertrag = fTausenderpunkt(CStr(dblUebertrag))
+					sUebertrag = fTausenderpunkt(fZahlMitPunkt(sSQL_Uebertrag))
 					if iCountLeistung &gt; 1 then
 						iCountInsert=fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,0) + 1
 					else
@@ -568,18 +567,18 @@ Sub Leistungen()
 					iCountInsert=iCountInsert + 1
 					iSelectLeistung = 1
 					if iPosTypID = 1 then
-						dblUebertrag = dblUebertrag+CDbl_with_Dot(sGP)
+						sSQL_Uebertrag = sSQL_Result(sSQL_Uebertrag &amp;&quot;+&quot;&amp; sGP)
 						iCountInsertCarry = iCountInsert
 					End if
 				elseif iInsertCarry = 1 then
-					sUebertrag = fTausenderpunkt(CStr(dblUebertrag))
+					sUebertrag = fTausenderpunkt(fZahlMitPunkt(sSQL_Uebertrag))
 					if iCountLeistung &gt; 1 then
 						iCountInsert=fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,0) + 1
 					else
 						iCountInsert = iCountInsert + 1
 					End if
 					if iPosTypID = 1 then
-						dblUebertrag = dblUebertrag+CDbl_with_Dot(sGP)
+						sSQL_Uebertrag = sSQL_Result(sSQL_Uebertrag &amp;&quot;+&quot;&amp; sGP)
 						iCountInsertCarry = iCountInsert
 					End if
 					iSelectLeistung = 1
@@ -607,9 +606,9 @@ Sub Leistungen()
 		then
 			if fiPageCount &gt; iPageCountCarry AND iInsertCarry = 1 then
 	 			if iCountInsertCarry = iCountInsert+1 then
-	 				dblUebertrag=dblUebertrag-CDbl_with_Dot(sGP)
+					sSQL_Uebertrag = sSQL_Result(sSQL_Uebertrag &amp;&quot;-&quot;&amp; sGP)
 	 			End if
-				sUebertrag = fTausenderpunkt(CStr(dblUebertrag))
+				sUebertrag = fTausenderpunkt(fZahlMitPunkt(sSQL_Uebertrag))
 				fInsertCarry(iCountInsert,sUebertrag,iPageCountCarry,1)
 			End if
 		End if
