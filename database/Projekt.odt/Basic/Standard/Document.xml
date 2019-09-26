@@ -367,7 +367,7 @@ Sub Document_berechnen()
 			sAZ_mit_MwSt=oRecord1.getString(3)
 		Wend
 
-		if (sSkonto_Satz = &quot;0&quot; OR iSkonto_Tage = 0) then
+		if (CDbl_with_Dot(sSkonto_Satz) = 0 OR iSkonto_Tage = 0) then
 			sSQL4=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Summe_ohne_MwSt=&apos;&quot;&amp; sErgebnis &amp;_
 				&quot;&apos;,AZ_ohne_MwSt=&apos;&quot;&amp; sAZ_ohne_MwSt &amp;_
 				&quot;&apos;,AZ_MwSt=&apos;&quot;&amp; sAZ_MwSt &amp;_
