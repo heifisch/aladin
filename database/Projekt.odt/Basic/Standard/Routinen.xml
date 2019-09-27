@@ -511,18 +511,18 @@ Sub Kontaktdaten_setzen()
 		End if
 	
 		if CDbl_with_Dot(oField_MVS.BoundField.string) &gt; 0 then
-			if CDbl_with_Dot(oField_MVS.BoundField.string) &lt;&gt; CDbl_with_Dot(sStundenverrechnungssatz)/60 then
+			if CDbl_with_Dot(oField_MVS.BoundField.string) &lt;&gt; CDbl_with_Dot(sSQL_Result(sStundenverrechnungssatz &amp;&quot;/60&quot;)) then
 				vStatus=MsgBox(&quot;Möchten Sie, aus dem in den Stamm-Daten gespeicherten Stundenverrechnungssatz, den Minutenverrechnungssatz(MVS) berechnen und diesen im Dokument verwenden?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
 					&quot;Achtung!!! Vorhandene Positionen werden nicht geändert.&quot;&amp; Chr(10)&amp;_
 					&quot;Für diese, kann durch drücken auf &quot;&amp; chr(34) &amp;&quot;Minutenverrechnungssatz übernehmen&quot;&amp; chr(34) &amp;&quot; der Wert &quot;&amp; chr(34) &amp;&quot;MVS&quot;&amp; chr(34) &amp;&quot; geändert werden&quot;,36,sTitle_lokal)
 				if vStatus=6 then
-					oField_MVS.value=CDbl_with_Dot(sStundenverrechnungssatz)/60
+					oField_MVS.value=CDbl_with_Dot(sSQL_Result(sStundenverrechnungssatz &amp;&quot;/60&quot;))
 					oField_MVS.commit()
 					oForm_Document.updateRow()
 				End if
 			End if
 		else
-			oField_MVS.value=CDbl_with_Dot(sStundenverrechnungssatz)/60
+			oField_MVS.value=CDbl_with_Dot(sSQL_Result(sStundenverrechnungssatz &amp;&quot;/60&quot;))
 			oField_MVS.commit()
 			oForm_Document.updateRow()
 		End if

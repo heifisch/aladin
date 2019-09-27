@@ -287,18 +287,18 @@ Sub Projektauswahl_commit()
 		oForm_Document.updateRow()
 		oForm_Projektdaten.reload()
 		if CDbl_with_Dot(oField_MVS.BoundField.string) &gt; 0 then
-			if CDbl_with_Dot(oField_MVS.BoundField.string) &lt;&gt; CDbl_with_Dot(oField_Stundensatz_Projekt.BoundField.string)/60 then
+			if CDbl_with_Dot(oField_MVS.BoundField.string) &lt;&gt; CDbl_with_Dot(sSQL_Result(fsReplace(oField_Stundensatz_Projekt.BoundField.string,&quot;,&quot;,&quot;.&quot;) &amp;&quot;/60&quot;)) then
 				vStatus=MsgBox(&quot;Möchten Sie, aus dem im Projekt gespeicherten Stundenverrechnungssatz, den Minutenverrechnungssatz (MVS) berechnen und diesen im Dokument verwenden?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
 					&quot;Achtung!!! Vorhandene Positionen werden nicht geändert.&quot;&amp; Chr(10)&amp;_
 					&quot;Für diese, kann durch drücken auf &quot;&amp; chr(34) &amp;&quot;Minutenverrechnungssatz übernehmen&quot;&amp; chr(34) &amp;&quot; der Wert &quot;&amp; chr(34) &amp;&quot;MVS&quot;&amp; chr(34) &amp;&quot; geändert werden&quot;,36,sTitle_lokal)
 				if vStatus=6 then
-					oField_MVS.value=CDbl_with_Dot(oField_Stundensatz_Projekt.BoundField.string)/60
+					oField_MVS.value=CDbl_with_Dot(sSQL_Result(fsReplace(oField_Stundensatz_Projekt.BoundField.string,&quot;,&quot;,&quot;.&quot;) &amp;&quot;/60&quot;))
 					oField_MVS.commit()
 					oForm_Document.updateRow()
 				End if
 			End if
 		else
-			oField_MVS.value=CDbl_with_Dot(oField_Stundensatz_Projekt.BoundField.string)/60
+			oField_MVS.value=CDbl_with_Dot(sSQL_Result(fsReplace(oField_Stundensatz_Projekt.BoundField.string,&quot;,&quot;,&quot;.&quot;) &amp;&quot;/60&quot;))
 			oField_MVS.commit()
 			oForm_Document.updateRow()
 		End if
@@ -320,22 +320,22 @@ End Sub
 Sub Field_Stundensatz_Projekt_commit()
 	if lDocumentID &lt;&gt; 0 then
 		if lProjektID &lt;&gt; 0 then
-			if CDbl_with_Dot(oField_Stundensatz_Projekt.value()) &lt;&gt; CDbl_with_Dot(oField_Stundensatz_Projekt.boundfield.string()) then
+			if CDbl_with_Dot(oField_Stundensatz_Projekt.value()) &lt;&gt; CDbl_with_Dot(oField_Stundensatz_Projekt.boundfield.string) then
 				oForm_Projektdaten.updateRow()
 				if CDbl_with_Dot(oField_MVS.BoundField.string) &gt; 0 then
-					if CDbl_with_Dot(oField_MVS.BoundField.string) &lt;&gt; CDbl_with_Dot(oField_Stundensatz_Projekt.value/60) then
+					if CDbl_with_Dot(oField_MVS.BoundField.string) &lt;&gt; CDbl_with_Dot(sSQL_Result(fsReplace(oField_Stundensatz_Projekt.value,&quot;,&quot;,&quot;.&quot;) &amp;&quot;/60&quot;)) then
 						vStatus=MsgBox(&quot;Der Stundenverrechnungssatz im Projekt wurde geändert.&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
 							&quot;Möchten Sie, aus dem geänderten Stundenverrechnungssatz, den Minutenverrechnungssatz (MVS) berechnen und diesen im Dokument verwenden?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
 							&quot;Achtung!!! Vorhandene Positionen werden nicht geändert.&quot;&amp; Chr(10)&amp;_
 							&quot;Für diese, kann durch drücken auf &quot;&amp; chr(34) &amp;&quot;Minutenverrechnungssatz übernehmen&quot;&amp; chr(34) &amp;&quot; der Wert &quot;&amp; chr(34) &amp;&quot;MVS&quot;&amp; chr(34) &amp;&quot; geändert werden&quot;,36,sTitle_lokal)
 						if vStatus=6 then
-							oField_MVS.value=CDbl_with_Dot(oField_Stundensatz_Projekt.value)/60
+							oField_MVS.value=CDbl_with_Dot(sSQL_Result(fsReplace(oField_Stundensatz_Projekt.value,&quot;,&quot;,&quot;.&quot;) &amp;&quot;/60&quot;))
 							oField_MVS.commit()
 							oForm_Document.updateRow()
 						End if
 					End if
 				else
-					oField_MVS.value=CDbl_with_Dot(oField_Stundensatz_Projekt.value)/60
+					oField_MVS.value=CDbl_with_Dot(sSQL_Result(fsReplace(oField_Stundensatz_Projekt.value,&quot;,&quot;,&quot;.&quot;) &amp;&quot;/60&quot;))
 					oField_MVS.commit()
 					oForm_Document.updateRow()
 				End if
@@ -350,19 +350,19 @@ Sub Field_Stundensatz_Kontakt_commit()
 			if CDbl_with_Dot(oField_Stundensatz_Kontakt.value()) &lt;&gt; CDbl_with_Dot(oField_Stundensatz_Kontakt.boundfield.string()) then
 				oForm_Kontaktdaten.updateRow()
 				if CDbl_with_Dot(oField_MVS.BoundField.string) &gt; 0 then
-					if CDbl_with_Dot(oField_MVS.BoundField.string) &lt;&gt; CDbl_with_Dot(oField_Stundensatz_Kontakt.value/60) then
+					if CDbl_with_Dot(oField_MVS.BoundField.string) &lt;&gt; CDbl_with_Dot(sSQL_Result(fsReplace(oField_Stundensatz_Kontakt.value,&quot;,&quot;,&quot;.&quot;) &amp;&quot;/60&quot;)) then
 						vStatus=MsgBox(&quot;Der Stundenverrechnungssatz in den Stamm-Daten wurde geändert.&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
 							&quot;Möchten Sie, aus dem geänderten Stundenverrechnungssatz, den Minutenverrechnungssatz (MVS) berechnen und diesen im Dokument verwenden?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
 							&quot;Achtung!!! Vorhandene Positionen werden nicht geändert.&quot;&amp; Chr(10)&amp;_
 							&quot;Für diese, kann durch drücken auf &quot;&amp; chr(34) &amp;&quot;Minutenverrechnungssatz übernehmen&quot;&amp; chr(34) &amp;&quot; der Wert &quot;&amp; chr(34) &amp;&quot;MVS&quot;&amp; chr(34) &amp;&quot; geändert werden&quot;,36,sTitle_lokal)
 						if vStatus=6 then
-							oField_MVS.value=CDbl_with_Dot(oField_Stundensatz_Kontakt.value)/60
+							oField_MVS.value=CDbl_with_Dot(sSQL_Result(fsReplace(oField_Stundensatz_Kontakt.value,&quot;,&quot;,&quot;.&quot;) &amp;&quot;/60&quot;))
 							oField_MVS.commit()
 							oForm_Document.updateRow()
 						End if
 					End if
 				else
-					oField_MVS.value=CDbl_with_Dot(oField_Stundensatz_Kontakt.value)/60
+					oField_MVS.value=CDbl_with_Dot(sSQL_Result(fsReplace(oField_Stundensatz_Kontakt.value,&quot;,&quot;,&quot;.&quot;) &amp;&quot;/60&quot;))
 					oField_MVS.commit()
 					oForm_Document.updateRow()
 				End if
