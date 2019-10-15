@@ -14,17 +14,21 @@ End Sub
 Sub set_DocumentID_new
 	Dim vStatus AS Variant
 	Dim sSQL1 AS String,sSQL2 AS String
+	Dim lDocumentID_new AS Long
+	
 	oField_DocumentID.commit()
 
-	if CStr(lDocumentID) &lt;&gt; &quot;&quot; AND lDocumentID &lt;&gt; lDocumentID_old then
-		if fAnzahlDatensaetzeRechnungen(sEingangsrechnungen,lDocumentID) = 0 then
-			if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.djvu&quot;) _
-				or FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) _
+	lDocumentID_new=CLng(oField_DocumentID.BoundField.Value)
+
+	if CStr(lDocumentID_new) &lt;&gt; &quot;&quot; AND lDocumentID_new &lt;&gt; lDocumentID_old then
+		if fAnzahlDatensaetzeRechnungen(sEingangsrechnungen,lDocumentID_new) = 0 then
+			if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_new) &amp;&quot;/&quot;&amp; CStr(lDocumentID_new) &amp;&quot;.djvu&quot;) _
+				or FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_new) &amp;&quot;/&quot;&amp; CStr(lDocumentID_new) &amp;&quot;.pdf&quot;) _
 			then
-				vStatus=MsgBox(&quot;Es gibt schon ein abgelegtes Dokument mit der neuen Dokumenten-Nummer: &quot;&amp; lDocumentID &amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+				vStatus=MsgBox(&quot;Es gibt schon ein abgelegtes Dokument mit der neuen Dokumenten-Nummer: &quot;&amp; lDocumentID_new &amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
 						&quot;Wollen Sie das vorhanden Dokument löschen?&quot;,36,sTitle_lokal)
 				if vStatus=6 then
-					RmDir &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID)
+					RmDir &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_new)
 				End if
 			End if
 	
@@ -36,30 +40,30 @@ Sub set_DocumentID_new
 				if vStatus=6 then
 					if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID_old) &amp;&quot;.djvu&quot;) then
 						Name &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID_old) &amp;&quot;.djvu&quot; _
-							as &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.djvu&quot;
+							as &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID_new) &amp;&quot;.djvu&quot;
 					elseif FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID_old) &amp;&quot;.pdf&quot;) then
 						Name &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID_old) &amp;&quot;.pdf&quot; _
-							as &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+							as &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID_new) &amp;&quot;.pdf&quot;
 					End if
-					if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID)) then
-						if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.djvu&quot;) then
-							FileCopy &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.djvu&quot;, _
-								&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.djvu&quot;
-						elseif FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) then
-							FileCopy &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;, _
-								&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+					if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_new)) then
+						if FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID_new) &amp;&quot;.djvu&quot;) then
+							FileCopy &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID_new) &amp;&quot;.djvu&quot;, _
+								&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_new) &amp;&quot;/&quot;&amp; CStr(lDocumentID_new) &amp;&quot;.djvu&quot;
+						elseif FileExists(&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID_new) &amp;&quot;.pdf&quot;) then
+							FileCopy &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) &amp;&quot;/&quot;&amp; CStr(lDocumentID_new) &amp;&quot;.pdf&quot;, _
+								&quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_new) &amp;&quot;/&quot;&amp; CStr(lDocumentID_new) &amp;&quot;.pdf&quot;
 						End if
 						RmDir &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old)
 					else
 						Name &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_old) _
-							as &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID)
+							as &quot;file:///&quot;&amp; sPathEingangsRechnungen &amp; CStr(lDocumentID_new)
 					End if
 				End if
 			End if
 
-			sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET RechnungsID=&quot;&amp; lDocumentID &amp;&quot; WHERE RechnungsID=&quot;&amp; lDocumentID_old
+			sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET RechnungsID=&quot;&amp; lDocumentID_new &amp;&quot; WHERE RechnungsID=&quot;&amp; lDocumentID_old
 			SQL_execute(sSQL1)
-			sSQL2=&quot;UPDATE Steuerung SET DocumentID=&quot;&amp; lDocumentID &amp;&quot; WHERE ClientID=&quot;&amp; iClientID
+			sSQL2=&quot;UPDATE Steuerung SET DocumentID=&quot;&amp; lDocumentID_new &amp;&quot; WHERE ClientID=&quot;&amp; iClientID
 			SQL_execute(sSQL2)
 			Taste_Rechnung_Anzeigen()
 		else
