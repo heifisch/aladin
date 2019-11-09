@@ -143,7 +143,7 @@ nochmal:
 		sMwStSatzKundenAlt=InputBox(&quot;Geben Sie bitte den MwSt-Satz ein, den Sie überschreiben wollen!&quot;&amp;_
 			 Chr$(10) &amp; &quot;Der neue MwSt-Satz wird anschließend abgefragt!&quot;,sTitle_lokal &amp;&quot; - Kunden: MwSt-Satz ändern&quot;)
 	
-		sSQL1=&quot;select count(MwSt_Satz) from Kunden where MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzKundenAlt))
+		sSQL1=&quot;select count(MwSt_Satz) from Kunden where MwSt_Satz=&quot;&amp; fZahlMitKomma(sMwStSatzKundenAlt)
 		oRecord1=oResult(sSQL1)
 		While oRecord1.next()
 			lCountMwStSatzAlt=oRecord1.getLong(1)
@@ -168,8 +168,8 @@ nochmal:
 			exit sub
 		End If
 	
-		sSQL2=&quot;update Kunden set MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzKundenNeu)) &amp;_
-				&quot;where MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzKundenAlt))
+		sSQL2=&quot;update Kunden set MwSt_Satz=&quot;&amp; fZahlMitKomma(sMwStSatzKundenNeu) &amp;_
+				&quot;where MwSt_Satz=&quot;&amp; fZahlMitKomma(sMwStSatzKundenAlt)
 		SQL_execute(sSQL2)
 	
 		MsgBox(&quot;Es wurde bei &quot;&amp; lCountMwStSatzAlt &amp;&quot; Kunden der MwSt-Satz von &quot;&amp;_
@@ -184,7 +184,7 @@ nochmal:
 		sMwStSatzLieferantenAlt=InputBox(&quot;Geben Sie bitte den MwSt-Satz ein, den Sie überschreiben wollen!&quot;&amp;_
 				 Chr$(10) &amp;&quot;Der neue MwSt-Satz wird anschließend abgefragt!&quot;,sTitle_lokal &amp;&quot; - Lieferanten: MwSt-Satz ändern&quot;)
 	
-		sSQL1=&quot;select count(MwSt_Satz) from Lieferanten where MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzLieferantenAlt))
+		sSQL1=&quot;select count(MwSt_Satz) from Lieferanten where MwSt_Satz=&quot;&amp; fZahlMitKomma(sMwStSatzLieferantenAlt)
 		oRecord1=oResult(sSQL1)
 		While oRecord1.next()
 			lCountMwStSatzAlt=oRecord1.getLong(1)
@@ -209,8 +209,8 @@ nochmal:
 			exit sub
 		End If
 	
-		sSQL2=&quot;update Lieferanten set MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzLieferantenNeu)) &amp;_
-				&quot;where MwSt_Satz=&quot;&amp; CCur(fZahlMitKomma(sMwStSatzLieferantenAlt))
+		sSQL2=&quot;update Lieferanten set MwSt_Satz=&quot;&amp; fZahlMitKomma(sMwStSatzLieferantenNeu) &amp;_
+				&quot;where MwSt_Satz=&quot;&amp; fZahlMitKomma(sMwStSatzLieferantenAlt)
 		SQL_execute(sSQL2)
 	
 		MsgBox(&quot;Es wurde bei &quot;&amp; lCountMwStSatzAlt &amp;&quot; Lieferanten der MwSt-Satz von &quot;&amp;_
@@ -225,7 +225,7 @@ nochmal:
 		sStundenSatzKundenAlt=InputBox(&quot;Geben Sie bitte den Stunden-Satz ein, den Sie überschreiben wollen!&quot;&amp;_
 				 Chr$(10) &amp; &quot;Der neue Stunden-Satz wird anschließend abgefragt!&quot;,sTitle_lokal &amp; &quot; - Kunden: Stunden-Satz ändern&quot;)
 	
-		sSQL1=&quot;select count(Stundenverrechnungssatz) from Kunden where Stundenverrechnungssatz=&quot;&amp; CCur(fZahlMitKomma(sStundenSatzKundenAlt))
+		sSQL1=&quot;select count(Stundenverrechnungssatz) from Kunden where Stundenverrechnungssatz=&quot;&amp; fZahlMitKomma(sStundenSatzKundenAlt)
 		oRecord1=oResult(sSQL1)
 		While oRecord1.next()
 			lCountStundenSatzAlt=oRecord1.getLong(1)
@@ -250,8 +250,8 @@ nochmal:
 			exit sub
 		End If
 	
-		sSQL2=&quot;update Kunden set Stundenverrechnungssatz=&quot;&amp; CCur(fZahlMitKomma(sStundenSatzKundenNeu)) &amp;_
-				&quot;where Stundenverrechnungssatz=&quot;&amp; CCur(fZahlMitKomma(sStundenSatzKundenAlt))
+		sSQL2=&quot;update Kunden set Stundenverrechnungssatz=&quot;&amp; fZahlMitKomma(sStundenSatzKundenNeu) &amp;_
+				&quot;where Stundenverrechnungssatz=&quot;&amp; fZahlMitKomma(sStundenSatzKundenAlt)
 		SQL_execute(sSQL2)
 	
 		MsgBox(&quot;Es wurde bei &quot;&amp; lCountStundenSatzAlt &amp;&quot; Kunden der Stunden-Satz von &quot;&amp;_
