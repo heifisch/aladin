@@ -90,7 +90,7 @@ Sub Import_Daten()
 	Dim oTextInputStream as Object
 	Dim oFileAccessService  as Object
 	Dim oFilePicker as Object
-	Dim vStatus as Variant,vStatusFilePicker as Variant,sRabatt as String, cRabatt as Currency
+	Dim vStatus as Variant,vStatusFilePicker as Variant,sRabatt as String
 	Dim sDateiTyp as String,sLine as String,iDatensatz as Integer
 	Dim sLeistungsID as String,sLeistungsbezeichnung as String,sEinheit as String,sBestellnummer as String
 	Dim sLeistungsbeschreibung as String,sOrdnungsZahl as String,sString as String,sLeistungsID_new as String
@@ -98,7 +98,7 @@ Sub Import_Daten()
 	Dim sLeistungsID_nach as String,sBestellnummer_nach as String,sKuerzel_vor_LeistungsID as String,sKuerzel_vor_Bezeichnung as String
 	Dim sZeile_auslassen_1 as String,sZeile_auslassen_2 as String,sZeile_auslassen_3 as String
 	Dim oRecord1 as Object,iCount as Integer,iLeistungsID_vorhanden as Integer,iCountProgress as Integer
-	Dim sPreis as String,sEinkaufspreis as String,sListenpreis as String,cPreis as Currency,lPreis as Long
+	Dim sPreis as String,sEinkaufspreis as String,sListenpreis as String,lPreis as Long
 	Dim sDelim() As String
 	Dim aLineA(),aLineB(),aLineD(),aLineT(),aLineP()
 	Dim oProgressbar as Object
@@ -417,7 +417,6 @@ Sub Import_Daten()
 			if sRabatt=&quot;&quot; then 
 				sRabatt= &quot;0&quot; 
 			end if
-			cRabatt=sRabatt
 			
 			Do While Not oTextInputStream.isEOF
 				sLine=oTextInputStream.readLine
@@ -576,8 +575,7 @@ Sub Import_Daten()
 					lPreis=CLng(sPreis)
 					
 					if sPreis &lt;&gt; &quot;&quot; and sPreis &lt;&gt; &quot;0&quot; then
-		&apos;				sEinkaufspreis=CStr(CCur(fZahlMitKomma(sPreis))*(100-cRabatt)/10000)
-						sEinkaufspreis=CStr((lPreis*(100-cRabatt)/10000)+0.0055)
+						sEinkaufspreis=sSQL_Result(lPreis &amp;&quot;*(100-&quot;&amp; fZahlMitKomma(sRabatt) &amp;&quot;)/10000&quot;)
 						if Len(sPreis) &gt; 2 then
 							sListenPreis=Left(sPreis,Len(sPreis)-2)&amp;&quot;.&quot;&amp; Right(sPreis,2)
 						else
