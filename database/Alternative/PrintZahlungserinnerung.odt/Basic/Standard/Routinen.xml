@@ -9,10 +9,17 @@ option explicit
 
 Sub createRepord()
 	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	StatusBar(True)
+	ToolBar(True)
 	FormSizePrint()
 
 	if oDoc.isReadOnly then
-		Dim oFrame as Object
+		Dim oFrame AS Object
+		Dim oController as Object
+		
+		oController = oDoc.CurrentController
+		oController.setFormDesignMode(False)
+
 		oFrame = StarDesktop.getCurrentFrame()
 		oFrame.setTitle(sTitle_lokal &amp;&quot; - Druck vorbereiten: Zahlungserinnerung&quot;)
 		
@@ -43,24 +50,24 @@ Sub createRepord()
 		oFrame = StarDesktop.getCurrentFrame()
 		oFrame.setTitle(sTitle_lokal &amp;&quot; - Druck vorbereiten: Zahlungserinnerung&quot;)
 
-		Dim sSQL1 as String
+		Dim sSQL1 AS String
 		Kontaktdaten.KontaktDaten()
 		Rechnungen.Rechnungen()
-		sSQL1=&quot;update Steuerung set Option_1=0 where ClientID=&quot;&amp; iClientID
+		sSQL1=&quot;UPDATE Steuerung SET Option_1=0 WHERE ClientID=&quot;&amp; iClientID
 		SQL_execute(sSQL1)
 	End if
 End Sub
 
 Sub DokumentDrucken()
-	Dim sFaxEmpfaenger as String
+	Dim sFaxEmpfaenger AS String
 	if GetGUIType = 1 then
-		if iPrint_Typ = 1 and fsInTrim(sFax_Empfaenger) &lt;&gt; &quot;&quot; and LCase(sFaxTyp) = &quot;fritzfax&quot; then
-			if sFaxNumberPrefix &lt;&gt; &quot;&quot; and Len(fsLeerzeichenEntfernen(sFax_Empfaenger)) &gt; CInt(iFaxLenInternNumber) then
-				sFaxEmpfaenger=fsLeerzeichenEntfernen(sFaxNumberPrefix &amp; fsPlusErsetzen(sFax_Empfaenger))
+		if iPrint_Typ = 1 AND fsInTrim(sFax_Empfaenger) &lt;&gt; &quot;&quot; AND LCase(sFaxTyp) = &quot;fritzfax&quot; then
+			if sFaxNumberPraefix &lt;&gt; &quot;&quot; AND Len(fsLeerzeichenEntfernen(sFax_Empfaenger)) &gt; CInt(iFaxLenInternNumber) then
+				sFaxEmpfaenger=fsLeerzeichenEntfernen(sFaxNumberPraefix &amp; fsPlusErsetzen(sFax_Empfaenger))
 			else
 				sFaxEmpfaenger=fsLeerzeichenEntfernen(sFax_Empfaenger)
 			End if
-			Set_FritzFax(&quot;PrintZahlungserinnerung&quot;,sFaxEmpfaenger)		
+			SET_FritzFax(&quot;PrintZahlungserinnerung&quot;,sFaxEmpfaenger)		
 		End if
 	End if
 End Sub
@@ -73,35 +80,27 @@ Sub DokumentSchlieszen()
 End Sub
 
 Sub ConvertToPdfAndSendMail()
-	Dim sURL as String,oPfad as Object
-	Dim vStatus as Variant, oMailer as Object,oMailClient as Object,oMessage as Object
-	Dim vAttachement(0)
+	Dim sURL AS String,oPfad AS Object
+	Dim sSubject AS String,sBody AS String
+	
 	oPfad = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
 
-&apos;	sURL=ConvertToURL(sStandardPfad &amp; &quot;/mail/&quot; &amp; sDocumentID &amp; &quot;.pdf&quot;)
 	sURL=ConvertToURL(oPfad.temp)&amp;&quot;/&quot;&amp; sDocument_Name &amp; &quot;.pdf&quot;
 	oDoc.storeToURL(sURL,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
-	vAttachement(0) = sURL
 
-	oMailer = createUnoService( &quot;com.sun.star.system.SystemMailProvider&quot; )
+	sSubject=fsInTrim(fsReplace(fsReplace(fsReplace(fsReplace(sDocument_Name,Chr(34),&quot; &quot;),Chr(10),&quot; - &quot;),Chr(13),&quot; - &quot;),&quot;,&quot;,&quot; &quot;))
 
-	oMailClient = oMailer.queryMailClient()
-	oMessage = oMailClient.createMailMessage()
+	sBody=&quot;Sehr geehrte Damen und Herren, &quot; &amp; Chr(10) &amp; Chr(10) &amp; &quot;im Anhang finden Sie unsere Zahlungserinnerung.&quot;
 	
-	oMessage.Recipient=sEMail_Empfaenger
-	oMessage.Subject=fsInTrim(fsReplace(fsReplace(fsReplace(fsReplace(sDocument_Name,Chr(34),&quot; &quot;),Chr(10),&quot; - &quot;),Chr(13),&quot; - &quot;),&quot;,&quot;,&quot; &quot;))
-	oMessage.Body=&quot;Sehr geehrte Damen und Herren,&quot; &amp; Chr(10) &amp; Chr(10) &amp; &quot;im Anhang finden Sie unsere Zahlungserinnerung.&quot;
-	oMessage.Attachement=vAttachement()
+ 	SendMail(sEMail_Empfaenger,sEMail,sSubject,sBody,sURL)
 
-	oMailClient.sendMailMessage( oMessage, 0 )
-&apos;	kill(sURL)
 	Status_Datum_setzen()
 End Sub
 
 Sub ConvertToPDF()
-	Dim sURL as String
-	Dim oFilePicker as Object,vStatusFilePicker as Variant
-	Dim vStatus as Variant
+	Dim sURL AS String
+	Dim oFilePicker AS Object,vStatusFilePicker AS Variant
+	Dim vStatus AS Variant
 	Dim initArgs(0)
 	
 	initArgs=Array(com.sun.star.ui.dialogs.TemplateDescription.FILESAVE_AUTOEXTENSION_SELECTION ) 
@@ -132,34 +131,34 @@ End Sub
 Sub Status_Datum_setzen()
 	if oDoc.isReadOnly then 
 		DokumentDrucken()
-		Dim sSQL1 as String
-		sSQL1=&quot;update &quot;&amp; sRechnungen1 &amp;_
-			&quot; set Status=&apos;erinnert&apos;,erinnert_am=(date_add(now(),interval 0 month)),&quot;&amp;_
-			&quot;erinnert_bis=(date_add(erinnert_am,interval 8 Day))where KontaktID=&quot;&amp; lKontaktID &amp;&quot; and Status=&apos;fällig&apos;&quot;
+		Dim sSQL1 AS String
+		sSQL1=&quot;UPDATE &quot;&amp; sRechnungen1 &amp;_
+			&quot; SET Status=&apos;erinnert&apos;,erinnert_am=(DATE_ADD(NOW(),INTERVAL 0 MONTH)),&quot;&amp;_
+			&quot;erinnert_bis=(DATE_ADD(erinnert_am,INTERVAL 8 DAY))WHERE KontaktID=&quot;&amp; lKontaktID &amp;&quot; AND Status=&apos;fällig&apos;&quot;
 		SQL_execute(sSQL1)
 	End if
 End Sub
 
-Function FieldContent(sField as string) as String
-	Dim vField as Variant,vFieldMaster as Variant
-	Dim sFieldName as String
+Function FieldContent(sField AS string) AS String
+	Dim vField AS Variant,vFieldMaster AS Variant
+	Dim sFieldName AS String
 	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
 	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName) 
 	FieldContent = vFieldMaster.Content       
 End Function
 
-Sub Feld_fuellen(sField as string,sInhalt as string )
-	Dim vField as Variant,vFieldMaster as Variant
-	Dim sFieldName as String
+Sub Feld_fuellen(sField AS string,sInhalt AS string )
+	Dim vField AS Variant,vFieldMaster AS Variant
+	Dim sFieldName AS String
 	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField 
 	vFieldMaster = oDoc.getTextFieldMasters.getByName(sFieldName) 
 	vFieldMaster.Content = sInhalt        
 End Sub
  
-Sub Feld_loeschen(sField as string)
-	Dim vField as Variant,vFieldMaster as Variant
-	Dim sFieldName as String
-	Dim bFound as boolean
+Sub Feld_loeschen(sField AS string)
+	Dim vField AS Variant,vFieldMaster AS Variant
+	Dim sFieldName AS String
+	Dim bFound AS boolean
 	vField = oDoc.createInstance(&quot;com.sun.star.text.TextField.User&quot;) 
 	sFieldName = &quot;com.sun.star.text.FieldMaster.User.&quot; + sField
 	bFound = oDoc.getTextFieldMasters.hasbyname(sFieldName)

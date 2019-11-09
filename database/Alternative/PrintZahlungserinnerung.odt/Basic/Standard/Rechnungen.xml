@@ -8,13 +8,13 @@ REM  *****  BASIC  *****
 option explicit
 
 Sub Rechnungen()
-	Dim oTables as Object
-	Dim vTableRechnungen as Variant
-	Dim vRowsRechnungen as Variant,oRecordRechnungen as Object,oRecordCountRechnungen as Object
-	Dim sDocumentID as String,sErstellungsdatum as String,sGueltigBis as String
-	Dim sRechnungsbetrag as String,sStatus as String
-	Dim sSQL1 as String,sSQL2 as String
-	Dim iAnzahlRechnungen as Integer,iCountRechnungen as Integer
+	Dim oTables AS Object
+	Dim vTableRechnungen AS Variant
+	Dim vRowsRechnungen AS Variant,oRecordRechnungen AS Object,oRecordCountRechnungen AS Object
+	Dim sDocumentID AS String,sErstellungsdatum AS String,sGueltigBis AS String
+	Dim sRechnungsbetrag AS String,sStatus AS String
+	Dim sSQL1 AS String,sSQL2 AS String
+	Dim iAnzahlRechnungen AS Integer,iCountRechnungen AS Integer
 	
 	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
 	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
