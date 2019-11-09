@@ -12,7 +12,7 @@ Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
 Dim oRecord1 AS Object,oRecord2 AS Object
 Dim vStatus AS Variant
 Dim sName1 AS String,sName AS String
-Dim cMwSt_Satz AS currency
+Dim sMwSt_Satz AS String
 
 Sub Start_Lieferanten()
 	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
@@ -286,10 +286,10 @@ nochmal:
 	sSQL1=&quot;SELECT MwSt_Satz FROM Einstellungen WHERE EinstellungsID=&quot;&amp; iEinstellungsID_lokal
 	oRecord1=oResult(sSQL1)
 	While oRecord1.next()
-		cMwSt_Satz=oRecord1.getString(1)
+		sMwSt_Satz=oRecord1.getString(1)
 	Wend
 	sSQL2=&quot;INSERT INTO &quot;&amp; sLieferanten &amp;&quot; (Name1,MwSt_Satz,Erstkontakt,Buchhaltung)&quot;&amp;_
-		&quot; SELECT &apos;&quot;&amp; fsConvertApostroph(sName1) &amp;&quot;&apos;,&quot;&amp; cMwSt_Satz &amp;&quot;,DATE_ADD(NOW(),INTERVAL 0 DAY),1&quot;
+		&quot; SELECT &apos;&quot;&amp; fsConvertApostroph(sName1) &amp;&quot;&apos;,&quot;&amp; sMwSt_Satz &amp;&quot;,DATE_ADD(NOW(),INTERVAL 0 DAY),1&quot;
 	SQL_execute(sSQL2)
 	SQL_UPDATE_Steuerung_KontaktID()
 	oForm_Steuerung.reload()
