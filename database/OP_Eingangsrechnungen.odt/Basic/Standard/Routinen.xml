@@ -11,8 +11,8 @@ Dim oStatement AS Object
 Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
 Dim oRecord1 AS Object,oRecord2 AS Object
 Dim vStatus AS Variant
-Dim cSkonto_Satz AS currency,iSkonto_Tage AS integer,iFaellig_Tage AS integer
-Dim sRechnungsname AS String,cMwSt_Satz AS currency,sDate AS string,sDatum AS string
+Dim sSkonto_Satz AS String,iSkonto_Tage AS integer,iFaellig_Tage AS integer
+Dim sRechnungsname AS String,sMwSt_Satz AS String,sDate AS string,sDatum AS string
 Dim sDay AS String, sMonth AS String, sYear AS String, iRechnungsID AS long
 Dim sZahlungsweise AS String,sMindestangaben AS String
 Dim sAnrede AS String,sTitel AS String,sVorname AS String
@@ -874,23 +874,23 @@ Sub Betrag_berechnen()
 	if lDocumentID &lt;&gt; 0 then
 		oField_Betrag_ohne_MwSt.commit()
 		oForm_Document.updateRow()
-		sSQL1=&quot;SELECT Skonto_Satz,Zahlungsweise,MwSt_Satz FROM &quot;&amp; sLieferanten &amp;&quot;  WHERE KontaktID=&apos;&quot;&amp; lKontaktID &amp;&quot;&apos;&quot;
+		sSQL1=&quot;SELECT COALESCE(Skonto_Satz,0),Zahlungsweise,MwSt_Satz FROM &quot;&amp; sLieferanten &amp;&quot;  WHERE KontaktID=&apos;&quot;&amp; lKontaktID &amp;&quot;&apos;&quot;
 		oRecord1=oResult(sSQL1)
 		While oRecord1.next()
-			cSkonto_Satz=oRecord1.getString(1)
+			sSkonto_Satz=oRecord1.getString(1)
 			sZahlungsweise=oRecord1.getString(2)
-			cMwSt_Satz=oRecord1.getString(3)
+			sMwSt_Satz=oRecord1.getString(3)
 		Wend
 		sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;_
-			&quot; SET MwSt_Satz=&quot;&amp; cMwSt_Satz &amp;&quot;,MwSt=Betrag_ohne_MwSt*MwSt_Satz/100,&quot;&amp;_
+			&quot; SET MwSt_Satz=&quot;&amp; sMwSt_Satz &amp;&quot;,MwSt=Betrag_ohne_MwSt*MwSt_Satz/100,&quot;&amp;_
 			&quot;Betrag_mit_MwSt=Betrag_ohne_MwSt+MwSt,Status=&apos;&quot;&amp; sZahlungsweise &amp;&quot;&apos; WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
 		SQL_execute(sSQL1)
-		if cSkonto_Satz &lt;&gt; &quot;&quot; AND cSkonto_Satz &lt;&gt; 0 then		
+		if CDbl(fZahlMitPunkt(sSkonto_Satz)) &gt; 0 then		
 			sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;_
-				&quot; SET Skonto_Satz=&quot;&amp; cSkonto_Satz &amp;_
+				&quot; SET Skonto_Satz=&quot;&amp; sSkonto_Satz &amp;_
 				&quot;, Skonto=Betrag_mit_MwSt*Skonto_Satz/100,Betrag_nach_Skonto=Betrag_mit_MwSt-Skonto WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
 			SQL_execute(sSQL1)
-		Elseif cSkonto_Satz = 0 then
+		Elseif CDbl(fZahlMitPunkt(sSkonto_Satz)) = 0 then
 			sSQL1=&quot;UPDATE &quot;&amp; sEingangsrechnungen &amp;&quot; SET Skonto=NULL,Betrag_nach_Skonto=NULL WHERE RechnungsID=&apos;&quot;&amp; lDocumentID &amp;&quot;&apos;&quot;
 			SQL_execute(sSQL1)
 		End if
