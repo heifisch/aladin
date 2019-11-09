@@ -103,7 +103,7 @@
       <config:config-item config:name="EmbedAsianScriptFonts" config:type="boolean">true</config:config-item>
       <config:config-item config:name="TabAtLeftIndentForParagraphsInList" config:type="boolean">false</config:config-item>
       <config:config-item config:name="PrintRightPages" config:type="boolean">true</config:config-item>
-      <config:config-item config:name="Rsid" config:type="int">1801034</config:config-item>
+      <config:config-item config:name="Rsid" config:type="int">1926164</config:config-item>
       <config:config-item config:name="MathBaselineAlignment" config:type="boolean">false</config:config-item>
       <config:config-item config:name="MsWordCompTrailingBlanks" config:type="boolean">false</config:config-item>
       <config:config-item config:name="InvertBorderSpacing" config:type="boolean">false</config:config-item>
