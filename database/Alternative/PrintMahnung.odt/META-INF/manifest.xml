@@ -6,10 +6,10 @@
  <manifest:file-entry manifest:full-path="Configurations2/" manifest:media-type="application/vnd.sun.xml.ui.configuration"/>
  <manifest:file-entry manifest:full-path="Basic/script-lc.xml" manifest:media-type="text/xml"/>
  <manifest:file-entry manifest:full-path="Basic/Standard/script-lb.xml" manifest:media-type="text/xml"/>
- <manifest:file-entry manifest:full-path="Basic/Standard/Kontaktdaten.xml" manifest:media-type="text/xml"/>
- <manifest:file-entry manifest:full-path="Basic/Standard/Rechnungen.xml" manifest:media-type="text/xml"/>
- <manifest:file-entry manifest:full-path="Basic/Standard/Routinen.xml" manifest:media-type="text/xml"/>
  <manifest:file-entry manifest:full-path="Basic/Standard/Control.xml" manifest:media-type="text/xml"/>
+ <manifest:file-entry manifest:full-path="Basic/Standard/Routinen.xml" manifest:media-type="text/xml"/>
+ <manifest:file-entry manifest:full-path="Basic/Standard/Rechnungen.xml" manifest:media-type="text/xml"/>
+ <manifest:file-entry manifest:full-path="Basic/Standard/Kontaktdaten.xml" manifest:media-type="text/xml"/>
  <manifest:file-entry manifest:full-path="content.xml" manifest:media-type="text/xml"/>
  <manifest:file-entry manifest:full-path="meta.xml" manifest:media-type="text/xml"/>
  <manifest:file-entry manifest:full-path="manifest.rdf" manifest:media-type="application/rdf+xml"/>

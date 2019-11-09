@@ -7,63 +7,63 @@
 REM  *****  BASIC  *****
 option explicit
 
-Function oDoc as Object
+Function oDoc AS Object
 	oDoc = thisComponent 
 End Function
 
-Function iEinstellungsID_lokal as Integer
+Function iEinstellungsID_lokal AS Integer
 	iEinstellungsID_lokal=GetDocUserProperty(&quot;oEinstellungsID_lokal&quot;)
 End Function
 
-Function iUserID_lokal as Integer
+Function iUserID_lokal AS Integer
 	iUserID_lokal=GetDocUserProperty(&quot;oUserID_lokal&quot;)
 End Function
 
-Function iClientID as Integer
+Function iClientID AS Integer
 	iClientID=GetDocUserProperty(&quot;oClientID&quot;)
 End Function
 
-Function sFax_Empfaenger as String
+Function sFax_Empfaenger AS String
 	sFax_Empfaenger=GetDocUserProperty(&quot;oFax_Empfaenger&quot;)
 End Function
 
-Function iPrint_Typ as Integer
+Function iPrint_Typ AS Integer
 	iPrint_Typ=GetDocUserProperty(&quot;oPrint_Typ&quot;)
 End Function
 
-Function sDocument_Name as String
+Function sDocument_Name AS String
 	sDocument_Name=GetDocUserProperty(&quot;oDocument_Name&quot;)
 End Function
 
-Function sEMail_Empfaenger as String
+Function sEMail_Empfaenger AS String
 	sEMail_Empfaenger=GetDocUserProperty(&quot;oEMail_Empfaenger&quot;)
 End Function
 
-Function lKontaktID as Long
+Function lKontaktID AS Long
 	lKontaktID=GetDocUserProperty(&quot;oKontaktID&quot;)
 End Function
 
-Function sRechnungen1 as String
+Function sRechnungen1 AS String
 	sRechnungen1=GetDocUserProperty(&quot;oRechnungen1&quot;)
 End Function
 
-Function sKunden as String
+Function sKunden AS String
 	sKunden=GetDocUserProperty(&quot;oKunden&quot;)
 End Function
 
-Function sAnsprechpartner_Kunden as String
+Function sAnsprechpartner_Kunden AS String
 	sAnsprechpartner_Kunden=GetDocUserProperty(&quot;oAnsprechpartner_Kunden&quot;)
 End Function
 
-Function sTitle_lokal as String
+Function sTitle_lokal AS String
 	 sTitle_lokal=GetDocUserProperty(&quot;oTitle_lokal&quot;)
 End Function
 
-Function GetDocUserProperty(sPropertyName as String) As String
-	Dim oUserProps As Object
+Function GetDocUserProperty(sPropertyName AS String) AS String
+	Dim oUserProps AS Object
 &apos;	On Error Resume Next
 	oUserProps = oDoc.DocumentProperties.getUserDefinedProperties()
-	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = True then
+	if oUserProps.getPropertySetInfo().hASPropertyByName(sPropertyName) = True then
 		GetDocUserProperty = oUserProps.getPropertyValue(sPropertyName)
 	else
 		GetDocUserProperty = &quot;&quot;

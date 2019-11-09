@@ -31,6 +31,7 @@
     <style:font-face style:name="StarSymbol" svg:font-family="StarSymbol" style:font-charset="x-symbol"/>
     <style:font-face style:name="Arial" svg:font-family="Arial, Helvetica"/>
     <style:font-face style:name="Lucidasans1" svg:font-family="Lucidasans"/>
+    <style:font-face style:name="Arial2" svg:font-family="Arial" style:font-adornments="Normal" style:font-family-generic="swiss"/>
     <style:font-face style:name="Bitstream Vera Sans" svg:font-family="'Bitstream Vera Sans'" style:font-pitch="variable"/>
     <style:font-face style:name="Lucidasans" svg:font-family="Lucidasans" style:font-pitch="variable"/>
     <style:font-face style:name="Mincho" svg:font-family="Mincho" style:font-pitch="variable"/>
@@ -276,7 +277,7 @@
     </style:style>
     <style:style style:name="P38" style:family="paragraph">
       <style:paragraph-properties fo:text-align="center"/>
-      <style:text-properties fo:font-family="Arial" style:font-style-name="Normal" style:font-family-generic="swiss" fo:font-size="12pt"/>
+      <style:text-properties style:font-name="Arial2" fo:font-size="12pt"/>
     </style:style>
     <style:style style:name="T1" style:family="text">
       <style:text-properties fo:font-weight="250" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
@@ -451,6 +452,9 @@
               <text:span text:style-name="T2">
                 <text:user-field-get text:name="Summe">Summe</text:user-field-get>
               </text:span>
+              <text:span text:style-name="T2">
+                <text:s/>
+              </text:span>
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -461,6 +465,9 @@
               <text:span text:style-name="T2">
                 <text:user-field-get text:name="Summe_Bezahlt">Summe_Bezahlt</text:user-field-get>
               </text:span>
+              <text:span text:style-name="T2">
+                <text:s/>
+              </text:span>
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -469,6 +476,7 @@
             <text:p text:style-name="P21">
               <text:tab/>
               <text:user-field-get text:name="Zinsen">Zinsen</text:user-field-get>
+              <text:s/>
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -481,6 +489,9 @@
               <text:span text:style-name="T3">
                 <text:user-field-get text:name="Mahngebuehr">Mahngebuehr</text:user-field-get>
               </text:span>
+              <text:span text:style-name="T3">
+                <text:s/>
+              </text:span>
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -490,6 +501,9 @@
               <text:tab/>
               <text:span text:style-name="T4">
                 <text:user-field-get text:name="Zahlungsbetrag">Zahlungsbetrag</text:user-field-get>
+              </text:span>
+              <text:span text:style-name="T4">
+                <text:s/>
               </text:span>
             </text:p>
           </table:table-cell>
@@ -505,6 +519,7 @@
       <text:p text:style-name="P36"/>
       <text:p text:style-name="P36">
         <text:user-field-get text:name="Name1_Eigen">Name1_Eigen</text:user-field-get>
+        <text:s/>
       </text:p>
     </office:text>
   </office:body>

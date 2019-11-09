@@ -4,6 +4,7 @@
     <style:font-face style:name="StarSymbol" svg:font-family="StarSymbol" style:font-charset="x-symbol"/>
     <style:font-face style:name="Arial" svg:font-family="Arial, Helvetica"/>
     <style:font-face style:name="Lucidasans1" svg:font-family="Lucidasans"/>
+    <style:font-face style:name="Arial2" svg:font-family="Arial" style:font-adornments="Normal" style:font-family-generic="swiss"/>
     <style:font-face style:name="Bitstream Vera Sans" svg:font-family="'Bitstream Vera Sans'" style:font-pitch="variable"/>
     <style:font-face style:name="Lucidasans" svg:font-family="Lucidasans" style:font-pitch="variable"/>
     <style:font-face style:name="Mincho" svg:font-family="Mincho" style:font-pitch="variable"/>
@@ -405,12 +406,15 @@
                     <text:p/>
                   </draw:line>
                 </draw:g>
+                <text:s/>
                 <text:user-field-get text:name="Anschrift_Eigen_3">Anschrift_Eigen_3</text:user-field-get>
+                <text:s/>
               </text:p>
             </table:table-cell>
             <table:table-cell table:style-name="Logo2.A1" office:value-type="string">
               <text:p text:style-name="MP3">
                 <text:user-field-get text:name="Nummern">Nummern</text:user-field-get>
+                <text:s/>
               </text:p>
               <text:p text:style-name="MP4"><text:tab/>Seite:<text:tab/><text:page-number text:select-page="current">0</text:page-number> von <text:page-count>1</text:page-count></text:p>
             </table:table-cell>
@@ -423,9 +427,11 @@
             <table:table-cell office:value-type="string">
               <text:p text:style-name="MP6">
                 <text:user-field-get text:name="Anschrift">Anschrift</text:user-field-get>
+                <text:s/>
               </text:p>
               <text:p text:style-name="MP6">
                 <text:user-field-get text:name="Leerzeilen">Leerzeilen</text:user-field-get>
+                <text:s/>
               </text:p>
             </table:table-cell>
           </table:table-row>
@@ -433,12 +439,14 @@
             <table:table-cell table:style-name="Kopf2.A2" office:value-type="string">
               <text:p text:style-name="MP7">
                 <text:user-field-get text:name="Document_Typ">Document_Typ</text:user-field-get>
+                <text:s/>
               </text:p>
             </table:table-cell>
           </table:table-row>
         </table:table>
         <text:p text:style-name="MP8">
           <text:user-field-get text:name="Document_Name">Document_Name</text:user-field-get>
+          <text:s/>
         </text:p>
         <text:p text:style-name="MP9"/>
       </style:header>
@@ -465,15 +473,19 @@
                     <text:p/>
                   </draw:line>
                 </draw:g>
+                <text:s/>
               </text:p>
               <text:p text:style-name="MP11">
                 <text:user-field-get text:name="Name1">Name1</text:user-field-get>
+                <text:s/>
               </text:p>
               <text:p text:style-name="MP10">
                 <text:user-field-get text:name="Name2">Name2</text:user-field-get>
+                <text:s/>
               </text:p>
               <text:p text:style-name="MP12">
                 <text:user-field-get text:name="Anschrift_Eigen_1">Anschrift_Eigen_1</text:user-field-get>
+                <text:s/>
               </text:p>
             </table:table-cell>
             <table:table-cell table:style-name="Logo1.A1" office:value-type="string">
@@ -494,15 +506,19 @@
                       <text:p text:style-name="MP14"/>
                       <text:p text:style-name="MP15">
                         <text:user-field-get text:name="unzustellbar">Wenn unzustellbar, zurück!</text:user-field-get>
+                        <text:s/>
                       </text:p>
                       <text:p text:style-name="MP16">
                         <text:user-field-get text:name="Anschrift_Eigen_2">Anschrift_Eigen_2</text:user-field-get>
+                        <text:s/>
                       </text:p>
                       <text:p text:style-name="MP17">
                         <text:user-field-get text:name="Anschrift">Anschrift</text:user-field-get>
+                        <text:s/>
                       </text:p>
                       <text:p text:style-name="MP18">
                         <text:user-field-get text:name="Leerzeilen">Leerzeilen</text:user-field-get>
+                        <text:s/>
                       </text:p>
                     </table:table-cell>
                   </table:table-row>
@@ -510,6 +526,7 @@
                     <table:table-cell table:style-name="Kopf1.A1.1.2" office:value-type="string">
                       <text:p text:style-name="MP19">
                         <text:user-field-get text:name="Document_Typ">Document_Typ</text:user-field-get>
+                        <text:s/>
                       </text:p>
                     </table:table-cell>
                   </table:table-row>
@@ -518,12 +535,15 @@
               <table:table-cell table:style-name="Kopf1.A1.1.1" office:value-type="string">
                 <text:p text:style-name="MP20">
                   <text:user-field-get text:name="Leistungsprofil">Leistungsprofil</text:user-field-get>
+                  <text:s/>
                 </text:p>
                 <text:p text:style-name="MP21">
                   <text:user-field-get text:name="Leerzeilen">Leerzeilen</text:user-field-get>
+                  <text:s/>
                 </text:p>
                 <text:p text:style-name="MP22">
                   <text:user-field-get text:name="Nummern">Nummern</text:user-field-get>
+                  <text:s/>
                 </text:p>
                 <text:p text:style-name="MP23"><text:tab/>Seite:<text:tab/><text:page-number text:select-page="current">1</text:page-number> von <text:page-count>1</text:page-count></text:p>
               </table:table-cell>
@@ -542,26 +562,36 @@
             <table:table-cell table:style-name="Fuß.A1" office:value-type="string">
               <text:p text:style-name="MP24">
                 <text:user-field-get text:name="Kontakt_Bez">Kontakt_Bez</text:user-field-get>
+                <text:s/>
               </text:p>
             </table:table-cell>
             <table:table-cell table:style-name="Fuß.A1" office:value-type="string">
               <text:p text:style-name="MP25">
                 <text:user-field-get text:name="Kontakt">Kontakt</text:user-field-get>
+                <text:s/>
               </text:p>
             </table:table-cell>
             <table:table-cell table:style-name="Fuß.A1" office:value-type="string">
               <text:p text:style-name="MP24">
                 <text:user-field-get text:name="Bankverbindung_Bez">Bankverbindung_Bez</text:user-field-get>
+                <text:s/>
                 <text:span text:style-name="MT1">
                   <text:user-field-get text:name="Bankverbindung">Bankverbindung</text:user-field-get>
+                </text:span>
+                <text:span text:style-name="MT1">
+                  <text:s/>
                 </text:span>
               </text:p>
             </table:table-cell>
             <table:table-cell table:style-name="Fuß.A1" office:value-type="string">
               <text:p text:style-name="MP24">
                 <text:user-field-get text:name="Geschaeftsfuehrer_Bez">Geschaeftsfuehrer_Bez</text:user-field-get>
+                <text:s/>
                 <text:span text:style-name="MT1">
                   <text:user-field-get text:name="Firmendaten">Firmendaten</text:user-field-get>
+                </text:span>
+                <text:span text:style-name="MT1">
+                  <text:s/>
                 </text:span>
               </text:p>
             </table:table-cell>
