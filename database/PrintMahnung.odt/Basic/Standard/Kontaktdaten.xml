@@ -595,29 +595,29 @@ Sub KontaktDaten()
 	Feld_fuellen(&quot;Document_Typ&quot;,sDocument_Typ)
 	Feld_fuellen(&quot;Erinnert_am&quot;,fConvDatum(sErinnertAm))
 	Feld_fuellen(&quot;Gemahnt_bis&quot;,fConvDatum(sGemahntBis))
-	Feld_fuellen(&quot;Summe&quot;,&quot;Summe nicht ausgeglichener Rechnungen:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sSumme) &amp; &quot; €&quot;)
+	Feld_fuellen(&quot;Summe&quot;,&quot;Summe nicht ausgeglichener Rechnungen:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sSumme) &amp; &quot; &quot;&amp; sWaehrung)
 	if CDbl(fZahlMitPunkt(sMahngebuehr)) &gt; 0 then
-		Feld_fuellen(&quot;Mahngebuehr&quot;,&quot;+ zuzüglich Mahngebühr:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sMahngebuehr) &amp; &quot; €&quot;)
+		Feld_fuellen(&quot;Mahngebuehr&quot;,&quot;+ zuzüglich Mahngebühr:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sMahngebuehr) &amp; &quot; &quot;&amp; sWaehrung)
 	else
 		vRows_Summen.removeByIndex(4,1)
 	End if
 	if CDbl(fZahlMitPunkt(sZinssatz)) &gt; 0 then
 		if sGemahntAm = &quot;&quot; then
 			Feld_fuellen(&quot;Zinsen&quot;,&quot;+ zuzüglich &quot; &amp; fZahlMitPunkt(sZinssatz) &amp; &quot;% Verzugszinsen per &quot; &amp; Date &amp; &quot;:&quot; &amp;_
-			 Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sZinsen) &amp; &quot; €&quot;)
+			 Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sZinsen) &amp; &quot; &quot;&amp; sWaehrung)
 		else
 			Feld_fuellen(&quot;Zinsen&quot;,&quot;+ zuzüglich &quot; &amp; fZahlMitPunkt(sZinssatz) &amp; &quot;% Verzugszinsen per &quot; &amp; fConvDatum(sGemahntAm) &amp; &quot;:&quot; &amp;_
-			 Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sZinsen) &amp; &quot; €&quot;)
+			 Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sZinsen) &amp; &quot; &quot;&amp; sWaehrung)
 		End if
 	else
 		vRows_Summen.removeByIndex(3,1)
 	End if
 	if CDbl(fZahlMitPunkt(sSumme_Bezahlt)) &gt; 0 then
-		Feld_fuellen(&quot;Summe_Bezahlt&quot;,&quot;- abzüglich geleisteter Zahlungen:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sSumme_Bezahlt) &amp; &quot; €&quot;)
+		Feld_fuellen(&quot;Summe_Bezahlt&quot;,&quot;- abzüglich geleisteter Zahlungen:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sSumme_Bezahlt) &amp; &quot; &quot;&amp; sWaehrung)
 	else
 		vRows_Summen.removeByIndex(2,1)
 	End if
-	Feld_fuellen(&quot;Zahlungsbetrag&quot;,&quot;Zahlungsbetrag:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sSumme_mit_Aufschlag) &amp; &quot; €&quot;)
+	Feld_fuellen(&quot;Zahlungsbetrag&quot;,&quot;Zahlungsbetrag:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sSumme_mit_Aufschlag) &amp; &quot; &quot;&amp; sWaehrung)
 	Feld_fuellen(&quot;Nummern&quot;,sNummern)
 	Feld_fuellen(&quot;Leistungsprofil&quot;,sLeistungsprofil)
 	Feld_fuellen(&quot;Kontakt_Bez&quot;,sKontakt_Bez)
