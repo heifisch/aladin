@@ -87,8 +87,8 @@ Sub Pos_kopieren_sub(iReset AS Integer)
 									&quot;Einkaufspreis,Bauzeit,Minutenverrechnungssatz,Materialaufschlagsatz,Erstellungsdatum,PersonalID,ProjektID,Lokation)&quot;&amp;_
 									&quot; VALUES (&apos;&quot;&amp; sLV_Pos_cp &amp;&quot;&apos;,&apos;&quot;&amp; sLeistungsID_cp &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer_cp &amp;_
 									&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung_cp) &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung_cp) &amp;_
-									&quot;&apos;,&apos;&quot;&amp; sEinheit_cp &amp;&quot;&apos;,&quot;&amp; cMenge_cp &amp;&quot;,&quot;&amp; cEinkaufspreis_cp &amp;&quot;,&quot;&amp; cBauzeit_cp &amp;&quot;,&quot;&amp; cMinutenverechnungssatz_cp &amp;_
-									&quot;,&quot; &amp; cMaterialaufschlagsatz_cp &amp;&quot;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;)&quot;
+									&quot;&apos;,&apos;&quot;&amp; sEinheit_cp &amp;&quot;&apos;,&quot;&amp; sMenge_cp &amp;&quot;,&quot;&amp; sEinkaufspreis_cp &amp;&quot;,&quot;&amp; sBauzeit_cp &amp;&quot;,&quot;&amp; sMinutenverechnungssatz_cp &amp;_
+									&quot;,&quot; &amp; sMaterialaufschlagsatz_cp &amp;&quot;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;)&quot;
 								SQL_execute(sSQL2)
 								oForm_Tabellendaten.reload()
 								oForm_Tabellendaten.last
@@ -202,8 +202,8 @@ Sub Pos_verschieben_sub(iReset AS Integer)
 									&quot;Einkaufspreis,Bauzeit,Minutenverrechnungssatz,Materialaufschlagsatz,Erstellungsdatum,PersonalID,ProjektID,Lokation)&quot;&amp;_
 									&quot; VALUES (&apos;&quot;&amp; sLV_Pos_mv &amp;&quot;&apos;,&apos;&quot;&amp; sLeistungsID_mv &amp;&quot;&apos;,&apos;&quot;&amp; sBestellnummer_mv &amp;_
 									&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung_mv) &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung_mv) &amp;_
-									&quot;&apos;,&apos;&quot;&amp; sEinheit_mv &amp;&quot;&apos;,&quot;&amp; cMenge_mv &amp;&quot;,&quot;&amp; cEinkaufspreis_mv &amp;&quot;,&quot;&amp; cBauzeit_mv &amp;&quot;,&quot;&amp; cMinutenverechnungssatz_mv &amp;_
-									&quot;,&quot; &amp; cMaterialaufschlagsatz_mv &amp;&quot;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;)&quot;
+									&quot;&apos;,&apos;&quot;&amp; sEinheit_mv &amp;&quot;&apos;,&quot;&amp; sMenge_mv &amp;&quot;,&quot;&amp; sEinkaufspreis_mv &amp;&quot;,&quot;&amp; sBauzeit_mv &amp;&quot;,&quot;&amp; sMinutenverechnungssatz_mv &amp;_
+									&quot;,&quot; &amp; sMaterialaufschlagsatz_mv &amp;&quot;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;)&quot;
 								SQL_execute(sSQL2)
 								oForm_Tabellendaten.reload()
 								oForm_Tabellendaten.last
