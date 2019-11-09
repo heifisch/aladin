@@ -12,7 +12,7 @@ Sub KontaktDaten()
 	Dim vTable_Summen AS Variant
 	Dim vRows_Summen AS Variant,oRecord_Kontakt AS Object,sDocument_Typ AS String
 	Dim sSumme AS String,sSumme_Bezahlt AS String,sZinssatz AS String,sZinsen AS String
-	Dim sMahngebuehr AS currency,sSumme_mit_Aufschlag AS currency
+	Dim sMahngebuehr AS String,sSumme_mit_Aufschlag AS String
 	Dim sAnschrift AS String,sNummern AS String,sLeerzeilen AS String,sLeistungsprofil AS String
 	Dim sName1Eigen AS String,sName2Eigen AS String,sName3Eigen AS String,sName4Eigen AS String,sNameKurzEigen AS String
 	Dim sLandEigen AS String,sPLZEigen AS String,sPlatzhalter AS String

@@ -42,7 +42,7 @@
       <config:config-item config:name="PrintHiddenText" config:type="boolean">false</config:config-item>
       <config:config-item config:name="PrintDrawings" config:type="boolean">true</config:config-item>
       <config:config-item config:name="IgnoreFirstLineIndentInNumbering" config:type="boolean">true</config:config-item>
-      <config:config-item config:name="PrinterSetup" config:type="base64Binary">sQH+/0hQX0xhc2VySmV0X1AzMDEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUF9MYXNlckpldF9QMzAxMAAAAAAAAAAAAAAWAAMA0gAAAAAAAAAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFBfTGFzZXJKZXRfUDMwMTAKb3JpZW50YXRpb249UG9ydHJhaXQKY29waWVzPTEKY29sbGF0ZT1mYWxzZQptYXJnaW5kYWp1c3RtZW50PTAsMCwwLDAKY29sb3JkZXB0aD0yNApwc2xldmVsPTAKcGRmZGV2aWNlPTEKY29sb3JkZXZpY2U9MApQUERDb250ZXhEYXRhCkhQQ29sbGF0ZVN1cHBvcnRlZDpGYWxzZTEyOABQYWdlU2l6ZTpBNAAAEgBDT01QQVRfRFVQTEVYX01PREUPAER1cGxleE1vZGU6Ok9mZg==</config:config-item>
+      <config:config-item config:name="PrinterSetup" config:type="base64Binary">zAH+/0hQX0xhc2VySmV0X1AzMDEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUF9MYXNlckpldF9QMzAxMAAAAAAAAAAAAAAWAAMA7QAAAAAAAAAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFBfTGFzZXJKZXRfUDMwMTAKb3JpZW50YXRpb249UG9ydHJhaXQKY29waWVzPTEKY29sbGF0ZT1mYWxzZQptYXJnaW5kYWp1c3RtZW50PTAsMCwwLDAKY29sb3JkZXB0aD0yNApwc2xldmVsPTAKcGRmZGV2aWNlPTEKY29sb3JkZXZpY2U9MApQUERDb250ZXhEYXRhCkR1cGxleDpOb25lAElucHV0U2xvdDpBdXRvAEhQQ29sbGF0ZVN1cHBvcnRlZDpGYWxzZTEyOABQYWdlU2l6ZTpBNAAAEgBDT01QQVRfRFVQTEVYX01PREUPAER1cGxleE1vZGU6Ok9mZg==</config:config-item>
       <config:config-item config:name="CollapseEmptyCellPara" config:type="boolean">false</config:config-item>
       <config:config-item config:name="UseOldPrinterMetrics" config:type="boolean">false</config:config-item>
       <config:config-item config:name="UseOldNumbering" config:type="boolean">false</config:config-item>
@@ -103,7 +103,7 @@
       <config:config-item config:name="EmbedAsianScriptFonts" config:type="boolean">true</config:config-item>
       <config:config-item config:name="TabAtLeftIndentForParagraphsInList" config:type="boolean">false</config:config-item>
       <config:config-item config:name="PrintRightPages" config:type="boolean">true</config:config-item>
-      <config:config-item config:name="Rsid" config:type="int">1213550</config:config-item>
+      <config:config-item config:name="Rsid" config:type="int">1399110</config:config-item>
       <config:config-item config:name="MathBaselineAlignment" config:type="boolean">false</config:config-item>
       <config:config-item config:name="MsWordCompTrailingBlanks" config:type="boolean">false</config:config-item>
       <config:config-item config:name="InvertBorderSpacing" config:type="boolean">false</config:config-item>
