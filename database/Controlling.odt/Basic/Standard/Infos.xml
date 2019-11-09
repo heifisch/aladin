@@ -74,8 +74,8 @@ Sub Leistungsdaten_anzeigen()
 		sLeistungsdaten = sLeistungsdaten &amp;_
 			  &quot;              Einheit:&quot;&amp; Chr$(9)&amp; sEinheit &amp;Chr$(13)&amp;_
 			  &quot;             Bauzeit:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sBauzeit) &amp;&quot; Minuten &quot; &amp;Chr$(13)&amp;_
-			  &quot;    Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
-			  &quot;        Listenpreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sListenpreis) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
+			  &quot;    Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; &quot;&amp; sWaehrung &amp;Chr$(13)&amp;_
+			  &quot;        Listenpreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sListenpreis) &amp;&quot; &quot;&amp; sWaehrung &amp;Chr$(13)&amp;_
 			  &quot;  Warenbestand:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sWarenbestand) &amp;&quot; &quot;&amp; sEinheit &amp;Chr$(13)
 		MsgBox(sLeistungsdaten,64,sTitle_lokal &amp;&quot; Leistungsdaten&quot;)
 	End if
@@ -189,11 +189,11 @@ Sub Leistungsdaten_anzeigen_Auftrag()
 				&quot;     verbaute Menge:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sMenge_verbaut)) &amp;&quot; &quot;&amp; sEinheit &amp;Chr$(13)&amp;_
 				&quot;angebotene Menge:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sMenge)) &amp;&quot; &quot;&amp; sEinheit &amp;Chr$(13)&amp;Chr$(13)&amp;_
 				&quot;          Bauzeit:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sBauzeit) &amp;&quot; Minuten &quot; &amp;Chr$(13)&amp;_
-				&quot; Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
-				&quot;       Lieferung:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sLieferung)) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
-				&quot;        Leistung:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sLeistung)) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
-				&quot;                 EP:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sEP)) &amp;&quot; €&quot; &amp;Chr$(13)&amp;_
-				&quot;                 GP:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sGP)) &amp;&quot; €&quot; &amp;Chr$(13)&amp;Chr$(13)&amp;_
+				&quot; Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; &quot;&amp; sWaehrung &amp;Chr$(13)&amp;_
+				&quot;       Lieferung:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sLieferung)) &amp;&quot; &quot;&amp; sWaehrung &amp;Chr$(13)&amp;_
+				&quot;        Leistung:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sLeistung)) &amp;&quot; &quot;&amp; sWaehrung &amp;Chr$(13)&amp;_
+				&quot;                 EP:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sEP)) &amp;&quot; &quot;&amp; sWaehrung &amp;Chr$(13)&amp;_
+				&quot;                 GP:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sGP)) &amp;&quot; &quot;&amp; sWaehrung &amp;Chr$(13)&amp;Chr$(13)&amp;_
 				&quot;Auftragsbestätigung:&quot;&amp;Chr$(9)&amp; lDocumentID_Auftrag &amp;Chr$(13)&amp; sDocument_Name 
 		MsgBox(sLeistungsdaten,64,sTitle_lokal &amp;&quot; Leistungsdaten&quot;)
 	End if
@@ -282,7 +282,7 @@ Sub Leistungsdaten_anzeigen_Projekt()
 			sLeistungsdaten = sLeistungsdaten &amp;_
 			&quot;verbaute Menge:&quot;&amp;Chr$(9)&amp; fTausenderpunkt(fZahlMitPunkt(sMenge_verbaut)) &amp;&quot; &quot;&amp; sEinheit &amp;Chr$(13)&amp;_
 			&quot;              Bauzeit:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sBauzeit) &amp;&quot; Minuten &quot; &amp;Chr$(13)&amp;_
-			&quot;     Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; €&quot; &amp;Chr$(13)
+			&quot;     Einkaufspreis:&quot;&amp;Chr$(9)&amp; fZahlMitPunkt(sEinkaufspreis) &amp;&quot; &quot;&amp; sWaehrung &amp;Chr$(13)
 		MsgBox(sLeistungsdaten,64,sTitle_lokal &amp;&quot; Leistungsdaten&quot;)
 	End if
 End Sub
