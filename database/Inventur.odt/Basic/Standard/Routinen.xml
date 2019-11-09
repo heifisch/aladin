@@ -13,7 +13,7 @@ Dim oRecord1 as Object,oRecord2 as Object
 Dim vStatus as Variant
 Dim sWert as String,sMenge as String
 Dim sLeistungsbezeichnung as String,sLeistungsID as String
-Global cWarenbestand as currency
+Global sWarenbestand as String
 
 Sub Start_Inventur()
 	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
@@ -60,11 +60,11 @@ Sub Start_Inventur()
 End Sub
 
 Sub Tabelle_updateRow()
-	cWarenbestand=fZahlMitKomma(fsWarenbestand)
+	sWarenbestand=fsWarenbestand
 End Sub
 
 Sub Tabelle_reload()
-	if cWarenbestand = 0 then
+	if CDbl(sWarenbestand) = 0 then
 		oForm_Warenbestand.reload()
 	end if
 	Bestand_refresh()
