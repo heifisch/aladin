@@ -12,7 +12,6 @@ Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String
 Dim oRecord1 AS Object,oRecord2 AS Object
 Dim vStatus AS Variant
 Dim sName1 AS String,sName AS String
-Dim cMwSt_Satz AS currency
 
 Sub Start_Kontakte()
 	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
