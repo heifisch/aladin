@@ -11,8 +11,7 @@ Dim oStatement as Object
 Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
 Dim oRecord1 as Object,oRecord2 as Object
 Dim vStatus as Variant
-Dim cSkonto_Satz as currency,iSkonto_Tage as integer,iFaellig_Tage as integer
-Dim sProjektname as String,cMwSt_Satz as currency,sDate as string,sDatum as string
+Dim sProjektname as String,sMwSt_Satz as String,sDate as string,sDatum as string
 Dim sDay as String, sMonth as String, sYear as String, iProjektID as long
 Dim sZahlungsweise as String,sMindestangaben as String
 Dim sAnrede as String,sTitel as String,sVorname as String
@@ -481,10 +480,10 @@ Sub Betrag_berechnen()
 	sSQL1=&quot;SELECT MwSt_Satz from &quot;&amp; sKunden &amp;&quot; where KontaktID=&quot;&amp; lKontaktID
 	oRecord1=oResult(sSQL1)
 	While oRecord1.next()
-		cMwSt_Satz=oRecord1.getString(1)
+		sMwSt_Satz=oRecord1.getString(1)
 	Wend
 	sSQL1=&quot;update &quot;&amp; sProjekte &amp;_
-		&quot; set MwSt_Satz=&quot;&amp; cMwSt_Satz &amp;&quot;,MwSt=Summe_ohne_MwSt*MwSt_Satz/100,&quot;&amp;_
+		&quot; set MwSt_Satz=&quot;&amp; sMwSt_Satz &amp;&quot;,MwSt=Summe_ohne_MwSt*MwSt_Satz/100,&quot;&amp;_
 		&quot;Summe_mit_MwSt=Summe_ohne_MwSt+MwSt where ProjektID=&quot;&amp; lProjektID
 	SQL_execute(sSQL1)
 	oForm_Projekt.reload()
