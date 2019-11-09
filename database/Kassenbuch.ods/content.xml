@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" office:version="1.2">
+<office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:presentation="urn:oasis:names:tc:opendocument:xmlns:presentation:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2">
   <office:scripts/>
   <office:font-face-decls>
     <style:font-face style:name="Bitstream Vera Sans" svg:font-family="'Bitstream Vera Sans'" style:font-pitch="variable"/>
@@ -7,48 +7,52 @@
     <style:font-face style:name="Times New Roman" svg:font-family="'Times New Roman'" style:font-adornments="Standard" style:font-family-generic="roman" style:font-pitch="variable"/>
     <style:font-face style:name="Arial" svg:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>
     <style:font-face style:name="Arial1" svg:font-family="Arial" style:font-adornments="Standard" style:font-family-generic="swiss" style:font-pitch="variable"/>
-    <style:font-face style:name="Arimo" svg:font-family="Arimo" style:font-family-generic="swiss" style:font-pitch="variable"/>
-    <style:font-face style:name="DejaVu Sans Condensed" svg:font-family="'DejaVu Sans Condensed'" style:font-family-generic="system" style:font-pitch="variable"/>
+    <style:font-face style:name="Liberation Sans" svg:font-family="'Liberation Sans'" style:font-family-generic="swiss" style:font-pitch="variable"/>
+    <style:font-face style:name="DejaVu Sans" svg:font-family="'DejaVu Sans'" style:font-family-generic="system" style:font-pitch="variable"/>
+    <style:font-face style:name="Noto Sans Devanagari" svg:font-family="'Noto Sans Devanagari'" style:font-family-generic="system" style:font-pitch="variable"/>
   </office:font-face-decls>
   <office:automatic-styles>
     <style:style style:name="co1" style:family="table-column">
-      <style:table-column-properties fo:break-before="auto" style:column-width="0.499cm"/>
+      <style:table-column-properties fo:break-before="auto" style:column-width="4.99mm"/>
     </style:style>
     <style:style style:name="co2" style:family="table-column">
-      <style:table-column-properties fo:break-before="auto" style:column-width="2cm"/>
+      <style:table-column-properties fo:break-before="auto" style:column-width="20mm"/>
     </style:style>
     <style:style style:name="co3" style:family="table-column">
-      <style:table-column-properties fo:break-before="auto" style:column-width="1.94cm"/>
+      <style:table-column-properties fo:break-before="auto" style:column-width="19.4mm"/>
     </style:style>
     <style:style style:name="co4" style:family="table-column">
-      <style:table-column-properties fo:break-before="auto" style:column-width="2.327cm"/>
+      <style:table-column-properties fo:break-before="auto" style:column-width="23.27mm"/>
     </style:style>
     <style:style style:name="co5" style:family="table-column">
-      <style:table-column-properties fo:break-before="auto" style:column-width="1.709cm"/>
+      <style:table-column-properties fo:break-before="auto" style:column-width="17.09mm"/>
     </style:style>
     <style:style style:name="co6" style:family="table-column">
-      <style:table-column-properties fo:break-before="auto" style:column-width="1.282cm"/>
+      <style:table-column-properties fo:break-before="auto" style:column-width="12.82mm"/>
     </style:style>
     <style:style style:name="co7" style:family="table-column">
-      <style:table-column-properties fo:break-before="auto" style:column-width="5.876cm"/>
+      <style:table-column-properties fo:break-before="auto" style:column-width="58.76mm"/>
     </style:style>
     <style:style style:name="co8" style:family="table-column">
-      <style:table-column-properties fo:break-before="auto" style:column-width="2.267cm"/>
+      <style:table-column-properties fo:break-before="auto" style:column-width="22.67mm"/>
+    </style:style>
+    <style:style style:name="co9" style:family="table-column">
+      <style:table-column-properties fo:break-before="auto" style:column-width="22.58mm"/>
     </style:style>
     <style:style style:name="ro1" style:family="table-row">
-      <style:table-row-properties style:row-height="1cm" fo:break-before="auto" style:use-optimal-row-height="false"/>
+      <style:table-row-properties style:row-height="10mm" fo:break-before="auto" style:use-optimal-row-height="false"/>
     </style:style>
     <style:style style:name="ro2" style:family="table-row">
-      <style:table-row-properties style:row-height="0.427cm" fo:break-before="auto" style:use-optimal-row-height="true"/>
+      <style:table-row-properties style:row-height="4.52mm" fo:break-before="auto" style:use-optimal-row-height="true"/>
     </style:style>
     <style:style style:name="ro3" style:family="table-row">
-      <style:table-row-properties style:row-height="0.52cm" fo:break-before="auto" style:use-optimal-row-height="false"/>
+      <style:table-row-properties style:row-height="5.2mm" fo:break-before="auto" style:use-optimal-row-height="false"/>
     </style:style>
     <style:style style:name="ro4" style:family="table-row">
-      <style:table-row-properties style:row-height="0.263cm" fo:break-before="auto" style:use-optimal-row-height="false"/>
+      <style:table-row-properties style:row-height="2.63mm" fo:break-before="auto" style:use-optimal-row-height="false"/>
     </style:style>
     <style:style style:name="ro5" style:family="table-row">
-      <style:table-row-properties style:row-height="0.631cm" fo:break-before="auto" style:use-optimal-row-height="true"/>
+      <style:table-row-properties style:row-height="6.31mm" fo:break-before="auto" style:use-optimal-row-height="true"/>
     </style:style>
     <style:style style:name="ta1" style:family="table" style:master-page-name="Default">
       <style:table-properties table:display="true" style:writing-mode="lr-tb"/>
@@ -57,35 +61,35 @@
       <number:number number:min-integer-digits="1"/>
     </number:number-style>
     <number:number-style style:name="N4">
-      <number:number number:decimal-places="2" number:min-integer-digits="1" number:grouping="true"/>
+      <number:number number:decimal-places="2" loext:min-decimal-places="2" number:min-integer-digits="1" number:grouping="true"/>
     </number:number-style>
     <number:text-style style:name="N100">
       <number:text-content/>
     </number:text-style>
-    <number:number-style style:name="N8001" number:language="de" number:country="DE">
-      <number:number number:decimal-places="0" number:min-integer-digits="1"/>
+    <number:number-style style:name="N10001" number:language="de" number:country="DE">
+      <number:number number:decimal-places="0" loext:min-decimal-places="0" number:min-integer-digits="1"/>
     </number:number-style>
     <style:style style:name="ce1" style:family="table-cell" style:parent-style-name="Hintergrund">
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="ce2" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0">
-      <style:table-cell-properties fo:border-bottom="none" fo:border-left="0.088cm solid #c0c0c0" fo:border-right="none" fo:border-top="0.088cm solid #c0c0c0"/>
+      <style:table-cell-properties fo:border-bottom="none" fo:border-left="2.49pt solid #c0c0c0" fo:border-right="none" fo:border-top="2.49pt solid #c0c0c0"/>
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="ce3" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0">
-      <style:table-cell-properties fo:border-bottom="none" fo:border-left="0.088cm solid #c0c0c0" fo:border-right="none" fo:border-top="none"/>
+      <style:table-cell-properties fo:border-bottom="none" fo:border-left="2.49pt solid #c0c0c0" fo:border-right="none" fo:border-top="none"/>
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="ce4" style:family="table-cell" style:parent-style-name="Default">
-      <style:table-cell-properties fo:border-bottom="none" fo:border-left="0.088cm solid #c0c0c0" fo:border-right="none" fo:border-top="none"/>
+      <style:table-cell-properties fo:border-bottom="none" fo:border-left="2.49pt solid #c0c0c0" fo:border-right="none" fo:border-top="none"/>
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="ce5" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0">
-      <style:table-cell-properties fo:border-bottom="0.088cm solid #c0c0c0" fo:border-left="0.088cm solid #c0c0c0" fo:border-right="none" fo:border-top="none"/>
+      <style:table-cell-properties fo:border-bottom="2.49pt solid #c0c0c0" fo:border-left="2.49pt solid #c0c0c0" fo:border-right="none" fo:border-top="none"/>
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="ce6" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0">
-      <style:table-cell-properties fo:border-bottom="none" fo:border-left="none" fo:border-right="none" fo:border-top="0.088cm solid #c0c0c0"/>
+      <style:table-cell-properties fo:border-bottom="none" fo:border-left="none" fo:border-right="none" fo:border-top="2.49pt solid #c0c0c0"/>
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="ce7" style:family="table-cell" style:parent-style-name="Heading1">
@@ -100,69 +104,69 @@
     <style:style style:name="ce10" style:family="table-cell" style:parent-style-name="Karte_20_UL">
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
-    <style:style style:name="ce11" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0">
+    <style:style style:name="ce64" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0">
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="ce12" style:family="table-cell" style:parent-style-name="Karte_20_OL" style:data-style-name="N0">
-      <style:table-cell-properties fo:padding="0.025cm"/>
+      <style:table-cell-properties fo:padding="0.25mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce13" style:family="table-cell" style:parent-style-name="Karte_20_L" style:data-style-name="N0">
-      <style:table-cell-properties fo:padding="0.025cm"/>
+      <style:table-cell-properties fo:padding="0.25mm"/>
       <style:text-properties fo:color="#800000" style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce14" style:family="table-cell" style:parent-style-name="Karte_20_L" style:data-style-name="N0">
-      <style:table-cell-properties fo:padding="0.025cm"/>
+      <style:table-cell-properties fo:padding="0.25mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce15" style:family="table-cell" style:parent-style-name="Karte_20_UL" style:data-style-name="N0">
-      <style:table-cell-properties fo:padding="0.025cm"/>
+      <style:table-cell-properties fo:padding="0.25mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
-    <style:style style:name="ce16" style:family="table-cell" style:parent-style-name="Default">
+    <style:style style:name="ce69" style:family="table-cell" style:parent-style-name="Default">
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="ce17" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0">
-      <style:table-cell-properties fo:border-bottom="0.088cm solid #c0c0c0" fo:border-left="none" fo:border-right="none" fo:border-top="none"/>
+      <style:table-cell-properties fo:border-bottom="2.49pt solid #c0c0c0" fo:border-left="none" fo:border-right="none" fo:border-top="none"/>
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="ce18" style:family="table-cell" style:parent-style-name="Karte_20_O">
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
-    <style:style style:name="ce19" style:family="table-cell" style:parent-style-name="Karte">
+    <style:style style:name="ce72" style:family="table-cell" style:parent-style-name="Karte">
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce20" style:family="table-cell" style:parent-style-name="Karte_20_U">
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce21" style:family="table-cell" style:parent-style-name="Karte_20_O" style:data-style-name="N0">
-      <style:table-cell-properties fo:padding="0.025cm"/>
+      <style:table-cell-properties fo:padding="0.25mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce22" style:family="table-cell" style:parent-style-name="Spaltenkopf" style:data-style-name="N0">
-      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="none" fo:padding="0.025cm"/>
-      <style:paragraph-properties fo:text-align="center" fo:margin-left="0cm"/>
+      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="none" fo:padding="0.25mm"/>
+      <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce23" style:family="table-cell" style:parent-style-name="Result">
-      <style:text-properties fo:color="#000000" style:text-outline="false" style:text-line-through-style="none" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal"/>
+      <style:text-properties fo:color="#000000" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal"/>
     </style:style>
-    <style:style style:name="ce24" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N108">
-      <style:table-cell-properties fo:padding="0.025cm"/>
+    <style:style style:name="ce24" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N109">
+      <style:table-cell-properties fo:padding="0.25mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
-    <style:style style:name="ce25" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N108">
-      <style:table-cell-properties fo:padding="0.025cm"/>
+    <style:style style:name="ce25" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N109">
+      <style:table-cell-properties fo:padding="0.25mm"/>
       <style:text-properties fo:color="#800000" style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
-    <style:style style:name="ce26" style:family="table-cell" style:parent-style-name="Karte_20_U" style:data-style-name="N0">
-      <style:table-cell-properties fo:padding="0.025cm"/>
+    <style:style style:name="ce79" style:family="table-cell" style:parent-style-name="Karte_20_U" style:data-style-name="N0">
+      <style:table-cell-properties fo:padding="0.25mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
-    <style:style style:name="ce27" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N8117">
+    <style:style style:name="ce27" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N10118">
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
-    <style:style style:name="ce28" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N8117">
+    <style:style style:name="ce28" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N10118">
       <style:table-cell-properties style:cell-protect="none" style:print-content="true"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
@@ -171,55 +175,55 @@
     </style:style>
     <style:style style:name="ce30" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N100">
       <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false"/>
-      <style:paragraph-properties fo:text-align="center" fo:margin-left="0cm"/>
+      <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
-    <style:style style:name="ce31" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N8001">
+    <style:style style:name="ce31" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N10001">
       <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false"/>
-      <style:paragraph-properties fo:text-align="center" fo:margin-left="0cm"/>
+      <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce32" style:family="table-cell" style:parent-style-name="Karte_20_linksbündig">
-      <style:text-properties fo:color="#000000" style:text-outline="false" style:text-line-through-style="none" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal"/>
+      <style:text-properties fo:color="#000000" style:text-outline="false" style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial" fo:font-size="8pt" fo:font-style="normal" fo:text-shadow="none" style:text-underline-style="none" fo:font-weight="normal"/>
     </style:style>
     <style:style style:name="ce33" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift_20__2f__20_Text">
-      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.025cm"/>
-      <style:paragraph-properties fo:text-align="center" fo:margin-left="0cm"/>
+      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.25mm"/>
+      <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce34" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift_20__2f__20_Text">
-      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.025cm"/>
-      <style:paragraph-properties fo:text-align="center" fo:margin-left="0cm"/>
+      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.25mm"/>
+      <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
       <style:text-properties fo:color="#800000" style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce35" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift_20__2f__20_Datum">
       <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false"/>
-      <style:paragraph-properties fo:text-align="center" fo:margin-left="0cm"/>
+      <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce36" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift_20__2f__20_Datum">
-      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.025cm"/>
-      <style:paragraph-properties fo:text-align="center" fo:margin-left="0cm"/>
+      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.25mm"/>
+      <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce37" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift_20__2f__20_Datum">
-      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.025cm"/>
-      <style:paragraph-properties fo:text-align="center" fo:margin-left="0cm"/>
+      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.25mm"/>
+      <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
       <style:text-properties fo:color="#800000" style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce38" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift_20__2f__20__25_">
       <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false"/>
-      <style:paragraph-properties fo:text-align="end" fo:margin-left="0cm"/>
+      <style:paragraph-properties fo:text-align="end" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce39" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N4">
-      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.025cm"/>
-      <style:paragraph-properties fo:text-align="end" fo:margin-left="0cm"/>
+      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.25mm"/>
+      <style:paragraph-properties fo:text-align="end" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce40" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N4">
-      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.025cm"/>
-      <style:paragraph-properties fo:text-align="end" fo:margin-left="0cm"/>
+      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.25mm"/>
+      <style:paragraph-properties fo:text-align="end" fo:margin-left="0mm"/>
       <style:text-properties fo:color="#800000" style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce41" style:family="table-cell" style:parent-style-name="Eingabe">
@@ -231,33 +235,33 @@
       <style:text-properties style:font-name="Arial" fo:font-size="6pt"/>
     </style:style>
     <style:style style:name="ce43" style:family="table-cell" style:parent-style-name="Karte_20_U" style:data-style-name="N0">
-      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.025cm" style:vertical-align="top"/>
+      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.25mm" style:vertical-align="top"/>
       <style:paragraph-properties fo:text-align="start"/>
       <style:text-properties style:font-name="Arial" fo:font-size="6pt"/>
     </style:style>
-    <style:style style:name="ce44" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N8114">
+    <style:style style:name="ce44" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift" style:data-style-name="N10115">
       <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false"/>
-      <style:paragraph-properties fo:text-align="center" fo:margin-left="0cm"/>
+      <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce45" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift">
       <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false"/>
-      <style:paragraph-properties fo:text-align="center" fo:margin-left="0cm"/>
+      <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce46" style:family="table-cell" style:parent-style-name="Spaltenkopf" style:data-style-name="N0">
-      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="none" fo:padding-bottom="0.025cm" fo:padding-left="0.325cm" fo:padding-right="0.025cm" fo:padding-top="0.025cm"/>
-      <style:paragraph-properties fo:text-align="center" fo:margin-left="0cm"/>
+      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:border="none" fo:padding-bottom="0.25mm" fo:padding-left="3.25mm" fo:padding-right="0.25mm" fo:padding-top="0.25mm"/>
+      <style:paragraph-properties fo:text-align="center" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce47" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift_20__2f__20_Text">
-      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.025cm"/>
-      <style:paragraph-properties fo:text-align="start" fo:margin-left="0cm"/>
+      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.25mm"/>
+      <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce48" style:family="table-cell" style:parent-style-name="Eingabe_20_kleine_20_Schrift_20__2f__20_Text">
-      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.025cm"/>
-      <style:paragraph-properties fo:text-align="start" fo:margin-left="0cm"/>
+      <style:table-cell-properties style:text-align-source="fix" style:repeat-content="false" fo:padding="0.25mm"/>
+      <style:paragraph-properties fo:text-align="start" fo:margin-left="0mm"/>
       <style:text-properties fo:color="#800000" style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce49" style:family="table-cell" style:parent-style-name="Karte_20_OR">
@@ -270,27 +274,27 @@
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce52" style:family="table-cell" style:parent-style-name="Karte_20_OR" style:data-style-name="N0">
-      <style:table-cell-properties fo:padding="0.025cm"/>
+      <style:table-cell-properties fo:padding="0.25mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce53" style:family="table-cell" style:parent-style-name="Karte_20_R" style:data-style-name="N0">
-      <style:table-cell-properties fo:padding="0.025cm"/>
+      <style:table-cell-properties fo:padding="0.25mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce54" style:family="table-cell" style:parent-style-name="Karte_20_UR" style:data-style-name="N0">
-      <style:table-cell-properties fo:padding="0.025cm"/>
+      <style:table-cell-properties fo:padding="0.25mm"/>
       <style:text-properties style:font-name="Arial" fo:font-size="8pt"/>
     </style:style>
     <style:style style:name="ce55" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0">
-      <style:table-cell-properties fo:border-bottom="none" fo:border-left="none" fo:border-right="0.088cm solid #c0c0c0" fo:border-top="0.088cm solid #c0c0c0"/>
+      <style:table-cell-properties fo:border-bottom="none" fo:border-left="none" fo:border-right="2.49pt solid #c0c0c0" fo:border-top="2.49pt solid #c0c0c0"/>
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="ce56" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0">
-      <style:table-cell-properties fo:border-bottom="none" fo:border-left="none" fo:border-right="0.088cm solid #c0c0c0" fo:border-top="none"/>
+      <style:table-cell-properties fo:border-bottom="none" fo:border-left="none" fo:border-right="2.49pt solid #c0c0c0" fo:border-top="none"/>
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="ce57" style:family="table-cell" style:parent-style-name="Default" style:data-style-name="N0">
-      <style:table-cell-properties fo:border-bottom="0.088cm solid #c0c0c0" fo:border-left="none" fo:border-right="0.088cm solid #c0c0c0" fo:border-top="none"/>
+      <style:table-cell-properties fo:border-bottom="2.49pt solid #c0c0c0" fo:border-left="none" fo:border-right="2.49pt solid #c0c0c0" fo:border-top="none"/>
       <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="gr1" style:family="graphic">
@@ -301,21 +305,25 @@
     </style:style>
     <style:style style:name="P2" style:family="paragraph">
       <style:paragraph-properties fo:text-align="center"/>
-      <style:text-properties style:text-line-through-style="none" fo:font-family="'Liberation Sans'" style:font-style-name="Standard" style:font-family-generic="swiss" style:font-pitch="variable" fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
+      <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" fo:font-family="'Liberation Sans'" style:font-style-name="Standard" style:font-family-generic="swiss" style:font-pitch="variable" fo:font-size="10pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
     </style:style>
     <style:style style:name="T1" style:family="text">
       <style:text-properties style:font-name="Times New Roman"/>
     </style:style>
     <style:style style:name="T2" style:family="text">
-      <style:text-properties style:font-name="Arial1"/>
+      <style:text-properties style:font-name="Arial"/>
     </style:style>
   </office:automatic-styles>
   <office:body>
     <office:spreadsheet>
       <table:table table:name="Vorlage" table:style-name="ta1" table:print-ranges="Vorlage.C3:Vorlage.K53">
         <office:forms form:automatic-focus="false" form:apply-design-mode="false">
-          <form:form form:name="Standard" form:apply-filter="true" form:command-type="table" form:control-implementation="ooo:com.sun.star.form.component.Form" office:target-frame="" xlink:href="" xlink:type="simple">
-            <form:button form:name="NewPage" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control1" form:id="control1" form:label="Neues Blatt" form:printable="false" form:tab-stop="false" office:target-frame="" xlink:href="" form:image-data="" form:delay-for-repeat="PT0.50S" form:image-position="center">
+          <form:form form:name="Standard" form:apply-filter="true" form:command-type="table" form:control-implementation="ooo:com.sun.star.form.component.Form" office:target-frame="">
+            <form:properties>
+              <form:property form:property-name="PropertyChangeNotificationEnabled" office:value-type="boolean" office:boolean-value="true"/>
+              <form:property form:property-name="TargetURL" office:value-type="string" office:string-value=""/>
+            </form:properties>
+            <form:button form:name="NewPage" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control1" form:id="control1" form:label="Neues Blatt" form:printable="false" form:tab-stop="false" office:target-frame="" form:delay-for-repeat="PT0.500000000S" form:image-position="center">
               <form:properties>
                 <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
                 <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
@@ -325,7 +333,7 @@
                 <script:event-listener script:language="ooo:StarBasic" script:event-name="form:performaction" script:macro-name="Standard.Copy.Copy"/>
               </office:event-listeners>
             </form:button>
-            <form:button form:name="SetPrintArea" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control2" form:id="control2" form:label="Druckbereich: aktuelles Blatt" form:printable="false" form:tab-stop="false" office:target-frame="" xlink:href="" form:image-data="" form:delay-for-repeat="PT0.50S" form:image-position="center">
+            <form:button form:name="SetPrintArea" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control2" form:id="control2" form:label="Druckbereich: aktuelles Blatt" form:printable="false" form:tab-stop="false" office:target-frame="" form:delay-for-repeat="PT0.500000000S" form:image-position="center">
               <form:properties>
                 <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="com.sun.star.form.control.CommandButton"/>
                 <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Den Druckbereich auf das aktuelle Blatt festlegen."/>
@@ -345,13 +353,13 @@
         <table:table-column table:style-name="co7" table:default-cell-style-name="ce1"/>
         <table:table-column table:style-name="co1" table:number-columns-repeated="2" table:default-cell-style-name="ce1"/>
         <table:table-column table:style-name="co8" table:number-columns-repeated="233" table:default-cell-style-name="ce1"/>
-        <table:table-column table:style-name="co8" table:number-columns-repeated="10" table:default-cell-style-name="ce16"/>
+        <table:table-column table:style-name="co8" table:number-columns-repeated="10" table:default-cell-style-name="ce69"/>
         <table:table-row table:style-name="ro1">
           <table:table-cell/>
           <table:table-cell>
-            <draw:g table:end-cell-address="Vorlage.M1" table:end-x="0.144cm" table:end-y="0.803cm" draw:z-index="0" draw:style-name="gr1">
-              <draw:control draw:style-name="gr1" draw:text-style-name="P1" svg:width="4cm" svg:height="0.6cm" svg:x="0.003cm" svg:y="0.203cm" draw:control="control1"/>
-              <draw:control draw:style-name="gr1" draw:text-style-name="P2" svg:width="6cm" svg:height="0.6cm" svg:x="13.203cm" svg:y="0.2cm" draw:control="control2"/>
+            <draw:g table:end-cell-address="Vorlage.M1" table:end-x="0.72mm" table:end-y="8.03mm" draw:z-index="0" draw:style-name="gr1">
+              <draw:control draw:style-name="gr1" draw:text-style-name="P1" svg:width="40mm" svg:height="6mm" svg:x="0.03mm" svg:y="2.03mm" draw:control="control1"/>
+              <draw:control draw:style-name="gr1" draw:text-style-name="P2" svg:width="60mm" svg:height="6mm" svg:x="132.03mm" svg:y="2mm" draw:control="control2"/>
             </draw:g>
           </table:table-cell>
           <table:table-cell table:number-columns-repeated="253"/>
@@ -366,11 +374,11 @@
         <table:table-row table:style-name="ro2">
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
-          <table:table-cell table:style-name="ce7" office:value-type="string" table:number-columns-spanned="3" table:number-rows-spanned="1">
+          <table:table-cell table:style-name="ce7" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="3" table:number-rows-spanned="1">
             <text:p>Journal für</text:p>
           </table:table-cell>
-          <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce11"/>
-          <table:table-cell table:style-name="ce11" table:number-columns-repeated="6"/>
+          <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce64"/>
+          <table:table-cell table:style-name="ce64" table:number-columns-repeated="6"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
         </table:table-row>
@@ -387,15 +395,15 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce9"/>
-          <table:table-cell table:style-name="ce19" office:value-type="string">
+          <table:table-cell table:style-name="ce72" office:value-type="string" calcext:value-type="string">
             <text:p>Name</text:p>
           </table:table-cell>
           <table:table-cell table:style-name="ce29" table:number-columns-spanned="3" table:number-rows-spanned="1"/>
-          <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce19"/>
-          <table:table-cell table:style-name="ce19" office:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+          <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce72"/>
+          <table:table-cell table:style-name="ce72" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
             <text:p>Monat / Jahr</text:p>
           </table:table-cell>
-          <table:covered-table-cell table:style-name="ce19"/>
+          <table:covered-table-cell table:style-name="ce72"/>
           <table:table-cell table:style-name="ce44"/>
           <table:table-cell table:style-name="ce50"/>
           <table:table-cell table:style-name="ce56"/>
@@ -405,10 +413,10 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce9"/>
-          <table:table-cell table:style-name="ce19"/>
+          <table:table-cell table:style-name="ce72"/>
           <table:table-cell table:style-name="ce29" table:number-columns-spanned="3" table:number-rows-spanned="1"/>
-          <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce19"/>
-          <table:table-cell table:style-name="ce19" table:number-columns-repeated="3"/>
+          <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce72"/>
+          <table:table-cell table:style-name="ce72" table:number-columns-repeated="3"/>
           <table:table-cell table:style-name="ce50"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
@@ -417,7 +425,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce9"/>
-          <table:table-cell table:style-name="ce19" table:number-columns-repeated="7"/>
+          <table:table-cell table:style-name="ce72" table:number-columns-repeated="7"/>
           <table:table-cell table:style-name="ce50"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
@@ -426,17 +434,17 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce9"/>
-          <table:table-cell table:style-name="ce19" office:value-type="string">
+          <table:table-cell table:style-name="ce72" office:value-type="string" calcext:value-type="string">
             <text:p>Mand.Nr.</text:p>
           </table:table-cell>
           <table:table-cell table:style-name="ce30" table:number-columns-spanned="2" table:number-rows-spanned="1"/>
-          <table:covered-table-cell table:style-name="ce19"/>
-          <table:table-cell table:style-name="ce19"/>
-          <table:table-cell table:style-name="ce19" office:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+          <table:covered-table-cell table:style-name="ce72"/>
+          <table:table-cell table:style-name="ce72"/>
+          <table:table-cell table:style-name="ce72" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
             <text:p>Titel</text:p>
           </table:table-cell>
-          <table:covered-table-cell table:style-name="ce19"/>
-          <table:table-cell table:style-name="ce45" office:value-type="string">
+          <table:covered-table-cell table:style-name="ce72"/>
+          <table:table-cell table:style-name="ce45" office:value-type="string" calcext:value-type="string">
             <text:p>Kassenbuch</text:p>
           </table:table-cell>
           <table:table-cell table:style-name="ce50"/>
@@ -447,14 +455,14 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce9"/>
-          <table:table-cell table:style-name="ce19" office:value-type="string">
+          <table:table-cell table:style-name="ce72" office:value-type="string" calcext:value-type="string">
             <text:p>Blatt</text:p>
           </table:table-cell>
-          <table:table-cell table:style-name="ce31" office:value-type="float" office:value="1" table:number-columns-spanned="2" table:number-rows-spanned="1">
+          <table:table-cell table:style-name="ce31" office:value-type="float" office:value="1" calcext:value-type="float" table:number-columns-spanned="2" table:number-rows-spanned="1">
             <text:p>1</text:p>
           </table:table-cell>
-          <table:covered-table-cell table:style-name="ce19"/>
-          <table:table-cell table:style-name="ce19" table:number-columns-repeated="3"/>
+          <table:covered-table-cell table:style-name="ce72"/>
+          <table:table-cell table:style-name="ce72" table:number-columns-repeated="3"/>
           <table:table-cell table:style-name="ce45"/>
           <table:table-cell table:style-name="ce50"/>
           <table:table-cell table:style-name="ce56"/>
@@ -472,18 +480,18 @@
         <table:table-row table:style-name="ro2">
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
-          <table:table-cell table:style-name="ce11" table:number-columns-repeated="9"/>
+          <table:table-cell table:style-name="ce64" table:number-columns-repeated="9"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
         </table:table-row>
         <table:table-row table:style-name="ro2">
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
-          <table:table-cell table:style-name="ce7" office:value-type="string" table:number-columns-spanned="3" table:number-rows-spanned="1">
+          <table:table-cell table:style-name="ce7" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="3" table:number-rows-spanned="1">
             <text:p>Buchungen</text:p>
           </table:table-cell>
-          <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce11"/>
-          <table:table-cell table:style-name="ce11" table:number-columns-repeated="6"/>
+          <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce64"/>
+          <table:table-cell table:style-name="ce64" table:number-columns-repeated="6"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
         </table:table-row>
@@ -500,25 +508,25 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce13"/>
-          <table:table-cell table:style-name="ce22" office:value-type="string">
+          <table:table-cell table:style-name="ce22" office:value-type="string" calcext:value-type="string">
             <text:p>Einnahmen</text:p>
           </table:table-cell>
-          <table:table-cell table:style-name="ce22" office:value-type="string">
+          <table:table-cell table:style-name="ce22" office:value-type="string" calcext:value-type="string">
             <text:p>Ausgaben</text:p>
           </table:table-cell>
-          <table:table-cell table:style-name="ce22" office:value-type="string">
+          <table:table-cell table:style-name="ce22" office:value-type="string" calcext:value-type="string">
             <text:p>Bestand</text:p>
           </table:table-cell>
-          <table:table-cell table:style-name="ce22" office:value-type="string">
+          <table:table-cell table:style-name="ce22" office:value-type="string" calcext:value-type="string">
             <text:p>Beleg Nr.</text:p>
           </table:table-cell>
-          <table:table-cell table:style-name="ce22" office:value-type="string">
+          <table:table-cell table:style-name="ce22" office:value-type="string" calcext:value-type="string">
             <text:p>Datum</text:p>
           </table:table-cell>
-          <table:table-cell table:style-name="ce22" office:value-type="string">
+          <table:table-cell table:style-name="ce22" office:value-type="string" calcext:value-type="string">
             <text:p>USt. Satz</text:p>
           </table:table-cell>
-          <table:table-cell table:style-name="ce46" office:value-type="string">
+          <table:table-cell table:style-name="ce46" office:value-type="string" calcext:value-type="string">
             <text:p>Text</text:p>
           </table:table-cell>
           <table:table-cell table:style-name="ce53"/>
@@ -529,10 +537,10 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:style-name="ce23" office:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+          <table:table-cell table:style-name="ce23" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
             <text:p>Anfangsbestand/Übertrag <text:span text:style-name="T1">»</text:span></text:p>
           </table:table-cell>
-          <table:covered-table-cell table:style-name="ce19"/>
+          <table:covered-table-cell table:style-name="ce72"/>
           <table:table-cell table:style-name="ce24"/>
           <table:table-cell table:style-name="ce33"/>
           <table:table-cell table:style-name="ce35"/>
@@ -546,7 +554,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D16]&lt;&gt;0;[.E16]&lt;&gt;0));[.F15]+[.D16]-[.E16];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -562,7 +570,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D17]&lt;&gt;0;[.E17]&lt;&gt;0));[.F16]+[.D17]-[.E17];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -578,7 +586,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D18]&lt;&gt;0;[.E18]&lt;&gt;0));[.F17]+[.D18]-[.E18];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -594,7 +602,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D19]&lt;&gt;0;[.E19]&lt;&gt;0));[.F18]+[.D19]-[.E19];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -610,7 +618,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D20]&lt;&gt;0;[.E20]&lt;&gt;0));[.F19]+[.D20]-[.E20];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -626,7 +634,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D21]&lt;&gt;0;[.E21]&lt;&gt;0));[.F20]+[.D21]-[.E21];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -642,7 +650,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D22]&lt;&gt;0;[.E22]&lt;&gt;0));[.F21]+[.D22]-[.E22];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -658,7 +666,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D23]&lt;&gt;0;[.E23]&lt;&gt;0));[.F22]+[.D23]-[.E23];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -674,7 +682,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D24]&lt;&gt;0;[.E24]&lt;&gt;0));[.F23]+[.D24]-[.E24];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -690,7 +698,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D25]&lt;&gt;0;[.E25]&lt;&gt;0));[.F24]+[.D25]-[.E25];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -706,7 +714,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D26]&lt;&gt;0;[.E26]&lt;&gt;0));[.F25]+[.D26]-[.E26];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -722,7 +730,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D27]&lt;&gt;0;[.E27]&lt;&gt;0));[.F26]+[.D27]-[.E27];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -738,7 +746,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D28]&lt;&gt;0;[.E28]&lt;&gt;0));[.F27]+[.D28]-[.E28];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -754,7 +762,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D29]&lt;&gt;0;[.E29]&lt;&gt;0));[.F28]+[.D29]-[.E29];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -770,7 +778,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D30]&lt;&gt;0;[.E30]&lt;&gt;0));[.F29]+[.D30]-[.E30];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -786,7 +794,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D31]&lt;&gt;0;[.E31]&lt;&gt;0));[.F30]+[.D31]-[.E31];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -802,7 +810,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D32]&lt;&gt;0;[.E32]&lt;&gt;0));[.F31]+[.D32]-[.E32];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -818,7 +826,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D33]&lt;&gt;0;[.E33]&lt;&gt;0));[.F32]+[.D33]-[.E33];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -834,7 +842,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D34]&lt;&gt;0;[.E34]&lt;&gt;0));[.F33]+[.D34]-[.E34];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -850,7 +858,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D35]&lt;&gt;0;[.E35]&lt;&gt;0));[.F34]+[.D35]-[.E35];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -866,8 +874,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
-          <table:table-cell table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="3"/>
           <table:table-cell table:style-name="ce33"/>
           <table:table-cell table:style-name="ce36"/>
           <table:table-cell table:style-name="ce38"/>
@@ -880,7 +887,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D37]&lt;&gt;0;[.E37]&lt;&gt;0));[.F36]+[.D37]-[.E37];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -896,7 +903,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D38]&lt;&gt;0;[.E38]&lt;&gt;0));[.F37]+[.D38]-[.E38];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -912,7 +919,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D39]&lt;&gt;0;[.E39]&lt;&gt;0));[.F38]+[.D39]-[.E39];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -928,7 +935,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D40]&lt;&gt;0;[.E40]&lt;&gt;0));[.F39]+[.D40]-[.E40];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -944,7 +951,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D41]&lt;&gt;0;[.E41]&lt;&gt;0));[.F40]+[.D41]-[.E41];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -960,7 +967,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D42]&lt;&gt;0;[.E42]&lt;&gt;0));[.F41]+[.D42]-[.E42];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -976,7 +983,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D43]&lt;&gt;0;[.E43]&lt;&gt;0));[.F42]+[.D43]-[.E43];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -992,7 +999,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce14"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce24"/>
+          <table:table-cell table:style-name="ce24" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D44]&lt;&gt;0;[.E44]&lt;&gt;0));[.F43]+[.D44]-[.E44];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -1008,7 +1015,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce3"/>
           <table:table-cell table:style-name="ce13"/>
-          <table:table-cell table:number-columns-repeated="2" table:style-name="ce25"/>
+          <table:table-cell table:style-name="ce25" table:number-columns-repeated="2"/>
           <table:table-cell table:style-name="ce24" table:formula="of:=IF(AND([.$F$15]&lt;&gt;0;OR([.D45]&lt;&gt;0;[.E45]&lt;&gt;0));[.F44]+[.D45]-[.E45];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
@@ -1024,7 +1031,7 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce4"/>
           <table:table-cell table:style-name="ce15"/>
-          <table:table-cell table:style-name="ce26" table:number-columns-repeated="7"/>
+          <table:table-cell table:style-name="ce79" table:number-columns-repeated="7"/>
           <table:table-cell table:style-name="ce54"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
@@ -1032,18 +1039,18 @@
         <table:table-row table:style-name="ro2">
           <table:table-cell/>
           <table:table-cell table:style-name="ce4"/>
-          <table:table-cell table:style-name="ce16" table:number-columns-repeated="9"/>
+          <table:table-cell table:style-name="ce69" table:number-columns-repeated="9"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
         </table:table-row>
         <table:table-row table:style-name="ro2">
           <table:table-cell/>
           <table:table-cell table:style-name="ce4"/>
-          <table:table-cell table:style-name="ce7" office:value-type="string" table:number-columns-spanned="3" table:number-rows-spanned="1">
+          <table:table-cell table:style-name="ce7" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="3" table:number-rows-spanned="1">
             <text:p>Salden</text:p>
           </table:table-cell>
-          <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce16"/>
-          <table:table-cell table:style-name="ce16" table:number-columns-repeated="6"/>
+          <table:covered-table-cell table:number-columns-repeated="2" table:style-name="ce69"/>
+          <table:table-cell table:style-name="ce69" table:number-columns-repeated="6"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
         </table:table-row>
@@ -1066,15 +1073,15 @@
           <table:table-cell table:style-name="ce27" table:formula="of:=IF([.$F$15]&lt;&gt;0;SUM([.E16:.E45]);&quot;&quot;)">
             <text:p/>
           </table:table-cell>
-          <table:table-cell table:style-name="ce32" office:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+          <table:table-cell table:style-name="ce32" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
             <text:p><text:span text:style-name="T2">«</text:span> Summen</text:p>
           </table:table-cell>
-          <table:covered-table-cell table:style-name="ce19"/>
-          <table:table-cell table:style-name="ce19" office:value-type="string">
+          <table:covered-table-cell table:style-name="ce72"/>
+          <table:table-cell table:style-name="ce72" office:value-type="string" calcext:value-type="string">
             <text:p>Geprüft</text:p>
           </table:table-cell>
           <table:table-cell table:style-name="ce41" table:number-columns-spanned="2" table:number-rows-spanned="1"/>
-          <table:covered-table-cell table:style-name="ce19"/>
+          <table:covered-table-cell table:style-name="ce72"/>
           <table:table-cell table:style-name="ce50"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
@@ -1089,15 +1096,15 @@
           <table:table-cell table:style-name="ce27" table:formula="of:=IF([.$F$15]&lt;&gt;0;[.D51]+[.D50]-[.E50];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
-          <table:table-cell table:style-name="ce32" office:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+          <table:table-cell table:style-name="ce32" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
             <text:p>« Anfangs-/Endbestand</text:p>
           </table:table-cell>
-          <table:covered-table-cell table:style-name="ce19"/>
-          <table:table-cell table:style-name="ce19"/>
-          <table:table-cell table:style-name="ce42" office:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+          <table:covered-table-cell table:style-name="ce72"/>
+          <table:table-cell table:style-name="ce72"/>
+          <table:table-cell table:style-name="ce42" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
             <text:p>Datum, Unterschrift</text:p>
           </table:table-cell>
-          <table:covered-table-cell table:style-name="ce19"/>
+          <table:covered-table-cell table:style-name="ce72"/>
           <table:table-cell table:style-name="ce50"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
@@ -1112,15 +1119,15 @@
           <table:table-cell table:style-name="ce28" table:formula="of:=IF([.$F$15]&lt;&gt;0;[.E50]+[.E51];&quot;&quot;)">
             <text:p/>
           </table:table-cell>
-          <table:table-cell table:style-name="ce32" office:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+          <table:table-cell table:style-name="ce32" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
             <text:p>« Summenkontrolle</text:p>
           </table:table-cell>
-          <table:covered-table-cell table:style-name="ce19"/>
-          <table:table-cell table:style-name="ce19" office:value-type="string">
+          <table:covered-table-cell table:style-name="ce72"/>
+          <table:table-cell table:style-name="ce72" office:value-type="string" calcext:value-type="string">
             <text:p>Gebucht</text:p>
           </table:table-cell>
           <table:table-cell table:style-name="ce41" table:number-columns-spanned="2" table:number-rows-spanned="1"/>
-          <table:covered-table-cell table:style-name="ce19"/>
+          <table:covered-table-cell table:style-name="ce72"/>
           <table:table-cell table:style-name="ce50"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
@@ -1129,11 +1136,11 @@
           <table:table-cell/>
           <table:table-cell table:style-name="ce4"/>
           <table:table-cell table:style-name="ce15"/>
-          <table:table-cell table:style-name="ce26" table:number-columns-repeated="5"/>
-          <table:table-cell table:style-name="ce43" office:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
+          <table:table-cell table:style-name="ce79" table:number-columns-repeated="5"/>
+          <table:table-cell table:style-name="ce43" office:value-type="string" calcext:value-type="string" table:number-columns-spanned="2" table:number-rows-spanned="1">
             <text:p>Datum, Unterschrift</text:p>
           </table:table-cell>
-          <table:covered-table-cell table:style-name="ce26"/>
+          <table:covered-table-cell table:style-name="ce79"/>
           <table:table-cell table:style-name="ce54"/>
           <table:table-cell table:style-name="ce56"/>
           <table:table-cell table:number-columns-repeated="243"/>
@@ -1152,6 +1159,7 @@
           <table:table-cell table:number-columns-repeated="255"/>
         </table:table-row>
       </table:table>
+      <table:named-expressions/>
     </office:spreadsheet>
   </office:body>
 </office:document-content>

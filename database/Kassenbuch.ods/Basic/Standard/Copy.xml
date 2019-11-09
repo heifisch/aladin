@@ -6,7 +6,7 @@ Const sTitle = &quot;Kassenbuch&quot;
 
 Sub Copy
 	Dim sTableTitle as String
-	Dim cEndbestand as currency
+	Dim dblEndbestand as Double
 	Dim oDocument as object
 	Dim oDispatcher as object
 	Dim vStatus as Variant
@@ -14,7 +14,7 @@ Sub Copy
 	oDocument = ThisComponent.CurrentController.Frame
 	oDispatcher = createUnoService(&quot;com.sun.star.frame.DispatchHelper&quot;)
 
-	cEndbestand = ThisComponent.Sheets(0).getCellByPosition(4, 50).Value
+	dblEndbestand = ThisComponent.Sheets(0).getCellByPosition(4, 50).Value
 
 nochmal:
 	sTableTitle=InputBox(&quot;Bitte geben Sie den Namen des neuen Blatts ein!&quot;,sTitle)
@@ -35,7 +35,7 @@ nochmal:
 	oDispatcher.executeDispatch(oDocument, &quot;.uno:JumpToTable&quot;, &quot;&quot;, 0, args1())
 
 	ThisComponent.Sheets(0).getCellRangeByName(&quot;$J$5&quot;).string = sTableTitle
-	ThisComponent.Sheets(0).getCellRangeByName(&quot;$F$15&quot;).value = cEndbestand
+	ThisComponent.Sheets(0).getCellRangeByName(&quot;$F$15&quot;).value = dblEndbestand
 
 	Dim args2(0) as new com.sun.star.beans.PropertyValue
 	args2(0).Name = &quot;ToPoint&quot;
