@@ -11,7 +11,7 @@ Sub KontaktDaten()
 	Dim oTables AS Object
 	Dim vTable_Summen AS Variant
 	Dim vRows_Summen AS Variant,oRecord_Kontakt AS Object,sDocument_Typ AS String
-	Dim sSumme AS String,sSumme_Bezahlt AS currency,sZinssatz AS currency,sZinsen AS currency
+	Dim sSumme AS String,sSumme_Bezahlt AS String,sZinssatz AS String,sZinsen AS String
 	Dim sMahngebuehr AS currency,sSumme_mit_Aufschlag AS currency
 	Dim sAnschrift AS String,sNummern AS String,sLeerzeilen AS String,sLeistungsprofil AS String
 	Dim sName1Eigen AS String,sName2Eigen AS String,sName3Eigen AS String,sName4Eigen AS String,sNameKurzEigen AS String
@@ -598,7 +598,7 @@ Sub KontaktDaten()
 	Feld_fuellen(&quot;Document_Typ&quot;,sDocument_Typ)
 	Feld_fuellen(&quot;Erinnert_bis&quot;,fConvDatum(sErinnertBis))
 	Feld_fuellen(&quot;Summe&quot;,&quot;Summe nicht ausgeglichener Rechnungen:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sSumme) &amp; &quot; €&quot;)
-	if sSumme_Bezahlt &gt; 0 then
+	if CDbl(fZahlMitPunkt(sSumme_Bezahlt)) &gt; 0 then
 		Feld_fuellen(&quot;Summe_Bezahlt&quot;,&quot;- abzüglich geleisteter Zahlungen:&quot; &amp; Chr(9) &amp; fTausenderpunkt(fZahlMitPunkt(sSumme_Bezahlt) &amp; &quot; €&quot;)
 	else
 		vRows_Summen.removeByIndex(2,2)
