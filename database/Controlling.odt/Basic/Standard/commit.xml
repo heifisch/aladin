@@ -312,9 +312,9 @@ Sub Suchstring_2_reset()
 End Sub
 
 Sub MVS_Faktor_commit()
-	if CCur(oField_MVS_Faktor.value()) &lt;&gt; CCur(oField_MVS_Faktor.boundfield.string()) then
+	if CDbl(oField_MVS_Faktor.value()) &lt;&gt; CDbl(oField_MVS_Faktor.boundfield.string()) then
 		sSQL1=&quot;UPDATE Steuerung &quot;&amp;_
-			&quot;SET Verrechnungs_Faktor=&apos;&quot;&amp; CCur(oField_MVS_Faktor.value()) &amp;&quot;&apos; &quot;&amp;_
+			&quot;SET Verrechnungs_Faktor=&apos;&quot;&amp; CDbl(oField_MVS_Faktor.value()) &amp;&quot;&apos; &quot;&amp;_
 			&quot;WHERE ClientID=&quot;&amp; iClientID
 		SQL_execute(sSQL1)
 		vStatus=MsgBox(&quot;Möchten Sie den geänderten Verrrechnungssatz-Faktor ZUSÄTZLICH im Personal-Stamm speichern?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
@@ -327,9 +327,9 @@ Sub MVS_Faktor_commit()
 End Sub
 
 Sub Stundenverrechnungssatz_commit()
-	if CCur(oField_Stundenverrechnungssatz.value()) &lt;&gt; CCur(oField_Stundenverrechnungssatz.boundfield.string()) then
+	if CDbl(oField_Stundenverrechnungssatz.value()) &lt;&gt; CDbl(oField_Stundenverrechnungssatz.boundfield.string()) then
 		sSQL1=&quot;UPDATE Steuerung &quot;&amp;_
-			&quot;SET Stundenverrechnungssatz=&apos;&quot;&amp; CCur(oField_Stundenverrechnungssatz.value()) &amp;&quot;&apos; &quot;&amp;_
+			&quot;SET Stundenverrechnungssatz=&apos;&quot;&amp; CDbl(oField_Stundenverrechnungssatz.value()) &amp;&quot;&apos; &quot;&amp;_
 			&quot;WHERE ClientID=&quot;&amp; iClientID
 		SQL_execute(sSQL1)
 		vStatus=MsgBox(&quot;Möchten Sie den geänderten Stundenverrechnungssatz ZUSÄTZLICH im Projekt speichern?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
@@ -342,9 +342,9 @@ Sub Stundenverrechnungssatz_commit()
 End Sub
 
 Sub Materialaufschlagsatz_commit()
-	if CCur(oField_Materialaufschlagsatz.value()) &lt;&gt; CCur(oField_Materialaufschlagsatz.boundfield.string()) then
+	if CDbl(oField_Materialaufschlagsatz.value()) &lt;&gt; CDbl(oField_Materialaufschlagsatz.boundfield.string()) then
 		sSQL1=&quot;UPDATE Steuerung &quot;&amp;_
-			&quot;SET Materialaufschlagsatz=&apos;&quot;&amp; CCur(oField_Materialaufschlagsatz.value()) &amp;&quot;&apos; &quot;&amp;_
+			&quot;SET Materialaufschlagsatz=&apos;&quot;&amp; CDbl(oField_Materialaufschlagsatz.value()) &amp;&quot;&apos; &quot;&amp;_
 			&quot;WHERE ClientID=&quot;&amp; iClientID
 		SQL_execute(sSQL1)
 		vStatus=MsgBox(&quot;Möchten Sie den geänderten Materialaufschlagsatz ZUSÄTZLICH im Projekt speichern?&quot;&amp; Chr(10) &amp; Chr(10) &amp;_
