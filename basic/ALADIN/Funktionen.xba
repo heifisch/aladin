@@ -7,8 +7,19 @@
 REM  *****  BASIC  *****
 
 Sub TestMandant
-print sTitle(3)
+print ooName()
 End Sub
+
+Function ooName() As String
+    Dim arrPropVal(0) as new com.sun.star.beans.PropertyValue
+
+    arrPropVal(0).Name = &quot;nodepath&quot;
+    arrPropVal(0).Value = &quot;/org.openoffice.Setup/Product&quot;
+
+    ConfProvider = createUnoService(&quot;com.sun.star.configuration.ConfigurationProvider&quot;)
+    ConfAccess=ConfProvider.createInstanceWithArguments(&quot;com.sun.star.configuration.ConfigurationAccess&quot;, arrPropVal())
+	ooName=ConfAccess.getByName(&quot;ooName&quot;)
+End Function
 
 Function sTitle(Optional iUserID_lokal as Integer) as String
 	Dim iEinstellungsID_lokal
