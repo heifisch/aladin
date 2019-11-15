@@ -32,6 +32,7 @@ Sub Test_CDec()
 		
 	print cErgebnis
 	print CCur(nErgebnis)
+	
 End Sub
 
 Sub Test_CCur()

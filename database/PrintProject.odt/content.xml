@@ -44,17 +44,12 @@
       <style:table-column-properties style:column-width="1.812cm" style:rel-column-width="6560*"/>
     </style:style>
     <style:style style:name="Leistungen.A1" style:family="table-cell">
-      <style:table-cell-properties fo:background-color="transparent" style:border-line-width-top="0.002cm 0.035cm 0.002cm" style:border-line-width-bottom="0.002cm 0.035cm 0.002cm" fo:padding="0.049cm" fo:border-left="none" fo:border-right="none" fo:border-top="1.1pt double #000000" fo:border-bottom="1.1pt double #000000">
+      <style:table-cell-properties fo:background-color="transparent" fo:padding="0.049cm" fo:border="none">
         <style:background-image/>
       </style:table-cell-properties>
     </style:style>
     <style:style style:name="Leistungen.2" style:family="table-row">
       <style:table-row-properties style:row-height="1cm" fo:keep-together="auto"/>
-    </style:style>
-    <style:style style:name="Leistungen.A2" style:family="table-cell">
-      <style:table-cell-properties fo:background-color="transparent" fo:padding="0.049cm" fo:border="none">
-        <style:background-image/>
-      </style:table-cell-properties>
     </style:style>
     <style:style style:name="Bemerkung" style:family="table">
       <style:table-properties style:width="18.101cm" fo:margin-top="0cm" fo:margin-bottom="0.3cm" table:align="margins" fo:keep-with-next="always" style:may-break-between-rows="false"/>
@@ -444,22 +439,22 @@
           </table:table-row>
         </table:table-header-rows>
         <table:table-row table:style-name="Leistungen.2">
-          <table:table-cell table:style-name="Leistungen.A2" office:value-type="string">
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
             <text:p text:style-name="P34"/>
           </table:table-cell>
-          <table:table-cell table:style-name="Leistungen.A2" office:value-type="string">
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
             <text:p text:style-name="P35"/>
           </table:table-cell>
-          <table:table-cell table:style-name="Leistungen.A2" office:value-type="string">
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
             <text:p text:style-name="P34"/>
           </table:table-cell>
-          <table:table-cell table:style-name="Leistungen.A2" office:value-type="string">
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
             <text:p text:style-name="P36"/>
           </table:table-cell>
-          <table:table-cell table:style-name="Leistungen.A2" office:value-type="string">
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
             <text:p text:style-name="P36"/>
           </table:table-cell>
-          <table:table-cell table:style-name="Leistungen.A2" office:value-type="string">
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
             <text:p text:style-name="P36"/>
           </table:table-cell>
         </table:table-row>
