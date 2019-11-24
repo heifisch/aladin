@@ -15,7 +15,8 @@ for f in ` find . \( -name "*.odt" -o -name "*.ott" -o -name "*.ods" \) -a -type
 do
   DESTPATH=${DEST_DIR}` echo ${f} | sed -e 's/^\.//g'`
   pushd ${f}
-  zip -r "temp.zip" * --exclude "temp.zip"
+  zip -0X "temp.zip" "mimetype"
+  zip -Xr9 "temp.zip" * --exclude "temp.zip" --exclude "mimetype"
   popd
   mv "${f}/temp.zip" ${DESTPATH}
 done
