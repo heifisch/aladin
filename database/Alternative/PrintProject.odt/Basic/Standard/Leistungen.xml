@@ -38,6 +38,8 @@ Sub Leistungen()
 	Dim afsInsertCarryReturn(1) AS String
 	Dim vViewCursor AS Variant
 	Dim iAZ AS Integer
+	Dim oBorderLine As Variant
+
 	
 	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
 	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
@@ -51,6 +53,49 @@ Sub Leistungen()
 	oPageStyle_2 = oPageStyles.getByName(&quot;Standard&quot;)
 	iEP_Ueberschrift = 0
 	iAZ=0
+	
+	If ooName() = &quot;OpenOffice&quot; Then
+		Dim oBorderLine1 AS New com.sun.star.table.BorderLine
+			oBorderLine1.Color=1
+			oBorderLine1.OuterLineWidth=2
+			oBorderLine1.InnerLineWidth=2
+			oBorderLine=oBorderLine1
+	elseif ooName() = &quot;LibreOffice&quot; Then
+		Dim oBorderLine2 AS New com.sun.star.table.BorderLine2
+			oBorderLine2.Color=1
+&apos;			oBorderLine2.InnerLineWidth=2
+&apos;			oBorderLine2.LineDistance=2
+&apos;			oBorderLine2.LineStyle=7 &apos;ein Strich
+			oBorderLine2.LineStyle=5
+			oBorderLine2.LineWidth=5
+&apos;			oBorderLine2.OuterLineWidth=2
+			oBorderLine=oBorderLine2
+	End If
+	
+	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).TopBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).BottomBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).TopBorderDistance=80
+	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).BottomBorderDistance=80
+	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).TopBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).BottomBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).TopBorderDistance=80
+	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).BottomBorderDistance=80
+	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).TopBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).BottomBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).TopBorderDistance=80
+	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).BottomBorderDistance=80
+	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).TopBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).BottomBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).TopBorderDistance=80
+	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).BottomBorderDistance=80
+	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).TopBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).BottomBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).TopBorderDistance=80
+	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).BottomBorderDistance=80
+	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).TopBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).BottomBorder=oBorderLine
+	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).TopBorderDistance=80
+	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).BottomBorderDistance=80
 
 	SELECT case iDocument_TypID
 		case 1
@@ -363,13 +408,6 @@ Sub Leistungen()
 			if iPosTypID = 4 AND iAZ = 0 then
 				vRowsLeistungen.insertByIndex(iCountInsert,1)
 				vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
-				Dim oBorderLine AS New com.sun.star.table.BorderLine2
-					oBorderLine.Color=1
-&apos;					oBorderLine.InnerLineWidth=2
-&apos;					oBorderLine.LineDistance=2
-					oBorderLine.LineStyle=7
-					oBorderLine.LineWidth=5
-&apos;					oBorderLine.OuterLineWidth=2
 				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorder=oBorderLine
 				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).BottomBorder=oBorderLine
 				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorderDistance=80
