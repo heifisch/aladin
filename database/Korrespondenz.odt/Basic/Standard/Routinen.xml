@@ -367,7 +367,7 @@ End Sub
 Sub neues_Document()
 	if oDoc.isReadOnly then 
 		Dim sSignum_URL as String,sStandard_Gruszformel as String,sStandard_Absender as String
-		Document_speichern
+		Document_speichern()
 		sSQL1=&quot;select Signum_URL,SignumHeight,SignumWidth,Standard_Gruszformel,Standard_Absender &quot;&amp;_
 			&quot;from Users where UserID=&quot;&amp; iUserID_lokal
 		oRecord1=oResult(sSQL1)
@@ -396,7 +396,7 @@ nochmal:
 		oForm_Steuerung.reload()
 		oForm_Document.reload()
 		SQL_update_Document1_Gesperrt_1(sKorrespondenz,lDocumentID)	
-		SQL_Datum_setzen
+		SQL_Datum_setzen()
 		oForm_Steuerung.reload()
 		Schreibschutz_setzen()
 	End if

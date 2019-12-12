@@ -146,7 +146,7 @@ Sub Betriebsart_aendern(iBetriebsart as integer)
 &apos;			Kontaktdaten_setzen()
 &apos;			Datum_setzen_manuel()
 		End if
-		oForm_Steuerung.refreshRow()
+&apos;		oForm_Steuerung.refreshRow()				&apos;Hier kommt es unter LO zu einem Fehler wenn &quot;neues_Document&quot; ausgeführt wird
 		oList_Documentauswahl.refresh()
 		oForm_Document.refreshRow()
 	End if
