@@ -135,6 +135,10 @@ Function sMaterialaufschlagsatz_cp as String
 	sMaterialaufschlagsatz_cp=GetDocUserProperty(&quot;oMaterialaufschlagsatz_cp&quot;)
 End Function
 
+Function sLV_Pos_cp as String
+	sLV_Pos_cp=GetDocUserProperty(&quot;oLV_Pos_cp&quot;)
+End Function
+
 Function sLeistungsID_mv as String
 	sLeistungsID_mv=GetDocUserProperty(&quot;oLeistungsID_mv&quot;)
 End Function
