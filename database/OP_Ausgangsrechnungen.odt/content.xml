@@ -98,7 +98,7 @@
       <style:text-properties style:font-name="Arial4" fo:font-size="10pt"/>
     </style:style>
     <style:style style:name="gr1" style:family="graphic">
-      <style:graphic-properties style:protect="position size" style:run-through="foreground" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page"/>
+      <style:graphic-properties style:protect="position size" style:run-through="foreground" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page" draw:wrap-influence-on-position="once-concurrent" style:flow-with-text="false"/>
     </style:style>
     <style:style style:name="gr2" style:family="graphic">
       <style:graphic-properties fo:background-color="#00b8ff" style:protect="position size"/>
