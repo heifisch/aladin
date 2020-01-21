@@ -71,31 +71,11 @@ Sub Leistungen()
 &apos;			oBorderLine2.OuterLineWidth=2
 			oBorderLine=oBorderLine2
 	End If
-	
-	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).BottomBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).BottomBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).BottomBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).BottomBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).BottomBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).BottomBorderDistance=80
+
+	vTableLeistungen.getCellRangeByName(&quot;A1:F1&quot;).TopBorder=oBorderLine
+	vTableLeistungen.getCellRangeByName(&quot;A1:F1&quot;).BottomBorder=oBorderLine
+	vTableLeistungen.getCellRangeByName(&quot;A1:F1&quot;).TopBorderDistance=80
+	vTableLeistungen.getCellRangeByName(&quot;A1:F1&quot;).BottomBorderDistance=80
 
 	SELECT case iDocument_TypID
 		case 1
