@@ -232,7 +232,6 @@ Sub Leistungen()
 		vTableLeistungen.getCellByName(&quot;E1&quot;).String=&quot;&quot;
 		vTableLeistungen.getCellByName(&quot;F1&quot;).String=&quot;&quot;
 	End if
-	
 		
 	Do While iAnzahlZwiSum &gt;= iCountZwiSum _
 		or iAnzahlZwiBem &gt;= iCountZwiBem _
@@ -383,63 +382,40 @@ Sub Leistungen()
 			iCountZwiSum=iCountZwiSum + 1
 			iSelectZwiSum = 1
 		elseif iPosLeistung &gt; 0 AND iPosLeistung &lt;= iPosZwiSum  AND iPosLeistung &lt; iPosZwiBem then
-	&apos; Leistung einfügen
+	&apos; Leistung / AZ einfügen
 	
 			if iPosTypID = 4 AND iAZ = 0 then
 				vRowsLeistungen.insertByIndex(iCountInsert,1)
 				vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
-				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).BottomBorderDistance=80
+				vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).TopBorder=oBorderLine
+				vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).BottomBorder=oBorderLine
+				vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).TopBorderDistance=80
+				vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).BottomBorderDistance=80
+
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;A&quot; &amp; iCountInsert)
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).BottomBorderDistance=80
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.LEFT
 				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).BottomBorderDistance=80
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;C&quot; &amp; iCountInsert)
 				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).BottomBorderDistance=80
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;D&quot; &amp; iCountInsert)
 				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).BottomBorderDistance=80
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;E&quot; &amp; iCountInsert)
 				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).BottomBorderDistance=80
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
 				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+
+				vTableLeistungen.getCellRangeByName(&quot;B&quot;&amp; iCountInsert &amp;&quot;:E&quot;&amp; iCountInsert).LeftBorderDistance=0
+				vTableLeistungen.getCellRangeByName(&quot;B&quot;&amp; iCountInsert &amp;&quot;:E&quot;&amp; iCountInsert).RightBorderDistance=0
+
 				vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=&quot;Abschlagsrechnungen&quot;
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).LeftBorderDistance=0
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).RightBorderDistance=0
 				vTableLeistungen.getCellByName(&quot;C&quot; &amp; iCountInsert).String=&quot;ohne MwSt&quot;
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).LeftBorderDistance=0
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).RightBorderDistance=0
 				vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=&quot;MwSt&quot;
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).LeftBorderDistance=0
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).RightBorderDistance=0
 				vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=&quot;mit MwSt&quot;
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).LeftBorderDistance=0
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).RightBorderDistance=0
 				iAZ = 1
 				iCountInsert=iCountInsert+1
 			elseif iPosTypID &lt; 4 then
