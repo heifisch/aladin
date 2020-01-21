@@ -33,8 +33,9 @@ Sub Buchhaltung_export()
 		iCountBuchungen=0
 	
 		sSQL1=&quot;SELECT COUNT(*) &quot;&amp;_
-			&quot;FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1 &quot;&amp;_
-			&quot;WHERE t1.gebucht=0&quot;
+			&quot;FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1,&quot;&amp; sKunden &amp;&quot; AS t2 &quot;&amp;_
+			&quot;WHERE t2.KontaktID = t1.KontaktID &quot;&amp;_
+			&quot;AND t1.gebucht=0&quot;
 			
 		oRecordCountBuchungen=oResult(sSQL1)
 		While oRecordCountBuchungen.next()
@@ -90,9 +91,9 @@ Sub Buchhaltung_export()
 				&quot;t1.Sicherheitseinbehalt,t1.bezahlt_am,t1.Kasse,&quot;&amp;_
 				&quot;t1.AZ,t1.13b &quot;&amp;_
 				&quot;FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1,&quot;&amp; sKunden &amp;&quot; AS t2 &quot;&amp;_
-				&quot;WHERE t2.KontaktID = t1.KontaktID&quot;&amp;_
-				&quot; AND t1.gebucht=0&quot;&amp;_
-				&quot; ORDER BY t1.DocumentID ASC&quot;
+				&quot;WHERE t2.KontaktID = t1.KontaktID &quot;&amp;_
+				&quot;AND t1.gebucht=0 &quot;&amp;_
+				&quot;ORDER BY t1.DocumentID ASC&quot;
 			iCountBuchungen=1
 			
 			Do While iAnzahlBuchungen &gt;= iCountBuchungen
@@ -168,8 +169,9 @@ Sub Buchhaltung_export()
 &apos;		iCountBuchungen=0
 	
 		sSQL1=&quot;SELECT COUNT(*) &quot;&amp;_
-			&quot;FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
-			&quot; WHERE t1.gebucht=0&quot;
+			&quot;FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1,&quot;&amp; sKunden &amp;&quot; AS t2 &quot;&amp;_
+			&quot;WHERE t2.KontaktID = t1.KontaktID &quot;&amp;_
+			&quot;AND t1.gebucht=0&quot;
 			
 		oRecordCountBuchungen=oResult(sSQL1)
 		While oRecordCountBuchungen.next()
@@ -223,9 +225,9 @@ Sub Buchhaltung_export()
 				&quot;t1.Sicherheitseinbehalt,t1.bezahlt_am,t1.Kasse,&quot;&amp;_
 				&quot;t1.AZ,t1.13b &quot;&amp;_
 				&quot;FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1,&quot;&amp; sKunden &amp;&quot; AS t2 &quot;&amp;_
-				&quot;WHERE t2.KontaktID = t1.KontaktID&quot;&amp;_
-				&quot; AND t1.gebucht=0&quot;&amp;_
-				&quot; ORDER BY t1.DocumentID ASC&quot;
+				&quot;WHERE t2.KontaktID = t1.KontaktID &quot;&amp;_
+				&quot;AND t1.gebucht=0 &quot;&amp;_
+				&quot;ORDER BY t1.DocumentID ASC&quot;
 			iCountBuchungen=1
 			
 			Do While iAnzahlBuchungen &gt;= iCountBuchungen
@@ -323,8 +325,9 @@ Sub Buchhaltung_export_Kuepper()
 		iCountBuchungen=0
 	
 		sSQL1=&quot;SELECT COUNT(*) &quot;&amp;_
-			&quot;FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1 &quot;&amp;_
-			&quot;WHERE t1.gebucht=0&quot;
+			&quot;FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1,&quot;&amp; sKunden &amp;&quot; AS t2 &quot;&amp;_
+			&quot;WHERE t2.KontaktID = t1.KontaktID &quot;&amp;_
+			&quot;AND t1.gebucht=0&quot;
 			
 		oRecordCountBuchungen=oResult(sSQL1)
 		While oRecordCountBuchungen.next()
@@ -381,9 +384,9 @@ Sub Buchhaltung_export_Kuepper()
 				&quot;t1.Sicherheitseinbehalt,t1.bezahlt_am,t1.Kasse,&quot;&amp;_
 				&quot;t1.AZ,t1.13b &quot;&amp;_
 				&quot;FROM &quot;&amp; sRechnungen1 &amp;&quot; AS t1,&quot;&amp; sKunden &amp;&quot; AS t2 &quot;&amp;_
-				&quot;WHERE t2.KontaktID = t1.KontaktID&quot;&amp;_
-				&quot; AND t1.gebucht=0&quot;&amp;_
-				&quot; ORDER BY t1.DocumentID ASC&quot;
+				&quot;WHERE t2.KontaktID = t1.KontaktID&quot; &amp;_
+				&quot;AND t1.gebucht=0&quot; &amp;_
+				&quot;ORDER BY t1.DocumentID ASC&quot;
 			iCountBuchungen=1
 			
 			Do While iAnzahlBuchungen &gt;= iCountBuchungen
@@ -459,8 +462,9 @@ Sub Buchhaltung_export_Kuepper()
 &apos;		iCountBuchungen=0
 	
 		sSQL1=&quot;SELECT COUNT(*) &quot;&amp;_
-			&quot;FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1&quot;&amp;_
-			&quot; WHERE t1.gebucht=0&quot;
+			&quot;FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1,&quot;&amp; sKunden &amp;&quot; AS t2 &quot;&amp;_
+			&quot;WHERE t2.KontaktID = t1.KontaktID &quot;&amp;_
+			&quot;AND t1.gebucht=0&quot;
 			
 		oRecordCountBuchungen=oResult(sSQL1)
 		While oRecordCountBuchungen.next()
@@ -514,9 +518,9 @@ Sub Buchhaltung_export_Kuepper()
 				&quot;t1.Sicherheitseinbehalt,t1.bezahlt_am,t1.Kasse,&quot;&amp;_
 				&quot;t1.AZ,t1.13b &quot;&amp;_
 				&quot;FROM &quot;&amp; sGutschriften1 &amp;&quot; AS t1,&quot;&amp; sKunden &amp;&quot; AS t2 &quot;&amp;_
-				&quot;WHERE t2.KontaktID = t1.KontaktID&quot;&amp;_
-				&quot; AND t1.gebucht=0&quot;&amp;_
-				&quot; ORDER BY t1.DocumentID ASC&quot;
+				&quot;WHERE t2.KontaktID = t1.KontaktID &quot;&amp;_
+				&quot;AND t1.gebucht=0 &quot;&amp;_
+				&quot;ORDER BY t1.DocumentID ASC&quot;
 			iCountBuchungen=1
 			
 			Do While iAnzahlBuchungen &gt;= iCountBuchungen
