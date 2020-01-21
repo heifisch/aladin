@@ -48,9 +48,10 @@ Sub neuerTask()
 	Steuerung_zuruecksetzen(iUserID_lokal)	
 	sSQL1=&quot;select Gesperrt from Steuerung order by ClientID ASC LIMIT &quot;&amp; (22+iClientIDOffset(iUserID_lokal)) &amp;&quot;,14&quot;
 	wait 1
-	
+
+	oRecordGesperrt=oResult_Scroll(sSQL1)
+
 	For iCount = 1 to 14
-		oRecordGesperrt=oResult_Scroll(sSQL1)
 		oRecordGesperrt.absolute(iCount)
 		iGesperrt=oRecordGesperrt.getInt(1)
 		if iCount = 1 AND iGesperrt = 1 then
@@ -169,8 +170,10 @@ Sub Projekt()
 	sSQL1=&quot;select Gesperrt from Steuerung order by ClientID ASC LIMIT &quot;&amp; iClientIDOffset(iUserID_lokal) &amp;&quot;,16&quot;
 
 	wait 1
+	
+	oRecordGesperrt=oResult_Scroll(sSQL1)
+
 	For iCount = 1 to 16
-		oRecordGesperrt=oResult_Scroll(sSQL1)
 		oRecordGesperrt.absolute(iCount)
 		iGesperrt=oRecordGesperrt.getInt(1)
 		if iCount = 1 AND iGesperrt = 1 then
@@ -277,8 +280,10 @@ Sub Dokument()
 	sSQL1=&quot;select Gesperrt from Steuerung order by ClientID ASC LIMIT &quot;&amp; (16+iClientIDOffset(iUserID_lokal)) &amp;&quot;,6&quot;
 
 	wait 1
+	
+	oRecordGesperrt=oResult_Scroll(sSQL1)
+	
 	For iCount = 1 to 6
-		oRecordGesperrt=oResult_Scroll(sSQL1)
 		oRecordGesperrt.absolute(iCount)
 		iGesperrt=oRecordGesperrt.getInt(1)
 		if iCount = 1 AND iGesperrt = 1 then
