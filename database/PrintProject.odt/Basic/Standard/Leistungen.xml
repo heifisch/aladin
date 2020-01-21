@@ -208,12 +208,12 @@ Sub Leistungen()
 	End if
 	
 	if iAnzahlZwiSum &gt; 0 then
-	sSQL2=&quot;SELECT DISTINCT Pos,ZwiSuName,Zwischensumme &quot;&amp;_
-		&quot;FROM &quot;&amp; sTabZwiSum &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC&quot;
+	sSQL2=&quot;SELECT DISTINCT Pos,ZwiSuName,Zwischensumme,ZwiSuID &quot;&amp;_
+		&quot;FROM &quot;&amp; sTabZwiSum &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC, ZwiSuID ASC&quot;
 	End if
 	
 	if iAnzahlZwiBem &gt; 0 then
-	sSQL3=&quot;SELECT DISTINCT Pos,Bemerkung &quot;&amp;_
+	sSQL3=&quot;SELECT DISTINCT Pos,Bemerkung,ZwiBemID &quot;&amp;_
 		&quot;FROM &quot;&amp; sTabZwiBem &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC, ZwiBemID ASC&quot;
 	End if
 	
