@@ -392,7 +392,6 @@ ErrorHandler:
 &apos;	MsgBox &quot;Sie haben möglicherweise nicht das richtige Passwort eingegeben,&quot;&amp;_
 &apos;			&quot; oder die notwendigen Rechte in der Datenbank sind nicht gesetzt!&quot;,16,&quot;Fehler&quot;
 	Stop
-	Exit Sub
 end Sub
 
 Function vDesktop as variant
@@ -435,10 +434,10 @@ On Error Goto ErrorHandler
 	oStatement.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
 	oStatement.EscapeProcessing = FALSE
 	oResult_Scroll=oStatement.executeQuery(sSQL)
+	Exit Function
 ErrorHandler:
 	MsgBox sSQL
 	Stop
-	Exit Function
 End Function
 
 Function oResult(sSQL as String)as Object
@@ -453,7 +452,6 @@ On Error Goto ErrorHandler
 ErrorHandler:
 	MsgBox sSQL
 	Stop
-	Exit Function
 End Function
 
 Function oResult_Leistungen(sSQL as String)as Object
