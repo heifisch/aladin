@@ -7,7 +7,6 @@
 REM  *****  BASIC  *****
 &apos;option explicit
 
-
 &apos;Global vViewCursor AS Variant
 
 Sub Leistungen()
@@ -201,20 +200,20 @@ Sub Leistungen()
 	iAnzahlAltPos = fAnzahlDatensaetzeAltPos(iUserID_lokal)
 	
 	if iAnzahlLeistungen &gt; 0 then
-	sSQL1=&quot;SELECT DISTINCT t1.PosID,t1.Pos,t1.Pos_TypID,t1.Bestellnummer,t2.Pos_Typ,t1.Leistungsbezeichnung,&quot;&amp;_
-		&quot;t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Lieferung,t1.Leistung,t1.EP,t1.GP&quot;&amp;_
-		&quot; FROM &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; AS t1,Pos_Typ AS t2&quot;&amp;_
-		&quot; WHERE t2.Pos_TypID=t1.Pos_TypID ORDER BY t1.PosID ASC&quot;
+		sSQL1=&quot;SELECT t1.PosID,t1.Pos,t1.Pos_TypID,t1.Bestellnummer,t2.Pos_Typ,t1.Leistungsbezeichnung,&quot;&amp;_
+			&quot;t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Lieferung,t1.Leistung,t1.EP,t1.GP&quot;&amp;_
+			&quot; FROM &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; AS t1,Pos_Typ AS t2&quot;&amp;_
+			&quot; WHERE t2.Pos_TypID=t1.Pos_TypID ORDER BY t1.PosID ASC&quot;
 	End if
 	
 	if iAnzahlZwiSum &gt; 0 then
-	sSQL2=&quot;SELECT DISTINCT Pos,ZwiSuName,Zwischensumme,ZwiSuID &quot;&amp;_
-		&quot;FROM &quot;&amp; sTabZwiSum &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC, ZwiSuID ASC&quot;
+		sSQL2=&quot;SELECT Pos,ZwiSuName,Zwischensumme,ZwiSuID &quot;&amp;_
+			&quot;FROM &quot;&amp; sTabZwiSum &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC, ZwiSuID ASC&quot;
 	End if
 	
 	if iAnzahlZwiBem &gt; 0 then
-	sSQL3=&quot;SELECT DISTINCT Pos,Bemerkung,ZwiBemID &quot;&amp;_
-		&quot;FROM &quot;&amp; sTabZwiBem &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC, ZwiBemID ASC&quot;
+		sSQL3=&quot;SELECT Pos,Bemerkung,ZwiBemID &quot;&amp;_
+			&quot;FROM &quot;&amp; sTabZwiBem &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC, ZwiBemID ASC&quot;
 	End if
 	
 	iCountZwiSum = 1
