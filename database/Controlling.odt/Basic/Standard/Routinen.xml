@@ -343,7 +343,7 @@ Sub Leistung_Auftrag_uebernehmen()
 							&quot;Leistungsbezeichnung,Leistungsbeschreibung,LV_Pos,Einheit,Menge,Einkaufspreis,Materialaufschlagsatz,Bauzeit,Minutenverrechnungssatz,IstZeit,Lokation)&quot;&amp;_
 							&quot; SELECT DISTINCT &apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&quot;&amp;_
 							&quot;t2.LeistungsID,t2.Bestellnummer,t2.Leistungsbezeichnung,t2.Leistungsbeschreibung,t2.LV_Pos,t2.Einheit,&apos;&quot;&amp; sMenge &amp;&quot;&apos;,&quot;&amp;_
-							&quot;t2.Einkaufspreis,t2.Materialaufschlagsatz,t2.Bauzeit,t2.Minutenverrechnungssatz,&apos;&quot;&amp; sIstZeit &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;&quot;&amp;_
+							&quot;t2.Einkaufspreis,COALESCE(t2.Materialaufschlagsatz,t1.Materialaufschlagsatz),t2.Bauzeit,COALESCE(t2.Minutenverrechnungssatz,t1.Stundenverrechnungssatz/60*t1.Verrechnungs_Faktor),&apos;&quot;&amp; sIstZeit &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;&quot;&amp;_
 							&quot; FROM Steuerung AS t1,&quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; AS t2 WHERE t1.ClientID=&quot;&amp; iClientID &amp;_
 							&quot; AND t1.PositionsID=t2.PositionsID&quot;
 						SQL_execute(sSQL2)
@@ -449,7 +449,7 @@ Sub Leistung_Projekt_uebernehmen()
 							&quot;Leistungsbezeichnung,Leistungsbeschreibung,LV_Pos,Einheit,Menge,Einkaufspreis,Materialaufschlagsatz,Bauzeit,Minutenverrechnungssatz,IstZeit,Lokation)&quot;&amp;_
 							&quot; SELECT DISTINCT &apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sPersonalID &amp;&quot;&apos;,&apos;&quot;&amp; sDatum &amp;&quot;&apos;,&quot;&amp;_
 							&quot;t2.LeistungsID,t2.Bestellnummer,t2.Leistungsbezeichnung,t2.Leistungsbeschreibung,t2.LV_Pos,t2.Einheit,&apos;&quot;&amp; sMenge &amp;&quot;&apos;,&quot;&amp;_
-							&quot;t2.Einkaufspreis,t2.Materialaufschlagsatz,t2.Bauzeit,t2.Minutenverrechnungssatz,&apos;&quot;&amp; sIstZeit &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;&quot;&amp;_
+							&quot;t2.Einkaufspreis,COALESCE(t2.Materialaufschlagsatz,t1.Materialaufschlagsatz),t2.Bauzeit,COALESCE(t2.Minutenverrechnungssatz,t1.Stundenverrechnungssatz/60*t1.Verrechnungs_Faktor),&apos;&quot;&amp; sIstZeit &amp;&quot;&apos;,&apos;&quot;&amp; sLokation &amp;&quot;&apos;&quot;&amp;_
 							&quot; FROM Steuerung AS t1,&quot;&amp; sControlling &amp;&quot; AS t2 WHERE t1.ClientID=&quot;&amp; iClientID &amp;_
 							&quot; AND t2.PositionsID=t1.PositionsID2&quot;
 						SQL_execute(sSQL2)

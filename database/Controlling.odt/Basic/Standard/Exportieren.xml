@@ -769,7 +769,7 @@ Sub Datensaetze_exportieren()
 					&quot;Materialaufschlagsatz)&quot;&amp;_
 					&quot; SELECT &apos;&quot;&amp; sDocumentID_export &amp;&quot;&apos;,t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
 					&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Einkaufspreis,&quot;&amp;_
-					&quot;t1.Bauzeit,t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz&quot;&amp;_
+					&quot;t1.Bauzeit,COALESCE(t1.Minutenverrechnungssatz,t2.Stundenverrechnungssatz/60*t2.Verrechnungs_Faktor),COALESCE(t1.Materialaufschlagsatz,t2.Materialaufschlagsatz)&quot;&amp;_
 					&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
 					&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
 					&quot; AND (((year(t1.Erstellungsdatum)=t2.Jahr AND t2.Jahr IS NOT NULL)&quot;&amp;_
@@ -846,7 +846,7 @@ Sub Datensaetze_exportieren()
 				&quot;Materialaufschlagsatz)&quot;&amp;_
 				&quot; SELECT &apos;&quot;&amp; sDocumentID_export &amp;&quot;&apos;,t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
 				&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Einkaufspreis,&quot;&amp;_
-				&quot;t1.Bauzeit,t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz&quot;&amp;_
+				&quot;t1.Bauzeit,COALESCE(t1.Minutenverrechnungssatz,t2.Stundenverrechnungssatz/60*t2.Verrechnungs_Faktor),COALESCE(t1.Materialaufschlagsatz,t2.Materialaufschlagsatz)&quot;&amp;_
 				&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
 				&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
 				&quot; AND (((year(t1.Erstellungsdatum)=t2.Jahr AND t2.Jahr IS NOT NULL)&quot;&amp;_
