@@ -44,8 +44,10 @@ Sub Datensaetze_exportieren()
 	Dim iCountLeistungen AS Integer,iAnzahlLeistungen AS Integer
 	Dim iMaxPos_export AS Integer,iPosGliederung1 AS Integer
 	Dim oRecord1 AS Object,oRecord2 AS Object,oRecord3 AS Object
-	Dim sSQL1 AS String,sSQL2 AS String,sSQL3 AS String,sSQL4 AS String,sSQL5 AS String
-	Dim sSQL6 AS String,sSQL7 AS String,sSQL8 AS String,sSQL9 AS String
+	Dim sSQL1 AS String,sSQL4 AS String,sSQL5 AS String,sSQL6 AS String,sSQL8 AS String,sSQL9 AS String
+	Dim sSQL2 AS String,sSQL2_Columns AS String,sSQL2_Count AS String
+	Dim sSQL3 AS String,sSQL3_Columns AS String,sSQL3_Count AS String
+	Dim sSQL7 AS String,sSQL7_Columns AS String,sSQL7_Count AS String
 	Dim sGliederung1 AS String,sGliederungsText1 AS String
 	Dim sGliederung2 AS String,sGliederungsText2 AS String
 	Dim oOptionAngebote1 AS Object,oOptionAuftrag1 AS Object,oOptionLieferscheine1 AS Object
@@ -415,22 +417,27 @@ Sub Datensaetze_exportieren()
 		End if
 	elseif oOptionZusammenfassung.State=1 then
 		iCountLeistungen=1
-		sSQL3=&quot;SELECT DISTINCT t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&quot;&amp;_
-			&quot;t1.Einkaufspreis,t1.Materialaufschlagsatz,t1.Bauzeit,t1.Minutenverrechnungssatz&quot;&amp;_
-			&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
+		
+		sSQL3_Count=&quot;SELECT COUNT(DISTINCT t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&quot;&amp;_
+			&quot;t1.Einkaufspreis,t1.Materialaufschlagsatz,t1.Bauzeit,t1.Minutenverrechnungssatz)&quot;
+
+		sSQL3_Columns=&quot;SELECT DISTINCT t1.LV_Pos,t1.LeistungsID,t1.Bestellnummer,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&quot;&amp;_
+			&quot;t1.Einkaufspreis,t1.Materialaufschlagsatz,t1.Bauzeit,t1.Minutenverrechnungssatz&quot;
+
+		sSQL3=&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
 			&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
 			&quot; AND (((year(t1.Erstellungsdatum)=t2.Jahr AND t2.Jahr IS NOT NULL)&quot;&amp;_
-			&quot; OR (year(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Jahr IS NULL))&quot;&amp;_
+			&quot;  OR (year(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Jahr IS NULL))&quot;&amp;_
 			&quot; AND ((month(t1.Erstellungsdatum)=t2.Monat AND t2.Monat IS NOT NULL)&quot;&amp;_
-			&quot; OR (month(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Monat IS NULL))&quot;&amp;_
+			&quot;  OR (month(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Monat IS NULL))&quot;&amp;_
 			&quot; AND ((week(t1.Erstellungsdatum)=t2.Woche AND t2.Woche IS NOT NULL)&quot;&amp;_
-			&quot; OR (week(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Woche IS NULL))&quot;&amp;_
+			&quot;  OR (week(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Woche IS NULL))&quot;&amp;_
 			&quot; AND ((t1.PersonalID=t2.PersonalID AND t2.PersonalID IS NOT NULL)&quot;&amp;_
-			&quot; OR (t1.PersonalID LIKE &apos;%&apos; AND t2.PersonalID IS NULL))&quot;&amp;_
+			&quot;  OR (t1.PersonalID LIKE &apos;%&apos; AND t2.PersonalID IS NULL))&quot;&amp;_
 			&quot; AND ((t1.ProjektID=t2.ProjektID AND t2.ProjektID IS NOT NULL)&quot;&amp;_
-			&quot; OR (t1.ProjektID LIKE &apos;%&apos; AND t2.ProjektID IS NULL))&quot;&amp;_
+			&quot;  OR (t1.ProjektID LIKE &apos;%&apos; AND t2.ProjektID IS NULL))&quot;&amp;_
 			&quot; AND ((t1.Lokation=t2.Lokation AND t2.Lokation is not NULL)&quot;&amp;_
-			&quot; OR (t1.Lokation LIKE &apos;%&apos; AND t2.Lokation is NULL))&quot;&amp;_
+			&quot;  OR (t1.Lokation LIKE &apos;%&apos; AND t2.Lokation is NULL))&quot;&amp;_
 			&quot; AND ((t1.Erstellungsdatum=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=0)&quot;&amp;_
 			&quot;  OR (t1.Erstellungsdatum&lt;=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=1)&quot;&amp;_
 			&quot;  OR (t1.Erstellungsdatum&gt;=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=2)&quot;&amp;_
@@ -439,13 +446,14 @@ Sub Datensaetze_exportieren()
 			&quot;  OR (t1.LeistungsTyp!=t2.LeistungsTyp AND t2.LeistungsTyp!=0 AND t2.Option_4=1)&quot;&amp;_
 			&quot;  OR (t1.LeistungsTyp LIKE &apos;%&apos; AND t2.LeistungsTyp=0))&quot;&amp;_
 			&quot; AND ((t1.Abgerechnet=t2.Status AND t2.Status!=0)&quot;&amp;_
-			&quot; OR (t1.Abgerechnet LIKE &apos;%&apos; AND t2.Status=0)))&quot;&amp;_
-			&quot; ORDER BY t1.LV_Pos ASC&quot;
-	
-			oRecordLeistungen=oResult_Scroll(sSQL3)
-			oRecordLeistungen.afterLast()
-			oRecordLeistungen.previous()
-			iAnzahlLeistungen=oRecordLeistungen.getRow()
+			&quot;  OR (t1.Abgerechnet LIKE &apos;%&apos; AND t2.Status=0)))&quot;
+
+			oRecord1=oResult(sSQL3_Count &amp; sSQL3)
+			While oRecord1.next()
+				iAnzahlLeistungen=oRecord1.getInt(1)
+			Wend
+			
+			sSQL3=sSQL3_Columns &amp; sSQL3 &amp;&quot; ORDER BY t1.LV_Pos ASC&quot;
 	
 		Do While iAnzahlLeistungen &gt;= iCountLeistungen
 			oRecordLeistungen=oResult_Scroll(sSQL3)
@@ -581,21 +589,24 @@ Sub Datensaetze_exportieren()
 		exit Sub
 	End if
 
-	sSQL1=&quot; SELECT COUNT(DISTINCT t1.&quot;&amp; sGliederung1 &amp;&quot;)&quot;&amp;_
-		&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
+	sSQL2_Count=&quot;SELECT COUNT(DISTINCT t1.&quot;&amp; sGliederung1 &amp;&quot;)&quot;
+
+	sSQL2_Columns=&quot;SELECT DISTINCT t1.&quot;&amp; sGliederung1
+
+	sSQL2=&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
 		&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
 		&quot; AND ((year(t1.Erstellungsdatum)=t2.Jahr AND t2.Jahr IS NOT NULL)&quot;&amp;_
-		&quot; OR (year(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Jahr IS NULL))&quot;&amp;_
+		&quot;  OR (year(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Jahr IS NULL))&quot;&amp;_
 		&quot; AND ((month(t1.Erstellungsdatum)=t2.Monat AND t2.Monat IS NOT NULL)&quot;&amp;_
-		&quot; OR (month(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Monat IS NULL))&quot;&amp;_
+		&quot;  OR (month(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Monat IS NULL))&quot;&amp;_
 		&quot; AND ((week(t1.Erstellungsdatum)=t2.Woche AND t2.Woche IS NOT NULL)&quot;&amp;_
-		&quot; OR (week(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Woche IS NULL))&quot;&amp;_
+		&quot;  OR (week(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Woche IS NULL))&quot;&amp;_
 		&quot; AND ((t1.PersonalID=t2.PersonalID AND t2.PersonalID IS NOT NULL)&quot;&amp;_
-		&quot; OR (t1.PersonalID LIKE &apos;%&apos; AND t2.PersonalID IS NULL))&quot;&amp;_
+		&quot;  OR (t1.PersonalID LIKE &apos;%&apos; AND t2.PersonalID IS NULL))&quot;&amp;_
 		&quot; AND ((t1.ProjektID=t2.ProjektID AND t2.ProjektID IS NOT NULL)&quot;&amp;_
-		&quot; OR (t1.ProjektID LIKE &apos;%&apos; AND t2.ProjektID IS NULL))&quot;&amp;_
+		&quot;  OR (t1.ProjektID LIKE &apos;%&apos; AND t2.ProjektID IS NULL))&quot;&amp;_
 		&quot; AND ((t1.Lokation=t2.Lokation AND t2.Lokation is not NULL)&quot;&amp;_
-		&quot; OR (t1.Lokation LIKE &apos;%&apos; AND t2.Lokation is NULL))&quot;&amp;_
+		&quot;  OR (t1.Lokation LIKE &apos;%&apos; AND t2.Lokation is NULL))&quot;&amp;_
 		&quot; AND ((t1.Erstellungsdatum=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=0)&quot;&amp;_
 		&quot;  OR (t1.Erstellungsdatum&lt;=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=1)&quot;&amp;_
 		&quot;  OR (t1.Erstellungsdatum&gt;=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=2)&quot;&amp;_
@@ -605,7 +616,8 @@ Sub Datensaetze_exportieren()
 		&quot;  OR (t1.LeistungsTyp LIKE &apos;%&apos; AND t2.LeistungsTyp=0))&quot;&amp;_
 		&quot; AND ((t1.Abgerechnet=t2.Status AND t2.Status!=0)&quot;&amp;_
 		&quot;  OR (t1.Abgerechnet LIKE &apos;%&apos; AND t2.Status=0))&quot;
-	oRecord1=oResult(sSQL1)
+
+	oRecord1=oResult(sSQL2_Count &amp; sSQL2)
 	iCountGliederung1=1
 	iCountDatensaetze=0
 	iAnzahlGliederung1=0
@@ -617,36 +629,13 @@ Sub Datensaetze_exportieren()
 	Do While iAnzahlGliederung1 &gt;= iCountGliederung1
 	
 		if iAnzahlGliederung1 &gt; 0 then
-			sSQL2=&quot;SELECT DISTINCT t1.&quot;&amp; sGliederung1 &amp;_
-				&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
-				&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
-				&quot; AND ((year(t1.Erstellungsdatum)=t2.Jahr AND t2.Jahr IS NOT NULL)&quot;&amp;_
-				&quot; OR (year(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Jahr IS NULL))&quot;&amp;_
-				&quot; AND ((month(t1.Erstellungsdatum)=t2.Monat AND t2.Monat IS NOT NULL)&quot;&amp;_
-				&quot; OR (month(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Monat IS NULL))&quot;&amp;_
-				&quot; AND ((week(t1.Erstellungsdatum)=t2.Woche AND t2.Woche IS NOT NULL)&quot;&amp;_
-				&quot; OR (week(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Woche IS NULL))&quot;&amp;_
-				&quot; AND ((t1.PersonalID=t2.PersonalID AND t2.PersonalID IS NOT NULL)&quot;&amp;_
-				&quot; OR (t1.PersonalID LIKE &apos;%&apos; AND t2.PersonalID IS NULL))&quot;&amp;_
-				&quot; AND ((t1.ProjektID=t2.ProjektID AND t2.ProjektID IS NOT NULL)&quot;&amp;_
-				&quot; OR (t1.ProjektID LIKE &apos;%&apos; AND t2.ProjektID IS NULL))&quot;&amp;_
-				&quot; AND ((t1.Lokation=t2.Lokation AND t2.Lokation is not NULL)&quot;&amp;_
-				&quot; OR (t1.Lokation LIKE &apos;%&apos; AND t2.Lokation is NULL))&quot;&amp;_
-				&quot; AND ((t1.Erstellungsdatum=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=0)&quot;&amp;_
-				&quot;  OR (t1.Erstellungsdatum&lt;=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=1)&quot;&amp;_
-				&quot;  OR (t1.Erstellungsdatum&gt;=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=2)&quot;&amp;_
-				&quot;  OR (t1.Erstellungsdatum LIKE &apos;%&apos; AND (LENGTH(t2.Datum) is NULL OR LENGTH(t2.Datum)=0)))&quot;&amp;_
-				&quot; AND ((t1.LeistungsTyp=t2.LeistungsTyp AND t2.LeistungsTyp!=0 AND t2.Option_4=0)&quot;&amp;_
-				&quot;  OR (t1.LeistungsTyp!=t2.LeistungsTyp AND t2.LeistungsTyp!=0 AND t2.Option_4=1)&quot;&amp;_
-				&quot;  OR (t1.LeistungsTyp LIKE &apos;%&apos; AND t2.LeistungsTyp=0))&quot;&amp;_
-				&quot; AND ((t1.Abgerechnet=t2.Status AND t2.Status!=0)&quot;&amp;_
-				&quot;  OR (t1.Abgerechnet LIKE &apos;%&apos; AND t2.Status=0))&quot;
+			sSQL3=sSQL2_Columns &amp; sSQL2
 			if sGliederung1 = &quot;Erstellungsdatum&quot; then
-				sSQL2=sSQL2 &amp;&quot; ORDER BY t1.Erstellungsdatum ASC&quot;
+				sSQL3=sSQL3 &amp;&quot; ORDER BY t1.Erstellungsdatum ASC&quot;
 			elseif sGliederung1 = &quot;Lokation&quot; then
-				sSQL2=sSQL2 &amp;&quot; ORDER BY t1.Lokation ASC&quot;
+				sSQL3=sSQL3 &amp;&quot; ORDER BY t1.Lokation ASC&quot;
 			End if
-			oRecordGliederung1=oResult_Scroll(sSQL2)
+			oRecordGliederung1=oResult_Scroll(sSQL3)
 			oRecordGliederung1.absolute(iCountGliederung1)
 			sGliederungsText1=oRecordGliederung1.getString(1)
 			iCountGliederung1=iCountGliederung1+1
@@ -658,10 +647,11 @@ Sub Datensaetze_exportieren()
 				sBemerkung= sTextVorLokation &amp; sGliederungsText1
 				sZwischensumme=sBemerkung
 			End if
-			sSQL3=&quot;INSERT INTO  &quot;&amp; sBemerkungen_export &amp;_
+
+			sSQL4=&quot;INSERT INTO  &quot;&amp; sBemerkungen_export &amp;_
 				&quot; (DocumentID,Pos,Bemerkung)&quot;&amp;_
 				&quot; VALUES (&apos;&quot;&amp; sDocumentID_export &amp;&quot;&apos;,&apos;&quot;&amp; iPosGliederung1 &amp;&quot;&apos;,&apos;&quot;&amp; sBemerkung &amp;&quot;&apos;)&quot;
-			SQL_execute(sSQL3)
+			SQL_execute(sSQL4)
 		
 		elseif iAnzahlGliederung1 = 0 then
 			sGliederungsText1=&quot;%&quot;
@@ -671,8 +661,11 @@ Sub Datensaetze_exportieren()
 
 		if sGliederung2 &lt;&gt; &quot;&quot; then
 
-			sSQL7=&quot; SELECT COUNT(DISTINCT t1.&quot;&amp; sGliederung2 &amp;&quot;)&quot;&amp;_
-				&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
+			sSQL7_Count=&quot;SELECT COUNT(DISTINCT t1.&quot;&amp; sGliederung2 &amp;&quot;)&quot;
+			
+			sSQL7_Columns=&quot;SELECT DISTINCT t1.&quot;&amp; sGliederung2
+			
+			sSQL7=&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
 				&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
 				&quot; AND (((year(t1.Erstellungsdatum)=t2.Jahr AND t2.Jahr IS NOT NULL)&quot;&amp;_
 				&quot;  OR (year(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Jahr IS NULL))&quot;&amp;_
@@ -696,8 +689,8 @@ Sub Datensaetze_exportieren()
 				&quot; AND ((t1.Abgerechnet=t2.Status AND t2.Status!=0)&quot;&amp;_
 				&quot;  OR (t1.Abgerechnet LIKE &apos;%&apos; AND t2.Status=0))&quot;&amp;_
 				&quot; AND t1.&quot;&amp; sGliederung1 &amp;&quot; LIKE &apos;&quot;&amp; sGliederungsText1 &amp;&quot;&apos;)&quot;
-				
-	 		oRecord3=oResult(sSQL7)
+
+	 		oRecord3=oResult(sSQL7_Count &amp; sSQL7)
 			iCountGliederung2=1
 			iAnzahlGliederung2=0
 			
@@ -708,31 +701,7 @@ Sub Datensaetze_exportieren()
 			Do While iAnzahlGliederung2 &gt;= iCountGliederung2
 			
 				if iAnzahlGliederung2 &gt; 0 then
-					sSQL8=&quot;SELECT DISTINCT t1.&quot;&amp; sGliederung2 &amp;_
-						&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
-						&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
-						&quot; AND (((year(t1.Erstellungsdatum)=t2.Jahr AND t2.Jahr IS NOT NULL)&quot;&amp;_
-						&quot;  OR (year(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Jahr IS NULL))&quot;&amp;_
-						&quot; AND ((month(t1.Erstellungsdatum)=t2.Monat AND t2.Monat IS NOT NULL)&quot;&amp;_
-						&quot;  OR (month(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Monat IS NULL))&quot;&amp;_
-						&quot; AND ((week(t1.Erstellungsdatum)=t2.Woche AND t2.Woche IS NOT NULL)&quot;&amp;_
-						&quot;  OR (week(t1.Erstellungsdatum) LIKE &apos;%&apos; AND t2.Woche IS NULL))&quot;&amp;_
-						&quot; AND ((t1.PersonalID=t2.PersonalID AND t2.PersonalID IS NOT NULL)&quot;&amp;_
-						&quot;  OR (t1.PersonalID LIKE &apos;%&apos; AND t2.PersonalID IS NULL))&quot;&amp;_
-						&quot; AND ((t1.ProjektID=t2.ProjektID AND t2.ProjektID IS NOT NULL)&quot;&amp;_
-						&quot;  OR (t1.ProjektID LIKE &apos;%&apos; AND t2.ProjektID IS NULL))&quot;&amp;_
-						&quot; AND ((t1.Lokation=t2.Lokation AND t2.Lokation is not NULL)&quot;&amp;_
-						&quot;  OR (t1.Lokation LIKE &apos;%&apos; AND t2.Lokation is NULL))&quot;&amp;_
-						&quot; AND ((t1.Erstellungsdatum=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=0)&quot;&amp;_
-						&quot;  OR (t1.Erstellungsdatum&lt;=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=1)&quot;&amp;_
-						&quot;  OR (t1.Erstellungsdatum&gt;=t2.Datum AND LENGTH(t2.Datum)&gt;0 AND t2.Option_5=2)&quot;&amp;_
-						&quot;  OR (t1.Erstellungsdatum LIKE &apos;%&apos; AND (LENGTH(t2.Datum) is NULL OR LENGTH(t2.Datum)=0)))&quot;&amp;_
-						&quot; AND ((t1.LeistungsTyp=t2.LeistungsTyp AND t2.LeistungsTyp!=0 AND t2.Option_4=0)&quot;&amp;_
-						&quot;  OR (t1.LeistungsTyp!=t2.LeistungsTyp AND t2.LeistungsTyp!=0 AND t2.Option_4=1)&quot;&amp;_
-						&quot;  OR (t1.LeistungsTyp LIKE &apos;%&apos; AND t2.LeistungsTyp=0))&quot;&amp;_
-						&quot; AND ((t1.Abgerechnet=t2.Status AND t2.Status!=0)&quot;&amp;_
-						&quot;  OR (t1.Abgerechnet LIKE &apos;%&apos; AND t2.Status=0))&quot;&amp;_
-						&quot; AND t1.&quot;&amp; sGliederung1 &amp;&quot; LIKE &apos;&quot;&amp; sGliederungsText1 &amp;&quot;&apos;)&quot;
+					sSQL8=sSQL7_Columns &amp; sSQL7
 					if sGliederung2 = &quot;Erstellungsdatum&quot; then
 						sSQL8=sSQL8 &amp;&quot; ORDER BY t1.Erstellungsdatum ASC&quot;
 					elseif sGliederung2 = &quot;Lokation&quot; then

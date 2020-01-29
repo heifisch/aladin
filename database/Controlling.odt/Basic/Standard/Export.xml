@@ -660,6 +660,7 @@ Sub Document_exportieren()
 	 		oRecord3=oResult(sSQL7_Count &amp; sSQL7)
 			iCountGliederung2=1
 			iAnzahlGliederung2=0
+
 			While oRecord3.next()
 				iAnzahlGliederung2=oRecord3.getInt(1)
 			Wend
@@ -673,6 +674,7 @@ Sub Document_exportieren()
 					elseif sGliederung2 = &quot;Lokation&quot; then
 						sSQL8=sSQL8 &amp;&quot; ORDER BY t1.Lokation ASC&quot;
 					End if
+					
 					oRecordGliederung2=oResult_Scroll(sSQL8)
 					oRecordGliederung2.absolute(iCountGliederung2)
 					sGliederungsText2 = oRecordGliederung2.getString(1)
