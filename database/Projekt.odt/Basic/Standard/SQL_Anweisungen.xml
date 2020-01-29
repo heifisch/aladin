@@ -117,9 +117,17 @@ End Sub
 
 Sub SQL_Leistung_berechnen()
 	sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+		&quot; SET Materialaufschlagsatz=&quot;&amp; sMAS &amp;_
+		&quot; WHERE Pos_TypID &lt; 4 AND Materialaufschlagsatz IS NULL&quot;
+	SQL_execute(sSQL1)
+	sSQL2=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
+		&quot; SET Minutenverrechnungssatz=&quot;&amp; sMVS &amp;_
+		&quot; WHERE Pos_TypID &lt; 4 AND Minutenverrechnungssatz IS NULL&quot;
+	SQL_execute(sSQL2)
+	sSQL3=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
 		&quot; SET Lieferung=Einkaufspreis*Materialaufschlagsatz,Leistung=Bauzeit*Minutenverrechnungssatz,EP=Lieferung+Leistung,GP=EP*Menge,GZ=Bauzeit*Menge/60&quot;&amp;_
 		&quot; WHERE Pos_TypID &lt; 4&quot;
-	SQL_execute(sSQL1)
+	SQL_execute(sSQL3)
 End Sub
 
 Sub SQL_AZ_berechnen(sMwSt_Satz as String)
