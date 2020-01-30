@@ -9,9 +9,10 @@ option explicit
 
 Sub Arbeitstabelle()
 Use_Aladin
-&apos;SQL_create_Arbeitstabellen()
-SQL_drop_Druckertabelle1()
-SQL_create_Druckertabelle1()
+SQL_drop_Arbeitstabellen()
+SQL_create_Arbeitstabellen()
+&apos;SQL_drop_Druckertabelle1()
+&apos;SQL_create_Druckertabelle1()
 End Sub
 
 Sub Alter_Table_20160912()
