@@ -760,6 +760,7 @@ Sub Document_exportieren()
 					sSQL6=sSQL6 &amp;&quot; AND t1.Lokation LIKE &apos;&quot;&amp; sGliederungsText1 &amp;&quot;&apos;&quot;&amp;_
 						&quot; AND t1.Erstellungsdatum LIKE &apos;&quot;&amp; sGliederungsText2 &amp;&quot;&apos;)&quot;
 				End if
+&apos;				sSQL6=sSQL6 &amp;&quot; ON DUPLICATE KEY UPDATE Pos=Pos+1&quot;
 				SQL_execute(sSQL6)
 			Loop
 		else
@@ -838,6 +839,7 @@ Sub Document_exportieren()
 					&quot;  OR (t1.Erstellungsdatum LIKE &apos;%&apos; AND (LENGTH(t2.Datum) is NULL OR LENGTH(t2.Datum)=0)))&quot;&amp;_
 					&quot; AND t1.Lokation LIKE &apos;&quot;&amp; sGliederungsText1 &amp;&quot;&apos;)&quot;
 			End if
+&apos;			sSQL6=sSQL6 &amp;&quot; ON DUPLICATE KEY UPDATE Pos=Pos+1&quot;
 			SQL_execute(sSQL6)
 		end if
 		sSQL9=&quot;INSERT INTO  &quot;&amp; sZwischensummen_export &amp;&quot;(DocumentID,Pos,ZwiSuName)&quot;&amp;_
