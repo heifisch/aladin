@@ -387,7 +387,7 @@ On Error Goto ErrorHandler
 	oStatement.execute(sSQL)
 Exit Sub
 ErrorHandler:
- 	MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;sSQL: &quot; &amp; sSQL
+ 	MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;sSQL: &quot; &amp; sSQL,16,sTitle &amp;&quot; - Fehler&quot;
 
 &apos;	MsgBox &quot;Sie haben möglicherweise nicht das richtige Passwort eingegeben,&quot;&amp;_
 &apos;			&quot; oder die notwendigen Rechte in der Datenbank sind nicht gesetzt!&quot;,16,&quot;Fehler&quot;
@@ -436,7 +436,7 @@ On Error Goto ErrorHandler
 	oResult_Scroll=oStatement.executeQuery(sSQL)
 	Exit Function
 ErrorHandler:
- 	MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;sSQL: &quot; &amp; sSQL
+ 	MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;sSQL: &quot; &amp; sSQL,16,sTitle &amp;&quot; - Fehler&quot;
 	Stop
 End Function
 
@@ -450,7 +450,7 @@ On Error Goto ErrorHandler
 	oResult=oStatement.executeQuery(sSQL)
 	Exit Function
 ErrorHandler:
- 	MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;sSQL: &quot; &amp; sSQL
+ 	MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;sSQL: &quot; &amp; sSQL,16,sTitle &amp;&quot; - Fehler&quot;
 	Stop
 End Function
 
