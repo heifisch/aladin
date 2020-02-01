@@ -36,7 +36,7 @@ Dim sFormular as String,sNutzer as String,sMessage as String
 
 Sub Document_kopieren()
 	if lDocumentID &gt; 0 then
-		vStatus=MsgBox(&quot;Soll das aktuelle Dokument mit der Nummer &quot;&amp; lDocumentID &amp;&quot; kopiert werden?&quot;,36,sTitle_lokal)
+		vStatus=MsgBox(&quot;Soll das aktuelle Dokument mit der Nummer &quot;&amp; Chr$(34) &amp; lDocumentID &amp; Chr$(34) &amp;&quot; kopiert werden?&quot;,36,sTitle_lokal)
 		if vStatus=6 then
 			oField_Bemerkung.commit()
 			oField_Document_Name.commit()
@@ -57,7 +57,7 @@ Sub Document_kopieren()
 			if iDocTypID &lt; 7 then
 				sSQL1=sSQL1 &amp; &quot;,t1.13b,t1.13bText&quot;
 			End if
-			sSQL1=sSQL1 &amp; &quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t1,Steuerung as t2,Einstellungen as t3 &quot;&amp;_
+			sSQL1=sSQL1 &amp; &quot; FROM &quot;&amp; sTabelle1 &amp;&quot; AS t1,Steuerung AS t2,Einstellungen AS t3 &quot;&amp;_
 				&quot;WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
 				&quot; AND t1.DocumentID=t2.DocumentID&quot;&amp;_
 				&quot; AND t3.EinstellungsID=&quot;&amp; iEinstellungsID_lokal
@@ -231,8 +231,8 @@ if lDocumentID &gt; 0 then
  		exit Sub
  	else
  		vStatus=MsgBox(&quot;Soll das aktuelle Dokument mit der Nummer &quot;&amp; lDocumentID &amp;_
-			&quot;, gelöscht werden?&quot;+Chr$(13)+Chr$(13)+Chr$(13)+_
-			&quot;Wenn Ja ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;+Chr$(13)+Chr$(13)+_
+			&quot;, gelöscht werden?&quot;&amp; Chr$(13) &amp; Chr$(13) &amp; Chr$(13) &amp;_
+			&quot;Wenn &quot;&amp; Chr$(34) &amp;&quot;Ja&quot;&amp; Chr$(34) &amp;&quot; ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
 			&quot;Wollen Sie trotzdem fortfahren?&quot;,292,sTitle_lokal)
 		if vStatus=6 then
 			SQL_Document_loeschen_Tabelle3()
