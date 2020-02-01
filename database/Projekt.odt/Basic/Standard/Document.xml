@@ -230,8 +230,8 @@ if lDocumentID &gt; 0 then
 	if Msg_Schreibschutz=1 then
  		exit Sub
  	else
- 		vStatus=MsgBox(&quot;Soll das aktuelle Dokument mit der Nummer &quot;&amp; lDocumentID &amp;_
-			&quot;, gelöscht werden?&quot;&amp; Chr$(13) &amp; Chr$(13) &amp; Chr$(13) &amp;_
+ 		vStatus=MsgBox(&quot;Soll das aktuelle Dokument mit der Nummer &quot;&amp; Chr$(34) &amp; lDocumentID &amp; Chr$(34) &amp;_
+			&quot; gelöscht werden?&quot;&amp; Chr$(13) &amp; Chr$(13) &amp; Chr$(13) &amp;_
 			&quot;Wenn &quot;&amp; Chr$(34) &amp;&quot;Ja&quot;&amp; Chr$(34) &amp;&quot; ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden!&quot;&amp; Chr$(13)&amp; Chr$(13) &amp;_
 			&quot;Wollen Sie trotzdem fortfahren?&quot;,292,sTitle_lokal)
 		if vStatus=6 then
