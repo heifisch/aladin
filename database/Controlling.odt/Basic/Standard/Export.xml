@@ -38,6 +38,7 @@ End Sub
 Sub Document_exportieren()
 	Dim vStatus AS Variant
 	Dim iGesperrt AS integer
+	Dim bArbeitstabelleNichtLeer as Boolean
 	Dim iCount AS Integer,iCountFormulare AS Integer,iCountDatensaetze AS Integer
 	Dim oRecord1 AS Object,oRecord2 AS Object,oRecord3 AS Object
 	Dim sSQL1 AS String,sSQL4 AS String,sSQL5 AS String,sSQL6 AS String,sSQL8 AS String,sSQL9 AS String
@@ -342,6 +343,31 @@ Sub Document_exportieren()
 	if iClientID_export=0 then
 		MsgBox(&quot;Sie haben noch kein Formular ausgewählt in welches die Datensätze exportiert werden sollen!&quot;,16,sTitle_lokal)
 		Exit Sub
+	End if
+
+	sSQL1=&quot;SELECT COUNT(*) FROM &quot;&amp; sArbeitstabelle_export
+	oRecord1=oResult(sSQL1)
+	While oRecord1.next()
+		If oRecord1.getInt(1) &gt; 0 then
+			bArbeitstabelleNichtLeer = True
+		else	
+			bArbeitstabelleNichtLeer = False
+		End If
+	Wend
+
+	If bArbeitstabelleNichtLeer then
+ 		vStatus=MsgBox(&quot;In der Arbeits-Tabelle des ausgewählten Formulars sind noch Datensätze enthalten. &quot; &amp;_
+			&quot;Sollen diese gelöscht werden?&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+			&quot;Wenn &quot;&amp; Chr$(34) &amp;&quot;Ja&quot;&amp; Chr$(34) &amp;&quot; ausgewählt wird, kann die Operation nicht mehr rückgängig gemacht werden! &quot;&amp;_
+			&quot;Bei &quot;&amp; Chr$(34) &amp;&quot;Nein&quot;&amp; Chr$(34) &amp;&quot; wird der Export abgebrochen.&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+			&quot;Wollen Sie trotzdem fortfahren?&quot;,292,sTitle_lokal)
+		if vStatus=6 then
+			sSQL1=&quot;DELETE FROM &quot;&amp; sArbeitstabelle_export
+			SQL_execute(sSQL1)
+			SQL_Reset_AutoIncrement(sArbeitstabelle_export)
+		Else
+			Exit Sub
+		End if
 	End if
 
 	sSQL2=&quot;INSERT INTO  &quot;&amp; sTabelle1_export &amp;_
@@ -843,8 +869,7 @@ Sub Document_exportieren()
 			SQL_execute(sSQL6)
 		end if
 		sSQL9=&quot;INSERT INTO  &quot;&amp; sZwischensummen_export &amp;&quot;(DocumentID,Pos,ZwiSuName)&quot;&amp;_
-			&quot; VALUES (&apos;&quot;&amp; sDocumentID_export &amp;&quot;&apos;,&apos;&quot;&amp;_
-			fAnzahlDatensaetze(sArbeitstabelle_export,sDocumentID_export) &amp;&quot;&apos;,&apos;&quot;&amp; sZwischensumme &amp;&quot;&apos;)&quot;
+			&quot; VALUES (&apos;&quot;&amp; sDocumentID_export &amp;&quot;&apos;,(SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle_export &amp;&quot;),&apos;&quot;&amp; sZwischensumme &amp;&quot;&apos;)&quot;
 		SQL_execute(sSQL9)
 	Loop
 

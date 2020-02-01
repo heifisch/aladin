@@ -879,8 +879,7 @@ Sub Datensaetze_exportieren()
 			SQL_execute(sSQL5)
 		End if
 		sSQL9=&quot;INSERT INTO  &quot;&amp; sZwischensummen_export &amp;&quot;(DocumentID,Pos,ZwiSuName)&quot;&amp;_
-			&quot; VALUES (&apos;&quot;&amp; sDocumentID_export &amp;&quot;&apos;,&apos;&quot;&amp;_
-			fAnzahlDatensaetze(sArbeitstabelle_export,sDocumentID_export) &amp;&quot;&apos;,&apos;&quot;&amp; sZwischensumme &amp;&quot;&apos;)&quot;
+			&quot; VALUES (&apos;&quot;&amp; sDocumentID_export &amp;&quot;&apos;,(SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle_export &amp;&quot;),&apos;&quot;&amp; sZwischensumme &amp;&quot;&apos;)&quot;
 		SQL_execute(sSQL9)
 	Loop
 	vStatus=MsgBox(&quot;Möchten Sie bei der aktuelle Auswahl der Datensätze den Status &quot;&amp; Chr(34) &amp;&quot;abgerechnet&quot;&amp; Chr(34) &amp;&quot; setzen?&quot;,36,sTitle_lokal)
@@ -888,7 +887,7 @@ Sub Datensaetze_exportieren()
 		Status_setzen_abgerechnet()
 	End if
 	MsgBox(&quot;Es wurden &quot;&amp; iCountDatensaetze &amp;&quot; Datensätze eingefügt.&quot;&amp; Chr$(13)&amp; Chr$(13)&amp;_
-		&quot;Betätigen Sie in dem Formular, in dem die Datensätze eingefügt wurden, die &gt;&gt; Berechnen &lt;&lt; -Taste!&quot;,48,sTitle_lokal)
+		&quot;Betätigen Sie in dem Formular, in dem die Datensätze eingefügt wurden,&quot;&amp; Chr$(13) &amp;&quot;die &gt;&gt; Berechnen &lt;&lt; -Taste!&quot;,48,sTitle_lokal)
 End Sub
 
 </script:module>
