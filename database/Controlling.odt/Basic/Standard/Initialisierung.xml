@@ -414,13 +414,6 @@ Sub init_List_Leistungsauswahl_Projekt()
 		&quot; WHERE t3.Standard IS NULL OR t3.Standard=0&quot;&amp;_
 		&quot; GROUP BY t1.Leistungsbezeichnung,t1.Leistungsbeschreibung&quot;&amp;_
 		&quot; ORDER BY t1.Leistungsbezeichnung ASC LIMIT 5000&quot;)
-
-&apos;		&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1&quot;&amp;_
-&apos;		&quot; INNER JOIN Steuerung AS t2&quot;&amp;_
-&apos;		&quot; ON t2.ClientID=&quot;&amp; iClientID &amp;_
-&apos;		&quot; AND t1.ProjektID=t2.ProjektID&quot;&amp;_
-&apos;		&quot; GROUP BY t1.Leistungsbezeichnung,t1.Leistungsbeschreibung&quot;&amp;_
-&apos;		&quot; ORDER BY Leistungsbezeichnung ASC LIMIT 5000&quot;)
 End Sub
 
 Sub init_List_SollZeit()
