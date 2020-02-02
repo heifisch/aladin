@@ -42,7 +42,6 @@ Sub Datensaetze_exportieren()
 	Dim iCountGliederung1 AS Integer,iAnzahlGliederung1 AS Integer
 	Dim iCountGliederung2 AS Integer,iAnzahlGliederung2 AS Integer
 	Dim iCountLeistungen AS Integer,iAnzahlLeistungen AS Integer
-	Dim iMaxPos_export AS Integer,iPosGliederung1 AS Integer
 	Dim oRecord1 AS Object,oRecord2 AS Object,oRecord3 AS Object
 	Dim sSQL1 AS String,sSQL4 AS String,sSQL5 AS String,sSQL6 AS String,sSQL8 AS String,sSQL9 AS String
 	Dim sSQL2 AS String,sSQL2_Columns AS String,sSQL2_Count AS String
@@ -373,19 +372,15 @@ Sub Datensaetze_exportieren()
 		Exit Sub
 	End if
 
-	sSQL2=&quot;SELECT DISTINCT t1.DocumentID,t2.Schreibschutz,max(t3.Pos)&quot;&amp;_
+	sSQL2=&quot;SELECT DISTINCT t1.DocumentID,t2.Schreibschutz&quot;&amp;_
 		&quot; FROM Steuerung AS t1,&quot;&amp; sTabelle1_export &amp;&quot; AS t2&quot;&amp;_
-		&quot; LEFT JOIN &quot;&amp; sArbeitstabelle_export &amp;&quot; AS t3&quot;&amp;_
-		&quot; ON t2.DocumentID=t3.DocumentID&quot;&amp;_
 		&quot; WHERE t1.ClientID=&quot;&amp; iClientID_export &amp;_
-		&quot; AND t2.DocumentID=t1.DocumentID&quot;&amp;_
-		&quot; GROUP BY t1.DocumentID&quot;
+		&quot; AND t2.DocumentID=t1.DocumentID&quot;
 		
 	oRecord1=oResult(sSQL2)
 	While oRecord1.next()
 		sDocumentID_export=oRecord1.getString(1)
 		iSchreibschutz_export=oRecord1.getInt(2)
-		iMaxPos_export=oRecord1.getInt(3)
 	Wend
 	
 	if sDocumentID_export = &quot;&quot; then
@@ -621,7 +616,6 @@ Sub Datensaetze_exportieren()
 	iCountGliederung1=1
 	iCountDatensaetze=0
 	iAnzahlGliederung1=0
-	iPosGliederung1=iMaxPos_export+1
 	While oRecord1.next()
 		iAnzahlGliederung1=oRecord1.getInt(1)
 	Wend
@@ -650,7 +644,7 @@ Sub Datensaetze_exportieren()
 
 			sSQL4=&quot;INSERT INTO  &quot;&amp; sBemerkungen_export &amp;_
 				&quot; (DocumentID,Pos,Bemerkung)&quot;&amp;_
-				&quot; VALUES (&apos;&quot;&amp; sDocumentID_export &amp;&quot;&apos;,&apos;&quot;&amp; iPosGliederung1 &amp;&quot;&apos;,&apos;&quot;&amp; sBemerkung &amp;&quot;&apos;)&quot;
+				&quot; VALUES (&apos;&quot;&amp; sDocumentID_export &amp;&quot;&apos;,COALESCE((SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle_export &amp;&quot;)+1,1),&apos;&quot;&amp; sBemerkung &amp;&quot;&apos;)&quot;
 			SQL_execute(sSQL4)
 		
 		elseif iAnzahlGliederung1 = 0 then
@@ -721,7 +715,7 @@ Sub Datensaetze_exportieren()
 	
 					sSQL9=&quot;INSERT INTO  &quot;&amp; sBemerkungen_export &amp;_
 						&quot; (DocumentID,Pos,Bemerkung)&quot;&amp;_
-						&quot; VALUES (&apos;&quot;&amp; sDocumentID_export &amp;&quot;&apos;,&apos;&quot;&amp; iPosGliederung1 &amp;&quot;&apos;,&apos;&quot;&amp; sBemerkung &amp;&quot;&apos;)&quot;
+						&quot; VALUES (&apos;&quot;&amp; sDocumentID_export &amp;&quot;&apos;,COALESCE((SELECT MAX(Pos) FROM &quot;&amp; sArbeitstabelle_export &amp;&quot;)+1,1),&apos;&quot;&amp; sBemerkung &amp;&quot;&apos;)&quot;
 					SQL_execute(sSQL9)
 				
 				elseif iAnzahlGliederung2 = 0 then
@@ -761,7 +755,6 @@ Sub Datensaetze_exportieren()
 					iAnzahlLeistungen=oRecord1.getInt(1)
 				Wend
 				iCountDatensaetze=iCountDatensaetze+iAnzahlLeistungen
-				iPosGliederung1=iPosGliederung1+iAnzahlLeistungen
 			
 				sSQL6=&quot;INSERT INTO  &quot;&amp; sArbeitstabelle_export &amp;_
 					&quot; (DocumentID,LV_Pos,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp;_
@@ -838,7 +831,6 @@ Sub Datensaetze_exportieren()
 				iAnzahlLeistungen=oRecord1.getInt(1)
 			Wend
 			iCountDatensaetze=iCountDatensaetze+iAnzahlLeistungen
-			iPosGliederung1=iPosGliederung1+iAnzahlLeistungen
 		
 			sSQL5=&quot;INSERT INTO  &quot;&amp; sArbeitstabelle_export &amp;_
 				&quot; (DocumentID,LV_Pos,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,&quot;&amp;_
