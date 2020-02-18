@@ -954,7 +954,7 @@ Sub Datum_setzen()
 	If lDocumentID &lt;&gt; 0 then
 		oField_Erstellungsdatum.commit()
 		oForm_Document.updateRow()
-		sSQL1=&quot;SELECT Faellig_Tage,Skonto_Tage FROM &quot;&amp; sLieferanten &amp;&quot;  WHERE KontaktID=&apos;&quot;&amp; lKontaktID &amp;&quot;&apos;&quot;
+		sSQL1=&quot;SELECT COALESCE(Faellig_Tage,0),COALESCE(Skonto_Tage,0) FROM &quot;&amp; sLieferanten &amp;&quot;  WHERE KontaktID=&apos;&quot;&amp; lKontaktID &amp;&quot;&apos;&quot;
 		oRecord1=oResult(sSQL1)
 		While oRecord1.next()
 			iFaellig_Tage=oRecord1.getInt(1)
