@@ -516,9 +516,9 @@
             <table:table-cell table:style-name="Bemerkung.A1" office:value-type="string">
               <text:p text:style-name="P40">
                 <text:user-field-get text:name="Bemerkung">Bemerkung</text:user-field-get>
-                <text:s/>
+                <text:s text:c="3"/>
                 <text:user-field-get text:name="13bText">13bText</text:user-field-get>
-                <text:s/>
+                <text:s text:c="3"/>
               </text:p>
             </table:table-cell>
           </table:table-row>
@@ -531,7 +531,7 @@
             <text:p text:style-name="P18">
               <text:tab/>
               <text:user-field-get text:name="Summe_ohne_MwSt">Summe_ohne_MwSt</text:user-field-get>
-              <text:s/>
+              <text:s text:c="3"/>
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -539,12 +539,12 @@
           <table:table-cell table:style-name="Summen.A1" office:value-type="string">
             <text:p text:style-name="P18">
               <text:tab/>
-              <text:s text:c="2"/>
+              <text:s text:c="3"/>
               <text:span text:style-name="T4">
                 <text:user-field-get text:name="Rabatt">Rabatt</text:user-field-get>
               </text:span>
               <text:span text:style-name="T4">
-                <text:s/>
+                <text:s text:c="3"/>
               </text:span>
             </text:p>
           </table:table-cell>
@@ -554,7 +554,7 @@
             <text:p text:style-name="P18">
               <text:tab/>
               <text:user-field-get text:name="Summe_nach_Rabatt">Summe_nach_Rabatt</text:user-field-get>
-              <text:s/>
+              <text:s text:c="3"/>
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -566,7 +566,7 @@
                 <text:user-field-get text:name="Korrektur">Korrektur</text:user-field-get>
               </text:span>
               <text:span text:style-name="T4">
-                <text:s/>
+                <text:s text:c="3"/>
               </text:span>
             </text:p>
           </table:table-cell>
@@ -576,7 +576,7 @@
             <text:p text:style-name="P18">
               <text:tab/>
               <text:user-field-get text:name="Summe_nach_Korrektur">Summe_nach_Korrektur</text:user-field-get>
-              <text:s/>
+              <text:s text:c="3"/>
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -588,7 +588,7 @@
                 <text:user-field-get text:name="MwSt">MwSt</text:user-field-get>
               </text:span>
               <text:span text:style-name="T4">
-                <text:s/>
+                <text:s text:c="3"/>
               </text:span>
             </text:p>
           </table:table-cell>
@@ -603,7 +603,7 @@
                 <text:user-field-get text:name="Summe_mit_MwSt">Summe_mit_MwSt</text:user-field-get>
               </text:span>
               <text:span text:style-name="T8">
-                <text:s/>
+                <text:s text:c="3"/>
               </text:span>
             </text:p>
           </table:table-cell>
@@ -621,7 +621,7 @@
                 <text:user-field-get text:name="MwSt">MwSt</text:user-field-get>
               </text:span>
               <text:span text:style-name="T5">
-                <text:s/>
+                <text:s text:c="3"/>
               </text:span>
             </text:p>
           </table:table-cell>
@@ -631,7 +631,7 @@
             <text:p text:style-name="P20">
               <text:tab/>
               <text:user-field-get text:name="Rechnungsbetrag">Rechnungsbetrag</text:user-field-get>
-              <text:s/>
+              <text:s text:c="3"/>
             </text:p>
           </table:table-cell>
         </table:table-row>
@@ -643,7 +643,7 @@
                 <text:user-field-get text:name="Abschlagszahlungen">Abschlagszahlungen</text:user-field-get>
               </text:span>
               <text:span text:style-name="T4">
-                <text:s/>
+                <text:s text:c="3"/>
               </text:span>
             </text:p>
           </table:table-cell>
@@ -653,13 +653,13 @@
             <text:p text:style-name="P20">
               <text:tab/>
               <text:user-field-get text:name="Restbetrag">Restbetrag</text:user-field-get>
-              <text:s/>
+              <text:s text:c="3"/>
               <text:tab/>
               <text:span text:style-name="T7">
                 <text:user-field-get text:name="Summe_mit_MwSt">Summe_mit_MwSt</text:user-field-get>
               </text:span>
               <text:span text:style-name="T7">
-                <text:s/>
+                <text:s text:c="3"/>
               </text:span>
             </text:p>
           </table:table-cell>
@@ -668,7 +668,7 @@
       <text:p text:style-name="P30"/>
       <text:p text:style-name="P29">
         <text:user-field-get text:name="Schlusstext">Schlusstext</text:user-field-get>
-        <text:s/>
+        <text:s text:c="3"/>
       </text:p>
     </office:text>
   </office:body>

@@ -7,7 +7,6 @@
 REM  *****  BASIC  *****
 &apos;option explicit
 
-
 &apos;Global vViewCursor AS Variant
 
 Sub Leistungen()
@@ -71,31 +70,11 @@ Sub Leistungen()
 &apos;			oBorderLine2.OuterLineWidth=2
 			oBorderLine=oBorderLine2
 	End If
-	
-	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;A&quot;&amp; 1).BottomBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;B&quot;&amp; 1).BottomBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;C&quot;&amp; 1).BottomBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;D&quot;&amp; 1).BottomBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;E&quot;&amp; 1).BottomBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).TopBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).BottomBorder=oBorderLine
-	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).TopBorderDistance=80
-	vTableLeistungen.getCellByName(&quot;F&quot;&amp; 1).BottomBorderDistance=80
+
+	vTableLeistungen.getCellRangeByName(&quot;A1:F1&quot;).TopBorder=oBorderLine
+	vTableLeistungen.getCellRangeByName(&quot;A1:F1&quot;).BottomBorder=oBorderLine
+	vTableLeistungen.getCellRangeByName(&quot;A1:F1&quot;).TopBorderDistance=80
+	vTableLeistungen.getCellRangeByName(&quot;A1:F1&quot;).BottomBorderDistance=80
 
 	SELECT case iDocument_TypID
 		case 1
@@ -221,20 +200,20 @@ Sub Leistungen()
 	iAnzahlAltPos = fAnzahlDatensaetzeAltPos(iUserID_lokal)
 	
 	if iAnzahlLeistungen &gt; 0 then
-	sSQL1=&quot;SELECT DISTINCT t1.PosID,t1.Pos,t1.Pos_TypID,t1.Bestellnummer,t2.Pos_Typ,t1.Leistungsbezeichnung,&quot;&amp;_
-		&quot;t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Lieferung,t1.Leistung,t1.EP,t1.GP&quot;&amp;_
-		&quot; FROM &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; AS t1,Pos_Typ AS t2&quot;&amp;_
-		&quot; WHERE t2.Pos_TypID=t1.Pos_TypID ORDER BY t1.PosID ASC&quot;
+		sSQL1=&quot;SELECT t1.PosID,t1.Pos,t1.Pos_TypID,t1.Bestellnummer,t2.Pos_Typ,t1.Leistungsbezeichnung,&quot;&amp;_
+			&quot;t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,t1.Lieferung,t1.Leistung,t1.EP,t1.GP&quot;&amp;_
+			&quot; FROM &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; AS t1,Pos_Typ AS t2&quot;&amp;_
+			&quot; WHERE t2.Pos_TypID=t1.Pos_TypID ORDER BY t1.PosID ASC&quot;
 	End if
 	
 	if iAnzahlZwiSum &gt; 0 then
-	sSQL2=&quot;SELECT DISTINCT Pos,ZwiSuName,Zwischensumme &quot;&amp;_
-		&quot;FROM &quot;&amp; sTabZwiSum &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC&quot;
+		sSQL2=&quot;SELECT Pos,ZwiSuName,Zwischensumme,ZwiSuID &quot;&amp;_
+			&quot;FROM &quot;&amp; sTabZwiSum &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC, ZwiSuID ASC&quot;
 	End if
 	
 	if iAnzahlZwiBem &gt; 0 then
-	sSQL3=&quot;SELECT DISTINCT Pos,Bemerkung &quot;&amp;_
-		&quot;FROM &quot;&amp; sTabZwiBem &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC, ZwiBemID ASC&quot;
+		sSQL3=&quot;SELECT Pos,Bemerkung,ZwiBemID &quot;&amp;_
+			&quot;FROM &quot;&amp; sTabZwiBem &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;&quot; ORDER BY Pos ASC, ZwiBemID ASC&quot;
 	End if
 	
 	iCountZwiSum = 1
@@ -252,7 +231,6 @@ Sub Leistungen()
 		vTableLeistungen.getCellByName(&quot;E1&quot;).String=&quot;&quot;
 		vTableLeistungen.getCellByName(&quot;F1&quot;).String=&quot;&quot;
 	End if
-	
 		
 	Do While iAnzahlZwiSum &gt;= iCountZwiSum _
 		or iAnzahlZwiBem &gt;= iCountZwiBem _
@@ -403,63 +381,40 @@ Sub Leistungen()
 			iCountZwiSum=iCountZwiSum + 1
 			iSelectZwiSum = 1
 		elseif iPosLeistung &gt; 0 AND iPosLeistung &lt;= iPosZwiSum  AND iPosLeistung &lt; iPosZwiBem then
-	&apos; Leistung einfügen
+	&apos; Leistung / AZ einfügen
 	
 			if iPosTypID = 4 AND iAZ = 0 then
 				vRowsLeistungen.insertByIndex(iCountInsert,1)
 				vRowsLeistungen.getByIndex(iCountInsert-1).IsAutoHeight = True
-				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;A&quot;&amp; iCountInsert).BottomBorderDistance=80
+				vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).TopBorder=oBorderLine
+				vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).BottomBorder=oBorderLine
+				vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).TopBorderDistance=80
+				vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).BottomBorderDistance=80
+
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;A&quot; &amp; iCountInsert)
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).BottomBorderDistance=80
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.LEFT
 				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).BottomBorderDistance=80
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;C&quot; &amp; iCountInsert)
 				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).BottomBorderDistance=80
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;D&quot; &amp; iCountInsert)
 				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).BottomBorderDistance=80
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;E&quot; &amp; iCountInsert)
 				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).TopBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).BottomBorder=oBorderLine
-				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).TopBorderDistance=80
-				vTableLeistungen.getCellByName(&quot;F&quot;&amp; iCountInsert).BottomBorderDistance=80
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
 				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+
+				vTableLeistungen.getCellRangeByName(&quot;B&quot;&amp; iCountInsert &amp;&quot;:E&quot;&amp; iCountInsert).LeftBorderDistance=0
+				vTableLeistungen.getCellRangeByName(&quot;B&quot;&amp; iCountInsert &amp;&quot;:E&quot;&amp; iCountInsert).RightBorderDistance=0
+
 				vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=&quot;Abschlagsrechnungen&quot;
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).LeftBorderDistance=0
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).RightBorderDistance=0
 				vTableLeistungen.getCellByName(&quot;C&quot; &amp; iCountInsert).String=&quot;ohne MwSt&quot;
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).LeftBorderDistance=0
-				vTableLeistungen.getCellByName(&quot;C&quot;&amp; iCountInsert).RightBorderDistance=0
 				vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=&quot;MwSt&quot;
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).LeftBorderDistance=0
-				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).RightBorderDistance=0
 				vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=&quot;mit MwSt&quot;
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).LeftBorderDistance=0
-				vTableLeistungen.getCellByName(&quot;E&quot;&amp; iCountInsert).RightBorderDistance=0
 				iAZ = 1
 				iCountInsert=iCountInsert+1
 			elseif iPosTypID &lt; 4 then

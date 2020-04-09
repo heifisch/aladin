@@ -438,15 +438,15 @@
                     <text:p/>
                   </draw:line>
                 </draw:g>
-                <text:s/>
+                <text:s text:c="3"/>
                 <text:user-field-get text:name="Anschrift_Eigen_3">Anschrift_Eigen_3</text:user-field-get>
-                <text:s/>
+                <text:s text:c="3"/>
               </text:p>
             </table:table-cell>
             <table:table-cell table:style-name="Logo2.A1" office:value-type="string">
               <text:p text:style-name="MP3">
                 <text:user-field-get text:name="Nummern">Nummern</text:user-field-get>
-                <text:s/>
+                <text:s text:c="3"/>
               </text:p>
               <text:p text:style-name="MP4"><text:tab/>Seite:<text:tab/><text:page-number text:select-page="current">0</text:page-number> von <text:page-count>1</text:page-count></text:p>
             </table:table-cell>
@@ -459,7 +459,7 @@
             <table:table-cell office:value-type="string">
               <text:p text:style-name="MP6">
                 <text:user-field-get text:name="Leerzeilen">Leerzeilen</text:user-field-get>
-                <text:s/>
+                <text:s text:c="3"/>
               </text:p>
             </table:table-cell>
           </table:table-row>
@@ -472,7 +472,7 @@
         </text:user-field-decls>
         <text:p text:style-name="MP8">
           <text:user-field-get text:name="Leerzeilen">Leerzeilen</text:user-field-get>
-          <text:s/>
+          <text:s text:c="3"/>
         </text:p>
       </style:footer>
     </style:master-page>
@@ -499,19 +499,19 @@
                     <text:p/>
                   </draw:line>
                 </draw:g>
-                <text:s/>
+                <text:s text:c="3"/>
               </text:p>
               <text:p text:style-name="MP10">
                 <text:user-field-get text:name="Name1">Name1</text:user-field-get>
-                <text:s/>
+                <text:s text:c="3"/>
               </text:p>
               <text:p text:style-name="MP9">
                 <text:user-field-get text:name="Name2">Name2</text:user-field-get>
-                <text:s/>
+                <text:s text:c="3"/>
               </text:p>
               <text:p text:style-name="MP11">
                 <text:user-field-get text:name="Anschrift_Eigen_1">Anschrift_Eigen_1</text:user-field-get>
-                <text:s/>
+                <text:s text:c="3"/>
               </text:p>
             </table:table-cell>
             <table:table-cell table:style-name="Logo1.B1" office:value-type="string">
@@ -532,27 +532,27 @@
                       <text:p text:style-name="MP13"/>
                       <text:p text:style-name="MP14">
                         <text:user-field-get text:name="unzustellbar">Wenn unzustellbar, zurück!</text:user-field-get>
-                        <text:s/>
+                        <text:s text:c="3"/>
                       </text:p>
                       <text:p text:style-name="MP15">
                         <text:user-field-get text:name="Anschrift_Eigen_2">Anschrift_Eigen_2</text:user-field-get>
-                        <text:s/>
+                        <text:s text:c="3"/>
                       </text:p>
                       <text:p text:style-name="MP16">
                         <text:user-field-get text:name="Anschrift">Anschrift</text:user-field-get>
-                        <text:s/>
+                        <text:s text:c="3"/>
                       </text:p>
                       <text:p text:style-name="MP17">
                         <text:user-field-get text:name="Leerzeilen">Leerzeilen</text:user-field-get>
-                        <text:s/>
+                        <text:s text:c="3"/>
                         <text:user-field-get text:name="FaxNr">FaxNr</text:user-field-get>
-                        <text:s/>
+                        <text:s text:c="3"/>
                       </text:p>
                       <text:p text:style-name="MP18">
                         <text:user-field-get text:name="Mindestangaben">Mindestangaben</text:user-field-get>
-                        <text:s/>
+                        <text:s text:c="3"/>
                         <text:user-field-get text:name="Leistungsempfaenger">Leistungsempfänger</text:user-field-get>
-                        <text:s/>
+                        <text:s text:c="3"/>
                       </text:p>
                     </table:table-cell>
                   </table:table-row>
@@ -560,7 +560,7 @@
                     <table:table-cell table:style-name="Kopf1.A1.1.2" office:value-type="string">
                       <text:p text:style-name="MP19">
                         <text:user-field-get text:name="Document_Typ">Document_Typ</text:user-field-get>
-                        <text:s/>
+                        <text:s text:c="3"/>
                       </text:p>
                     </table:table-cell>
                   </table:table-row>
@@ -569,15 +569,15 @@
               <table:table-cell table:style-name="Kopf1.A1.1.1" office:value-type="string">
                 <text:p text:style-name="MP20">
                   <text:user-field-get text:name="Leistungsprofil">Leistungsprofil</text:user-field-get>
-                  <text:s/>
+                  <text:s text:c="3"/>
                 </text:p>
                 <text:p text:style-name="MP21">
                   <text:user-field-get text:name="Leerzeilen">Leerzeilen</text:user-field-get>
-                  <text:s/>
+                  <text:s text:c="3"/>
                 </text:p>
                 <text:p text:style-name="MP22">
                   <text:user-field-get text:name="Nummern">Nummern</text:user-field-get>
-                  <text:s/>
+                  <text:s text:c="3"/>
                 </text:p>
                 <text:p text:style-name="MP23"><text:tab/>Seite:<text:tab/><text:page-number text:select-page="current">1</text:page-number> von <text:page-count>1</text:page-count></text:p>
               </table:table-cell>
@@ -586,15 +586,15 @@
         </table:table>
         <text:p text:style-name="MP24">
           <text:user-field-get text:name="Document_Name">Document_Name</text:user-field-get>
-          <text:s/>
+          <text:s text:c="3"/>
         </text:p>
         <text:p text:style-name="MP24"/>
         <text:p text:style-name="MP25">
           <text:span text:style-name="MT1">
-            <text:s text:c="2"/>
+            <text:s text:c="3"/>
           </text:span>
           <text:user-field-get text:name="Lieferbemerkung">Lieferbemerkung</text:user-field-get>
-          <text:s/>
+          <text:s text:c="3"/>
         </text:p>
       </style:header>
       <style:footer>
@@ -607,13 +607,13 @@
             <table:table-cell table:style-name="Fuß.A1" office:value-type="string">
               <text:p text:style-name="MP26">
                 <text:user-field-get text:name="Kontakt_Bez">Kontakt_Bez</text:user-field-get>
-                <text:s/>
+                <text:s text:c="3"/>
               </text:p>
             </table:table-cell>
             <table:table-cell table:style-name="Fuß.A1" office:value-type="string">
               <text:p text:style-name="MP27">
                 <text:user-field-get text:name="Kontakt">Kontakt</text:user-field-get>
-                <text:s/>
+                <text:s text:c="3"/>
               </text:p>
             </table:table-cell>
             <table:table-cell table:style-name="Fuß.A1" office:value-type="string">
@@ -622,25 +622,25 @@
                   <text:user-field-get text:name="Bankverbindung_Bez">Bankverbindung_Bez</text:user-field-get>
                 </text:span>
                 <text:span text:style-name="MT2">
-                  <text:s/>
+                  <text:s text:c="3"/>
                 </text:span>
                 <text:span text:style-name="MT3">
                   <text:user-field-get text:name="Bankverbindung">Bankverbindung</text:user-field-get>
                 </text:span>
                 <text:span text:style-name="MT3">
-                  <text:s/>
+                  <text:s text:c="3"/>
                 </text:span>
               </text:p>
             </table:table-cell>
             <table:table-cell table:style-name="Fuß.A1" office:value-type="string">
               <text:p text:style-name="MP28">
                 <text:user-field-get text:name="Geschaeftsfuehrer_Bez">Geschaeftsfuehrer_Bez</text:user-field-get>
-                <text:s/>
+                <text:s text:c="3"/>
                 <text:span text:style-name="MT3">
                   <text:user-field-get text:name="Firmendaten">Firmendaten</text:user-field-get>
                 </text:span>
                 <text:span text:style-name="MT3">
-                  <text:s/>
+                  <text:s text:c="3"/>
                 </text:span>
               </text:p>
             </table:table-cell>
