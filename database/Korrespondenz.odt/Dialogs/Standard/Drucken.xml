@@ -2,7 +2,7 @@
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="2" dlg:id="Drucken" dlg:left="50" dlg:top="50" dlg:width="180" dlg:height="89" dlg:closeable="true" dlg:moveable="true" dlg:title="ALADIN - Dokument drucken">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="0" dlg:background-color="0xb8ff" dlg:text-color="0xffffff" dlg:font-name="Arial" dlg:font-family="swiss" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="1" dlg:look="simple"/>
   <dlg:style dlg:style-id="2" dlg:background-color="0x99ccff"/>
  </dlg:styles>

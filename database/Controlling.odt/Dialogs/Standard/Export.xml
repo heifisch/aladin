@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="3" dlg:id="Export" dlg:left="48" dlg:top="54" dlg:width="185" dlg:height="220" dlg:closeable="true" dlg:moveable="true" dlg:title="neues Dokument erstellen:">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="4" dlg:id="Export" dlg:left="48" dlg:top="54" dlg:width="185" dlg:height="220" dlg:closeable="true" dlg:moveable="true" dlg:title="neues Dokument erstellen:">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="0" dlg:background-color="0xb8ff" dlg:text-color="0xffffff" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="1" dlg:look="simple" dlg:font-name="Arial" dlg:font-stylename="Cursiva" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="2" dlg:font-name="Arial" dlg:font-stylename="Fett" dlg:font-family="swiss" dlg:font-weight="150"/>
-  <dlg:style dlg:style-id="3" dlg:background-color="0x99ccff"/>
+  <dlg:style dlg:style-id="3" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="4" dlg:background-color="0x99ccff"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="102" dlg:top="198" dlg:width="51" dlg:height="14" dlg:value="OK" dlg:button-type="ok"/>
@@ -25,10 +26,10 @@
    <dlg:radio dlg:style-id="1" dlg:id="OptionGutschriften1" dlg:tab-index="11" dlg:left="7" dlg:top="175" dlg:width="82" dlg:height="10" dlg:value="Gutschriften (1)"/>
   </dlg:radiogroup>
   <dlg:text dlg:style-id="2" dlg:id="Label_Hinweis" dlg:tab-index="14" dlg:left="7" dlg:top="7" dlg:width="168" dlg:height="38" dlg:value="Das Dokument kann nur in ein Formular exportiert werden, welches zur Zeit nicht geöffnet ist! Sollte die Auswahl des gewünschten Formulars nicht möglich sein schließen Sie bitte erst das entsprechende Formular." dlg:multiline="true"/>
-  <dlg:titledbox dlg:style-id="0" dlg:id="FrameControl1" dlg:tab-index="15" dlg:left="4" dlg:top="114" dlg:width="175" dlg:height="77">
+  <dlg:titledbox dlg:style-id="3" dlg:id="FrameControl1" dlg:tab-index="15" dlg:left="4" dlg:top="114" dlg:width="175" dlg:height="77">
    <dlg:title dlg:value="Formular"/>
   </dlg:titledbox>
-  <dlg:titledbox dlg:style-id="0" dlg:id="FrameControl2" dlg:tab-index="16" dlg:left="4" dlg:top="50" dlg:width="175" dlg:height="38">
+  <dlg:titledbox dlg:style-id="3" dlg:id="FrameControl2" dlg:tab-index="16" dlg:left="4" dlg:top="50" dlg:width="175" dlg:height="38">
    <dlg:title dlg:value="Gliederung"/>
   </dlg:titledbox>
   <dlg:radiogroup>

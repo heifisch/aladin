@@ -175,7 +175,7 @@ Sub FormSize_Test()
 	Dim iPosSizeWidth as Integer
 	Dim iPosSizeHeight as Integer
 	
-	iViewFaktorWidth=1440/TwipsPerPixelX()/2540*10000
+	iViewFaktorWidth=1440/TwipsPerPixel()/2540*10000
 	iViewFaktorlHeight=1440/TwipsPerPixelY()/2540*10000
 
 	oFrame = StarDesktop.getCurrentFrame()

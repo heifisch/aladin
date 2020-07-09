@@ -2,7 +2,7 @@
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="2" dlg:id="Importieren" dlg:left="50" dlg:top="60" dlg:width="181" dlg:height="110" dlg:closeable="true" dlg:moveable="true" dlg:title="Datensätze aus folgendem Formular importieren:">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-stylename="Normal" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="0" dlg:background-color="0xb8ff" dlg:text-color="0xffffff" dlg:font-name="Arial" dlg:font-stylename="Normal" dlg:font-family="swiss" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="1" dlg:look="simple" dlg:font-name="Arial" dlg:font-stylename="Cursiva" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="2" dlg:background-color="0x99ccff"/>
  </dlg:styles>

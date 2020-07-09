@@ -2,7 +2,7 @@
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="3" dlg:id="Projekt" dlg:left="45" dlg:top="50" dlg:width="208" dlg:height="127" dlg:closeable="true" dlg:moveable="true" dlg:title="Angebote, Rechnungen, Bestellungen...">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:font-name="Standard" dlg:font-stylename="Fett" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="0" dlg:background-color="0xb8ff" dlg:text-color="0xffffff" dlg:font-name="Standard" dlg:font-height="12" dlg:font-stylename="Fett" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="1" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="2" dlg:look="simple" dlg:font-name="Arial" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="3" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-height="10" dlg:font-stylename="Normal" dlg:font-family="swiss"/>

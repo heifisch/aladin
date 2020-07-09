@@ -5,7 +5,7 @@
   <dlg:style dlg:style-id="0" dlg:look="simple" dlg:font-name="Arial" dlg:font-stylename="Cursiva" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="1" dlg:look="simple" dlg:font-name="Arial" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
   <dlg:style dlg:style-id="2" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
-  <dlg:style dlg:style-id="3" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0xb8ff" dlg:text-color="0xffffff" dlg:font-name="Arial" dlg:font-family="swiss" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="4" dlg:background-color="0x99ccff"/>
  </dlg:styles>
  <dlg:bulletinboard>

@@ -5,8 +5,8 @@
   <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:text-color="0x4c4c4c" dlg:border="simple" dlg:font-name="Arial" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="100"/>
   <dlg:style dlg:style-id="1" dlg:border="simple"/>
   <dlg:style dlg:style-id="2" dlg:background-color="0x99ccff" dlg:text-color="0x4c4c4c" dlg:border="simple" dlg:font-name="Arial" dlg:font-stylename="Fett" dlg:font-family="swiss" dlg:font-weight="100"/>
-  <dlg:style dlg:style-id="3" dlg:background-color="0x99ccff" dlg:text-color="0x0" dlg:font-name="Arial" dlg:font-height="12" dlg:font-stylename="Fett" dlg:font-family="swiss" dlg:font-weight="150"/>
-  <dlg:style dlg:style-id="4" dlg:background-color="0x99ccff" dlg:text-color="0x0" dlg:font-name="Arial" dlg:font-height="16" dlg:font-stylename="Fett" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0xb8ff" dlg:text-color="0xffffff" dlg:font-name="Standard" dlg:font-height="12" dlg:font-stylename="Fett" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="4" dlg:background-color="0xb8ff" dlg:text-color="0xffffff" dlg:font-name="Standard" dlg:font-height="16" dlg:font-stylename="Fett" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="5" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-height="10" dlg:font-stylename="Standard" dlg:font-family="swiss" dlg:font-weight="150"/>
  </dlg:styles>
  <dlg:bulletinboard>

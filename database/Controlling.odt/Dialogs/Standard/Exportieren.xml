@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE dlg:window PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "dialog.dtd">
-<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="2" dlg:id="Exportieren" dlg:left="48" dlg:top="60" dlg:width="183" dlg:height="189" dlg:closeable="true" dlg:moveable="true" dlg:title="Datensätze in folgendes Formular exportieren:">
+<dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="3" dlg:id="Exportieren" dlg:left="48" dlg:top="60" dlg:width="183" dlg:height="189" dlg:closeable="true" dlg:moveable="true" dlg:title="Datensätze in folgendes Formular exportieren:">
  <dlg:styles>
-  <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="0" dlg:background-color="0xb8ff" dlg:text-color="0xffffff" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
   <dlg:style dlg:style-id="1" dlg:look="simple" dlg:font-name="Arial" dlg:font-stylename="Normal" dlg:font-family="swiss"/>
-  <dlg:style dlg:style-id="2" dlg:background-color="0x99ccff"/>
+  <dlg:style dlg:style-id="2" dlg:font-name="Arial" dlg:font-stylename="Negreta" dlg:font-family="swiss" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0x99ccff"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:button dlg:style-id="0" dlg:id="CommandButton2" dlg:tab-index="1" dlg:left="108" dlg:top="171" dlg:width="51" dlg:height="14" dlg:value="OK" dlg:button-type="ok"/>
@@ -27,10 +28,10 @@
    <dlg:radio dlg:style-id="1" dlg:id="OptionAufmasze1" dlg:tab-index="17" dlg:left="7" dlg:top="108" dlg:width="82" dlg:height="10" dlg:value="Aufmaße (1)"/>
    <dlg:radio dlg:style-id="1" dlg:id="OptionGutschriften1" dlg:tab-index="13" dlg:left="7" dlg:top="128" dlg:width="82" dlg:height="10" dlg:value="Gutschriften (1)"/>
   </dlg:radiogroup>
-  <dlg:titledbox dlg:style-id="0" dlg:id="FrameGliederung" dlg:tab-index="18" dlg:left="4" dlg:top="3" dlg:width="175" dlg:height="38">
+  <dlg:titledbox dlg:style-id="2" dlg:id="FrameGliederung" dlg:tab-index="18" dlg:left="4" dlg:top="3" dlg:width="175" dlg:height="38">
    <dlg:title dlg:value="Gliederung"/>
   </dlg:titledbox>
-  <dlg:titledbox dlg:style-id="0" dlg:id="FrameFormular" dlg:tab-index="19" dlg:left="4" dlg:top="68" dlg:width="175" dlg:height="97">
+  <dlg:titledbox dlg:style-id="2" dlg:id="FrameFormular" dlg:tab-index="19" dlg:left="4" dlg:top="68" dlg:width="175" dlg:height="97">
    <dlg:title dlg:value="Formular"/>
   </dlg:titledbox>
   <dlg:radiogroup>

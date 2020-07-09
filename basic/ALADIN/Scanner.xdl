@@ -3,9 +3,10 @@
 <dlg:window xmlns:dlg="http://openoffice.org/2000/dialog" xmlns:script="http://openoffice.org/2000/script" dlg:style-id="0" dlg:id="Scanner" dlg:left="110" dlg:top="80" dlg:width="150" dlg:height="190" dlg:closeable="true" dlg:moveable="true" dlg:title="Scanner">
  <dlg:styles>
   <dlg:style dlg:style-id="0" dlg:background-color="0x99ccff"/>
-  <dlg:style dlg:style-id="1" dlg:background-color="0x99ccff" dlg:border="simple" dlg:font-name="Standard" dlg:font-stylename="Fett" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="1" dlg:background-color="0x99ccff" dlg:border="simple"/>
   <dlg:style dlg:style-id="2" dlg:border="simple"/>
-  <dlg:style dlg:style-id="3" dlg:background-color="0x99ccff" dlg:font-height="11" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="3" dlg:background-color="0xb8ff" dlg:text-color="0xffffff" dlg:font-name="Standard" dlg:font-height="10" dlg:font-stylename="Fett" dlg:font-weight="150"/>
+  <dlg:style dlg:style-id="4" dlg:background-color="0x99ccff" dlg:font-height="11" dlg:font-weight="150"/>
  </dlg:styles>
  <dlg:bulletinboard>
   <dlg:radiogroup>
@@ -43,12 +44,12 @@
   <dlg:numericfield dlg:style-id="2" dlg:id="Field_Heigth" dlg:tab-index="15" dlg:left="100" dlg:top="106" dlg:width="30" dlg:height="10" dlg:decimal-accuracy="0" dlg:value="0" dlg:value-min="0" dlg:value-max="400" dlg:spin="true"/>
   <dlg:numericfield dlg:style-id="2" dlg:id="Field_Resolution" dlg:tab-index="4" dlg:left="100" dlg:top="78" dlg:width="29" dlg:height="10" dlg:decimal-accuracy="0" dlg:value="300" dlg:value-min="0" dlg:value-max="1200" dlg:spin="true"/>
   <dlg:numericfield dlg:style-id="2" dlg:id="Field_Width" dlg:tab-index="13" dlg:left="60" dlg:top="106" dlg:width="30" dlg:height="10" dlg:decimal-accuracy="0" dlg:value="0" dlg:value-min="0" dlg:value-max="215" dlg:spin="true"/>
-  <dlg:button dlg:style-id="1" dlg:id="Button_Scannen" dlg:tab-index="20" dlg:left="10" dlg:top="136" dlg:width="50" dlg:height="17" dlg:value="Scannen">
+  <dlg:button dlg:style-id="3" dlg:id="Button_Scannen" dlg:tab-index="20" dlg:left="10" dlg:top="136" dlg:width="50" dlg:height="17" dlg:value="Scannen">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:ALADIN.Scanner.Scannen?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
-  <dlg:button dlg:style-id="1" dlg:id="Button_Exit" dlg:tab-index="21" dlg:left="104" dlg:top="136" dlg:width="35" dlg:height="17" dlg:value="Schließen" dlg:button-type="cancel"/>
-  <dlg:text dlg:style-id="3" dlg:id="Field_Status" dlg:tab-index="25" dlg:left="5" dlg:top="165" dlg:width="140" dlg:height="15" dlg:value="Scanner" dlg:align="center"/>
-  <dlg:button dlg:style-id="1" dlg:id="Button_Loeschen" dlg:tab-index="26" dlg:left="65" dlg:top="136" dlg:width="35" dlg:height="17" dlg:value="Löschen">
+  <dlg:button dlg:style-id="3" dlg:id="Button_Exit" dlg:tab-index="21" dlg:left="104" dlg:top="136" dlg:width="35" dlg:height="17" dlg:value="Schließen" dlg:button-type="cancel"/>
+  <dlg:text dlg:style-id="4" dlg:id="Field_Status" dlg:tab-index="25" dlg:left="5" dlg:top="165" dlg:width="140" dlg:height="15" dlg:value="Scanner" dlg:align="center"/>
+  <dlg:button dlg:style-id="3" dlg:id="Button_Loeschen" dlg:tab-index="26" dlg:left="65" dlg:top="136" dlg:width="35" dlg:height="17" dlg:value="Löschen">
    <script:event script:event-name="on-performaction" script:macro-name="vnd.sun.star.script:ALADIN.Scanner.ScanDocument_loeschen?language=Basic&amp;location=application" script:language="Script"/>
   </dlg:button>
  </dlg:bulletinboard>
