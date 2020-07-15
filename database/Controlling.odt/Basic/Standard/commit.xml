@@ -243,6 +243,7 @@ Sub Hauptgruppenauswahl_commit()
 	wait 10
 	oList_Gruppenauswahl.refresh()
 	oForm_Steuerung_1.reload()
+	oDoc.unlockControllers()
 End Sub
 
 Sub Hauptgruppenauswahl_reset()
