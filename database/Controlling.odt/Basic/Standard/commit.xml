@@ -291,6 +291,7 @@ Sub Suchstring_reset()
 	SQL_execute(sSQL1)
 	List_Leistungen_refresh()
 	oForm_Steuerung_1.reload()
+	oDoc.unlockControllers()
 End Sub
 
 Sub Suchstring_2_commit()

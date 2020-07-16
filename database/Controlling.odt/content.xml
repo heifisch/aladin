@@ -183,7 +183,7 @@
                 </form:text>
               </form:column>
               <form:column form:name="Baudatum" form:control-implementation="ooo:DateField" form:label="Baudatum" form:text-style-name="ctrl1">
-                <form:date xml:id="control3" form:id="control3" form:min-value="1800-01-01" form:data-field="Erstellungsdatum" form:input-required="false">
+                <form:date xml:id="control3" form:id="control3" form:current-value="2004-10-22" form:min-value="1800-01-01" form:data-field="Erstellungsdatum" form:input-required="false">
                   <form:properties>
                     <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                     <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.DateField"/>
@@ -287,7 +287,7 @@
                     <form:property form:property-name="Width" office:value-type="float" office:value="238"/>
                   </form:properties>
                   <form:option form:label="nein" form:value="1"/>
-                  <form:option form:label="ja" form:value="2"/>
+                  <form:option form:label="ja" form:value="2" form:current-selected="true"/>
                 </form:listbox>
               </form:column>
               <form:column form:name="MVS" form:control-implementation="ooo:NumericField" form:label="MVS">
@@ -349,7 +349,7 @@
                     <form:list-property form:property-name="TypedItemList" office:value-type="float"/>
                     <form:property form:property-name="Width" office:value-type="float" office:value="450"/>
                   </form:properties>
-                  <form:option form:label="Standardleistung" form:value="1"/>
+                  <form:option form:label="Standardleistung" form:value="1" form:current-selected="true"/>
                   <form:option form:label="Nebenleistung" form:value="2"/>
                   <form:option form:label="Nachtragsleistungen" form:value="3"/>
                 </form:listbox>
@@ -409,7 +409,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusOut" xlink:href="vnd.sun.star.script:Standard.commit.ProjektID_setzen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:formatted-text>
-          <form:radio form:name="Option_Datum_am" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control26" form:id="control26" form:label="am" form:disabled="true" form:visual-effect="flat" form:value="0" form:data-field="Option_5" form:input-required="false" form:image-position="center">
+          <form:radio form:name="Option_Datum_am" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control26" form:id="control26" form:label="am" form:current-selected="true" form:disabled="true" form:visual-effect="flat" form:value="0" form:data-field="Option_5" form:input-required="false" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="com.sun.star.form.control.RadioButton"/>
@@ -532,7 +532,7 @@
             <office:event-listeners>
               <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.commit.Filter_Status_setzen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
-            <form:option form:label="" form:value="0"/>
+            <form:option form:label="" form:value="0" form:current-selected="true"/>
             <form:option form:label="nicht abgerechnet" form:value="1"/>
             <form:option form:label="abgerechnet" form:value="2"/>
           </form:listbox>
@@ -561,7 +561,7 @@
             <office:event-listeners>
               <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.commit.Filter_LeistungsTyp_setzen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
-            <form:option form:label="" form:value="0"/>
+            <form:option form:label="" form:value="0" form:current-selected="true"/>
             <form:option form:label="Standardleistung" form:value="1"/>
             <form:option form:label="Nebenleistung" form:value="2"/>
             <form:option form:label="Nachtragsleistungen" form:value="3"/>
@@ -874,7 +874,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Infos.Leistungsbeschreibung_anzeigen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:checkbox form:name="CheckBox_Bezeichnung" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control102" form:id="control102" form:label="Bezeichnung" form:tab-stop="false" form:tab-index="11" form:visual-effect="flat" form:value="1" form:data-field="Option_2" form:input-required="false" form:image-position="center">
+          <form:checkbox form:name="CheckBox_Bezeichnung" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control102" form:id="control102" form:label="Bezeichnung" form:tab-stop="false" form:tab-index="11" form:visual-effect="flat" form:value="1" form:data-field="Option_2" form:input-required="false" form:current-state="checked" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CheckBox"/>
@@ -964,7 +964,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.commit.Suchstring_reset?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:checkbox form:name="CheckBox_LeistungsID" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control111" form:id="control111" form:label="LeistungsID" form:tab-stop="false" form:tab-index="10" form:visual-effect="flat" form:value="1" form:data-field="Option_1" form:input-required="false" form:image-position="center">
+          <form:checkbox form:name="CheckBox_LeistungsID" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control111" form:id="control111" form:label="LeistungsID" form:tab-stop="false" form:tab-index="10" form:visual-effect="flat" form:value="1" form:data-field="Option_1" form:input-required="false" form:current-state="checked" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CheckBox"/>
