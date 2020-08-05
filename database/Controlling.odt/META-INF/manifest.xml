@@ -5,8 +5,8 @@
  <manifest:file-entry manifest:full-path="Configurations2/accelerator/current.xml" manifest:media-type=""/>
  <manifest:file-entry manifest:full-path="Configurations2/" manifest:media-type="application/vnd.sun.xml.ui.configuration"/>
  <manifest:file-entry manifest:full-path="Configurations/toolboxlayout.xml" manifest:media-type=""/>
- <manifest:file-entry manifest:full-path="Configurations/writermenubar.xml" manifest:media-type=""/>
  <manifest:file-entry manifest:full-path="Configurations/functionbar.xml" manifest:media-type=""/>
+ <manifest:file-entry manifest:full-path="Configurations/writermenubar.xml" manifest:media-type=""/>
  <manifest:file-entry manifest:full-path="manifest.rdf" manifest:media-type="application/rdf+xml"/>
  <manifest:file-entry manifest:full-path="Basic/Standard/Exportieren.xml" manifest:media-type="text/xml"/>
  <manifest:file-entry manifest:full-path="Basic/Standard/Start.xml" manifest:media-type="text/xml"/>

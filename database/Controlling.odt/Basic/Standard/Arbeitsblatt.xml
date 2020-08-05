@@ -130,9 +130,11 @@ Sub Arbeitsblatt_drucken()
 				&quot; AND t3.ProjektID=t2.ProjektID&quot;&amp;_
 				&quot; AND t2.ClientID=&quot;&amp; iClientID &amp;&quot;)&quot;&amp;_
 				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
-		
+				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;
+				
+			if Len(sLV_Pos) &gt; 0 then 	
+				sSQL5=sSQL5 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+			End if
 			if sBestellnummer = &quot;&quot; then
 				sSQL5=sSQL5 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 			else
@@ -154,9 +156,11 @@ Sub Arbeitsblatt_drucken()
 				&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
 				&quot; AND t2.ClientID=&quot;&amp; iClientID &amp;&quot;)&quot;&amp;_
 				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
-		
+				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;
+				
+			if Len(sLV_Pos) &gt; 0 then 	
+				sSQL6=sSQL6 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+			End if
 			if sBestellnummer = &quot;&quot; then
 				sSQL6=sSQL6 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 			else
@@ -177,7 +181,7 @@ Sub Arbeitsblatt_drucken()
 				&quot; (PosID,Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Menge,Lieferung)&quot;&amp;_
 				&quot; SELECT DISTINCT &apos;&quot;&amp; iCountLeistungen 
 		
-			if sLV_Pos = &quot;&quot; then 
+			if Len(sLV_Pos) = 0 then 
 				sSQL7=sSQL7 &amp;&quot;&apos;,&apos;&quot;&amp; iCountLeistungen &amp;&quot;&apos;&quot;
 			else
 				sSQL7=sSQL7 &amp;&quot;&apos;,t1.LV_Pos&quot;
@@ -190,9 +194,11 @@ Sub Arbeitsblatt_drucken()
 				&quot; AND t1.DocumentID=t3.DocumentID&quot;&amp;_
 				&quot; AND t3.ProjektID=t2.ProjektID&quot;&amp;_
 				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;
 		
+			if Len(sLV_Pos) &gt; 0 then 	
+				sSQL7=sSQL7 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+			End if
 			if sBestellnummer = &quot;&quot; then
 				sSQL7=sSQL7 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 			else
@@ -203,7 +209,6 @@ Sub Arbeitsblatt_drucken()
 			else
 				sSQL7=sSQL7 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
 			End if
-		
 			SQL_execute(sSQL7)
 			iCountLeistungen=iCountLeistungen+1
 		Loop
@@ -248,9 +253,11 @@ Sub Arbeitsblatt_drucken()
 				&quot; AND t3.ProjektID=t2.ProjektID&quot;&amp;_
 				&quot; AND t2.ClientID=&quot;&amp; iClientID &amp;&quot;)&quot;&amp;_
 				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;
 		
+			if Len(sLV_Pos) &gt; 0 then 	
+				sSQL5=sSQL5 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+			End if
 			if sBestellnummer = &quot;&quot; then
 				sSQL5=sSQL5 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 			else
@@ -297,7 +304,7 @@ Sub Arbeitsblatt_drucken()
 					&quot; (PosID,Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Menge,Lieferung)&quot;&amp;_
 					&quot; SELECT DISTINCT &apos;&quot;&amp; iOffsetLeistungen
 			
-				if sLV_Pos = &quot;&quot; then 
+				if Len(sLV_Pos) = 0 then 
 					sSQL7=sSQL7 &amp;&quot;&apos;,&apos;&quot;&amp; iOffsetLeistungen-1 &amp;&quot;&apos;&quot;
 				else
 					sSQL7=sSQL7 &amp;&quot;&apos;,t1.LV_Pos&quot;
@@ -309,9 +316,11 @@ Sub Arbeitsblatt_drucken()
 					&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
 					&quot; AND t1.ProjektID=t2.ProjektID&quot;&amp;_
 					&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
-					&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
-					&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+					&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;
 			
+				if Len(sLV_Pos) &gt; 0 then 	
+					sSQL7=sSQL7 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+				End if
 				if sBestellnummer = &quot;&quot; then
 					sSQL7=sSQL7 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 				else
