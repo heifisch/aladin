@@ -19,7 +19,7 @@ Sub Arbeitsblatt_drucken()
 	Dim sName2 AS String,sName3 AS String,sName4 AS String
 	Dim sLand AS String,sPLZ AS String,sOrt AS String
 	Dim sStrasse AS String,sHausnummer AS String,sPos AS String,sNummern AS String
-	Dim sVerbauteMenge AS String,sAngeboteneMenge AS String
+	Dim sVerbauteMenge AS String,sAngeboteneMenge AS String,sGesamtBauzeit AS String
 	
 	Dim sBemerkung AS String,sMenge AS String
 	Dim sLV_Pos AS String,sLeistungsID AS String,sLeistungsbezeichnung AS String,sEinkaufspreis AS String
@@ -151,7 +151,7 @@ Sub Arbeitsblatt_drucken()
 				sAngeboteneMenge=oRecord2.getString(1)
 			Wend
 			
-			sSQL6=&quot;SELECT SUM(t1.Menge)&quot;&amp;_
+			sSQL6=&quot;SELECT SUM(t1.Menge),SUM(t1.Menge)*t1.Bauzeit/60&quot;&amp;_
 				&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
 				&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
 				&quot; AND t2.ClientID=&quot;&amp; iClientID &amp;&quot;)&quot;&amp;_
@@ -175,10 +175,11 @@ Sub Arbeitsblatt_drucken()
 			oRecord2=oResult(sSQL6)
 			While oRecord2.next()
 				sVerbauteMenge=oRecord2.getString(1)
+				sGesamtBauzeit=oRecord2.getString(2)
 			Wend
 			
 			sSQL7=&quot;INSERT INTO  &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;_
-				&quot; (PosID,Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Menge,Lieferung)&quot;&amp;_
+				&quot; (PosID,Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Menge,Lieferung,GZ)&quot;&amp;_
 				&quot; SELECT DISTINCT &apos;&quot;&amp; iCountLeistungen 
 		
 			if Len(sLV_Pos) = 0 then 
@@ -188,7 +189,7 @@ Sub Arbeitsblatt_drucken()
 			End if	
 		
 			sSQL7=sSQL7 &amp;&quot;,&apos;99999999&apos;,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
-				&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&apos;&quot;&amp; sAngeboteneMenge &amp;&quot;&apos;,&apos;&quot;&amp; sVerbauteMenge &amp;&quot;&apos;&quot;&amp;_
+				&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&apos;&quot;&amp; sAngeboteneMenge &amp;&quot;&apos;,&apos;&quot;&amp; sVerbauteMenge &amp;&quot;&apos;,&apos;&quot;&amp; sGesamtBauzeit &amp;&quot;&apos;&quot;&amp;_
 				&quot; FROM &quot;&amp; sAuftragsbestaetigungen2 &amp;&quot; AS t1,Steuerung AS t2,&quot;&amp; sAuftragsbestaetigungen1 &amp;&quot; AS t3&quot;&amp;_
 				&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
 				&quot; AND t1.DocumentID=t3.DocumentID&quot;&amp;_
@@ -274,7 +275,7 @@ Sub Arbeitsblatt_drucken()
 				sAngeboteneMenge=oRecord2.getLong(1)
 			Wend
 			
-			sSQL6=&quot;SELECT SUM(t1.Menge)&quot;&amp;_
+			sSQL6=&quot;SELECT SUM(t1.Menge),SUM(t1.Menge)*t1.Bauzeit/60&quot;&amp;_
 				&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
 				&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
 				&quot; AND t2.ClientID=&quot;&amp; iClientID &amp;&quot;)&quot;&amp;_
@@ -296,12 +297,13 @@ Sub Arbeitsblatt_drucken()
 			oRecord2=oResult(sSQL6)
 			While oRecord2.next()
 				sVerbauteMenge=oRecord2.getString(1)
+				sGesamtBauzeit=oRecord2.getString(2)
 			Wend
 		
 			if sAngeboteneMenge = &quot;0&quot; then
 			
 				sSQL7=&quot;INSERT INTO  &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;_
-					&quot; (PosID,Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Menge,Lieferung)&quot;&amp;_
+					&quot; (PosID,Pos,DocumentID,LeistungsID,Bestellnummer,Leistungsbezeichnung,Leistungsbeschreibung,Menge,Lieferung,GZ)&quot;&amp;_
 					&quot; SELECT DISTINCT &apos;&quot;&amp; iOffsetLeistungen
 			
 				if Len(sLV_Pos) = 0 then 
@@ -311,7 +313,7 @@ Sub Arbeitsblatt_drucken()
 				End if	
 			
 				sSQL7=sSQL7 &amp;&quot;,&apos;99999999&apos;,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
-					&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&apos;&quot;&amp; sAngeboteneMenge &amp;&quot;&apos;,&apos;&quot;&amp; sVerbauteMenge &amp;&quot;&apos;&quot;&amp;_
+					&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,&apos;&quot;&amp; sAngeboteneMenge &amp;&quot;&apos;,&apos;&quot;&amp; sVerbauteMenge &amp;&quot;&apos;,&apos;&quot;&amp; sGesamtBauzeit &amp;&quot;&apos;&quot;&amp;_
 					&quot; FROM &quot;&amp; sControlling &amp;&quot; AS t1,Steuerung AS t2&quot;&amp;_
 					&quot; WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
 					&quot; AND t1.ProjektID=t2.ProjektID&quot;&amp;_
