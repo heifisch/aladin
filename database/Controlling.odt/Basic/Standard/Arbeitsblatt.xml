@@ -135,12 +135,12 @@ Sub Arbeitsblatt_drucken()
 			if Len(sLV_Pos) &gt; 0 then 	
 				sSQL5=sSQL5 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
 			End if
-			if sBestellnummer = &quot;&quot; then
+			if Len(sBestellnummer) = 0 then
 				sSQL5=sSQL5 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 			else
 				sSQL5=sSQL5 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
 			End if
-			if sLeistungsbeschreibung = &quot;&quot; then
+			if Len(sLeistungsbeschreibung) = 0 then
 				sSQL5=sSQL5 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
 			else
 				sSQL5=sSQL5 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
@@ -161,12 +161,12 @@ Sub Arbeitsblatt_drucken()
 			if Len(sLV_Pos) &gt; 0 then 	
 				sSQL6=sSQL6 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
 			End if
-			if sBestellnummer = &quot;&quot; then
+			if Len(sBestellnummer) = 0 then
 				sSQL6=sSQL6 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 			else
 				sSQL6=sSQL6 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
 			End if
-			if sLeistungsbeschreibung = &quot;&quot; then
+			if Len(sLeistungsbeschreibung) = 0 then
 				sSQL6=sSQL6 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
 			else
 				sSQL6=sSQL6 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
@@ -200,12 +200,12 @@ Sub Arbeitsblatt_drucken()
 			if Len(sLV_Pos) &gt; 0 then 	
 				sSQL7=sSQL7 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
 			End if
-			if sBestellnummer = &quot;&quot; then
+			if Len(sBestellnummer) = 0 then
 				sSQL7=sSQL7 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 			else
 				sSQL7=sSQL7 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
 			End if
-			if sLeistungsbeschreibung = &quot;&quot; then
+			if Len(sLeistungsbeschreibung) = 0 then
 				sSQL7=sSQL7 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
 			else
 				sSQL7=sSQL7 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
@@ -259,12 +259,12 @@ Sub Arbeitsblatt_drucken()
 			if Len(sLV_Pos) &gt; 0 then 	
 				sSQL5=sSQL5 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
 			End if
-			if sBestellnummer = &quot;&quot; then
+			if Len(sBestellnummer) = 0 then
 				sSQL5=sSQL5 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 			else
 				sSQL5=sSQL5 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
 			End if
-			if sLeistungsbeschreibung = &quot;&quot; then
+			if Len(sLeistungsbeschreibung) = 0 then
 				sSQL5=sSQL5 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
 			else
 				sSQL5=sSQL5 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
@@ -280,15 +280,17 @@ Sub Arbeitsblatt_drucken()
 				&quot; WHERE (t1.ProjektID=t2.ProjektID&quot;&amp;_
 				&quot; AND t2.ClientID=&quot;&amp; iClientID &amp;&quot;)&quot;&amp;_
 				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;
 		
-			if sBestellnummer = &quot;&quot; then
+			if Len(sLV_Pos) &gt; 0 then 	
+				sSQL6=sSQL6 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+			End if
+			if Len(sBestellnummer) = 0 then
 				sSQL6=sSQL6 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 			else
 				sSQL6=sSQL6 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
 			End if
-			if sLeistungsbeschreibung = &quot;&quot; then
+			if Len(sLeistungsbeschreibung) = 0 then
 				sSQL6=sSQL6 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
 			else
 				sSQL6=sSQL6 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
@@ -323,12 +325,12 @@ Sub Arbeitsblatt_drucken()
 				if Len(sLV_Pos) &gt; 0 then 	
 					sSQL7=sSQL7 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
 				End if
-				if sBestellnummer = &quot;&quot; then
+				if Len(sBestellnummer) = 0 then
 					sSQL7=sSQL7 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 				else
 					sSQL7=sSQL7 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
 				End if
-				if sLeistungsbeschreibung = &quot;&quot; then
+				if Len(sLeistungsbeschreibung) = 0 then
 					sSQL7=sSQL7 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL))&quot;
 				else
 					sSQL7=sSQL7 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;)&quot;
@@ -340,7 +342,11 @@ Sub Arbeitsblatt_drucken()
 		
 			iCountLeistungen=iCountLeistungen+1
 		Loop
-	
+		
+		sSQL8=&quot;UPDATE &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; SET Pos_TypID=0 WHERE PosID IN &quot;&amp;_
+			&quot;(SELECT PosID FROM &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot;  GROUP BY Leistungsbezeichnung HAVING (COUNT(Leistungsbeschreibung)=1))&quot;
+		SQL_execute(sSQL8)
+		
 		oProgressbar.End
 
 		SetUserID(iUserID_lokal)
