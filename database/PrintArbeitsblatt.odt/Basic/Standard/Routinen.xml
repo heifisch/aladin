@@ -50,8 +50,8 @@ End Sub
 
 Sub Leistungen()
 	Dim sPos as String
-	Dim sLeistungsbezeichnung as String
-	Dim iPosLeistung as Integer,iPosZwiBem as Integer,iPosZwiSum as Integer
+	Dim sLeistungsbezeichnung as String,sLeistungsbeschreibung as String
+	Dim iPosLeistung as Integer,iPosZwiBem as Integer,iPosZwiSum as Integer,iPos_TypID as Integer
 	Dim lCountLeistung as Long,lCountZwiBem as Long,lCountZwiSum as Long,lCountInsert as Long
 	Dim iSelectLeistung as Integer,iSelectZwiBem as Integer,iSelectZwiSum as Integer
 	Dim sLeistungstext as String,sBemerkung as String,sZwiSumName as String,sZwiSumBauzeit as String
@@ -197,7 +197,7 @@ Sub Leistungen()
 	lAnzahlZwiSum = fAnzahlDatensaetze(sTabZwiSum,lDocumentID)
 	
 	if lAnzahlLeistungen &gt; 0 then
-		sSQL1=&quot;select distinct t1.PosID,t1.Pos,t1.Leistungsbezeichnung,t1.Menge,t1.Lieferung,t1.GZ&quot;&amp;_
+		sSQL1=&quot;select distinct t1.PosID,t1.Pos,t1.Pos_TypID,t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,t1.Menge,t1.Lieferung,t1.GZ&quot;&amp;_
 			&quot; from &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; as t1&quot;&amp;_
 			&quot; order by t1.PosID ASC&quot;
 	End if
@@ -244,10 +244,12 @@ Sub Leistungen()
 				oRecordLeistungen.absolute(lCountLeistung)
 				iPosLeistung = oRecordLeistungen.getLong(1)
 				sPos = oRecordLeistungen.getString(2)
-				sLeistungsbezeichnung = oRecordLeistungen.getString(3)
-				sMenge = oRecordLeistungen.getString(4)
-				sMengeVerbaut = oRecordLeistungen.getString(5)
-				sBauzeit = oRecordLeistungen.getString(6)
+				iPos_TypID = oRecordLeistungen.getLong(3)
+				sLeistungsbezeichnung = oRecordLeistungen.getString(4)
+				sLeistungsbeschreibung = oRecordLeistungen.getString(5)
+				sMenge = oRecordLeistungen.getString(6)
+				sMengeVerbaut = oRecordLeistungen.getString(7)
+				sBauzeit = oRecordLeistungen.getString(8)
 				iSelectLeistung = 0
 			else
 				iSelectLeistung = 0
@@ -286,6 +288,9 @@ Sub Leistungen()
 		elseif iPosLeistung &gt; 0 and iPosLeistung &lt; iPosZwiBem _ 
 			and (iPosLeistung &lt;= iPosZwiSum or iBauzeit_drucken &lt;&gt; 6) then
 			sLeistungstext = sLeistungsbezeichnung
+			if lDocumentID = 99999999 and iPos_TypID=1 then
+				sLeistungstext = sLeistungsbezeichnung &amp; Chr$(13) &amp; TRIM(sLeistungsbeschreibung)
+			End If
 			vRowsLeistungen.insertByIndex(lCountInsert,1)
 			vRowsLeistungen.getByIndex(lCountInsert-1).IsAutoHeight = True
 			vTableLeistungen.getCellByName(&quot;A&quot; &amp; lCountInsert).String=sPos
