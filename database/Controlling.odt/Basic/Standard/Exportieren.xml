@@ -490,25 +490,27 @@ Sub Datensaetze_exportieren()
 				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
 				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
 				&quot; AND t1.Einkaufspreis=&apos;&quot;&amp; sEinkaufspreis &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.Bauzeit=&apos;&quot;&amp; sBauzeit &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+				&quot; AND t1.Bauzeit=&apos;&quot;&amp; sBauzeit &amp;&quot;&apos;&quot;
 		
-			if sBestellnummer = &quot;&quot; then
+			if Len(sLV_Pos) &gt; 0 then 	
+				sSQL4=sSQL4 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+			End if
+			if Len(sBestellnummer) = 0 then
 				sSQL4=sSQL4 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 			else
 				sSQL4=sSQL4 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
 			End if
-			if sLeistungsbeschreibung = &quot;&quot; then
+			if Len(sLeistungsbeschreibung) = 0 then
 				sSQL4=sSQL4 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL)&quot;
 			else
 				sSQL4=sSQL4 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;&quot;
 			End if
-			if sMaterialaufschlagsatz = &quot;&quot; then
+			if Len(sMaterialaufschlagsatz) = 0 then
 				sSQL4=sSQL4 &amp;&quot; AND t1.Materialaufschlagsatz IS NULL&quot;
 			else
 				sSQL4=sSQL4 &amp;&quot; AND t1.Materialaufschlagsatz=&apos;&quot;&amp; sMaterialaufschlagsatz &amp;&quot;&apos;&quot;
 			End if
-			if sMinutenverrechnungssatz = &quot;&quot; then
+			if Len(sMinutenverrechnungssatz) = 0 then
 				sSQL4=sSQL4 &amp;&quot; AND t1.Minutenverrechnungssatz IS NULL))&quot;
 			else
 				sSQL4=sSQL4 &amp;&quot; AND t1.Minutenverrechnungssatz=&apos;&quot;&amp; sMinutenverrechnungssatz &amp;&quot;&apos;))&quot;
@@ -552,25 +554,27 @@ Sub Datensaetze_exportieren()
 				&quot; AND (t1.LeistungsID=&apos;&quot;&amp; sLeistungsID &amp;&quot;&apos;&quot;&amp;_
 				&quot; AND t1.Leistungsbezeichnung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbezeichnung) &amp;&quot;&apos;&quot;&amp;_
 				&quot; AND t1.Einkaufspreis=&apos;&quot;&amp; sEinkaufspreis &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.Bauzeit=&apos;&quot;&amp; sBauzeit &amp;&quot;&apos;&quot;&amp;_
-				&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+				&quot; AND t1.Bauzeit=&apos;&quot;&amp; sBauzeit &amp;&quot;&apos;&quot;
 		
-			if sBestellnummer = &quot;&quot; then
+			if Len(sLV_Pos) &gt; 0 then 	
+				sSQL5=sSQL5 &amp;&quot; AND t1.LV_Pos=&apos;&quot;&amp; sLV_Pos &amp;&quot;&apos;&quot;
+			End if
+			if Len(sBestellnummer) = 0 then
 				sSQL5=sSQL5 &amp;&quot; AND (t1.Bestellnummer=&apos;&apos; OR t1.Bestellnummer IS NULL)&quot;
 			else
 				sSQL5=sSQL5 &amp;&quot; AND t1.Bestellnummer=&apos;&quot;&amp; sBestellnummer &amp;&quot;&apos;&quot;
 			End if
-			if sLeistungsbeschreibung = &quot;&quot; then
+			if Len(sLeistungsbeschreibung) = 0 then
 				sSQL5=sSQL5 &amp;&quot; AND (t1.Leistungsbeschreibung=&apos;&apos; OR t1.Leistungsbeschreibung IS NULL)&quot;
 			else
 				sSQL5=sSQL5 &amp;&quot; AND t1.Leistungsbeschreibung=&apos;&quot;&amp; fsConvertApostroph(sLeistungsbeschreibung) &amp;&quot;&apos;&quot;
 			End if
-			if sMaterialaufschlagsatz = &quot;&quot; then
+			if Len(sMaterialaufschlagsatz) = 0 then
 				sSQL5=sSQL5 &amp;&quot; AND t1.Materialaufschlagsatz IS NULL&quot;
 			else
 				sSQL5=sSQL5 &amp;&quot; AND t1.Materialaufschlagsatz=&apos;&quot;&amp; sMaterialaufschlagsatz &amp;&quot;&apos;&quot;
 			End if
-			if sMinutenverrechnungssatz = &quot;&quot; then
+			if Len(sMinutenverrechnungssatz) = 0 then
 				sSQL5=sSQL5 &amp;&quot; AND t1.Minutenverrechnungssatz IS NULL))&quot;
 			else
 				sSQL5=sSQL5 &amp;&quot; AND t1.Minutenverrechnungssatz=&apos;&quot;&amp; sMinutenverrechnungssatz &amp;&quot;&apos;))&quot;

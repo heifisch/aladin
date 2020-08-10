@@ -4,8 +4,8 @@
     <config:config-item-set config:name="ooo:view-settings">
       <config:config-item config:name="ViewAreaTop" config:type="long">501</config:config-item>
       <config:config-item config:name="ViewAreaLeft" config:type="long">501</config:config-item>
-      <config:config-item config:name="ViewAreaWidth" config:type="long">50220</config:config-item>
-      <config:config-item config:name="ViewAreaHeight" config:type="long">20772</config:config-item>
+      <config:config-item config:name="ViewAreaWidth" config:type="long">24687</config:config-item>
+      <config:config-item config:name="ViewAreaHeight" config:type="long">25666</config:config-item>
       <config:config-item config:name="ShowRedlineChanges" config:type="boolean">false</config:config-item>
       <config:config-item config:name="InBrowseMode" config:type="boolean">true</config:config-item>
       <config:config-item-map-indexed config:name="Views">
@@ -15,8 +15,8 @@
           <config:config-item config:name="ViewTop" config:type="long">1242</config:config-item>
           <config:config-item config:name="VisibleLeft" config:type="long">501</config:config-item>
           <config:config-item config:name="VisibleTop" config:type="long">501</config:config-item>
-          <config:config-item config:name="VisibleRight" config:type="long">50719</config:config-item>
-          <config:config-item config:name="VisibleBottom" config:type="long">21271</config:config-item>
+          <config:config-item config:name="VisibleRight" config:type="long">25187</config:config-item>
+          <config:config-item config:name="VisibleBottom" config:type="long">26166</config:config-item>
           <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
           <config:config-item config:name="ViewLayoutColumns" config:type="short">1</config:config-item>
           <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
@@ -71,7 +71,7 @@
       <config:config-item config:name="InvertBorderSpacing" config:type="boolean">false</config:config-item>
       <config:config-item config:name="SaveGlobalDocumentLinks" config:type="boolean">false</config:config-item>
       <config:config-item config:name="TabsRelativeToIndent" config:type="boolean">true</config:config-item>
-      <config:config-item config:name="Rsid" config:type="int">6692866</config:config-item>
+      <config:config-item config:name="Rsid" config:type="int">6870633</config:config-item>
       <config:config-item config:name="EmbeddedDatabaseName" config:type="string"/>
       <config:config-item config:name="SaveThumbnail" config:type="boolean">true</config:config-item>
       <config:config-item config:name="PrintProspectRTL" config:type="boolean">false</config:config-item>
@@ -118,7 +118,7 @@
       <config:config-item config:name="LoadReadonly" config:type="boolean">true</config:config-item>
       <config:config-item config:name="DoNotCaptureDrawObjsOnPage" config:type="boolean">false</config:config-item>
       <config:config-item config:name="CurrentDatabaseCommand" config:type="string"/>
-      <config:config-item config:name="PrinterSetup" config:type="base64Binary">zAH+/0hQX0xhc2VySmV0X1AzMDEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUF9MYXNlckpldF9QMzAxMAAAAAAAAAAAAAAWAAMA7QAAAAAAAAAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFBfTGFzZXJKZXRfUDMwMTAKb3JpZW50YXRpb249UG9ydHJhaXQKY29waWVzPTEKY29sbGF0ZT1mYWxzZQptYXJnaW5kYWp1c3RtZW50PTAsMCwwLDAKY29sb3JkZXB0aD0yNApwc2xldmVsPTAKcGRmZGV2aWNlPTEKY29sb3JkZXZpY2U9MApQUERDb250ZXhEYXRhCkhQQ29sbGF0ZVN1cHBvcnRlZDpGYWxzZTEyOABEdXBsZXg6Tm9uZQBQYWdlU2l6ZTpBNABJbnB1dFNsb3Q6QXV0bwAAEgBDT01QQVRfRFVQTEVYX01PREUPAER1cGxleE1vZGU6Ok9mZg==</config:config-item>
+      <config:config-item config:name="PrinterSetup" config:type="base64Binary">zAH+/0hQX0xhc2VySmV0X1AzMDEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUF9MYXNlckpldF9QMzAxMAAAAAAAAAAAAAAWAAMA7QAAAAAAAAAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFBfTGFzZXJKZXRfUDMwMTAKb3JpZW50YXRpb249UG9ydHJhaXQKY29waWVzPTEKY29sbGF0ZT1mYWxzZQptYXJnaW5kYWp1c3RtZW50PTAsMCwwLDAKY29sb3JkZXB0aD0yNApwc2xldmVsPTAKcGRmZGV2aWNlPTEKY29sb3JkZXZpY2U9MApQUERDb250ZXhEYXRhCklucHV0U2xvdDpBdXRvAFBhZ2VTaXplOkE0AEhQQ29sbGF0ZVN1cHBvcnRlZDpGYWxzZTEyOABEdXBsZXg6Tm9uZQAAEgBDT01QQVRfRFVQTEVYX01PREUPAER1cGxleE1vZGU6Ok9mZg==</config:config-item>
       <config:config-item config:name="ClipAsCharacterAnchoredWriterFlyFrames" config:type="boolean">false</config:config-item>
     </config:config-item-set>
   </office:settings>
