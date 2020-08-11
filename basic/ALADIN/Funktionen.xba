@@ -455,48 +455,73 @@ ErrorHandler:
 End Function
 
 Function oResult_Leistungen(sSQL as String)as Object
+On Error Goto ErrorHandler
 	Dim oStatement_Leistungen as Object
 	oStatement_Leistungen=oConnection.createStatement()
 	oStatement_Leistungen.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_INSENSITIVE
 	oStatement_Leistungen.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
 	oStatement_Leistungen.EscapeProcessing = FALSE
 	oResult_Leistungen=oStatement_Leistungen.executeQuery(sSQL)
+	Exit Function
+ErrorHandler:
+ 	MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;sSQL: &quot; &amp; sSQL,16,sTitle &amp;&quot; - Fehler&quot;
+	Stop
 End Function
 
 Function oResult_ZwiSum(sSQL as String)as Object
+On Error Goto ErrorHandler
 	Dim oStatement_ZwiSum as Object
 	oStatement_ZwiSum=oConnection.createStatement()
 	oStatement_ZwiSum.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_INSENSITIVE
 	oStatement_ZwiSum.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
 	oStatement_ZwiSum.EscapeProcessing = FALSE
 	oResult_ZwiSum=oStatement_ZwiSum.executeQuery(sSQL)
+	Exit Function
+ErrorHandler:
+ 	MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;sSQL: &quot; &amp; sSQL,16,sTitle &amp;&quot; - Fehler&quot;
+	Stop
 End Function
 
 Function oResult_ZwiBem(sSQL as String)as Object
+On Error Goto ErrorHandler
 	Dim oStatement_ZwiBem as Object
 	oStatement_ZwiBem=oConnection.createStatement()
 	oStatement_ZwiBem.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_INSENSITIVE
 	oStatement_ZwiBem.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
 	oStatement_ZwiBem.EscapeProcessing = FALSE
 	oResult_ZwiBem=oStatement_ZwiBem.executeQuery(sSQL)
+	Exit Function
+ErrorHandler:
+ 	MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;sSQL: &quot; &amp; sSQL,16,sTitle &amp;&quot; - Fehler&quot;
+	Stop
 End Function
 
 Function oResult_Serienbrief(sSQL as String)as Object
+On Error Goto ErrorHandler
 	Dim oStatement_Serienbrief as Object
 	oStatement_Serienbrief=oConnection.createStatement()
 	oStatement_Serienbrief.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_INSENSITIVE
 	oStatement_Serienbrief.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
 	oStatement_Serienbrief.EscapeProcessing = FALSE
 	oResult_Serienbrief=oStatement_Serienbrief.executeQuery(sSQL)
+	Exit Function
+ErrorHandler:
+ 	MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;sSQL: &quot; &amp; sSQL,16,sTitle &amp;&quot; - Fehler&quot;
+	Stop
 End Function
 
 Function oResultGesperrt(sSQL as String)as Object
+On Error Goto ErrorHandler
 	Dim oStatement as Object
 	oStatement=oConnection.createStatement()
 	oStatement.ResultSetType = com.sun.star.sdbc.ResultSetType.SCROLL_INSENSITIVE
 	oStatement.ResultSetConcurrency = com.sun.star.sdbc.ResultSetConcurrency.READ_ONLY
 	oStatement.EscapeProcessing = FALSE
 	oResultGesperrt=oStatement.executeQuery(sSQL)
+	Exit Function
+ErrorHandler:
+ 	MsgBox &quot;Error &quot; &amp; Err &amp; &quot;: &quot; &amp; Error$ &amp; &quot; (line : &quot; &amp; Erl &amp; &quot;)&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;&quot;sSQL: &quot; &amp; sSQL,16,sTitle &amp;&quot; - Fehler&quot;
+	Stop
 End Function
 
 Function sSQL_Result(sSelect as String) as String
