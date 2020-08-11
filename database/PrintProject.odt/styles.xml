@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<office:document-styles xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:officeooo="http://openoffice.org/2009/office" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" office:version="1.2">
+<office:document-styles xmlns:officeooo="http://openoffice.org/2009/office" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:rpt="http://openoffice.org/2005/report" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:css3t="http://www.w3.org/TR/css3-text/" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:drawooo="http://openoffice.org/2010/draw" office:version="1.2">
   <office:font-face-decls>
     <style:font-face style:name="StarSymbol" svg:font-family="StarSymbol" style:font-charset="x-symbol"/>
-    <style:font-face style:name="Arial" svg:font-family="Arial, Helvetica"/>
+    <style:font-face style:name="Arial2" svg:font-family="Arial, Helvetica"/>
     <style:font-face style:name="Lucidasans1" svg:font-family="Lucidasans"/>
-    <style:font-face style:name="Arial2" svg:font-family="Arial" style:font-adornments="Normal" style:font-family-generic="swiss"/>
+    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-adornments="Normal" style:font-family-generic="swiss"/>
     <style:font-face style:name="Bitstream Vera Sans" svg:font-family="'Bitstream Vera Sans'" style:font-pitch="variable"/>
     <style:font-face style:name="Lucidasans" svg:font-family="Lucidasans" style:font-pitch="variable"/>
     <style:font-face style:name="Mincho" svg:font-family="Mincho" style:font-pitch="variable"/>
@@ -16,14 +16,14 @@
   <office:styles>
     <style:default-style style:family="graphic">
       <style:graphic-properties svg:stroke-color="#808080" draw:fill-color="#cfe7f5" fo:wrap-option="no-wrap" draw:shadow-offset-x="0.3cm" draw:shadow-offset-y="0.3cm" draw:start-line-spacing-horizontal="0.283cm" draw:start-line-spacing-vertical="0.283cm" draw:end-line-spacing-horizontal="0.283cm" draw:end-line-spacing-vertical="0.283cm" style:flow-with-text="true"/>
-      <style:paragraph-properties style:text-autospace="ideograph-alpha" style:line-break="strict" style:font-independent-line-spacing="false">
+      <style:paragraph-properties style:text-autospace="ideograph-alpha" style:line-break="strict" style:writing-mode="lr-tb" style:font-independent-line-spacing="false">
         <style:tab-stops/>
       </style:paragraph-properties>
       <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman" fo:font-size="12pt" fo:language="de" fo:country="DE" style:font-name-asian="Bitstream Vera Sans" style:font-size-asian="12pt" style:language-asian="de" style:country-asian="DE" style:font-name-complex="Lucidasans" style:font-size-complex="12pt" style:language-complex="de" style:country-complex="DE"/>
     </style:default-style>
     <style:default-style style:family="paragraph">
       <style:paragraph-properties fo:hyphenation-ladder-count="no-limit" style:text-autospace="ideograph-alpha" style:punctuation-wrap="hanging" style:line-break="strict" style:tab-stop-distance="1.251cm" style:writing-mode="page"/>
-      <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman" fo:font-size="12pt" fo:language="de" fo:country="DE" style:font-name-asian="Bitstream Vera Sans" style:font-size-asian="12pt" style:language-asian="de" style:country-asian="DE" style:font-name-complex="Lucidasans" style:font-size-complex="12pt" style:language-complex="de" style:country-complex="DE" fo:hyphenate="false" fo:hyphenation-remain-char-count="2" fo:hyphenation-push-char-count="2"/>
+      <style:text-properties style:use-window-font-color="true" style:font-name="Times New Roman" fo:font-size="12pt" fo:language="de" fo:country="DE" style:font-name-asian="Bitstream Vera Sans" style:font-size-asian="12pt" style:language-asian="de" style:country-asian="DE" style:font-name-complex="Lucidasans" style:font-size-complex="12pt" style:language-complex="de" style:country-complex="DE" fo:hyphenate="false" fo:hyphenation-remain-char-count="2" fo:hyphenation-push-char-count="2" loext:hyphenation-no-caps="false"/>
     </style:default-style>
     <style:default-style style:family="table">
       <style:table-properties table:border-model="separating"/>
@@ -37,10 +37,18 @@
     </style:style>
     <style:style style:name="Heading" style:family="paragraph" style:parent-style-name="Standard" style:next-style-name="Text_20_body" style:class="text">
       <style:paragraph-properties fo:margin-top="0.423cm" fo:margin-bottom="0.212cm" loext:contextual-spacing="false" fo:keep-with-next="always"/>
-      <style:text-properties style:font-name="Arial" fo:font-family="Arial, Helvetica" fo:font-size="14pt" style:font-name-asian="Mincho" style:font-family-asian="Mincho" style:font-pitch-asian="variable" style:font-size-asian="14pt" style:font-name-complex="Lucidasans" style:font-family-complex="Lucidasans" style:font-pitch-complex="variable" style:font-size-complex="14pt"/>
+      <style:text-properties style:font-name="Arial2" fo:font-family="Arial, Helvetica" fo:font-size="14pt" style:font-name-asian="Mincho" style:font-family-asian="Mincho" style:font-pitch-asian="variable" style:font-size-asian="14pt" style:font-name-complex="Lucidasans" style:font-family-complex="Lucidasans" style:font-pitch-complex="variable" style:font-size-complex="14pt"/>
     </style:style>
     <style:style style:name="List" style:family="paragraph" style:parent-style-name="Text_20_body" style:class="list">
       <style:text-properties style:font-name-complex="Lucidasans1" style:font-family-complex="Lucidasans"/>
+    </style:style>
+    <style:style style:name="Header_20_and_20_Footer" style:display-name="Header and Footer" style:family="paragraph" style:parent-style-name="Standard" style:class="extra">
+      <style:paragraph-properties text:number-lines="false" text:line-number="0">
+        <style:tab-stops>
+          <style:tab-stop style:position="8.5cm" style:type="center"/>
+          <style:tab-stop style:position="17cm" style:type="right"/>
+        </style:tab-stops>
+      </style:paragraph-properties>
     </style:style>
     <style:style style:name="Header" style:family="paragraph" style:parent-style-name="Standard" style:class="extra">
       <style:paragraph-properties text:number-lines="false" text:line-number="0">
@@ -227,7 +235,7 @@
     </style:style>
     <style:style style:name="MP5" style:family="paragraph" style:parent-style-name="Header">
       <style:paragraph-properties fo:margin-top="0.499cm" fo:margin-bottom="0cm" loext:contextual-spacing="false" fo:hyphenation-ladder-count="no-limit" fo:padding="0cm" fo:border="none"/>
-      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:text-outline="true" style:font-name="URW Gothic L" fo:font-size="18pt" fo:letter-spacing="normal" fo:font-style="normal" fo:text-shadow="1pt 1pt" style:text-underline-style="none" fo:font-weight="600" fo:background-color="transparent" style:font-size-asian="12pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal" fo:hyphenate="false" fo:hyphenation-remain-char-count="2" fo:hyphenation-push-char-count="2"/>
+      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:text-outline="true" style:font-name="URW Gothic L" fo:font-size="18pt" fo:letter-spacing="normal" fo:font-style="normal" fo:text-shadow="1pt 1pt" style:text-underline-style="none" fo:font-weight="600" fo:background-color="transparent" style:font-size-asian="12pt" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-weight-complex="normal" fo:hyphenate="false" fo:hyphenation-remain-char-count="2" fo:hyphenation-push-char-count="2" loext:hyphenation-no-caps="false"/>
     </style:style>
     <style:style style:name="MP6" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false">
@@ -297,7 +305,7 @@
     </style:style>
     <style:style style:name="MP18" style:family="paragraph" style:parent-style-name="Header">
       <style:paragraph-properties fo:margin-top="0.499cm" fo:margin-bottom="0cm" loext:contextual-spacing="false" fo:hyphenation-ladder-count="no-limit" fo:padding="0cm" fo:border="none"/>
-      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:text-outline="true" style:font-name="URW Gothic L" fo:font-size="18pt" fo:letter-spacing="normal" fo:font-style="normal" fo:text-shadow="1pt 1pt" style:text-underline-style="none" fo:font-weight="600" fo:background-color="transparent" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="normal" fo:hyphenate="false" fo:hyphenation-remain-char-count="2" fo:hyphenation-push-char-count="2"/>
+      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:text-outline="true" style:font-name="URW Gothic L" fo:font-size="18pt" fo:letter-spacing="normal" fo:font-style="normal" fo:text-shadow="1pt 1pt" style:text-underline-style="none" fo:font-weight="600" fo:background-color="transparent" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="normal" fo:hyphenate="false" fo:hyphenation-remain-char-count="2" fo:hyphenation-push-char-count="2" loext:hyphenation-no-caps="false"/>
     </style:style>
     <style:style style:name="MP19" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false">
@@ -368,7 +376,7 @@
       <style:text-properties fo:font-weight="250" style:font-weight-asian="normal" style:font-weight-complex="normal"/>
     </style:style>
     <style:style style:name="Mgr1" style:family="graphic">
-      <style:graphic-properties style:protect="position size" style:run-through="foreground" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page-start-margin" draw:wrap-influence-on-position="once-concurrent" style:flow-with-text="false"/>
+      <style:graphic-properties style:protect="position size" style:run-through="foreground" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page-start-margin" draw:wrap-influence-on-position="once-concurrent" loext:allow-overlap="true" style:flow-with-text="false"/>
     </style:style>
     <style:style style:name="Mgr2" style:family="graphic">
       <style:graphic-properties draw:textarea-horizontal-align="center" draw:textarea-vertical-align="middle" style:protect="position size" style:run-through="foreground"/>
@@ -408,8 +416,12 @@
     <style:master-page style:name="Standard" style:page-layout-name="Mpm1">
       <style:header>
         <text:user-field-decls>
+          <text:user-field-decl office:value-type="string" office:string-value="Anschrift" text:name="Anschrift"/>
           <text:user-field-decl office:value-type="string" office:string-value="Anschrift_Eigen_3" text:name="Anschrift_Eigen_3"/>
           <text:user-field-decl office:value-type="string" office:string-value="Document_Name" text:name="Document_Name"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Document_Typ" text:name="Document_Typ"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Leerzeilen" text:name="Leerzeilen"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Nummern" text:name="Nummern"/>
         </text:user-field-decls>
         <table:table table:name="Logo2" table:style-name="Logo2">
           <table:table-column table:style-name="Logo2.A"/>
@@ -422,7 +434,7 @@
           </table:table-row>
         </table:table>
         <text:p text:style-name="MP2">
-          <draw:g text:anchor-type="paragraph" draw:z-index="3" draw:name="Falzmarken_2" draw:style-name="Mgr1">
+          <draw:g text:anchor-type="paragraph" draw:z-index="1" draw:name="Falzmarken_2" draw:style-name="Mgr1">
             <draw:line draw:style-name="Mgr2" draw:text-style-name="MP3" svg:x1="0.4cm" svg:y1="10.499cm" svg:x2="0.801cm" svg:y2="10.499cm">
               <text:p/>
             </draw:line>
@@ -489,8 +501,19 @@
     <style:master-page style:name="First_20_Page" style:display-name="First Page" style:page-layout-name="Mpm2" style:next-style-name="Standard">
       <style:header>
         <text:user-field-decls>
+          <text:user-field-decl office:value-type="string" office:string-value="Anschrift" text:name="Anschrift"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Anschrift_Eigen_1" text:name="Anschrift_Eigen_1"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Anschrift_Eigen_2" text:name="Anschrift_Eigen_2"/>
           <text:user-field-decl office:value-type="string" office:string-value="Document_Name" text:name="Document_Name"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Document_Typ" text:name="Document_Typ"/>
+          <text:user-field-decl office:value-type="string" office:string-value="FaxNr" text:name="FaxNr"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Leerzeilen" text:name="Leerzeilen"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Leistungsempfänger" text:name="Leistungsempfaenger"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Leistungsprofil" text:name="Leistungsprofil"/>
           <text:user-field-decl office:value-type="string" office:string-value="Lieferbemerkung" text:name="Lieferbemerkung"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Mindestangaben" text:name="Mindestangaben"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Nummern" text:name="Nummern"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Wenn unzustellbar, zurück!" text:name="unzustellbar"/>
         </text:user-field-decls>
         <table:table table:name="Logo1" table:style-name="Logo1">
           <table:table-column table:style-name="Logo1.A"/>
@@ -511,7 +534,7 @@
                   <table:table-row>
                     <table:table-cell table:style-name="Kopf1.A1.1.1" office:value-type="string">
                       <text:p text:style-name="MP12">
-                        <draw:g text:anchor-type="paragraph" draw:z-index="2" draw:name="Falzmarken_1" draw:style-name="Mgr1">
+                        <draw:g text:anchor-type="paragraph" draw:z-index="0" draw:name="Falzmarken_1" draw:style-name="Mgr1">
                           <draw:line draw:style-name="Mgr2" draw:text-style-name="MP3" svg:x1="0.4cm" svg:y1="10.499cm" svg:x2="0.801cm" svg:y2="10.499cm">
                             <text:p/>
                           </draw:line>
@@ -578,6 +601,14 @@
         </text:p>
       </style:header>
       <style:footer>
+        <text:user-field-decls>
+          <text:user-field-decl office:value-type="string" office:string-value="Bankverbindung" text:name="Bankverbindung"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Bankverbindung_Bez" text:name="Bankverbindung_Bez"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Firmendaten" text:name="Firmendaten"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Geschaeftsfuehrer_Bez" text:name="Geschaeftsfuehrer_Bez"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Kontakt" text:name="Kontakt"/>
+          <text:user-field-decl office:value-type="string" office:string-value="Kontakt_Bez" text:name="Kontakt_Bez"/>
+        </text:user-field-decls>
         <table:table table:name="Fuß" table:style-name="Fuß">
           <table:table-column table:style-name="Fuß.A"/>
           <table:table-column table:style-name="Fuß.B"/>
