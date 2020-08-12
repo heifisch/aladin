@@ -111,8 +111,8 @@ End Sub
 
 Sub Druck_vorbereiten()
 	Dim vStatus as Variant
-	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String
-	Dim oRecord1 as Object,oRecord2 as Object
+	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String,sSQL5 as String
+	Dim oRecord1 as Object,oRecord2 as Object,oRecord3 as Object
 	Dim oOption_Print as Object,oOption_Fax as Object,oOption_Mail as Object
 	Dim oOption_Zusammenstellung as Object,oBox_LogoDrucken as Object,oBox_BestEP as Object
 	Dim oBox_Leistungsbeschreibung as Object,oBox_Leistungsbezeichnung as Object
@@ -123,7 +123,7 @@ Sub Druck_vorbereiten()
 	Dim ifLiefuLeist as integer,ifLV_Pos as integer,sifLV_Pos as String
 	Dim ifLogoDrucken as Integer,ifBestellnummer as Integer,ifPos as Integer,ifPosBestellnummer as Integer
 	
-	Dim iPrint_Typ as Integer,iDocument_TypID as Integer,iDoc_Typ as integer,iAZ as Integer
+	Dim iPrint_Typ as Integer,iDocument_TypID as Integer,iDoc_Typ as integer,iAZ as Integer,iAnzahlMwStSatzAZ as Integer
 	Dim sSchlusstext as String,sAnschrift as String,sPraefix as String
 	Dim sAnrede as String,sTitel as String,sVorname as String,sName1 as String
 	Dim sName2 as String,sName3 as String,sName4 as String
@@ -572,10 +572,23 @@ Sub Druck_vorbereiten()
 					sRechnungsbetrag = &quot;Rechnungssumme\t&quot;&amp; sSumme_nach_Korrektur &amp;&quot;\t&quot;&amp; sMwSt &amp;&quot;\t&quot;&amp; sSumme_mit_MwSt
 					sAbschlagszahlungen = &quot;./. Abschlagszahlungen\t&quot;&amp; sAZ_ohne_MwSt &amp;&quot;\t&quot;&amp; sAZ_MwSt &amp;&quot;\t&quot;&amp; sAZ_mit_MwSt
 					sRestbetrag = &quot;verbleibende Restzahlung\t&quot;&amp; sZahlbetrag_ohne_MwSt &amp;&quot;\t&quot;&amp; sZahlbetrag_MwSt
-														
-&apos;					sSQL_MwSt = &quot;concat(&apos;\tohne MwSt\t+&quot;&amp; fsReplace(sMwSt_Satz,&quot;.&quot;,&quot;,&quot;) &amp;&quot;% MwSt\tmit MwSt&apos;)&quot;
-					sSQL_MwSt = &quot;concat(&apos;\tohne MwSt\tMwSt\tmit MwSt&apos;)&quot;
-
+					
+					sSQL5=&quot;SELECT COUNT(DISTINCT MwSt_Satz) FROM (&quot;&amp;_
+						&quot; SELECT MwSt_Satz FROM &quot;&amp;  sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;_
+						&quot; UNION &quot;&amp;_
+						&quot; SELECT DISTINCT Lieferung AS MwSt_Satz FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos_TypID=4) X&quot;
+						
+					oRecord3=oResult(sSQL5)
+					While oRecord3.next()
+						iAnzahlMwStSatzAZ=oRecord3.getLong(1)
+					Wend
+					
+					If 	iAnzahlMwStSatzAZ =1 Then		
+						sSQL_MwSt = &quot;concat(&apos;\tohne MwSt\t+&quot;&amp; fsReplace(sMwSt_Satz,&quot;.&quot;,&quot;,&quot;) &amp;&quot;% MwSt\tmit MwSt&apos;)&quot;
+					else
+						sSQL_MwSt = &quot;concat(&apos;\tohne MwSt\tMwSt\tmit MwSt&apos;)&quot;
+					End If
+					
 					sSQL_Summe_mit_MwSt = &quot;concat(&apos;&quot;&amp; sZahlbetrag_mit_MwSt &amp;&quot;&apos;)&quot;
 				End if
 			

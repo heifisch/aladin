@@ -32,7 +32,7 @@ Sub SQL_Update_Steuerung_export_DocumentID(iOption as integer)
 	SQL_execute(sSQL1)
 End Sub
 
-Sub SQL_Gruppe_reset
+Sub SQL_Gruppe_reset()
 	sSQL1=&quot;UPDATE Steuerung SET GruppenID=&apos;%&apos; WHERE ClientID=&quot;&amp; iClientID
 	SQL_execute(sSQL1)
 End Sub
@@ -128,13 +128,6 @@ Sub SQL_Leistung_berechnen()
 		&quot; SET Lieferung=Einkaufspreis*Materialaufschlagsatz,Leistung=Bauzeit*Minutenverrechnungssatz,EP=Lieferung+Leistung,GP=EP*Menge,GZ=Bauzeit*Menge/60&quot;&amp;_
 		&quot; WHERE Pos_TypID &lt; 4&quot;
 	SQL_execute(sSQL3)
-End Sub
-
-Sub SQL_AZ_berechnen(sMwSt_Satz as String)
-	sSQL1=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;_
-		&quot; SET Lieferung=&quot;&amp; sMwSt_Satz &amp;&quot;,Leistung=Einkaufspreis/100*&quot;&amp; sMwSt_Satz &amp;&quot;,EP=Einkaufspreis,GP=EP+Leistung&quot;&amp;_
-		&quot; WHERE Pos_TypID = 4&quot;
-	SQL_execute(sSQL1)
 End Sub
 
 Sub SQL_Arbeitstabelle_fuellen()

@@ -357,7 +357,6 @@ Sub Document_berechnen()
 				End if
 			End if
 		end if		
-&apos;		SQL_AZ_berechnen(sMwSt_Satz)
 		sSQL2=&quot;SELECT SUM(EP),SUM(Leistung),SUM(GP) &quot;&amp;_
 			&quot;FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos_TypID = 4 GROUP BY Pos_TypID&quot;
 		oRecord1=oResult(sSQL2)
