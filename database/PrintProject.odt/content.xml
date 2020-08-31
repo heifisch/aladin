@@ -10,38 +10,38 @@
   </office:scripts>
   <office:font-face-decls>
     <style:font-face style:name="StarSymbol" svg:font-family="StarSymbol" style:font-charset="x-symbol"/>
-    <style:font-face style:name="Arial2" svg:font-family="Arial, Helvetica"/>
+    <style:font-face style:name="Arial" svg:font-family="Arial, Helvetica"/>
     <style:font-face style:name="Lucidasans1" svg:font-family="Lucidasans"/>
-    <style:font-face style:name="Arial1" svg:font-family="Arial" style:font-adornments="Normal" style:font-family-generic="swiss"/>
+    <style:font-face style:name="Arial2" svg:font-family="Arial" style:font-adornments="Normal" style:font-family-generic="swiss"/>
     <style:font-face style:name="Bitstream Vera Sans" svg:font-family="'Bitstream Vera Sans'" style:font-pitch="variable"/>
     <style:font-face style:name="Lucidasans" svg:font-family="Lucidasans" style:font-pitch="variable"/>
     <style:font-face style:name="Mincho" svg:font-family="Mincho" style:font-pitch="variable"/>
     <style:font-face style:name="URW Gothic L" svg:font-family="'URW Gothic L'" style:font-pitch="variable"/>
     <style:font-face style:name="Times New Roman" svg:font-family="'Times New Roman'" style:font-family-generic="roman" style:font-pitch="variable"/>
     <style:font-face style:name="Albany" svg:font-family="Albany" style:font-adornments="Standard" style:font-family-generic="swiss" style:font-pitch="variable"/>
-    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>
+    <style:font-face style:name="Arial1" svg:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>
   </office:font-face-decls>
   <office:automatic-styles>
     <style:style style:name="Leistungen" style:family="table" style:master-page-name="First_20_Page">
       <style:table-properties style:width="18.101cm" fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" style:page-number="auto" fo:break-before="auto" fo:break-after="auto" table:align="margins"/>
     </style:style>
     <style:style style:name="Leistungen.A" style:family="table-column">
-      <style:table-column-properties style:column-width="1.81cm" style:rel-column-width="6552*"/>
+      <style:table-column-properties style:column-width="1.808cm" style:rel-column-width="6546*"/>
     </style:style>
     <style:style style:name="Leistungen.B" style:family="table-column">
-      <style:table-column-properties style:column-width="9.363cm" style:rel-column-width="33897*"/>
+      <style:table-column-properties style:column-width="9.363cm" style:rel-column-width="33901*"/>
     </style:style>
     <style:style style:name="Leistungen.C" style:family="table-column">
       <style:table-column-properties style:column-width="1.782cm" style:rel-column-width="6450*"/>
     </style:style>
     <style:style style:name="Leistungen.D" style:family="table-column">
-      <style:table-column-properties style:column-width="1.632cm" style:rel-column-width="5907*"/>
+      <style:table-column-properties style:column-width="1.63cm" style:rel-column-width="5901*"/>
     </style:style>
     <style:style style:name="Leistungen.E" style:family="table-column">
       <style:table-column-properties style:column-width="1.704cm" style:rel-column-width="6169*"/>
     </style:style>
     <style:style style:name="Leistungen.F" style:family="table-column">
-      <style:table-column-properties style:column-width="1.812cm" style:rel-column-width="6560*"/>
+      <style:table-column-properties style:column-width="1.813cm" style:rel-column-width="6568*"/>
     </style:style>
     <style:style style:name="Leistungen.A1" style:family="table-cell">
       <style:table-cell-properties fo:background-color="transparent" fo:padding="0.049cm" fo:border="none">
@@ -73,17 +73,17 @@
     </style:style>
     <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false" fo:text-align="start" style:justify-single-word="false"/>
-      <style:text-properties style:font-name="Arial" fo:font-size="6pt" style:font-size-asian="6pt" style:font-size-complex="6pt"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="6pt" style:font-size-asian="6pt" style:font-size-complex="6pt"/>
     </style:style>
     <style:style style:name="P2" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false"/>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" fo:font-weight="normal" style:font-size-asian="9pt" style:font-weight-asian="normal" style:font-size-complex="9pt" style:font-weight-complex="normal"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" fo:font-weight="normal" style:font-size-asian="9pt" style:font-weight-asian="normal" style:font-size-complex="9pt" style:font-weight-complex="normal"/>
     </style:style>
     <style:style style:name="P3" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false">
         <style:tab-stops/>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
     </style:style>
     <style:style style:name="P4" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false">
@@ -92,17 +92,17 @@
           <style:tab-stop style:position="3.387cm"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
     </style:style>
     <style:style style:name="P5" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false"/>
-      <style:text-properties style:font-name="Arial" fo:font-size="7pt" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="7pt" style:font-weight-asian="normal" style:font-size-complex="7pt" style:font-weight-complex="normal"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="7pt" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="7pt" style:font-weight-asian="normal" style:font-size-complex="7pt" style:font-weight-complex="normal"/>
     </style:style>
     <style:style style:name="P6" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false">
         <style:tab-stops/>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="12pt" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
     </style:style>
     <style:style style:name="P7" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false" fo:text-align="start" style:justify-single-word="false"/>
@@ -110,7 +110,7 @@
     </style:style>
     <style:style style:name="P8" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false"/>
-      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial" fo:font-size="10pt" fo:letter-spacing="normal" fo:font-style="normal" fo:text-shadow="none" fo:font-weight="normal" fo:background-color="transparent" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
+      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial1" fo:font-size="10pt" fo:letter-spacing="normal" fo:font-style="normal" fo:text-shadow="none" fo:font-weight="normal" fo:background-color="transparent" style:font-size-asian="10pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
     </style:style>
     <style:style style:name="P9" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false">
@@ -125,15 +125,15 @@
           <style:tab-stop style:position="3.387cm"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
     </style:style>
     <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Standard">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false"/>
-      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial" fo:font-size="6pt" fo:letter-spacing="0.035cm" fo:font-style="normal" fo:text-shadow="none" fo:font-weight="normal" style:font-size-asian="6pt" style:font-size-complex="6pt"/>
+      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial1" fo:font-size="6pt" fo:letter-spacing="0.035cm" fo:font-style="normal" fo:text-shadow="none" fo:font-weight="normal" style:font-size-asian="6pt" style:font-size-complex="6pt"/>
     </style:style>
     <style:style style:name="P12" style:family="paragraph" style:parent-style-name="Standard">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false"/>
-      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial" fo:font-size="10pt" fo:letter-spacing="normal" fo:font-style="normal" fo:text-shadow="none" fo:font-weight="normal" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
+      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial1" fo:font-size="10pt" fo:letter-spacing="normal" fo:font-style="normal" fo:text-shadow="none" fo:font-weight="normal" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
     </style:style>
     <style:style style:name="P13" style:family="paragraph" style:parent-style-name="Footer">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false" fo:line-height="100%">
@@ -143,7 +143,7 @@
           <style:tab-stop style:position="10.458cm"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="8pt" fo:font-weight="250" style:font-size-asian="8pt" style:font-weight-asian="normal" style:font-size-complex="8pt" style:font-weight-complex="normal"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="8pt" fo:font-weight="250" style:font-size-asian="8pt" style:font-weight-asian="normal" style:font-size-complex="8pt" style:font-weight-complex="normal"/>
     </style:style>
     <style:style style:name="P14" style:family="paragraph" style:parent-style-name="Standard">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false" fo:keep-together="always" fo:keep-with-next="always">
@@ -152,7 +152,7 @@
           <style:tab-stop style:position="17.757cm" style:type="right"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="11pt" style:font-size-asian="11pt" style:font-size-complex="11pt"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="11pt" style:font-size-asian="11pt" style:font-size-complex="11pt"/>
     </style:style>
     <style:style style:name="P15" style:family="paragraph" style:parent-style-name="Standard">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false" fo:keep-together="always" fo:keep-with-next="always">
@@ -161,7 +161,7 @@
           <style:tab-stop style:position="17.757cm" style:type="right"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="11pt" style:text-underline-style="none" style:font-size-asian="11pt" style:font-size-complex="11pt"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="11pt" style:text-underline-style="none" style:font-size-asian="11pt" style:font-size-complex="11pt"/>
     </style:style>
     <style:style style:name="P16" style:family="paragraph" style:parent-style-name="Standard">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false" fo:keep-together="always" fo:keep-with-next="always">
@@ -172,7 +172,7 @@
           <style:tab-stop style:position="17.754cm" style:type="right"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="11pt" fo:font-weight="bold" style:font-size-asian="11pt" style:font-weight-asian="bold" style:font-size-complex="11pt" style:font-weight-complex="bold"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="11pt" fo:font-weight="bold" style:font-size-asian="11pt" style:font-weight-asian="bold" style:font-size-complex="11pt" style:font-weight-complex="bold"/>
     </style:style>
     <style:style style:name="P17" style:family="paragraph" style:parent-style-name="Standard">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0cm" loext:contextual-spacing="false" fo:keep-together="always" fo:keep-with-next="always">
@@ -183,7 +183,7 @@
           <style:tab-stop style:position="17.754cm" style:type="right"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="11pt" fo:font-weight="normal" style:font-size-asian="11pt" style:font-weight-asian="normal" style:font-size-complex="11pt" style:font-weight-complex="normal"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="11pt" fo:font-weight="normal" style:font-size-asian="11pt" style:font-weight-asian="normal" style:font-size-complex="11pt" style:font-weight-complex="normal"/>
     </style:style>
     <style:style style:name="P18" style:family="paragraph" style:parent-style-name="Table_20_Contents" style:master-page-name="">
       <style:paragraph-properties fo:margin-top="0cm" fo:margin-bottom="0.4cm" loext:contextual-spacing="false" fo:text-align="start" style:justify-single-word="false" style:page-number="auto"/>
@@ -205,33 +205,33 @@
           <style:tab-stop style:position="10.458cm"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="10pt" fo:font-weight="normal" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="10pt" fo:font-weight="normal" style:font-size-asian="10pt" style:font-weight-asian="normal" style:font-size-complex="10pt" style:font-weight-complex="normal"/>
     </style:style>
     <style:style style:name="P22" style:family="paragraph" style:parent-style-name="Standard">
       <style:paragraph-properties fo:margin-top="0.4cm" fo:margin-bottom="0cm" loext:contextual-spacing="false"/>
-      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial" fo:font-size="12pt" fo:letter-spacing="0.035cm" fo:font-style="oblique" fo:text-shadow="1pt 1pt" fo:font-weight="bold" style:font-size-asian="6pt" style:font-size-complex="6pt"/>
+      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial1" fo:font-size="12pt" fo:letter-spacing="0.035cm" fo:font-style="oblique" fo:text-shadow="1pt 1pt" fo:font-weight="bold" style:font-size-asian="6pt" style:font-size-complex="6pt"/>
     </style:style>
     <style:style style:name="P23" style:family="paragraph" style:parent-style-name="Standard">
       <style:paragraph-properties fo:margin-top="0.4cm" fo:margin-bottom="0cm" loext:contextual-spacing="false"/>
-      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial" fo:font-size="12pt" fo:letter-spacing="0.035cm" fo:font-style="italic" fo:text-shadow="1pt 1pt" fo:font-weight="bold" style:font-size-asian="6pt" style:font-size-complex="6pt"/>
+      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial1" fo:font-size="12pt" fo:letter-spacing="0.035cm" fo:font-style="italic" fo:text-shadow="1pt 1pt" fo:font-weight="bold" style:font-size-asian="6pt" style:font-size-complex="6pt"/>
     </style:style>
     <style:style style:name="P24" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="1.101cm" fo:margin-bottom="0cm" loext:contextual-spacing="false"/>
-      <style:text-properties style:font-name="Arial" fo:font-size="7pt" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="7pt" style:font-weight-asian="normal" style:font-size-complex="7pt" style:font-weight-complex="normal"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="7pt" style:text-underline-style="none" fo:font-weight="normal" style:font-size-asian="7pt" style:font-weight-asian="normal" style:font-size-complex="7pt" style:font-weight-complex="normal"/>
     </style:style>
     <style:style style:name="P25" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0.199cm" fo:margin-bottom="0cm" loext:contextual-spacing="false"/>
-      <style:text-properties style:font-name="Arial" fo:font-size="11pt" fo:font-weight="normal" style:font-size-asian="11pt" style:font-weight-asian="normal" style:font-size-complex="11pt" style:font-weight-complex="normal"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="11pt" fo:font-weight="normal" style:font-size-asian="11pt" style:font-weight-asian="normal" style:font-size-complex="11pt" style:font-weight-complex="normal"/>
     </style:style>
     <style:style style:name="P26" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0.3cm" fo:margin-bottom="0cm" loext:contextual-spacing="false"/>
-      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial" fo:font-size="12pt" fo:letter-spacing="normal" fo:font-style="normal" fo:text-shadow="none" fo:font-weight="normal" fo:background-color="transparent" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
+      <style:text-properties fo:font-variant="normal" fo:text-transform="none" fo:color="#000000" style:font-name="Arial1" fo:font-size="12pt" fo:letter-spacing="normal" fo:font-style="normal" fo:text-shadow="none" fo:font-weight="normal" fo:background-color="transparent" style:font-size-asian="12pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="12pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
     </style:style>
     <style:style style:name="P27" style:family="paragraph" style:parent-style-name="Standard" style:master-page-name="">
       <style:paragraph-properties fo:margin-top="0.3cm" fo:margin-bottom="0cm" loext:contextual-spacing="false" fo:keep-together="always" style:page-number="auto" fo:keep-with-next="always">
         <style:tab-stops/>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" style:text-underline-style="none" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" style:text-underline-style="none" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
     </style:style>
     <style:style style:name="P28" style:family="paragraph" style:parent-style-name="Table_20_Contents">
       <style:paragraph-properties fo:margin-top="0.9cm" fo:margin-bottom="0cm" loext:contextual-spacing="false">
@@ -240,7 +240,7 @@
           <style:tab-stop style:position="3.387cm"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" style:font-size-asian="9pt" style:font-size-complex="9pt"/>
     </style:style>
     <style:style style:name="P29" style:family="paragraph" style:parent-style-name="Footer">
       <style:paragraph-properties fo:line-height="100%">
@@ -250,7 +250,7 @@
           <style:tab-stop style:position="10.458cm"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="8pt" fo:font-weight="600" style:font-size-asian="8pt" style:font-weight-asian="bold" style:font-size-complex="8pt" style:font-weight-complex="bold"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="8pt" fo:font-weight="600" style:font-size-asian="8pt" style:font-weight-asian="bold" style:font-size-complex="8pt" style:font-weight-complex="bold"/>
     </style:style>
     <style:style style:name="P30" style:family="paragraph" style:parent-style-name="Footer">
       <style:paragraph-properties>
@@ -260,43 +260,43 @@
           <style:tab-stop style:position="10.458cm"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="8pt" fo:font-weight="bold" style:font-size-asian="8pt" style:font-weight-asian="bold" style:font-size-complex="8pt" style:font-weight-complex="bold"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="8pt" fo:font-weight="bold" style:font-size-asian="8pt" style:font-weight-asian="bold" style:font-size-complex="8pt" style:font-weight-complex="bold"/>
     </style:style>
-    <style:style style:name="P31" style:family="paragraph" style:parent-style-name="Table_20_Heading">
-      <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="bold" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+    <style:style style:name="P31" style:family="paragraph" style:parent-style-name="Standard">
+      <style:paragraph-properties fo:margin-top="0.101cm" fo:margin-bottom="0.101cm" loext:contextual-spacing="false" fo:keep-together="always" fo:keep-with-next="always"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="10pt" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
     </style:style>
     <style:style style:name="P32" style:family="paragraph" style:parent-style-name="Table_20_Heading">
-      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="bold" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+      <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="bold" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="bold"/>
     </style:style>
     <style:style style:name="P33" style:family="paragraph" style:parent-style-name="Table_20_Heading">
-      <style:paragraph-properties fo:text-align="end" style:justify-single-word="false"/>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="bold" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="bold"/>
+      <style:paragraph-properties fo:text-align="start" style:justify-single-word="false"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="bold" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="bold"/>
     </style:style>
     <style:style style:name="P34" style:family="paragraph" style:parent-style-name="Table_20_Heading">
-      <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="normal" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
+      <style:paragraph-properties fo:text-align="end" style:justify-single-word="false"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="bold" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="bold" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="bold"/>
     </style:style>
     <style:style style:name="P35" style:family="paragraph" style:parent-style-name="Table_20_Heading">
+      <style:paragraph-properties fo:text-align="center" style:justify-single-word="false"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="normal" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
+    </style:style>
+    <style:style style:name="P36" style:family="paragraph" style:parent-style-name="Table_20_Heading">
       <style:paragraph-properties fo:text-align="start" style:justify-single-word="false">
         <style:tab-stops>
           <style:tab-stop style:position="5.286cm"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="normal" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="normal" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
     </style:style>
-    <style:style style:name="P36" style:family="paragraph" style:parent-style-name="Table_20_Heading">
+    <style:style style:name="P37" style:family="paragraph" style:parent-style-name="Table_20_Heading">
       <style:paragraph-properties fo:text-align="end" style:justify-single-word="false"/>
-      <style:text-properties style:font-name="Arial" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="normal" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
-    </style:style>
-    <style:style style:name="P37" style:family="paragraph" style:parent-style-name="Standard">
-      <style:paragraph-properties fo:margin-top="0.101cm" fo:margin-bottom="0.101cm" loext:contextual-spacing="false" fo:keep-together="always" fo:keep-with-next="always"/>
-      <style:text-properties style:font-name="Arial" fo:font-size="10pt" style:font-size-asian="10pt" style:font-size-complex="10pt"/>
+      <style:text-properties style:font-name="Arial1" fo:font-size="9pt" fo:font-style="normal" fo:font-weight="normal" style:font-size-asian="9pt" style:font-style-asian="normal" style:font-weight-asian="normal" style:font-size-complex="9pt" style:font-style-complex="normal" style:font-weight-complex="normal"/>
     </style:style>
     <style:style style:name="P38" style:family="paragraph">
       <style:paragraph-properties fo:text-align="center"/>
-      <style:text-properties style:font-name="Arial1" fo:font-size="12pt"/>
+      <style:text-properties style:font-name="Arial2" fo:font-size="12pt"/>
     </style:style>
     <style:style style:name="P39" style:family="paragraph">
       <style:paragraph-properties fo:text-align="center"/>
@@ -416,46 +416,44 @@
         <table:table-column table:style-name="Leistungen.D"/>
         <table:table-column table:style-name="Leistungen.E"/>
         <table:table-column table:style-name="Leistungen.F"/>
-        <table:table-header-rows>
-          <table:table-row>
-            <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
-              <text:p text:style-name="P31">Pos</text:p>
-            </table:table-cell>
-            <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
-              <text:p text:style-name="P32">Leistungsbezeichnung</text:p>
-            </table:table-cell>
-            <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
-              <text:p text:style-name="P31">Einheit</text:p>
-            </table:table-cell>
-            <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
-              <text:p text:style-name="P33">Menge</text:p>
-            </table:table-cell>
-            <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
-              <text:p text:style-name="P33">EP in €</text:p>
-            </table:table-cell>
-            <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
-              <text:p text:style-name="P33">GP in €</text:p>
-            </table:table-cell>
-          </table:table-row>
-        </table:table-header-rows>
-        <table:table-row table:style-name="Leistungen.2">
+        <table:table-row>
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
+            <text:p text:style-name="P32"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
+            <text:p text:style-name="P33"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
+            <text:p text:style-name="P32"/>
+          </table:table-cell>
           <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
             <text:p text:style-name="P34"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
+            <text:p text:style-name="P34"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
+            <text:p text:style-name="P34"/>
+          </table:table-cell>
+        </table:table-row>
+        <table:table-row table:style-name="Leistungen.2">
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
+            <text:p text:style-name="P35"/>
+          </table:table-cell>
+          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
+            <text:p text:style-name="P36"/>
           </table:table-cell>
           <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
             <text:p text:style-name="P35"/>
           </table:table-cell>
           <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
-            <text:p text:style-name="P34"/>
+            <text:p text:style-name="P37"/>
           </table:table-cell>
           <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
-            <text:p text:style-name="P36"/>
+            <text:p text:style-name="P37"/>
           </table:table-cell>
           <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
-            <text:p text:style-name="P36"/>
-          </table:table-cell>
-          <table:table-cell table:style-name="Leistungen.A1" office:value-type="string">
-            <text:p text:style-name="P36"/>
+            <text:p text:style-name="P37"/>
           </table:table-cell>
         </table:table-row>
       </table:table>
@@ -464,7 +462,7 @@
         <table:table-header-rows>
           <table:table-row>
             <table:table-cell table:style-name="Bemerkung.A1" office:value-type="string">
-              <text:p text:style-name="P37">
+              <text:p text:style-name="P31">
                 <text:user-field-get text:name="Bemerkung">Bemerkung</text:user-field-get>
                 <text:user-field-get text:name="13bText">13bText</text:user-field-get>
               </text:p>

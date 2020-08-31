@@ -173,12 +173,16 @@ Sub KontaktDaten()
 			SetDocUserProperty(&quot;oPraefix&quot;,sPraefix &amp; &quot;L&quot;)
 		End if
 	End if
+	
+	if iDocument_TypID &lt; 7 then
+		SetDocUserProperty(&quot;ifPrintPreis&quot;,1)
+	else
+		SetDocUserProperty(&quot;ifPrintPreis&quot;,0)
+	End If
 
 	if iDocument_TypID = 3 or iDocument_TypID = 4 then
 		vStatus = MsgBox(&quot;Sollen die Preise mit gedruckt werden?&quot;,36,sTitle_lokal)
-		if vStatus = 6 then
-			SetDocUserProperty(&quot;ifPrintPreis&quot;,1)
-		elseif vStatus = 7 then
+		if vStatus = 7 then
 			SetDocUserProperty(&quot;ifPrintPreis&quot;,0)
 		End if
 	End if 

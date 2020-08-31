@@ -95,6 +95,10 @@ Function ifPrintPreis AS Integer
 	ifPrintPreis=GetDocUserProperty(&quot;ifPrintPreis&quot;)
 End Function
 
+Function ifPrintEP AS Integer
+	ifPrintEP=GetDocUserProperty(&quot;ifPrintEP&quot;)
+End Function
+
 Function sTitle_lokal AS String
 	 sTitle_lokal=GetDocUserProperty(&quot;oTitle_lokal&quot;)
 End Function
