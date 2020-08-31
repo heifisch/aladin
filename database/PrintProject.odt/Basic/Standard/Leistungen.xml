@@ -593,8 +593,8 @@ Sub Leistungen()
 	iCountInsert = iCountInsert-1
 	if iAnzahlLeistungen &gt; 1 then
 		afsInsertCarryReturn=Split(fsInsertCarry(iPageCountBefore,iCountInsert,1),&quot;;&quot;)
-		iInsertCarry = CInt(Trim(afsInsertCarryReturn(0))
-		iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1))
+		iInsertCarry = CInt(Trim(afsInsertCarryReturn(0)))
+		iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1)))
 		
 		if iDocument_TypID &lt; 3 _
 			or ((iDocument_TypID = 3 or iDocument_TypID = 4) AND ifPrintPreis = 1) _
