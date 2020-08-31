@@ -308,8 +308,8 @@ Sub Leistungen()
 			if iDocument_TypID &lt; 7 AND iDocument_TypID &lt;&gt; 3 AND iDocument_TypID &lt;&gt; 4 then
 	
 				afsInsertCarryReturn=Split(fsInsertCarry(iPageCountBefore,iCountInsert,0),&quot;;&quot;)
-				iInsertCarry = CInt(Trim(afsInsertCarryReturn(0))
-				iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1))
+				iInsertCarry = CInt(Trim(afsInsertCarryReturn(0)))
+				iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1)))
 	
 				if iInsertCarry = 0 then
 					iCountInsert=iCountInsert + 1
@@ -359,8 +359,8 @@ Sub Leistungen()
 				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).RightBorderDistance=0
 	
 				afsInsertCarryReturn=Split(fsInsertCarry(iPageCountBefore,iCountInsert,0),&quot;;&quot;)
-				iInsertCarry = CInt(Trim(afsInsertCarryReturn(0))
-				iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1))
+				iInsertCarry = CInt(Trim(afsInsertCarryReturn(0)))
+				iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1)))
 	
 				if iInsertCarry = 0 then
 					iCountInsert=iCountInsert + 1
@@ -556,8 +556,8 @@ Sub Leistungen()
 			then
 	
 				afsInsertCarryReturn=Split(fsInsertCarry(iPageCountBefore,iCountInsert,0),&quot;;&quot;)
-				iInsertCarry = CInt(Trim(afsInsertCarryReturn(0))
-				iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1))
+				iInsertCarry = CInt(Trim(afsInsertCarryReturn(0)))
+				iPageCountCarry = CInt(Trim(afsInsertCarryReturn(1)))
 				
 				if iInsertCarry = 0 then
 					iCountInsert=iCountInsert + 1
