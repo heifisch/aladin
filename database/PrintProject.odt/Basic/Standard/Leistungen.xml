@@ -182,13 +182,7 @@ Sub Leistungen()
 	End SELECT		
 	
 	iAnzahlLeistungen = fAnzahlDatensaetze(sDrucker2_TEMP(iUserID_lokal),lDocumentID)
-	
-	&apos;if iAnzahlLeistungen &gt; 0 then
-		iAnzahlZwiBem = fAnzahlDatensaetze(sTabZwiBem,lDocumentID)
-	&apos;else
-	&apos;	iAnzahlZwiBem = 0
-	&apos;End if
-	
+	iAnzahlZwiBem = fAnzahlDatensaetze(sTabZwiBem,lDocumentID)
 	iAnzahlAltPos = fAnzahlDatensaetzeAltPos(iUserID_lokal)
 
 	if iAnzahlLeistungen &gt; 0 then
@@ -290,7 +284,7 @@ Sub Leistungen()
 			oCursorZwiBem=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
 			oCursorZwiBem.CharWeight=com.sun.star.awt.FontWeight.BOLD
 			vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=sBemerkung
-			vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).TopBorderDistance=100
+			vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).TopBorderDistance=100
 	
 			afsInsertCarryReturn=Split(fsInsertCarry(iPageCountBefore,iCountInsert,0),&quot;;&quot;)
 			iInsertCarry = CInt(Trim(afsInsertCarryReturn(0)))
@@ -336,7 +330,7 @@ Sub Leistungen()
 				oCursorZwiSum.paraAdjust = com.sun.star.style.ParagraphAdjust.LEFT
 				vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=&quot;Zwischensumme: &quot; &amp; sZwiSumName
 				vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sZwiSum))
-				vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).BottomBorderDistance=100
+				vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).BottomBorderDistance=100
 				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).LeftBorderDistance=0
 				vTableLeistungen.getCellByName(&quot;D&quot;&amp; iCountInsert).RightBorderDistance=0
 	
@@ -424,23 +418,13 @@ Sub Leistungen()
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
 				oCursorAltPos.CharPosture = com.sun.star.awt.FontSlant.ITALIC
 			elseif iPosTypID = 4 then
-	&apos;			sLeistungstext = sPosTyp &amp; Chr(10) &amp; sLeistungstext
-				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;A&quot; &amp; iCountInsert)
-				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
-	&apos;			oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).TopBorderDistance=100
-				vTableLeistungen.getCellByName(&quot;B&quot;&amp; iCountInsert).BottomBorderDistance=100
+				vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).TopBorderDistance=100
+				vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).BottomBorderDistance=100
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;C&quot; &amp; iCountInsert)
-	&apos;			oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;D&quot; &amp; iCountInsert)
-	&apos;			oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
 				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;E&quot; &amp; iCountInsert)
-	&apos;			oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
-				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-				oCursorAltPos=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
-				oCursorAltPos.CharWeight=com.sun.star.awt.FontWeight.BOLD
 				oCursorAltPos.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
 			End if
 	

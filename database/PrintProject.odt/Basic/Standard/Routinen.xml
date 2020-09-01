@@ -218,7 +218,8 @@ Function fsInsertCarry(iPageCountBefore AS integer,iCountInsert AS Integer,iLast
 	vViewCursor.jumpToEndOfPage()
 	oDoc.refresh()
 
-wait 500
+&apos;wait 500
+
 	If NOT IsEmpty(vViewCursor.Cell) then
 		if vViewCursor.TextTable.Name = &quot;Leistungen&quot; then
 			if CLng(Mid(vViewCursor.Cell.CellName,2)) = CLng(vTableLeistungen.Rows.getCount) then
@@ -369,26 +370,27 @@ Function fiSpaltenBezeichnung_setzen(iCountInsert As Integer,iAZ As Integer) AS 
 	vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).TopBorderDistance=80
 	vTableLeistungen.getCellRangeByName(&quot;A&quot;&amp; iCountInsert &amp;&quot;:F&quot;&amp; iCountInsert).BottomBorderDistance=80
 
-	If iAZ=0 then
+	oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;A&quot; &amp; iCountInsert)
+	oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.CENTER
+	oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
+	oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.LEFT
+	oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;D&quot; &amp; iCountInsert)
+	oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+	oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;E&quot; &amp; iCountInsert)
+	oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
+	oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
+	oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
 
-		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;A&quot; &amp; iCountInsert)
-		oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.CENTER
-		oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
-		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
-		oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.LEFT
-		oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
+	If iAZ = 0 then
+
 		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;C&quot; &amp; iCountInsert)
 		oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
 		oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.CENTER
-		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;D&quot; &amp; iCountInsert)
-		oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
-		oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;E&quot; &amp; iCountInsert)
-		oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
-		oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
-		oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
-		oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
 
 &apos;		vTableLeistungen.getCellRangeByName(&quot;B&quot;&amp; iCountInsert &amp;&quot;:E&quot;&amp; iCountInsert).LeftBorderDistance=0
 &apos;		vTableLeistungen.getCellRangeByName(&quot;B&quot;&amp; iCountInsert &amp;&quot;:E&quot;&amp; iCountInsert).RightBorderDistance=0
@@ -408,20 +410,8 @@ Function fiSpaltenBezeichnung_setzen(iCountInsert As Integer,iAZ As Integer) AS 
 		End If
 
 	else
-		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;A&quot; &amp; iCountInsert)
-		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;B&quot; &amp; iCountInsert)
-		oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.LEFT
-		oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
+
 		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;C&quot; &amp; iCountInsert)
-		oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
-		oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;D&quot; &amp; iCountInsert)
-		oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
-		oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;E&quot; &amp; iCountInsert)
-		oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
-		oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
-		oCursorSpaltenKopf=vTableLeistungen.createCursorByCellName(&quot;F&quot; &amp; iCountInsert)
 		oCursorSpaltenKopf.CharWeight=com.sun.star.awt.FontWeight.BOLD
 		oCursorSpaltenKopf.paraAdjust = com.sun.star.style.ParagraphAdjust.RIGHT
 
@@ -433,6 +423,7 @@ Function fiSpaltenBezeichnung_setzen(iCountInsert As Integer,iAZ As Integer) AS 
 		vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=&quot;MwSt&quot;
 		vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=&quot;mit MwSt&quot;
 	End If
+	
 	fiSpaltenBezeichnung_setzen=iCountInsert + 1
 
 End Function
