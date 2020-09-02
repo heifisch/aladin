@@ -10,9 +10,9 @@
   </office:scripts>
   <office:font-face-decls>
     <style:font-face style:name="StarSymbol" svg:font-family="StarSymbol" style:font-charset="x-symbol"/>
-    <style:font-face style:name="Arial" svg:font-family="Arial, Helvetica"/>
+    <style:font-face style:name="Arial2" svg:font-family="Arial, Helvetica"/>
     <style:font-face style:name="Lucidasans1" svg:font-family="Lucidasans"/>
-    <style:font-face style:name="Arial2" svg:font-family="Arial" style:font-adornments="Normal" style:font-family-generic="swiss"/>
+    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-adornments="Normal" style:font-family-generic="swiss"/>
     <style:font-face style:name="Bitstream Vera Sans" svg:font-family="'Bitstream Vera Sans'" style:font-pitch="variable"/>
     <style:font-face style:name="Lucidasans" svg:font-family="Lucidasans" style:font-pitch="variable"/>
     <style:font-face style:name="Mincho" svg:font-family="Mincho" style:font-pitch="variable"/>
@@ -296,7 +296,7 @@
     </style:style>
     <style:style style:name="P38" style:family="paragraph">
       <style:paragraph-properties fo:text-align="center"/>
-      <style:text-properties style:font-name="Arial2" fo:font-size="12pt"/>
+      <style:text-properties style:font-name="Arial" fo:font-size="12pt"/>
     </style:style>
     <style:style style:name="P39" style:family="paragraph">
       <style:paragraph-properties fo:text-align="center"/>

@@ -20,7 +20,7 @@ Sub Test_CDec()
 	Dim cWert2 as Currency
 	Dim iErgebnis as Integer
 	Dim nErgebnis as Single
-		
+print  ooName()		
 		cWert1=0
 		cWert2=4.5
 		

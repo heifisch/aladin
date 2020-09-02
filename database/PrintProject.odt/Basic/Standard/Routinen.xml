@@ -348,12 +348,8 @@ Function fiSpaltenBezeichnung_setzen(iCountInsert As Integer,iAZ As Integer) AS 
 	elseif ooName() = &quot;LibreOffice&quot; Then
 		Dim oBorderLine2 AS New com.sun.star.table.BorderLine2
 			oBorderLine2.Color=1
-&apos;			oBorderLine2.InnerLineWidth=2
-&apos;			oBorderLine2.LineDistance=2
-&apos;			oBorderLine2.LineStyle=7 &apos;ein Strich
-			oBorderLine2.LineStyle=5
-			oBorderLine2.LineWidth=5
-&apos;			oBorderLine2.OuterLineWidth=2
+			oBorderLine2.LineStyle=3
+			oBorderLine2.LineWidth=100
 			oBorderLine=oBorderLine2
 	End If
 	
@@ -421,7 +417,8 @@ Function fiSpaltenBezeichnung_setzen(iCountInsert As Integer,iAZ As Integer) AS 
 		vTableLeistungen.getCellByName(&quot;B&quot; &amp; iCountInsert).String=&quot;Abschlagsrechnungen&quot;
 		vTableLeistungen.getCellByName(&quot;C&quot; &amp; iCountInsert).String=&quot;ohne MwSt&quot;
 		vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=&quot;MwSt&quot;
-		vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=&quot;mit MwSt&quot;
+		vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=&quot;Satz&quot;
+		vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=&quot;mit MwSt&quot;
 	End If
 	
 	fiSpaltenBezeichnung_setzen=iCountInsert + 1

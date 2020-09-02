@@ -459,11 +459,10 @@ Sub Leistungen()
 					vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sEP))
 				else
 					vTableLeistungen.getCellByName(&quot;D&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sLeistung))
+					vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=Left(fZahlMitPunkt(sLieferung),Len(fZahlMitPunkt(sLieferung))-1) &amp; &quot;%&quot;
 				End if
-				if iPosTypID = 1 then
+				if iPosTypID = 1 OR iPosTypID = 4 then
 					vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sGP))
-				elseif iPosTypID = 4 then
-					vTableLeistungen.getCellByName(&quot;E&quot; &amp; iCountInsert).String=fTausenderpunkt(fZahlMitPunkt(sGP))
 				elseif iPosTypID &gt; 1  AND iPosTypID &lt; 4 then
 					vTableLeistungen.getCellByName(&quot;F&quot; &amp; iCountInsert).String=&quot;(&quot; &amp; fTausenderpunkt(fZahlMitPunkt(sGP)) &amp; &quot;)&quot;
 				End if
