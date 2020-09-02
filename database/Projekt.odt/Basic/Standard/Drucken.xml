@@ -573,21 +573,21 @@ Sub Druck_vorbereiten()
 					sAbschlagszahlungen = &quot;./. Abschlagszahlungen\t&quot;&amp; sAZ_ohne_MwSt &amp;&quot;\t&quot;&amp; sAZ_MwSt &amp;&quot;\t&quot;&amp; sAZ_mit_MwSt
 					sRestbetrag = &quot;verbleibende Restzahlung\t&quot;&amp; sZahlbetrag_ohne_MwSt &amp;&quot;\t&quot;&amp; sZahlbetrag_MwSt
 					
-					sSQL5=&quot;SELECT COUNT(DISTINCT MwSt_Satz) FROM (&quot;&amp;_
-						&quot; SELECT MwSt_Satz FROM &quot;&amp;  sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;_
-						&quot; UNION &quot;&amp;_
-						&quot; SELECT DISTINCT Lieferung AS MwSt_Satz FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos_TypID=4) X&quot;
+&apos;					sSQL5=&quot;SELECT COUNT(DISTINCT MwSt_Satz) FROM (&quot;&amp;_
+&apos;						&quot; SELECT MwSt_Satz FROM &quot;&amp;  sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID &amp;_
+&apos;						&quot; UNION &quot;&amp;_
+&apos;						&quot; SELECT DISTINCT Lieferung AS MwSt_Satz FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE Pos_TypID=4) X&quot;
 						
-					oRecord3=oResult(sSQL5)
-					While oRecord3.next()
-						iAnzahlMwStSatzAZ=oRecord3.getLong(1)
-					Wend
+&apos;					oRecord3=oResult(sSQL5)
+&apos;					While oRecord3.next()
+&apos;						iAnzahlMwStSatzAZ=oRecord3.getLong(1)
+&apos;					Wend
 					
-					If 	iAnzahlMwStSatzAZ =1 Then		
+&apos;					If 	iAnzahlMwStSatzAZ =1 Then		
 						sSQL_MwSt = &quot;concat(&apos;\tohne MwSt\t+&quot;&amp; fsReplace(sMwSt_Satz,&quot;.&quot;,&quot;,&quot;) &amp;&quot;% MwSt\tmit MwSt&apos;)&quot;
-					else
-						sSQL_MwSt = &quot;concat(&apos;\tohne MwSt\tMwSt\tmit MwSt&apos;)&quot;
-					End If
+&apos;					else
+&apos;						sSQL_MwSt = &quot;concat(&apos;\tohne MwSt\tMwSt\tmit MwSt&apos;)&quot;
+&apos;					End If
 					
 					sSQL_Summe_mit_MwSt = &quot;concat(&apos;&quot;&amp; sZahlbetrag_mit_MwSt &amp;&quot;&apos;)&quot;
 				End if

@@ -116,7 +116,7 @@
       <config:config-item config:name="DoNotJustifyLinesWithManualBreak" config:type="boolean">true</config:config-item>
       <config:config-item config:name="DoNotResetParaAttrsForNumFont" config:type="boolean">true</config:config-item>
       <config:config-item config:name="CurrentDatabaseCommandType" config:type="int">1</config:config-item>
-      <config:config-item config:name="LoadReadonly" config:type="boolean">true</config:config-item>
+      <config:config-item config:name="LoadReadonly" config:type="boolean">false</config:config-item>
       <config:config-item config:name="DoNotCaptureDrawObjsOnPage" config:type="boolean">false</config:config-item>
       <config:config-item config:name="CurrentDatabaseCommand" config:type="string"/>
       <config:config-item config:name="PrinterSetup" config:type="base64Binary">zAH+/0hQX0xhc2VySmV0X1AzMDEwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUF9MYXNlckpldF9QMzAxMAAAAAAAAAAAAAAWAAMA7QAAAAAAAAAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFBfTGFzZXJKZXRfUDMwMTAKb3JpZW50YXRpb249UG9ydHJhaXQKY29waWVzPTEKY29sbGF0ZT1mYWxzZQptYXJnaW5kYWp1c3RtZW50PTAsMCwwLDAKY29sb3JkZXB0aD0yNApwc2xldmVsPTAKcGRmZGV2aWNlPTEKY29sb3JkZXZpY2U9MApQUERDb250ZXhEYXRhCkR1cGxleDpOb25lAEhQQ29sbGF0ZVN1cHBvcnRlZDpGYWxzZTEyOABQYWdlU2l6ZTpBNABJbnB1dFNsb3Q6QXV0bwAAEgBDT01QQVRfRFVQTEVYX01PREUPAER1cGxleE1vZGU6Ok9mZg==</config:config-item>

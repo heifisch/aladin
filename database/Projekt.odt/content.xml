@@ -7,10 +7,10 @@
     </office:event-listeners>
   </office:scripts>
   <office:font-face-decls>
-    <style:font-face style:name="Arial2" svg:font-family="Arial, Helvetica"/>
+    <style:font-face style:name="Arial3" svg:font-family="Arial, Helvetica"/>
     <style:font-face style:name="Arial1" svg:font-family="Arial" style:font-family-generic="swiss"/>
-    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-adornments="Fett" style:font-family-generic="swiss"/>
-    <style:font-face style:name="Arial3" svg:font-family="Arial" style:font-adornments="Standard" style:font-family-generic="swiss"/>
+    <style:font-face style:name="Arial2" svg:font-family="Arial" style:font-adornments="Fett" style:font-family-generic="swiss"/>
+    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-adornments="Standard" style:font-family-generic="swiss"/>
     <style:font-face style:name="Lucidasans" svg:font-family="Lucidasans" style:font-pitch="variable"/>
     <style:font-face style:name="Nimbus Sans L" svg:font-family="'Nimbus Sans L'" style:font-pitch="variable"/>
     <style:font-face style:name="Nimbus Roman No9 L" svg:font-family="'Nimbus Roman No9 L'" style:font-family-generic="roman" style:font-pitch="variable"/>
@@ -27,7 +27,7 @@
       <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial1" fo:font-style="normal" style:text-underline-style="none"/>
     </style:style>
     <style:style style:name="P3" style:family="paragraph">
-      <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial3" fo:font-style="normal" style:text-underline-style="none"/>
+      <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" style:font-name="Arial" fo:font-style="normal" style:text-underline-style="none"/>
     </style:style>
     <style:style style:name="P4" style:family="paragraph">
       <style:paragraph-properties fo:text-align="start"/>
@@ -46,7 +46,7 @@
     </style:style>
     <style:style style:name="P8" style:family="paragraph">
       <style:paragraph-properties fo:text-align="start"/>
-      <style:text-properties fo:color="#4c4c4c" style:font-name="Arial3" fo:font-size="9pt"/>
+      <style:text-properties fo:color="#4c4c4c" style:font-name="Arial" fo:font-size="9pt"/>
     </style:style>
     <style:style style:name="P9" style:family="paragraph">
       <style:paragraph-properties fo:text-align="center"/>
@@ -149,7 +149,7 @@
     </style:style>
     <style:style style:name="P34" style:family="paragraph">
       <style:paragraph-properties fo:text-align="center"/>
-      <style:text-properties fo:color="#ffffff" style:font-name="Arial" fo:font-weight="bold"/>
+      <style:text-properties fo:color="#ffffff" style:font-name="Arial2" fo:font-weight="bold"/>
     </style:style>
     <style:style style:name="P35" style:family="paragraph">
       <style:paragraph-properties fo:text-align="center"/>
