@@ -85,7 +85,7 @@ Sub SQL_Datensaetze_Tabelle2_entfernen()
 End Sub
 
 Sub SQL_Pos_entfernen()
-	sSQL1=&quot;UPDATE &quot;&amp; sTabelle2 &amp;&quot; SET Pos=&apos;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
+	sSQL1=&quot;UPDATE &quot;&amp; sTabelle2 &amp;&quot; SET Pos=NULL WHERE DocumentID=&quot;&amp; lDocumentID
 	SQL_execute(sSQL1)
 End Sub
 
