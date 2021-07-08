@@ -98,6 +98,10 @@ Sub ToolBar_an
 	ToolBar(true)
 End Sub
 
+Sub ToolBar_aus
+	ToolBar(false)
+End Sub
+
 Sub ToolBar(bVisible As Boolean, Optional oDoc As Object)
 	Dim sToolBarsRoot As String
 	Dim sToolBarNameHide() As String
@@ -108,7 +112,7 @@ Sub ToolBar(bVisible As Boolean, Optional oDoc As Object)
 	
 	sToolBarsRoot = &quot;private:resource/toolbar/&quot;
 	
- 	sToolBarNameHide = Array(&quot;textobjectbar&quot;,&quot;viewerbar&quot;,&quot;standardbar&quot;,&quot;formdesign&quot;,&quot;formcontrols&quot;,&quot;moreformcontrols&quot;)
+ 	sToolBarNameHide = Array(&quot;textobjectbar&quot;,&quot;viewerbar&quot;,&quot;standardbar&quot;,&quot;mailmerge&quot;,&quot;formdesign&quot;,&quot;formcontrols&quot;,&quot;moreformcontrols&quot;)
  	sToolBarNameShow = Array(&quot;textobjectbar&quot;,&quot;standardbar&quot;)
 
 	If Not IsMissing(oDoc) Then

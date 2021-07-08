@@ -13,6 +13,18 @@ Option explicit
 	Global vConfiguration as Variant
 	Global vControllerManager as Variant
 
+Sub mySymbolleisten
+Dim layout as Variant
+Dim elem() as Variant
+Dim i As Integer
+	layout = ThisComponent.CurrentController.Frame.LayoutManager
+	elem = layout.getElements()
+	for i=1 to ubound(elem())
+		msgbox elem(i).ResourceURL
+	next i 
+End Sub
+
+
 Sub Test_CDec()
 	Dim cErgebnis as Currency
 	Dim sErgebnis as String
