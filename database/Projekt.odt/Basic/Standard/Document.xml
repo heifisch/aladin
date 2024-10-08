@@ -44,6 +44,7 @@ Sub Document_kopieren()
 			sBezeichnung=oTextField_Document_Name.Label &amp;&quot;n&quot;
 			SetDocUserProperty(&quot;oDocumentID_old&quot;, lDocumentID)
 			SQL_Datensaetze_Tabelle2_entfernen
+			SQL_Reset_AutoIncrement(sTabelle2)
 			SQL_Datensaetze_Tabelle2_einfuegen
 			SQL_Update_Document1_Gesperrt_0(sTabelle1,lDocumentID)
 			sSQL1=&quot;SELECT t1.Document_Name,t1.ProjektID,t1.KontaktID,t1.AnsprechpartnerID,&quot;&amp;_
@@ -141,6 +142,7 @@ nochmal:
 			if iDocTypID &lt; 7 then
 				sSQL2=sSQL2 &amp; &quot;,&quot;&amp; i13b &amp;&quot;,&apos;&quot;&amp; s13bText &amp;&quot;&apos;&quot;
 			End if
+			SQL_Reset_AutoIncrement(sTabelle1)
 			SQL_execute(sSQL2 &amp; &quot;)&quot;)
 			SQL_Update_Tabelle1_DocumentID(1)
 			SQL_Update_Steuerung_DocumentID(0)
@@ -517,6 +519,8 @@ nochmal:
 				exit sub
 			End if
 		End if
+		SQL_Reset_AutoIncrement(sTabelle1)
+		SQL_Reset_AutoIncrement(sTabelle2)
 		SQL_Reset_AutoIncrement(sArbeitstabelle)
 		SQL_neues_Document(fsConvertApostroph(sDocument_Name))
 		SQL_Update_Tabelle1_DocumentID(1,sTabelle1)
