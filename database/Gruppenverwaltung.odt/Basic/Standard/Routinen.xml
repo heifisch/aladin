@@ -391,5 +391,6 @@ Sub Maske_schliessen()
 	
  	StatusBar(True,oDoc)
 	ToolBar(True,oDoc)
+	oDoc.Modified = False
 End Sub
 </script:module>

@@ -765,6 +765,7 @@ Sub Maske_schliessen()
 	End if
 	StatusBar(True,oDoc)
 	ToolBar(True,oDoc)
+	oDoc.Modified = False
 End Sub
 
 Sub List_Rechnungsname_refresh()

@@ -222,6 +222,7 @@ Sub Maske_schliessen()
 
 	StatusBar(True,oDoc)
 	ToolBar(True,oDoc)
+	oDoc.Modified = False
 End Sub
 
 Sub Print_Inventur()

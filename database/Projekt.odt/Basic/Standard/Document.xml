@@ -286,6 +286,7 @@ Sub Document_schliessen()
 	End if	
 	StatusBar(True,oDoc)
 	ToolBar(True,oDoc)
+	oDoc.Modified = False
 End Sub
 
 Sub Document_berechnen()

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<office:document-meta xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:grddl="http://www.w3.org/2003/g/data-view#" office:version="1.2">
+<office:document-meta xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ooo="http://openoffice.org/2004/office" xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" office:version="1.4">
   <office:meta>
-    <meta:generator>LibreOffice/6.2.5.2$Linux_X86_64 LibreOffice_project/20$Build-2</meta:generator>
+    <meta:generator>LibreOffice/25.2.3.2$Linux_X86_64 LibreOffice_project/520$Build-2</meta:generator>
     <meta:initial-creator>Peter Thielmann</meta:initial-creator>
     <meta:creation-date>1998-03-25T17:31:38</meta:creation-date>
-    <dc:date>2019-11-09T17:50:01.113332500</dc:date>
+    <dc:date>2025-06-28T15:05:09.352631824</dc:date>
     <dc:language>de-DE</dc:language>
-    <meta:editing-cycles>254</meta:editing-cycles>
-    <meta:editing-duration>PT13H41M51S</meta:editing-duration>
+    <meta:editing-cycles>255</meta:editing-cycles>
+    <meta:editing-duration>PT13H42M13S</meta:editing-duration>
     <meta:document-statistic meta:table-count="0" meta:image-count="0" meta:object-count="0" meta:page-count="1" meta:paragraph-count="0" meta:word-count="0" meta:character-count="0" meta:non-whitespace-character-count="0"/>
     <meta:user-defined meta:name="Info 0"/>
     <meta:user-defined meta:name="Info 1"/>

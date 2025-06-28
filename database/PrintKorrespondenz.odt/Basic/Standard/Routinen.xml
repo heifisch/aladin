@@ -58,6 +58,7 @@ Sub DokumentSchlieszen()
 	if GetGUIType = 1 then
 		ReSet_FritzFax()
 	End if
+	oDoc.Modified = False
 End Sub
 
 Sub ConvertToPdfAndSendMail()

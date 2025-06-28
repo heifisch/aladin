@@ -28,6 +28,10 @@ Sub createRepord()
 	End if
 End Sub
 
+Sub closeRepord()
+	oDoc.Modified = False
+End Sub
+
 Sub KontaktDaten()
 	Dim oRecord_Kontakt as Object
 	Dim Projekt_Name as String,sProjektID as String

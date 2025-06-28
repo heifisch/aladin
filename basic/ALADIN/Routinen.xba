@@ -61,7 +61,7 @@ Sub SetDocUserProperty(sPropertyName as String, sPropertyValue as String, Option
 	End If
 	
 	if oUserProps.getPropertySetInfo().hasPropertyByName(sPropertyName) = False then
-		oUserProps.addProperty(sPropertyName, ,sPropertyValue)
+		oUserProps.addProperty(sPropertyName, 0,sPropertyValue)
 	else
 		oUserProps.setPropertyValue(sPropertyName, sPropertyValue)
 	end if

@@ -37,6 +37,10 @@ Sub createRepord()
 	End if
 End Sub
 
+Sub closeRepord()
+	oDoc.Modified = False
+End Sub
+
 Sub Document_ruecksetzen()
 	Feld_fuellen(&quot;Anschrift_Eigen_1&quot;,&quot;Anschrift_Eigen_1&quot;)
 	Feld_fuellen(&quot;Anschrift_Eigen_2&quot;,&quot;Anschrift_Eigen_2&quot;)
