@@ -43,7 +43,7 @@ Sub Leistungen(iOption1 as Integer,iOption2 as Integer,ifLeistungsbezeichnung as
 	vViewCursor = oDoc.CurrentController.getViewCursor()
 	oStyleFamilies= oDoc.getStyleFamilies()
 	oPageStyles = oStyleFamilies.getByName(&quot;PageStyles&quot;)
-	oPageStyle_1 = oPageStyles.getByName(&quot;Erste Seite&quot;)
+	oPageStyle_1 = oPageStyles.getByName(&quot;First Page&quot;)
 	oPageStyle_2 = oPageStyles.getByName(&quot;Standard&quot;)
 	
 	lAnzahlGesamtLeistungen=flAnzahlLeistungen

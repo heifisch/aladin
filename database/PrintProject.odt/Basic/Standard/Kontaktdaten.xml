@@ -42,6 +42,7 @@ Sub KontaktDaten()
 	SetDocUserProperty(&quot;oDocumentArchiviert&quot;,0)	
 	
 	GlobalScope.BasicLibraries.LoadLibrary(&quot;ALADIN&quot;)
+	
 	sSQL1=&quot;SELECT DISTINCT &quot;&amp;_
 		&quot;t1.DocumentID,t1.Document_TypID,t1.Document_Typ,t1.Print_Typ,t1.Bestellnummer,t1.Leistungsbezeichnung,&quot;&amp;_
 		&quot;t1.Leistungsbeschreibung,t1.Liefuleist,t1.LV_Pos,t1.Document_Name,t1.Nummern,&quot;&amp;_
@@ -199,7 +200,7 @@ Sub KontaktDaten()
 	
 	oStyleFamilies= oDoc.getStyleFamilies()
 	oPageStyles = oStyleFamilies.getByName(&quot;PageStyles&quot;)
-	oPageStyle_1 = oPageStyles.getByName(&quot;Erste Seite&quot;)
+	oPageStyle_1 = oPageStyles.getByName(&quot;First Page&quot;)
 	oPageStyle_2 = oPageStyles.getByName(&quot;Standard&quot;)
 	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
 	oTables = oDoc.getTextTables

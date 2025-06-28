@@ -224,24 +224,24 @@
         <text:sequence-decl text:display-outline-level="0" text:name="Figure"/>
       </text:sequence-decls>
       <text:user-field-decls>
-        <text:user-field-decl office:value-type="string" office:string-value="Document_Name" text:name="Document_Name"/>
-        <text:user-field-decl office:value-type="string" office:string-value="Anschrift_Eigen_3" text:name="Anschrift_Eigen_3"/>
-        <text:user-field-decl office:value-type="string" office:string-value="Nummern" text:name="Nummern"/>
         <text:user-field-decl office:value-type="string" office:string-value="Anschrift" text:name="Anschrift"/>
-        <text:user-field-decl office:value-type="string" office:string-value="Leerzeilen" text:name="Leerzeilen"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Anschrift_Eigen_3" text:name="Anschrift_Eigen_3"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Document_Name" text:name="Document_Name"/>
         <text:user-field-decl office:value-type="string" office:string-value="Document_Typ" text:name="Document_Typ"/>
-        <text:user-field-decl office:value-type="string" office:string-value="Name1" text:name="Name1"/>
-        <text:user-field-decl office:value-type="string" office:string-value="Name2" text:name="Name2"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Leerzeilen" text:name="Leerzeilen"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Nummern" text:name="Nummern"/>
         <text:user-field-decl office:value-type="string" office:string-value="Anschrift_Eigen_1" text:name="Anschrift_Eigen_1"/>
-        <text:user-field-decl office:value-type="string" office:string-value="Wenn unzustellbar, zurück!" text:name="unzustellbar"/>
         <text:user-field-decl office:value-type="string" office:string-value="Anschrift_Eigen_2" text:name="Anschrift_Eigen_2"/>
         <text:user-field-decl office:value-type="string" office:string-value="Leistungsprofil" text:name="Leistungsprofil"/>
-        <text:user-field-decl office:value-type="string" office:string-value="Kontakt_Bez" text:name="Kontakt_Bez"/>
-        <text:user-field-decl office:value-type="string" office:string-value="Kontakt" text:name="Kontakt"/>
-        <text:user-field-decl office:value-type="string" office:string-value="Bankverbindung_Bez" text:name="Bankverbindung_Bez"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Name1" text:name="Name1"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Name2" text:name="Name2"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Wenn unzustellbar, zurück!" text:name="unzustellbar"/>
         <text:user-field-decl office:value-type="string" office:string-value="Bankverbindung" text:name="Bankverbindung"/>
-        <text:user-field-decl office:value-type="string" office:string-value="Geschaeftsfuehrer_Bez" text:name="Geschaeftsfuehrer_Bez"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Bankverbindung_Bez" text:name="Bankverbindung_Bez"/>
         <text:user-field-decl office:value-type="string" office:string-value="Firmendaten" text:name="Firmendaten"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Geschaeftsfuehrer_Bez" text:name="Geschaeftsfuehrer_Bez"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Kontakt" text:name="Kontakt"/>
+        <text:user-field-decl office:value-type="string" office:string-value="Kontakt_Bez" text:name="Kontakt_Bez"/>
         <text:user-field-decl office:value-type="string" office:string-value="Erinnert_bis" text:name="Erinnert_bis"/>
         <text:user-field-decl office:value-type="string" office:string-value="Name3" text:name="Name3"/>
         <text:user-field-decl office:value-type="string" office:string-value="Name4" text:name="Name4"/>

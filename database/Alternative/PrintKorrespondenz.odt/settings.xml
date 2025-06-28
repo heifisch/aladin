@@ -4,19 +4,19 @@
     <config:config-item-set config:name="ooo:view-settings">
       <config:config-item config:name="ViewAreaTop" config:type="long">0</config:config-item>
       <config:config-item config:name="ViewAreaLeft" config:type="long">0</config:config-item>
-      <config:config-item config:name="ViewAreaWidth" config:type="long">21962</config:config-item>
-      <config:config-item config:name="ViewAreaHeight" config:type="long">18972</config:config-item>
+      <config:config-item config:name="ViewAreaWidth" config:type="long">22941</config:config-item>
+      <config:config-item config:name="ViewAreaHeight" config:type="long">24661</config:config-item>
       <config:config-item config:name="ShowRedlineChanges" config:type="boolean">true</config:config-item>
       <config:config-item config:name="InBrowseMode" config:type="boolean">false</config:config-item>
       <config:config-item-map-indexed config:name="Views">
         <config:config-item-map-entry>
           <config:config-item config:name="ViewId" config:type="string">view2</config:config-item>
-          <config:config-item config:name="ViewLeft" config:type="long">2531</config:config-item>
+          <config:config-item config:name="ViewLeft" config:type="long">3000</config:config-item>
           <config:config-item config:name="ViewTop" config:type="long">8934</config:config-item>
           <config:config-item config:name="VisibleLeft" config:type="long">0</config:config-item>
           <config:config-item config:name="VisibleTop" config:type="long">0</config:config-item>
-          <config:config-item config:name="VisibleRight" config:type="long">21960</config:config-item>
-          <config:config-item config:name="VisibleBottom" config:type="long">18971</config:config-item>
+          <config:config-item config:name="VisibleRight" config:type="long">22939</config:config-item>
+          <config:config-item config:name="VisibleBottom" config:type="long">24659</config:config-item>
           <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
           <config:config-item config:name="ViewLayoutColumns" config:type="short">1</config:config-item>
           <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
@@ -114,7 +114,7 @@
       <config:config-item config:name="CharacterCompressionType" config:type="short">0</config:config-item>
       <config:config-item config:name="IsLabelDocument" config:type="boolean">false</config:config-item>
       <config:config-item config:name="EmbedLatinScriptFonts" config:type="boolean">true</config:config-item>
-      <config:config-item config:name="PrinterSetup" config:type="base64Binary">3AH+/0hQX0xhc2VySmV0X1AzMDEwX1NlcmllcwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUF9MYXNlckpldF9QMzAxMF9TZXJpZXMAAAAWAAMAqQAAAAAAAAAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFBfTGFzZXJKZXRfUDMwMTBfU2VyaWVzCm9yaWVudGF0aW9uPVBvcnRyYWl0CmNvcGllcz0xCmNvbGxhdGU9ZmFsc2UKbWFyZ2luYWRqdXN0bWVudD0wLDAsJzAsMApjb2xvcmRlcHRoPTI0CmNvbG9yZGV2aWNlPTAKUFBEQ29udGV4dERhdGEKUGFnZVNpemU6QTQAABIAQ09NUEFUX0RVUExFWF9NT0RFDwBEdXBsZXhNb2RlOjpPZmYMAFBSSU5URVJfTkFNRRgASFBfTGFzZXJKZXRfUDMwMTBfU2VyaWVzCwBEUklWRVJfTkFNRR0AQ1VQUzpIUF9MYXNlckpldF9QMzAxMF9TZXJpZXM=</config:config-item>
+      <config:config-item config:name="PrinterSetup" config:type="base64Binary">9wH+/0hQX0xhc2VySmV0X1AzMDEwX1NlcmllcwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUF9MYXNlckpldF9QMzAxMF9TZXJpZXMAAAAWAAMAxAAAAAAAAAAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFBfTGFzZXJKZXRfUDMwMTBfU2VyaWVzCm9yaWVudGF0aW9uPVBvcnRyYWl0CmNvcGllcz0xCmNvbGxhdGU9ZmFsc2UKbWFyZ2luYWRqdXN0bWVudD0wLDAsJzAsMApjb2xvcmRlcHRoPTI0CmNvbG9yZGV2aWNlPTAKUFBEQ29udGV4dERhdGEKRHVwbGV4Ok5vbmUASW5wdXRTbG90OkF1dG8AUGFnZVNpemU6QTQAABIAQ09NUEFUX0RVUExFWF9NT0RFDwBEdXBsZXhNb2RlOjpPZmYMAFBSSU5URVJfTkFNRRgASFBfTGFzZXJKZXRfUDMwMTBfU2VyaWVzCwBEUklWRVJfTkFNRR0AQ1VQUzpIUF9MYXNlckpldF9QMzAxMF9TZXJpZXM=</config:config-item>
       <config:config-item config:name="UseVariableWidthNBSP" config:type="boolean">false</config:config-item>
       <config:config-item config:name="EmbedOnlyUsedFonts" config:type="boolean">false</config:config-item>
       <config:config-item config:name="ApplyUserData" config:type="boolean">true</config:config-item>
@@ -142,7 +142,7 @@
       <config:config-item config:name="UseOldPrinterMetrics" config:type="boolean">false</config:config-item>
       <config:config-item config:name="RedlineProtectionKey" config:type="base64Binary"/>
       <config:config-item config:name="TabsRelativeToIndent" config:type="boolean">true</config:config-item>
-      <config:config-item config:name="Rsid" config:type="int">1675979</config:config-item>
+      <config:config-item config:name="Rsid" config:type="int">1701953</config:config-item>
       <config:config-item config:name="UpdateFromTemplate" config:type="boolean">false</config:config-item>
       <config:config-item config:name="ProtectForm" config:type="boolean">false</config:config-item>
       <config:config-item config:name="MsWordCompMinLineHeightByFly" config:type="boolean">false</config:config-item>

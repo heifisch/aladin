@@ -285,7 +285,7 @@ Sub KontaktDaten()
 	
 	oStyleFamilies= oDoc.getStyleFamilies()
 	oPageStyles = oStyleFamilies.getByName(&quot;PageStyles&quot;)
-	oPageStyle_1 = oPageStyles.getByName(&quot;Erste Seite&quot;)
+	oPageStyle_1 = oPageStyles.getByName(&quot;First Page&quot;)
 	oPageStyle_2 = oPageStyles.getByName(&quot;Standard&quot;)
 	oTables = createunoservice(&quot;com.sun.star.text.TextTables&quot;)
 	oTables = oDoc.getTextTables
