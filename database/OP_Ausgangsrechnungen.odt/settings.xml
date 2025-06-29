@@ -4,8 +4,8 @@
     <config:config-item-set config:name="ooo:view-settings">
       <config:config-item config:name="ViewAreaTop" config:type="long">501</config:config-item>
       <config:config-item config:name="ViewAreaLeft" config:type="long">501</config:config-item>
-      <config:config-item config:name="ViewAreaWidth" config:type="long">21962</config:config-item>
-      <config:config-item config:name="ViewAreaHeight" config:type="long">19528</config:config-item>
+      <config:config-item config:name="ViewAreaWidth" config:type="long">19951</config:config-item>
+      <config:config-item config:name="ViewAreaHeight" config:type="long">22571</config:config-item>
       <config:config-item config:name="ShowRedlineChanges" config:type="boolean">false</config:config-item>
       <config:config-item config:name="InBrowseMode" config:type="boolean">true</config:config-item>
       <config:config-item-map-indexed config:name="Views">
@@ -15,8 +15,8 @@
           <config:config-item config:name="ViewTop" config:type="long">1242</config:config-item>
           <config:config-item config:name="VisibleLeft" config:type="long">501</config:config-item>
           <config:config-item config:name="VisibleTop" config:type="long">501</config:config-item>
-          <config:config-item config:name="VisibleRight" config:type="long">22461</config:config-item>
-          <config:config-item config:name="VisibleBottom" config:type="long">20027</config:config-item>
+          <config:config-item config:name="VisibleRight" config:type="long">20451</config:config-item>
+          <config:config-item config:name="VisibleBottom" config:type="long">23070</config:config-item>
           <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
           <config:config-item config:name="ViewLayoutColumns" config:type="short">1</config:config-item>
           <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
@@ -107,14 +107,14 @@
       <config:config-item config:name="HeaderSpacingBelowLastPara" config:type="boolean">false</config:config-item>
       <config:config-item config:name="SaveVersionOnClose" config:type="boolean">false</config:config-item>
       <config:config-item config:name="UseFormerLineSpacing" config:type="boolean">true</config:config-item>
-      <config:config-item config:name="PrinterName" config:type="string">HP_LaserJet_P3010_Series</config:config-item>
+      <config:config-item config:name="PrinterName" config:type="string">Generic Printer</config:config-item>
       <config:config-item config:name="AddParaLineSpacingToTableCells" config:type="boolean">false</config:config-item>
       <config:config-item config:name="IsKernAsianPunctuation" config:type="boolean">false</config:config-item>
       <config:config-item config:name="DoNotJustifyLinesWithManualBreak" config:type="boolean">true</config:config-item>
       <config:config-item config:name="CharacterCompressionType" config:type="short">0</config:config-item>
       <config:config-item config:name="IsLabelDocument" config:type="boolean">false</config:config-item>
       <config:config-item config:name="EmbedLatinScriptFonts" config:type="boolean">true</config:config-item>
-      <config:config-item config:name="PrinterSetup" config:type="base64Binary">3AH+/0hQX0xhc2VySmV0X1AzMDEwX1NlcmllcwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQ1VQUzpIUF9MYXNlckpldF9QMzAxMF9TZXJpZXMAAAAWAAMAqQAAAAAAAAAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9SFBfTGFzZXJKZXRfUDMwMTBfU2VyaWVzCm9yaWVudGF0aW9uPVBvcnRyYWl0CmNvcGllcz0xCmNvbGxhdGU9ZmFsc2UKbWFyZ2luYWRqdXN0bWVudD0wLDAsJzAsMApjb2xvcmRlcHRoPTI0CmNvbG9yZGV2aWNlPTAKUFBEQ29udGV4dERhdGEKUGFnZVNpemU6QTQAABIAQ09NUEFUX0RVUExFWF9NT0RFDwBEdXBsZXhNb2RlOjpPZmYMAFBSSU5URVJfTkFNRRgASFBfTGFzZXJKZXRfUDMwMTBfU2VyaWVzCwBEUklWRVJfTkFNRR0AQ1VQUzpIUF9MYXNlckpldF9QMzAxMF9TZXJpZXM=</config:config-item>
+      <config:config-item config:name="PrinterSetup" config:type="base64Binary">tAH+/0dlbmVyaWMgUHJpbnRlcgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAU0dFTlBSVAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAWAAMAoAAAAAAAAAAEAAhSAAAEdAAASm9iRGF0YSAxCnByaW50ZXI9R2VuZXJpYyBQcmludGVyCm9yaWVudGF0aW9uPVBvcnRyYWl0CmNvcGllcz0xCmNvbGxhdGU9ZmFsc2UKbWFyZ2luYWRqdXN0bWVudD0wLDAsJzAsMApjb2xvcmRlcHRoPTI0CmNvbG9yZGV2aWNlPTAKUFBEQ29udGV4dERhdGEKUGFnZVNpemU6QTQAABIAQ09NUEFUX0RVUExFWF9NT0RFDwBEdXBsZXhNb2RlOjpPZmYMAFBSSU5URVJfTkFNRQ8AR2VuZXJpYyBQcmludGVyCwBEUklWRVJfTkFNRQcAU0dFTlBSVA==</config:config-item>
       <config:config-item config:name="UseVariableWidthNBSP" config:type="boolean">false</config:config-item>
       <config:config-item config:name="EmbedOnlyUsedFonts" config:type="boolean">false</config:config-item>
       <config:config-item config:name="ApplyUserData" config:type="boolean">true</config:config-item>
@@ -142,7 +142,7 @@
       <config:config-item config:name="UseOldPrinterMetrics" config:type="boolean">false</config:config-item>
       <config:config-item config:name="RedlineProtectionKey" config:type="base64Binary"/>
       <config:config-item config:name="TabsRelativeToIndent" config:type="boolean">true</config:config-item>
-      <config:config-item config:name="Rsid" config:type="int">3702439</config:config-item>
+      <config:config-item config:name="Rsid" config:type="int">3803011</config:config-item>
       <config:config-item config:name="UpdateFromTemplate" config:type="boolean">true</config:config-item>
       <config:config-item config:name="ProtectForm" config:type="boolean">false</config:config-item>
       <config:config-item config:name="MsWordCompMinLineHeightByFly" config:type="boolean">false</config:config-item>

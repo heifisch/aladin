@@ -107,7 +107,7 @@ Sub Dokument_Anzeigen()
 	End if
 
 	oShell = createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;)
-	oShell.execute(sUrl,,0)
+	oShell.execute(sUrl,&quot;&quot;,0)
 End Sub
 
 
