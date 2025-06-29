@@ -40,16 +40,16 @@ Extras ->
  
 folgende Datei auswählen: <Speicherpfad>/basic/ALADIN/script.xlb
        und <Speicherpfad>/basic/ALADIN_Global/script.xlb
-       
-![grafik](https://github.com/user-attachments/assets/374d1bce-b07c-49e9-b890-128d6d8af558) ![grafik](https://github.com/user-attachments/assets/91def1d6-c2b6-4de8-8bf2-661a2aabad1b)
 
-So sollte das dann in etwa aussehen:
+![grafik](https://github.com/user-attachments/assets/1fe17b17-1a8b-4d39-abf6-d069c626fbe5) ![grafik](https://github.com/user-attachments/assets/b188140d-97b9-42da-ba81-3af6c7580c8e)  
 
-![grafik](https://github.com/user-attachments/assets/302ad90e-f639-4125-9b2e-59b3c9bcec9e)
+So sollte das dann in etwa aussehen:  
+![grafik](https://github.com/user-attachments/assets/6d2ff7bb-9fe7-4f33-ba77-be5b0690752f)  
 
 3. In der Bibliothek "ALADIN_Global" unter "Global" noch die nötigen Variablen anpassen:
 
-![grafik](https://github.com/user-attachments/assets/8b7bc0c8-dda7-4ea4-8ac2-9441f43b7227)  
+![grafik](https://github.com/user-attachments/assets/7911899c-3702-42ae-826a-67ffe7d14ef8)  
+
 Wichtig wären sAladinPfad, sStandardPfad, bei Mehrbenutzerbetrieb und Mehr-Mandantenbetrieb die iUserID und evtl. der Mandanten-Name unter sMandant.  
 
 4. Datenbankenschnittstelle in AOO/LO konfigurieren
@@ -63,9 +63,9 @@ Diese Datenbank muss dann unter:
 Extras ->
  Optionen ->
  OpenOffice.org Base ->
- Datenbanken
+ Datenbanken  
  
- ![grafik](https://github.com/user-attachments/assets/20524bd8-5cd8-48d2-8e60-94024040a2da)  
+![grafik](https://github.com/user-attachments/assets/61954564-a44d-43bf-9f57-e18161499243)  
 
 unter den Namen "MySQL" registriert werden. Groß-Kleinschreibung beachten!  
 Danach sollte man in der Datenquellenansicht(F4) Zugriff auf die Tabellen von mysql (db, user, usw.) haben. 
@@ -101,13 +101,13 @@ AOO: ooffice macro:///ALADIN.Startmenue.neuerTask
 LO: loffice macro:///ALADIN.Startmenue.neuerTask
 
 Wenn das geklappt hat, kann man sich mit diesem Aufruf eine Verknüpfung auf dem Desktop machen.  
-Und schon sollte es losgehen können.
+Und schon sollte es losgehen können.  
 
-![grafik](https://github.com/user-attachments/assets/d859d195-6cb2-4fe9-b77d-35d0607d2d9f)  
-![grafik](https://github.com/user-attachments/assets/6ef61127-32d8-42f6-bfe0-d0c7ce57e9d9)  
-![grafik](https://github.com/user-attachments/assets/d92d9d8c-0da3-41de-aa9c-f7c1b489ac51)  
+![grafik](https://github.com/user-attachments/assets/2c397faf-99f5-4cc0-a88d-2723ecf9f85f)  
+![grafik](https://github.com/user-attachments/assets/d18a9598-178e-473a-b614-9399fc8d6f28)  
+![grafik](https://github.com/user-attachments/assets/2fab60d7-65c4-4e00-8737-e585336fe1bd)  
 
-9. Modul "Einstellungen" starten und die entsprechenden Einstellungen vornehmen.
+9. Modul "Einstellungen" starten und die entsprechenden Einstellungen vornehmen.  
 
 **Achtung!!!**
 
