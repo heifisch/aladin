@@ -65,5 +65,5 @@ CONTENT='
 
 echo $CONTENT
 
-tar cvhjf aladin410.$(date -I).tar.bz2  $CONTENT 
-zip -rv aladin410.$(date -I).zip \ $CONTENT
+tar cvhjf ./.git_repo/package/aladin.$(date -I).tar.bz2  $CONTENT 
+zip -rv ./.git_repo/package/aladin.$(date -I).zip \ $CONTENT

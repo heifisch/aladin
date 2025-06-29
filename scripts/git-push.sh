@@ -33,4 +33,5 @@ pushd ${EXTRACT_DIR}
   git add *
   git commit
   git push origin master
+  git push aladin master
 popd
