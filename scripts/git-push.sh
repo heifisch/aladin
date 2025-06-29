@@ -32,6 +32,8 @@ done
 pushd ${EXTRACT_DIR}
   git add *
   git commit
+echo "******** push lokal **********"
   git push origin master
+echo "******** push github *********"
   git push aladin master
 popd
