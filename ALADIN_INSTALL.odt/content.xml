@@ -1,88 +1,109 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<office:document-content xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:rpt="http://openoffice.org/2005/report" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" office:version="1.2">
+<office:document-content xmlns:css3t="http://www.w3.org/TR/css3-text/" xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:xhtml="http://www.w3.org/1999/xhtml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xforms="http://www.w3.org/2002/xforms" xmlns:dom="http://www.w3.org/2001/xml-events" xmlns:script="urn:oasis:names:tc:opendocument:xmlns:script:1.0" xmlns:form="urn:oasis:names:tc:opendocument:xmlns:form:1.0" xmlns:math="http://www.w3.org/1998/Math/MathML" xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:fo="urn:oasis:names:tc:opendocument:xmlns:xsl-fo-compatible:1.0" xmlns:ooow="http://openoffice.org/2004/writer" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:drawooo="http://openoffice.org/2010/draw" xmlns:oooc="http://openoffice.org/2004/calc" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:calcext="urn:org:documentfoundation:names:experimental:calc:xmlns:calcext:1.0" xmlns:style="urn:oasis:names:tc:opendocument:xmlns:style:1.0" xmlns:text="urn:oasis:names:tc:opendocument:xmlns:text:1.0" xmlns:of="urn:oasis:names:tc:opendocument:xmlns:of:1.2" xmlns:tableooo="http://openoffice.org/2009/table" xmlns:draw="urn:oasis:names:tc:opendocument:xmlns:drawing:1.0" xmlns:dr3d="urn:oasis:names:tc:opendocument:xmlns:dr3d:1.0" xmlns:rpt="http://openoffice.org/2005/report" xmlns:formx="urn:openoffice:names:experimental:ooxml-odf-interop:xmlns:form:1.0" xmlns:svg="urn:oasis:names:tc:opendocument:xmlns:svg-compatible:1.0" xmlns:chart="urn:oasis:names:tc:opendocument:xmlns:chart:1.0" xmlns:officeooo="http://openoffice.org/2009/office" xmlns:table="urn:oasis:names:tc:opendocument:xmlns:table:1.0" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:loext="urn:org:documentfoundation:names:experimental:office:xmlns:loext:1.0" xmlns:number="urn:oasis:names:tc:opendocument:xmlns:datastyle:1.0" xmlns:field="urn:openoffice:names:experimental:ooo-ms-interop:xmlns:field:1.0" office:version="1.4">
   <office:scripts/>
   <office:font-face-decls>
-    <style:font-face style:name="StarSymbol" svg:font-family="StarSymbol" style:font-charset="x-symbol"/>
-    <style:font-face style:name="Arial" svg:font-family="Arial, Helvetica"/>
-    <style:font-face style:name="Lucidasans1" svg:font-family="Lucidasans"/>
-    <style:font-face style:name="Nimbus Roman No9 L" svg:font-family="'Nimbus Roman No9 L'"/>
-    <style:font-face style:name="Courier New" svg:font-family="'Courier New'" style:font-family-generic="modern" style:font-pitch="fixed"/>
+    <style:font-face style:name="Arial" svg:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>
+    <style:font-face style:name="Arial1" svg:font-family="Arial, Helvetica"/>
     <style:font-face style:name="Bitstream Vera Sans" svg:font-family="'Bitstream Vera Sans'" style:font-pitch="variable"/>
-    <style:font-face style:name="Lucidasans" svg:font-family="Lucidasans" style:font-pitch="variable"/>
-    <style:font-face style:name="Mincho" svg:font-family="Mincho" style:font-pitch="variable"/>
-    <style:font-face style:name="Liberation Serif" svg:font-family="'Liberation Serif'" style:font-family-generic="roman" style:font-pitch="variable"/>
-    <style:font-face style:name="Arial1" svg:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable"/>
+    <style:font-face style:name="Courier New" svg:font-family="'Courier New'" style:font-family-generic="modern" style:font-pitch="fixed"/>
     <style:font-face style:name="DejaVu Sans" svg:font-family="'DejaVu Sans'" style:font-family-generic="system" style:font-pitch="variable"/>
+    <style:font-face style:name="Liberation Serif" svg:font-family="'Liberation Serif'" style:font-family-generic="roman" style:font-pitch="variable"/>
+    <style:font-face style:name="Lucidasans" svg:font-family="Lucidasans"/>
+    <style:font-face style:name="Lucidasans1" svg:font-family="Lucidasans" style:font-pitch="variable"/>
+    <style:font-face style:name="Mincho" svg:font-family="Mincho" style:font-pitch="variable"/>
+    <style:font-face style:name="Nimbus Roman No9 L" svg:font-family="'Nimbus Roman No9 L'"/>
+    <style:font-face style:name="StarSymbol" svg:font-family="StarSymbol" style:font-charset="x-symbol"/>
   </office:font-face-decls>
   <office:automatic-styles>
     <style:style style:name="P1" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
-      <style:text-properties style:font-name="Arial1"/>
+      <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="P2" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
-      <style:text-properties style:font-name="Arial1" fo:font-size="12pt" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+      <style:text-properties style:font-name="Arial" fo:font-size="12pt" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
     </style:style>
-    <style:style style:name="P3" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
-      <style:text-properties style:font-name="Arial1" fo:font-size="12pt" style:text-underline-style="none" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+    <style:style style:name="P3" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L1">
+      <style:text-properties style:font-name="Arial"/>
     </style:style>
     <style:style style:name="P4" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
-      <style:text-properties style:font-name="Arial1" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color"/>
+      <style:text-properties style:font-name="Arial" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color"/>
     </style:style>
-    <style:style style:name="P5" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
-      <style:paragraph-properties fo:break-before="page"/>
-      <style:text-properties style:font-name="Arial1" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color"/>
+    <style:style style:name="P5" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L2">
+      <style:text-properties style:font-name="Arial" fo:font-size="12pt" style:text-underline-style="none" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
     </style:style>
     <style:style style:name="P6" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
-      <style:paragraph-properties fo:break-before="page"/>
-      <style:text-properties style:font-name="Arial1" fo:font-size="12pt" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+      <style:text-properties style:font-name="Arial" fo:font-size="12pt" style:text-underline-style="none" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
     </style:style>
     <style:style style:name="P7" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
-      <style:text-properties style:font-name="Arial1"/>
+      <style:paragraph-properties fo:break-before="page"/>
+      <style:text-properties style:font-name="Arial" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color"/>
     </style:style>
-    <style:style style:name="P8" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L1">
-      <style:text-properties style:font-name="Arial1"/>
+    <style:style style:name="P8" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L3">
+      <style:text-properties style:font-name="Arial"/>
     </style:style>
-    <style:style style:name="P9" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L1">
+    <style:style style:name="P9" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L3">
       <style:paragraph-properties>
         <style:tab-stops>
           <style:tab-stop style:position="10.663cm"/>
         </style:tab-stops>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial1"/>
+      <style:text-properties style:font-name="Arial"/>
     </style:style>
-    <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L1">
+    <style:style style:name="P10" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L3">
       <style:paragraph-properties>
         <style:tab-stops/>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial1"/>
+      <style:text-properties style:font-name="Arial"/>
     </style:style>
-    <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L2">
-      <style:text-properties style:font-name="Arial1"/>
-    </style:style>
-    <style:style style:name="P12" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L1">
+    <style:style style:name="P11" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L3">
       <style:paragraph-properties fo:margin-left="-1.251cm" fo:margin-right="0cm" fo:text-indent="0cm" style:auto-text-indent="false">
         <style:tab-stops/>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial1"/>
+      <style:text-properties style:font-name="Arial"/>
     </style:style>
-    <style:style style:name="P13" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L1">
+    <style:style style:name="P12" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L3">
       <style:paragraph-properties fo:break-before="page">
         <style:tab-stops/>
       </style:paragraph-properties>
     </style:style>
-    <style:style style:name="P14" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L1">
+    <style:style style:name="P13" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L3">
       <style:paragraph-properties fo:break-before="page">
         <style:tab-stops/>
       </style:paragraph-properties>
-      <style:text-properties style:font-name="Arial1"/>
+      <style:text-properties style:font-name="Arial"/>
+    </style:style>
+    <style:style style:name="P14" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L3">
+      <style:paragraph-properties>
+        <style:tab-stops/>
+      </style:paragraph-properties>
+      <style:text-properties style:font-name="Arial" officeooo:paragraph-rsid="001eaf57"/>
+    </style:style>
+    <style:style style:name="P15" style:family="paragraph" style:parent-style-name="Preformatted_20_Text">
+      <style:paragraph-properties fo:break-before="page"/>
+      <style:text-properties style:font-name="Arial" fo:font-size="12pt" style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color" style:font-size-asian="12pt" style:font-size-complex="12pt"/>
+    </style:style>
+    <style:style style:name="P16" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L4">
+      <style:text-properties style:font-name="Arial"/>
+    </style:style>
+    <style:style style:name="P17" style:family="paragraph" style:parent-style-name="Preformatted_20_Text" style:list-style-name="L4">
+      <style:text-properties style:font-name="Arial" officeooo:paragraph-rsid="002080f0"/>
     </style:style>
     <style:style style:name="T1" style:family="text">
-      <style:text-properties style:text-underline-style="solid" style:text-underline-width="auto" style:text-underline-color="font-color"/>
+      <style:text-properties officeooo:rsid="001ab118"/>
     </style:style>
     <style:style style:name="T2" style:family="text">
       <style:text-properties style:text-underline-style="none"/>
     </style:style>
     <style:style style:name="T3" style:family="text">
-      <style:text-properties style:font-name="Arial1"/>
+      <style:text-properties style:font-name="Arial"/>
+    </style:style>
+    <style:style style:name="T4" style:family="text">
+      <style:text-properties officeooo:rsid="001e4f23"/>
+    </style:style>
+    <style:style style:name="T5" style:family="text">
+      <style:text-properties officeooo:rsid="001eaf57"/>
+    </style:style>
+    <style:style style:name="T6" style:family="text">
+      <style:text-properties officeooo:rsid="002080f0"/>
     </style:style>
     <style:style style:name="fr1" style:family="graphic" style:parent-style-name="Graphics">
       <style:graphic-properties style:vertical-pos="from-top" style:vertical-rel="paragraph" style:horizontal-pos="from-left" style:horizontal-rel="paragraph" style:mirror="none" fo:clip="rect(0cm, 0cm, 0cm, 0cm)" draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%" draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%" draw:color-mode="standard"/>
@@ -94,75 +115,199 @@
       <style:graphic-properties style:vertical-pos="top" style:vertical-rel="paragraph" style:horizontal-pos="center" style:horizontal-rel="paragraph" style:mirror="none" fo:clip="rect(0cm, 0cm, 0cm, 0cm)" draw:luminance="0%" draw:contrast="0%" draw:red="0%" draw:green="0%" draw:blue="0%" draw:gamma="100%" draw:color-inversion="false" draw:image-opacity="100%" draw:color-mode="standard"/>
     </style:style>
     <text:list-style style:name="L1">
-      <text:list-level-style-number text:level="1" style:num-suffix="." style:num-format="1">
+      <text:list-level-style-bullet text:level="1" text:style-name="Bullet_20_Symbols" loext:num-list-format="%1%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="1.27cm" fo:text-indent="-0.635cm" fo:margin-left="1.27cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="2" text:style-name="Bullet_20_Symbols" loext:num-list-format="%2%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="1.905cm" fo:text-indent="-0.635cm" fo:margin-left="1.905cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="3" text:style-name="Bullet_20_Symbols" loext:num-list-format="%3%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="2.54cm" fo:text-indent="-0.635cm" fo:margin-left="2.54cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="4" text:style-name="Bullet_20_Symbols" loext:num-list-format="%4%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="3.175cm" fo:text-indent="-0.635cm" fo:margin-left="3.175cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="5" text:style-name="Bullet_20_Symbols" loext:num-list-format="%5%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="3.81cm" fo:text-indent="-0.635cm" fo:margin-left="3.81cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="6" text:style-name="Bullet_20_Symbols" loext:num-list-format="%6%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="4.445cm" fo:text-indent="-0.635cm" fo:margin-left="4.445cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="7" text:style-name="Bullet_20_Symbols" loext:num-list-format="%7%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="5.08cm" fo:text-indent="-0.635cm" fo:margin-left="5.08cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="8" text:style-name="Bullet_20_Symbols" loext:num-list-format="%8%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="5.715cm" fo:text-indent="-0.635cm" fo:margin-left="5.715cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="9" text:style-name="Bullet_20_Symbols" loext:num-list-format="%9%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="6.35cm" fo:text-indent="-0.635cm" fo:margin-left="6.35cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="10" text:style-name="Bullet_20_Symbols" loext:num-list-format="%10%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="6.985cm" fo:text-indent="-0.635cm" fo:margin-left="6.985cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+    </text:list-style>
+    <text:list-style style:name="L2">
+      <text:list-level-style-bullet text:level="1" text:style-name="Bullet_20_Symbols" loext:num-list-format="%1%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="1.27cm" fo:text-indent="-0.635cm" fo:margin-left="1.27cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="2" text:style-name="Bullet_20_Symbols" loext:num-list-format="%2%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="1.905cm" fo:text-indent="-0.635cm" fo:margin-left="1.905cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="3" text:style-name="Bullet_20_Symbols" loext:num-list-format="%3%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="2.54cm" fo:text-indent="-0.635cm" fo:margin-left="2.54cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="4" text:style-name="Bullet_20_Symbols" loext:num-list-format="%4%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="3.175cm" fo:text-indent="-0.635cm" fo:margin-left="3.175cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="5" text:style-name="Bullet_20_Symbols" loext:num-list-format="%5%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="3.81cm" fo:text-indent="-0.635cm" fo:margin-left="3.81cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="6" text:style-name="Bullet_20_Symbols" loext:num-list-format="%6%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="4.445cm" fo:text-indent="-0.635cm" fo:margin-left="4.445cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="7" text:style-name="Bullet_20_Symbols" loext:num-list-format="%7%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="5.08cm" fo:text-indent="-0.635cm" fo:margin-left="5.08cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="8" text:style-name="Bullet_20_Symbols" loext:num-list-format="%8%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="5.715cm" fo:text-indent="-0.635cm" fo:margin-left="5.715cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="9" text:style-name="Bullet_20_Symbols" loext:num-list-format="%9%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="6.35cm" fo:text-indent="-0.635cm" fo:margin-left="6.35cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+      <text:list-level-style-bullet text:level="10" text:style-name="Bullet_20_Symbols" loext:num-list-format="%10%" text:bullet-char="•">
+        <style:list-level-properties text:list-level-position-and-space-mode="label-alignment">
+          <style:list-level-label-alignment text:label-followed-by="listtab" text:list-tab-stop-position="6.985cm" fo:text-indent="-0.635cm" fo:margin-left="6.985cm"/>
+        </style:list-level-properties>
+        <style:text-properties fo:font-family="OpenSymbol"/>
+      </text:list-level-style-bullet>
+    </text:list-style>
+    <text:list-style style:name="L3">
+      <text:list-level-style-number text:level="1" loext:num-list-format="%1%." style:num-suffix="." style:num-format="1">
         <style:list-level-properties text:space-before="0.635cm" text:min-label-width="0.635cm"/>
       </text:list-level-style-number>
-      <text:list-level-style-number text:level="2" style:num-suffix="." style:num-format="1">
+      <text:list-level-style-number text:level="2" loext:num-list-format="%2%." style:num-suffix="." style:num-format="1">
         <style:list-level-properties text:space-before="1.27cm" text:min-label-width="0.635cm"/>
       </text:list-level-style-number>
-      <text:list-level-style-number text:level="3" style:num-suffix="." style:num-format="1">
+      <text:list-level-style-number text:level="3" loext:num-list-format="%3%." style:num-suffix="." style:num-format="1">
         <style:list-level-properties text:space-before="1.905cm" text:min-label-width="0.635cm"/>
       </text:list-level-style-number>
-      <text:list-level-style-number text:level="4" style:num-suffix="." style:num-format="1">
+      <text:list-level-style-number text:level="4" loext:num-list-format="%4%." style:num-suffix="." style:num-format="1">
         <style:list-level-properties text:space-before="2.54cm" text:min-label-width="0.635cm"/>
       </text:list-level-style-number>
-      <text:list-level-style-number text:level="5" style:num-suffix="." style:num-format="1">
+      <text:list-level-style-number text:level="5" loext:num-list-format="%5%." style:num-suffix="." style:num-format="1">
         <style:list-level-properties text:space-before="3.175cm" text:min-label-width="0.635cm"/>
       </text:list-level-style-number>
-      <text:list-level-style-number text:level="6" style:num-suffix="." style:num-format="1">
+      <text:list-level-style-number text:level="6" loext:num-list-format="%6%." style:num-suffix="." style:num-format="1">
         <style:list-level-properties text:space-before="3.81cm" text:min-label-width="0.635cm"/>
       </text:list-level-style-number>
-      <text:list-level-style-number text:level="7" style:num-suffix="." style:num-format="1">
+      <text:list-level-style-number text:level="7" loext:num-list-format="%7%." style:num-suffix="." style:num-format="1">
         <style:list-level-properties text:space-before="4.445cm" text:min-label-width="0.635cm"/>
       </text:list-level-style-number>
-      <text:list-level-style-number text:level="8" style:num-suffix="." style:num-format="1">
+      <text:list-level-style-number text:level="8" loext:num-list-format="%8%." style:num-suffix="." style:num-format="1">
         <style:list-level-properties text:space-before="5.08cm" text:min-label-width="0.635cm"/>
       </text:list-level-style-number>
-      <text:list-level-style-number text:level="9" style:num-suffix="." style:num-format="1">
+      <text:list-level-style-number text:level="9" loext:num-list-format="%9%." style:num-suffix="." style:num-format="1">
         <style:list-level-properties text:space-before="5.715cm" text:min-label-width="0.635cm"/>
       </text:list-level-style-number>
-      <text:list-level-style-number text:level="10" style:num-suffix="." style:num-format="1">
+      <text:list-level-style-number text:level="10" loext:num-list-format="%10%." style:num-suffix="." style:num-format="1">
         <style:list-level-properties text:space-before="6.35cm" text:min-label-width="0.635cm"/>
       </text:list-level-style-number>
     </text:list-style>
-    <text:list-style style:name="L2">
-      <text:list-level-style-bullet text:level="1" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+    <text:list-style style:name="L4">
+      <text:list-level-style-bullet text:level="1" text:style-name="Bullet_20_Symbols" loext:num-list-format="%1%" text:bullet-char="•">
         <style:list-level-properties text:space-before="0.635cm" text:min-label-width="0.635cm"/>
         <style:text-properties style:font-name="StarSymbol"/>
       </text:list-level-style-bullet>
-      <text:list-level-style-bullet text:level="2" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+      <text:list-level-style-bullet text:level="2" text:style-name="Bullet_20_Symbols" loext:num-list-format="%2%" text:bullet-char="•">
         <style:list-level-properties text:space-before="1.27cm" text:min-label-width="0.635cm"/>
         <style:text-properties style:font-name="StarSymbol"/>
       </text:list-level-style-bullet>
-      <text:list-level-style-bullet text:level="3" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+      <text:list-level-style-bullet text:level="3" text:style-name="Bullet_20_Symbols" loext:num-list-format="%3%" text:bullet-char="•">
         <style:list-level-properties text:space-before="1.905cm" text:min-label-width="0.635cm"/>
         <style:text-properties style:font-name="StarSymbol"/>
       </text:list-level-style-bullet>
-      <text:list-level-style-bullet text:level="4" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+      <text:list-level-style-bullet text:level="4" text:style-name="Bullet_20_Symbols" loext:num-list-format="%4%" text:bullet-char="•">
         <style:list-level-properties text:space-before="2.54cm" text:min-label-width="0.635cm"/>
         <style:text-properties style:font-name="StarSymbol"/>
       </text:list-level-style-bullet>
-      <text:list-level-style-bullet text:level="5" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+      <text:list-level-style-bullet text:level="5" text:style-name="Bullet_20_Symbols" loext:num-list-format="%5%" text:bullet-char="•">
         <style:list-level-properties text:space-before="3.175cm" text:min-label-width="0.635cm"/>
         <style:text-properties style:font-name="StarSymbol"/>
       </text:list-level-style-bullet>
-      <text:list-level-style-bullet text:level="6" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+      <text:list-level-style-bullet text:level="6" text:style-name="Bullet_20_Symbols" loext:num-list-format="%6%" text:bullet-char="•">
         <style:list-level-properties text:space-before="3.81cm" text:min-label-width="0.635cm"/>
         <style:text-properties style:font-name="StarSymbol"/>
       </text:list-level-style-bullet>
-      <text:list-level-style-bullet text:level="7" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+      <text:list-level-style-bullet text:level="7" text:style-name="Bullet_20_Symbols" loext:num-list-format="%7%" text:bullet-char="•">
         <style:list-level-properties text:space-before="4.445cm" text:min-label-width="0.635cm"/>
         <style:text-properties style:font-name="StarSymbol"/>
       </text:list-level-style-bullet>
-      <text:list-level-style-bullet text:level="8" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+      <text:list-level-style-bullet text:level="8" text:style-name="Bullet_20_Symbols" loext:num-list-format="%8%" text:bullet-char="•">
         <style:list-level-properties text:space-before="5.08cm" text:min-label-width="0.635cm"/>
         <style:text-properties style:font-name="StarSymbol"/>
       </text:list-level-style-bullet>
-      <text:list-level-style-bullet text:level="9" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+      <text:list-level-style-bullet text:level="9" text:style-name="Bullet_20_Symbols" loext:num-list-format="%9%" text:bullet-char="•">
         <style:list-level-properties text:space-before="5.715cm" text:min-label-width="0.635cm"/>
         <style:text-properties style:font-name="StarSymbol"/>
       </text:list-level-style-bullet>
-      <text:list-level-style-bullet text:level="10" text:style-name="Bullet_20_Symbols" text:bullet-char="•">
+      <text:list-level-style-bullet text:level="10" text:style-name="Bullet_20_Symbols" loext:num-list-format="%10%" text:bullet-char="•">
         <style:list-level-properties text:space-before="6.35cm" text:min-label-width="0.635cm"/>
         <style:text-properties style:font-name="StarSymbol"/>
       </text:list-level-style-bullet>
@@ -176,11 +321,9 @@
         <text:sequence-decl text:display-outline-level="0" text:name="Table"/>
         <text:sequence-decl text:display-outline-level="0" text:name="Text"/>
         <text:sequence-decl text:display-outline-level="0" text:name="Drawing"/>
+        <text:sequence-decl text:display-outline-level="0" text:name="Figure"/>
       </text:sequence-decls>
-      <text:p text:style-name="P1">10.10.2013</text:p>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1">Copyright (C) Heiko Fischer &lt;heiko.fischer@aladin-gmbh.de&gt;</text:p>
-      <text:p text:style-name="P1"/>
+      <text:p text:style-name="P1"><text:span text:style-name="T1">29</text:span>.<text:span text:style-name="T1">05.</text:span>20<text:span text:style-name="T1">25</text:span></text:p>
       <text:p text:style-name="P1"/>
       <text:p text:style-name="P1">Angebots- und Rechnungsverwaltung mit Kunden- und Lieferantenstamm, OP-Buchhaltung, Nachkalkulation und Vielem mehr.</text:p>
       <text:p text:style-name="P1"/>
@@ -192,38 +335,37 @@
       <text:p text:style-name="P1">auch ohne die implizierte Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK.</text:p>
       <text:p text:style-name="P1"/>
       <text:p text:style-name="P2">Vorausetzungen:</text:p>
-      <text:p text:style-name="P1"><text:span text:style-name="T1"><text:line-break/></text:span><text:span text:style-name="T2">Apache </text:span>OpenOffice ab 4.0</text:p>
-      <text:p text:style-name="P1">In wieweit die Software fehlerfrei mit LibreOffice funktioniert, habe ich nicht getestet.</text:p>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1">Eine Verbindung von AOO dem Datenbankserver.</text:p>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1">Ich verwende unter Linux MySQL 5.1.x und den nativen MySQL-Connector derzeit von hier:</text:p>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1">http://extensions.openoffice.org/en/node/5644</text:p>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1">Unter Windows XP mit dem aktuellen MySQL-Connector läuft die Anwendung ohne Fehler und funktionierte sehr gut. </text:p>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1">Unter MacOS kann ich leider keinen Test durchführen, da nicht vorhanden.</text:p>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1">Die Anbindung über odbc/jdbc hab ich mit den derzeitigen Software-Stand nicht getestet.</text:p>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1">Ob und wie das Programm mit anderen Datenbanken zusammenarbeitet hab ich nicht getestet, </text:p>
-      <text:p text:style-name="P1">es müssten sicher ein paar SQL-Anweisungen angepasst werden.</text:p>
-      <text:p text:style-name="P1">Dazu kann ich jedoch keine Unterstützung geben.</text:p>
+      <text:p text:style-name="P2"/>
+      <text:list text:style-name="L1">
+        <text:list-item>
+          <text:p text:style-name="P3"><text:span text:style-name="T2">Apache </text:span>OpenOffice <text:span text:style-name="T1">oder LibreOffice,</text:span></text:p>
+        </text:list-item>
+        <text:list-item>
+          <text:p text:style-name="P3">
+            <text:span text:style-name="T1">MariaDB oder MySQL,</text:span>
+          </text:p>
+        </text:list-item>
+      </text:list>
       <text:p text:style-name="P4"/>
       <text:p text:style-name="P2">Erforderliche Kenntnisse:</text:p>
       <text:p text:style-name="P2"/>
-      <text:p text:style-name="P3">- Grundlegende Kenntnisse über die Installation und Administration von MySQL.</text:p>
-      <text:p text:style-name="P3">- Einrichtung einer Datenverbindung in OpenOffice.org zu MySQL</text:p>
-      <text:p text:style-name="P3"/>
-      <text:p text:style-name="P3"/>
-      <text:p text:style-name="P3"/>
-      <text:p text:style-name="P5"/>
+      <text:list text:style-name="L2">
+        <text:list-item>
+          <text:p text:style-name="P5">Grundlegende Kenntnisse über die Installation und Administration von <text:span text:style-name="T1">MariaDB/</text:span>MySQL.</text:p>
+        </text:list-item>
+        <text:list-item>
+          <text:p text:style-name="P5">Einrichtung einer Datenverbindung in OpenOffice.org/<text:span text:style-name="T1">LibreOffice</text:span> zu <text:span text:style-name="T1">MariaDB/</text:span>MySQL</text:p>
+        </text:list-item>
+      </text:list>
+      <text:p text:style-name="P6"/>
+      <text:p text:style-name="P6"/>
+      <text:p text:style-name="P6"/>
+      <text:p text:style-name="P7"/>
       <text:p text:style-name="P2">Kurzanleitung zum Einrichten:</text:p>
       <text:p text:style-name="P2"/>
-      <text:list xml:id="list3868643493324639706" text:style-name="L1">
+      <text:list text:style-name="L3">
         <text:list-item>
-          <text:p text:style-name="P8">Archiv in beliebiges Verzeichnis z.B. mit tar xvjf aladin400.xxxx-xx-xx.tar.bz2" entpacken.<text:line-break/>Unter Windows kann das Archiv aladin400.xxxx-xx-xx.zip verwendet werden.</text:p>
+          <text:p text:style-name="P8">Archiv in beliebiges Verzeichnis z.B. mit tar xvjf aladin.xxxx-xx-xx.tar.bz2" entpacken.<text:line-break/>Unter Windows kann das Archiv aladin.xxxx-xx-xx.zip verwendet werden.</text:p>
           <text:p text:style-name="P8"/>
           <text:p text:style-name="P8">Dies kann auch für Mehrbenutzerbetrieb auf einem Netzwerk-Share erfolgen.</text:p>
           <text:p text:style-name="P8">Wichtig ist, dass nach Einrichtung der Software, der Speicherpfad nicht mehr geändert wird, da dies sonst eine Anpassung der Einstellungen erforderlich macht.</text:p>
@@ -232,37 +374,38 @@
           </text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P8">Basic-Bibliothek "ALADIN" in AOO als Referenz importieren.</text:p>
-          <text:p text:style-name="P8">Basic-Bibliothek "ALADIN_Global" in AOO NICHT als Referenz importieren.</text:p>
+          <text:p text:style-name="P8">Basic-Bibliothek "ALADIN" in AOO/LO als Referenz importieren.</text:p>
+          <text:p text:style-name="P8">Basic-Bibliothek "ALADIN_Global" in AOO/LO NICHT als Referenz importieren.</text:p>
           <text:p text:style-name="P8"/>
           <text:p text:style-name="P9"/>
           <text:p text:style-name="P10">Unter:<text:line-break/><text:line-break/>Extras -&gt;<text:line-break/> Makros -&gt;<text:line-break/> Makros Verwalten -&gt;<text:line-break/> OpenOffice Basic... -&gt;<text:line-break/> Verwalten -&gt;<text:line-break/> Bibliotheken -&gt;<text:line-break/> Importieren<text:line-break/> <text:line-break/>folgende Datei auswählen: &lt;Speicherpfad&gt;/basic/ALADIN/script.xlb</text:p>
           <text:p text:style-name="P10">und &lt;Speicherpfad&gt;/basic/ALADIN_Global/script.xlb</text:p>
-          <text:p text:style-name="P10"><draw:frame draw:style-name="fr1" draw:name="Grafik1" text:anchor-type="paragraph" svg:x="0.402cm" svg:y="0.434cm" svg:width="8.377cm" svg:height="6.221cm" draw:z-index="2"><draw:image xlink:href="Pictures/100000000000017900000113137A9024.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame><draw:frame draw:style-name="fr1" draw:name="Grafik4" text:anchor-type="paragraph" svg:x="9.359cm" svg:y="0.407cm" svg:width="8.257cm" svg:height="6.306cm" draw:z-index="3"><draw:image xlink:href="Pictures/10000000000001740000010EFA296F13.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame><text:line-break/><text:line-break/>So sollte das dann in etwa aussehen:<text:line-break/></text:p>
+          <text:p text:style-name="P10"><draw:frame draw:style-name="fr1" draw:name="Grafik1" text:anchor-type="paragraph" svg:x="0.402cm" svg:y="0.434cm" svg:width="8.377cm" svg:height="6.221cm" draw:z-index="2"><draw:image xlink:href="Pictures/1000000000000179000001136DE6E588.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:mime-type="image/png"/></draw:frame><draw:frame draw:style-name="fr1" draw:name="Grafik4" text:anchor-type="paragraph" svg:x="9.359cm" svg:y="0.407cm" svg:width="8.257cm" svg:height="6.306cm" draw:z-index="3"><draw:image xlink:href="Pictures/10000000000001740000010E7035EA2D.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:mime-type="image/png"/></draw:frame><text:line-break/><text:line-break/>So sollte das dann in etwa aussehen:<text:line-break/></text:p>
           <text:p text:style-name="P10">
             <draw:frame draw:style-name="fr2" draw:name="Grafik5" text:anchor-type="paragraph" svg:width="12.698cm" svg:height="8.729cm" draw:z-index="4">
-              <draw:image xlink:href="Pictures/10000000000001E00000014A1ACD8E99.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+              <draw:image xlink:href="Pictures/10000000000001E00000014A7FEF1767.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:mime-type="image/png"/>
             </draw:frame>
+          </text:p>
+          <text:p text:style-name="P10">
             <text:soft-page-break/>
           </text:p>
-          <text:p text:style-name="P10"/>
         </text:list-item>
         <text:list-item>
           <text:p text:style-name="P10">In der Bibliothek "ALADIN_Global" unter "Global" noch die nötigen Variablen anpassen:</text:p>
           <text:p text:style-name="P10"/>
-          <text:p text:style-name="P12">
+          <text:p text:style-name="P11">
             <draw:frame draw:style-name="fr3" draw:name="Grafik6" text:anchor-type="paragraph" svg:width="17.814cm" svg:height="15.002cm" draw:z-index="5">
-              <draw:image xlink:href="Pictures/100000000000041800000356C5653E77.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+              <draw:image xlink:href="Pictures/100000000000041800000356AAD8A196.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:mime-type="image/png"/>
             </draw:frame>
             <text:line-break/>
           </text:p>
-          <text:p text:style-name="P12">Wichtig wären sAladinPfad, sStandardPfad, bei Mehrbenutzerbetrieb und Mehr-Mandantenbetrieb die iUserID und evtl. der Mandanten-Name unter sMandant.</text:p>
+          <text:p text:style-name="P11">Wichtig wären sAladinPfad, sStandardPfad, bei Mehrbenutzerbetrieb und Mehr-Mandantenbetrieb die iUserID und evtl. der Mandanten-Name unter sMandant.</text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P13"><text:span text:style-name="T3">Datenbankenschnittstelle in AOO konfigurieren<text:line-break/><text:line-break/>Die Extension „</text:span>MySQL Driver for Apache OpenOffice“ <text:span text:style-name="T3">sollte installiert sein.</text:span></text:p>
-          <text:p text:style-name="P10">Nun sollte mit dem Assistenten eine neu Datenbank angelegt werden.<text:line-break/>Dazu "Verbindung zu einer bestehenden Datenbank", "MySQL", "native" auswählen und die entsprechenden Einstellungen machen. Als erstes wird zur Erstellung der Tabellenstruktur und zum Anlegen der Benutzer eine Verbindung zum Datenbank-Server mit root-Rechten benötigt.<text:line-break/></text:p>
+          <text:p text:style-name="P12"><text:span text:style-name="T3">Datenbankenschnittstelle in AOO/LO konfigurieren<text:line-break/><text:line-break/>Die Extension „</text:span>MySQL Driver for Apache OpenOffice“ <text:span text:style-name="T3">sollte installiert sein.</text:span></text:p>
+          <text:p text:style-name="P10">Nun sollte mit dem Assistenten eine neu<text:span text:style-name="T4">e</text:span> Datenbank angelegt werden.<text:line-break/>Dazu "Verbindung zu einer bestehenden Datenbank", "MySQL", "native" auswählen und die entsprechenden Einstellungen machen. Als erstes wird zur Erstellung der Tabellenstruktur und zum Anlegen der Benutzer eine Verbindung zum Datenbank-Server mit root-Rechten benötigt.<text:line-break/></text:p>
           <text:p text:style-name="P10">Diese Datenbank muss dann unter:</text:p>
-          <text:p text:style-name="P10"><draw:frame draw:style-name="fr1" draw:name="Grafik2" text:anchor-type="paragraph" svg:x="1.422cm" svg:y="2.122cm" svg:width="15.787cm" svg:height="8.548cm" draw:z-index="0"><draw:image xlink:href="Pictures/1000000000000354000001B1285C9CBD.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/></draw:frame><text:line-break/>Extras -&gt;<text:line-break/> Optionen -&gt;<text:line-break/> OpenOffice.org Base -&gt;<text:line-break/> Datenbanken<text:line-break/><text:line-break/>unter den Namen "MySQL" registriert werden. Groß-Kleinschreibung beachten!<text:line-break/><text:line-break/>Danach sollte man in der Datenquellenansicht(F4) Zugriff auf die Tabellen von mysql (db, user, usw.) haben.</text:p>
+          <text:p text:style-name="P10"><draw:frame draw:style-name="fr1" draw:name="Grafik2" text:anchor-type="paragraph" svg:x="1.422cm" svg:y="2.122cm" svg:width="15.787cm" svg:height="8.548cm" draw:z-index="0"><draw:image xlink:href="Pictures/1000000000000354000001B121E9A9ED.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:mime-type="image/png"/></draw:frame><text:line-break/>Extras -&gt;<text:line-break/> Optionen -&gt;<text:line-break/> OpenOffice.org Base -&gt;<text:line-break/> Datenbanken<text:line-break/><text:line-break/>unter den Namen "MySQL" registriert werden. Groß-Kleinschreibung beachten!<text:line-break/><text:line-break/>Danach sollte man in der Datenquellenansicht(F4) Zugriff auf die Tabellen von mysql (db, user, usw.) haben.</text:p>
           <text:p text:style-name="P10"/>
           <text:p text:style-name="P10">Wichtig!! Wenn das nicht klappt, braucht man die folgenden Schritte gar nicht probieren. <text:line-break/><text:line-break/></text:p>
         </text:list-item>
@@ -271,26 +414,27 @@
         </text:list-item>
         <text:list-item>
           <text:p text:style-name="P10">Knopf "Tabellen in Datenbank erzeugen" drücken und Anzahl der User für Mehrbenutzerinstallation angeben.<text:line-break/>Jetzt sollten die Tabellen in der Datenbank "aladin" angelegt worden sein.<text:line-break/>Sollte das nicht geklappt haben, nochmal die Verbindung zur Datenbank überprüfen.<text:line-break/><text:line-break/></text:p>
-          <text:p text:style-name="P14"/>
+          <text:p text:style-name="P13"/>
         </text:list-item>
         <text:list-item>
           <text:p text:style-name="P10">Nun sollte mit dem Assistenten noch eine neu Datenbank angelegt werden.<text:line-break/>Dazu wieder "Verbindung zu einer bestehenden Datenbank", "MySQL", "native" auswählen und die entsprechenden Einstellungen machen. Jetzt wird die Verbindung mit dem Benutzernamen und Passwort angelegt, der bei der beim betätigen der Taste "Benutzer anlegen und Zugriffsrechte setzen" angegeben wurde. Diese Verbindung ist für den normalen Betrieb des Programmes gedacht.<text:line-break/></text:p>
           <text:p text:style-name="P10">Diese Datenbank muss dann unter:<text:line-break/>Extras -&gt;<text:line-break/><text:tab/>Optionen -&gt;<text:line-break/><text:tab/><text:tab/>OpenOffice.org Base -&gt;<text:line-break/><text:tab/><text:tab/><text:tab/><text:tab/><text:tab/>Datenbanken<text:line-break/><text:line-break/>unter den Namen "ALADIN" registriert werden. Groß-Kleinschreibung beachten!<text:line-break/><text:line-break/>Sollte das fehlgeschlagen sein, dann sollten nochmal die Datenbankverbindungen überprüft werden.<text:line-break/><text:line-break/>Jetzt sollte man in der Datenquellenansicht(F4) Zugriff auf die Tabellen von "ALADIN" haben.<text:line-break/><text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P10">Mit folgendem Befehl kann nun das Programm gestartet werden:<text:line-break/><text:line-break/>ooffice macro:///ALADIN.Startmenue.neuerTask<text:line-break/><text:line-break/>Wenn das geklappt hat, kann man sich mit diesem Aufruf eine Verknüpfung auf dem Desktop machen.<text:line-break/><text:line-break/>Und schon sollte es losgehen können.</text:p>
+          <text:p text:style-name="P14">Mit folgendem Befehl kann nun das Programm gestartet werden:<text:line-break/><text:line-break/><text:span text:style-name="T5">AOO: </text:span>ooffice <text:a xlink:type="simple" xlink:href="macro:///ALADIN.Startmenue.neuerTask" text:style-name="Internet_20_link" text:visited-style-name="Visited_20_Internet_20_Link">macro:///ALADIN.Startmenue.neuerTask</text:a></text:p>
+          <text:p text:style-name="P14"><text:span text:style-name="T5">LO: l</text:span>office macro:///ALADIN.Startmenue.neuerTask<text:line-break/><text:line-break/>Wenn das geklappt hat, kann man sich mit diesem Aufruf eine Verknüpfung auf dem Desktop machen.<text:line-break/><text:line-break/>Und schon sollte es losgehen können.</text:p>
           <text:p text:style-name="P10"/>
           <text:p text:style-name="P10">
             <draw:frame draw:style-name="fr1" draw:name="Grafik7" text:anchor-type="paragraph" svg:x="1.748cm" svg:y="14.072cm" svg:width="12.196cm" svg:height="6.93cm" draw:z-index="6">
-              <draw:image xlink:href="Pictures/10000000000001CD0000010688ECE9BA.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+              <draw:image xlink:href="Pictures/10000000000001CD00000106B25972EE.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:mime-type="image/png"/>
             </draw:frame>
             <draw:frame draw:style-name="fr1" draw:name="Grafik3" text:anchor-type="paragraph" svg:x="3.434cm" svg:y="0.416cm" svg:width="9.497cm" svg:height="11.337cm" draw:z-index="1">
-              <draw:image xlink:href="Pictures/100000000000019100000213F26D25E2.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+              <draw:image xlink:href="Pictures/100000000000019100000213A2F17DFF.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:mime-type="image/png"/>
             </draw:frame>
           </text:p>
           <text:p text:style-name="P10">
             <draw:frame draw:style-name="fr1" draw:name="Grafik8" text:anchor-type="paragraph" svg:x="4.096cm" svg:y="7.84cm" svg:width="8.412cm" svg:height="8.386cm" draw:z-index="7">
-              <draw:image xlink:href="Pictures/100000000000013E0000013D32E37FB5.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad"/>
+              <draw:image xlink:href="Pictures/100000000000013E0000013DFE752343.png" xlink:type="simple" xlink:show="embed" xlink:actuate="onLoad" draw:mime-type="image/png"/>
             </draw:frame>
             <text:soft-page-break/>
           </text:p>
@@ -301,17 +445,11 @@
           <text:p text:style-name="P10">Modul "Einstellungen" starten und die entsprechenden Einstellungen vornehmen.</text:p>
         </text:list-item>
       </text:list>
-      <text:p text:style-name="P6">Achtung!!!</text:p>
+      <text:p text:style-name="P15">Achtung!!!</text:p>
       <text:p text:style-name="P1"/>
       <text:p text:style-name="P1">Vor einem Update einer vorhandenen Installation, sollte auf jedem Fall die Datenbank, das Kassenbuch sowie die angepassten Dokumentvorlagen gesichert werden, da diese bei der Installation überschrieben bzw.</text:p>
-      <text:p text:style-name="P1">beschädigt werden könnten und Datenverlust auftreten könnte. </text:p>
+      <text:p text:style-name="P1">beschädigt werden und Datenverlust auftreten könnte. </text:p>
       <text:p text:style-name="P1"/>
-      <text:p text:style-name="P2">Was noch geplant ist:</text:p>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1">- Übergabe der im Kontakt gespeicherten Faxnummer an das Faxprogramm. </text:p>
-      <text:p text:style-name="P1"><text:s text:c="2"/>Dazu wollte ich das Programm cups4hylafax verwenden.</text:p>
-      <text:p text:style-name="P1">- Import-Filter für Datanorm</text:p>
       <text:p text:style-name="P1"/>
       <text:p text:style-name="P2">kurze Beschreibung der einzelnen Module:</text:p>
       <text:p text:style-name="P1"/>
@@ -331,72 +469,66 @@
       <text:p text:style-name="P1">also mindestens Useranzahl x 40.</text:p>
       <text:p text:style-name="P1">Das Anlegen der Datensätze, sowie die Erstellung der Tabellen für den Mehrbenutzerbetrieb kann mit der Angabe der Anzahl der User beim Erzeugen der Tabellen erledigt werden.</text:p>
       <text:p text:style-name="P1"/>
-      <text:list xml:id="list1831990535665377175" text:style-name="L2">
+      <text:list text:style-name="L4">
         <text:list-item>
-          <text:p text:style-name="P11">Personalstamm<text:line-break/>Erfassung der Personaldaten.<text:line-break/></text:p>
+          <text:p text:style-name="P16">Personalstamm<text:line-break/>Erfassung der Personaldaten.<text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Kontakte- / Kunden- / Lieferantenstamm<text:line-break/>Neben den erforderlichen Daten für die weitere Verarbeitung wie Stundensatz, Materialaufschlag, Faxnummer, Zahlungsziele usw., können hier pro Kontakt beliebig viele Ansprechpartner angelegt werden, die dann für die entsprechenden Dokumenten ausgewählt werden können. Weiterhin werden für die einzelnen Kontakte die Umsätze angezeigt.<text:line-break/></text:p>
+          <text:p text:style-name="P16">Kontakte- / Kunden- / Lieferantenstamm<text:line-break/>Neben den erforderlichen Daten für die weitere Verarbeitung wie Stundensatz, Materialaufschlag, Faxnummer, Zahlungsziele usw., können hier pro Kontakt beliebig viele Ansprechpartner angelegt werden, die dann für die entsprechenden Dokumenten ausgewählt werden können. Weiterhin werden für die einzelnen Kontakte die Umsätze angezeigt.<text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Leistungsstamm / Gruppenverwaltung<text:line-break/>Im Leistungsstamm lassen sich u.a. Leistungsbezeichnung, Leistungsbeschreibung, Einkaufspreis, Bauzeit erfassen. Die Leistungen können verschieden Leistungsgruppen zugeordnet werden, was die Auswahl besonders bei großen Datenbeständen erleichtert. Weiterhin lassen sich Leistungen als Standard-Leistung definieren, welche dann unabhängig von den Filtereinstellungen in der Auswahlliste erscheinen.<text:line-break/></text:p>
+          <text:p text:style-name="P16">Leistungsstamm / Gruppenverwaltung<text:line-break/>Im Leistungsstamm lassen sich u.a. Leistungsbezeichnung, Leistungsbeschreibung, Einkaufspreis, Bauzeit erfassen. Die Leistungen können verschieden Leistungsgruppen zugeordnet werden, was die Auswahl besonders bei großen Datenbeständen erleichtert. Weiterhin lassen sich Leistungen als Standard-Leistung definieren, welche dann unabhängig von den Filtereinstellungen in der Auswahlliste erscheinen.<text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Projekte<text:line-break/>Im Modul "Projekte" lassen sich Projekte anlegen denen Dokumente wie Angebote, Rechnungen, usw. zugeordnet werden können. Es werden alle dem Projekt zugeordneten Dokumente angezeigt und ein paar Zahlen zur Auswertung wie der Stand des Projektes ist bzw. wie es gelaufen ist.<text:line-break/></text:p>
+          <text:p text:style-name="P16">Projekte<text:line-break/>Im Modul "Projekte" lassen sich Projekte anlegen denen Dokumente wie Angebote, Rechnungen, usw. zugeordnet werden können. Es werden alle dem Projekt zugeordneten Dokumente angezeigt und ein paar Zahlen zur Auswertung wie der Stand des Projektes ist bzw. wie es gelaufen ist.<text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Angebot / Auftragsbestätigung / Aufmaß / Lieferschein / Rechnung / Gutschrift / Preisanfrage / Bestellung<text:line-break/>Das Modul "Projekt" ist darauf ausgelegt, möglichst einfach die aufgeführten Dokumente zu erstellen.<text:line-break/>Dazu kann der Datenbestand des Leistungsstamm verwendet werden, aber es können auch Blanko-Datensätze erstellt werden. Die einzelnen Dokumente lassen sich in einen anderen Typ exportieren, d.h. es lässt sich z.B. aus einem Angebot eine Rechnung machen oder aus einer Preisanfrage eine Bestellung usw.<text:line-break/><text:line-break/>Die Positionen können als Alternativposition oder Eventualposition markiert werden. Diese Positionen gehen in der Berechnung nicht mit in die Summen ein. Es lassen sich Zwischensummen und Zwischenbemerkungen ins Dokument einfügen. Die einzelnen Positionen können ausgeschnitten, kopiert oder verschoben werden.<text:line-break/><text:line-break/>Es kann auch ein benutzerdefiniertes Positionsnummernformat verwendet werden. Dazu ist die Tabellenspalte LV_Pos einzublenden und manuell die 1. Positionsnummer einzutragen z.B. 01.01.001. <text:line-break/>Die Positionsnummern werden dann automatisch hochgezählt. Dabei ist aber trotzdem noch etwas Handarbeit notwendig.<text:line-break/><text:soft-page-break/><text:line-break/>Zur Kalkulation können der Minutenverrechnungssatz und Materialaufschlagsatz angepasst werden, diese <text:s/>werden dann mit den in den Positionen hinterlegten Bauzeiten und Einkaufspreisen multipliziert. Es werden Lieferung, Leistung, Einheitspreis und Gesamtpreis pro Position berechnet. Es kann der Einkaufspreis oder der Listenpreis aus dem Leistungsstamm übernommen werden.<text:line-break/><text:line-break/>Besonderen Wert hab ich darauf gelegt, daß man aus diesem Modul heraus, Leistungen im Leistungsstamm aktualisieren und auch neu anlegen kann. So können die Bauzeit, der Einkaufspreis und die Leistungsbezeichnung in der Leistungstabelle verändert und dann in den Leistungsstamm zurückgespeichert werden.<text:line-break/>Weiterhin kann eine Leistung aus dem Leistungsstamm dupliziert, werden. Das ist sinnvoll, wenn man eine ähnliche Leistung wie die duplizierende anlegen möchte, bei der die Leistungsbeschreibung(Langtext) und die Gruppenzugehörigkeit gleich ist. Man würde nur die Leistungsbezeichnung entsprechend ändern und anschließend Bauzeit und Einkaufspreis aus der Tabelle heraus aktualisieren.</text:p>
-          <text:p text:style-name="P11">In den Positionen können Benutzerdefinierte Langtexte verwendet werden.<text:line-break/><text:line-break/>Beim Ausdruck von mehrseitigen Dokumenten wird der Übertrag eingefügt.<text:line-break/><text:line-break/>WICHTIG!!<text:line-break/>Während der Dokumenterzeugung sollte keine Benutzeraktion durchgeführt werden, da eine Aktion den View-Cursor beeinflussen könnte, und dann könnte das Programm zur Dokument-Erzeugung fehlerhaft laufen und beendet sich selbst.<text:line-break/></text:p>
+          <text:p text:style-name="P16">Angebot / Auftragsbestätigung / Aufmaß / Lieferschein / Rechnung / Gutschrift / Preisanfrage / Bestellung<text:line-break/>Das Modul "Projekt" ist darauf ausgelegt, möglichst einfach die aufgeführten Dokumente zu erstellen.<text:line-break/>Dazu kann der Datenbestand des Leistungsstamm verwendet werden, aber es können auch Blanko-Datensätze erstellt werden. Die einzelnen Dokumente lassen sich in einen anderen Typ exportieren, d.h. es lässt sich z.B. aus einem Angebot eine Rechnung machen oder aus einer Preisanfrage eine Bestellung usw.<text:line-break/><text:line-break/>Die Positionen können als Alternativposition oder Eventualposition markiert werden. Diese Positionen gehen in der Berechnung nicht mit in die Summen ein. Es lassen sich Zwischensummen und Zwischenbemerkungen ins Dokument einfügen. Die einzelnen Positionen können ausgeschnitten, kopiert oder verschoben werden.<text:line-break/><text:line-break/>Es kann auch ein benutzerdefiniertes Positionsnummernformat verwendet werden. Dazu ist die Tabellenspalte LV_Pos einzublenden und manuell die 1. Positionsnummer einzutragen z.B. 01.01.001. <text:line-break/>Die Positionsnummern werden dann automatisch hochgezählt. Dabei ist aber trotzdem noch etwas Handarbeit notwendig.<text:line-break/><text:line-break/>Zur Kalkulation können der Minutenverrechnungssatz und Materialaufschlagsatz angepasst werden, diese <text:s/>werden dann mit den in den Positionen hinterlegten Bauzeiten und Einkaufspreisen multipliziert. Es werden Lieferung, Leistung, Einheitspreis und Gesamtpreis pro Position berechnet. Es kann der Einkaufspreis oder der Listenpreis aus dem Leistungsstamm übernommen werden.<text:line-break/><text:line-break/>Besonderen Wert hab ich darauf gelegt, daß man aus diesem Modul heraus, Leistungen im <text:soft-page-break/>Leistungsstamm aktualisieren und auch neu anlegen kann. So können die Bauzeit, der Einkaufspreis und die Leistungsbezeichnung in der Leistungstabelle verändert und dann in den Leistungsstamm zurückgespeichert werden.<text:line-break/>Weiterhin kann eine Leistung aus dem Leistungsstamm dupliziert, werden. Das ist sinnvoll, wenn man eine ähnliche Leistung wie die duplizierende anlegen möchte, bei der die Leistungsbeschreibung(Langtext) und die Gruppenzugehörigkeit gleich ist. Man würde nur die Leistungsbezeichnung entsprechend ändern und anschließend Bauzeit und Einkaufspreis aus der Tabelle heraus aktualisieren.</text:p>
+          <text:p text:style-name="P16">In den Positionen können Benutzerdefinierte Langtexte verwendet werden.<text:line-break/><text:line-break/>Beim Ausdruck von mehrseitigen Dokumenten wird der Übertrag eingefügt.<text:line-break/><text:line-break/>WICHTIG!!<text:line-break/>Während der Dokumenterzeugung sollte keine Benutzeraktion durchgeführt werden, da eine Aktion den View-Cursor beeinflussen könnte, und dann könnte das Programm zur Dokument-Erzeugung fehlerhaft laufen und beendet sich selbst.<text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Inventur<text:line-break/>Mit diesem Modul lässt sich eine Inventur anhand der im Leistungsstamm enthaltenen Leistungen erstellen.<text:line-break/></text:p>
+          <text:p text:style-name="P16">Inventur<text:line-break/>Mit diesem Modul lässt sich eine Inventur anhand der im Leistungsstamm enthaltenen Leistungen erstellen.<text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Offen-Posten Buchhaltung / Mahnwesen<text:line-break/>Alle Ausgangsrechnungen werden hier erfasst und entsprechend Fälligkeitsdatum als fällig markiert.<text:line-break/>Der Status "fällig" wird anhand der im Kundenstamm bzw. im Rechnungsformular festgelegten Fristen automatisch gesetzt. Es lassen sich einfach Zahlungserinnerungen und Mahnungen erstellen. Nach Zahlungseingang sollte der Status der Rechnungen dann auf <text:s/>"bezahlt" gesetzt werden. Entsprechend den Filtereinstellungen können Listen mit den Ausgangsrechnungen ausgegeben werden.<text:line-break/><text:line-break/>Die Eingangsrechnungen können in dem Modul "OP_Eingangsrechnungen" erfasst werden.<text:line-break/>Hier wird wieder der Status "skontofähig", "berechnet" oder "fällig" automatisch anhand der im <text:s text:c="2"/>Lieferantenstamm für den Lieferanten festgelegten Fristen gesetzt. Es können Zahlungslisten und Listen entsprechend den Filtereinstellungen ausgegeben werden.<text:line-break/></text:p>
+          <text:p text:style-name="P16">Offen-Posten Buchhaltung / Mahnwesen<text:line-break/>Alle Ausgangsrechnungen werden hier erfasst und entsprechend Fälligkeitsdatum als fällig markiert.<text:line-break/>Der Status "fällig" wird anhand der im Kundenstamm bzw. im Rechnungsformular festgelegten Fristen automatisch gesetzt. Es lassen sich einfach Zahlungserinnerungen und Mahnungen erstellen. Nach Zahlungseingang sollte der Status der Rechnungen dann auf <text:s/>"bezahlt" gesetzt werden. Entsprechend den Filtereinstellungen können Listen mit den Ausgangsrechnungen ausgegeben werden.<text:line-break/><text:line-break/>Die Eingangsrechnungen können in dem Modul "OP_Eingangsrechnungen" erfasst werden.<text:line-break/>Hier wird wieder der Status "skontofähig", "berechnet" oder "fällig" automatisch anhand der im <text:s text:c="2"/>Lieferantenstamm für den Lieferanten festgelegten Fristen gesetzt. Es können Zahlungslisten und Listen entsprechend den Filtereinstellungen ausgegeben werden.<text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Controlling </text:p>
-          <text:p text:style-name="P11">Mit diesem Modul lassen sich die tatsächlich angefallenen Leistungen für die einzelnen Projekte erfassen.<text:line-break/>Anhand der erfassten Daten können dann Aufmaße, Rechnungen, usw. erstellt werden. Die erfassten Daten werden mit im Modul "Projekte" ausgewertet und zeigen da den aktuellen Stand des Projektes.<text:line-break/></text:p>
+          <text:p text:style-name="P16">Controlling </text:p>
+          <text:p text:style-name="P16">Mit diesem Modul lassen sich die tatsächlich angefallenen Leistungen für die einzelnen Projekte erfassen.<text:line-break/>Anhand der erfassten Daten können dann Aufmaße, Rechnungen, usw. erstellt werden. Die erfassten Daten werden mit im Modul "Projekte" ausgewertet und zeigen da den aktuellen Stand des Projektes.<text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Korrespondenz<text:line-break/>Mit diesem Modul lassen sich einfache Dokumente erstellen. Für direktes Faxen, kann mit der Option "Signum drucken" eine Grafik mit Unterschrift in das Dokument eingefügt werden. Mit der Option "Serienbrief" wird ein Serienbrief-Dokument erzeugt, <text:s/>mit allen Empfängern, die im Serienbrief-Verteiler eingetragen sind.</text:p>
-          <text:p text:style-name="P11">Es können verschiedenen Serienbriefverteiler angelegt und mit Namen gespeichert werden.<text:line-break/></text:p>
+          <text:p text:style-name="P16">Korrespondenz<text:line-break/>Mit diesem Modul lassen sich einfache Dokumente erstellen. Für direktes Faxen, kann mit der Option "Signum drucken" eine Grafik mit Unterschrift in das Dokument eingefügt werden. Mit der Option "Serienbrief" wird ein Serienbrief-Dokument erzeugt, <text:s/>mit allen Empfängern, die im Serienbrief-Verteiler eingetragen sind.</text:p>
+          <text:p text:style-name="P16">Es können verschiedenen Serienbriefverteiler angelegt und mit Namen gespeichert werden.<text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Einstellungen<text:line-break/>Hier können alle Firmen-Daten eingetragen werden. Weiterhin lassen sich hier die URL zur Logo-Datei und zur Signum-Datei einstellen. Ich verwende ein Logo in dem Format BxH 210x 23 mm. Für andere Formate und Positionen der Logo-Grafik müsste man etwas experimentieren.<text:line-break/></text:p>
+          <text:p text:style-name="P16">Einstellungen<text:line-break/>Hier können alle Firmen-Daten eingetragen werden. Weiterhin lassen sich hier die URL zur Logo-Datei und zur Signum-Datei einstellen. Ich verwende ein Logo in dem Format BxH 210x 23 mm. Für andere Formate und Positionen der Logo-Grafik müsste man etwas experimentieren.<text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Preislisten<text:line-break/>Mit diesem Modul lassen sich einzelne Artikelgruppen markieren, aus denen dann eine Preisliste gedruckt werden kann.<text:line-break/></text:p>
+          <text:p text:style-name="P16">Preislisten<text:line-break/>Mit diesem Modul lassen sich einzelne Artikelgruppen markieren, aus denen dann eine Preisliste gedruckt werden kann.<text:line-break/></text:p>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Import<text:line-break/>Zur Zeit lassen sich damit nur GEAB und Datanorm Dateien in den Leistungsstamm importieren</text:p>
-          <text:p text:style-name="P11"/>
+          <text:p text:style-name="P16">Import<text:line-break/>Zur Zeit lassen sich damit nur GEAB und Datanorm Dateien in den Leistungsstamm importieren</text:p>
+          <text:p text:style-name="P16"/>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">LDAP-Anbindung der gesamten Kontaktdaten mittels back-sql an OpenLDAP</text:p>
-          <text:p text:style-name="P11"/>
+          <text:p text:style-name="P16">LDAP-Anbindung der gesamten Kontaktdaten mittels back-sql an OpenLDAP</text:p>
+          <text:p text:style-name="P16"/>
         </text:list-item>
         <text:list-item>
-          <text:p text:style-name="P11">Anbindung an Fax-Server Hylafax optional über yajhfc</text:p>
-        </text:list-item>
-      </text:list>
-      <text:p text:style-name="P1"/>
-      <text:list xml:id="list1656402899" text:continue-numbering="true" text:style-name="L2">
-        <text:list-item>
-          <text:p text:style-name="P11">Mehr-Mandantenbetrieb, es können mit dieser Software für mehrere Firmen Instanzen angelegt werden</text:p>
+          <text:p text:style-name="P16">Anbindung an Fax-Server Hylafax optional über yajhfc</text:p>
         </text:list-item>
       </text:list>
       <text:p text:style-name="P1"/>
+      <text:list text:continue-numbering="true" text:style-name="L4">
+        <text:list-item>
+          <text:p text:style-name="P17">Mehr-Mandantenbetrieb</text:p>
+          <text:p text:style-name="P17"><text:span text:style-name="T6">E</text:span>s können mit dieser Software für mehrere Firmen Instanzen angelegt werden</text:p>
+        </text:list-item>
+      </text:list>
       <text:p text:style-name="P1"/>
-      <text:p text:style-name="P2">
-        <text:soft-page-break/>
-      </text:p>
       <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1">Für eine längere Anleitung habe ich noch keine Zeit gefunden.</text:p>
-      <text:p text:style-name="P1">Ich würde aber, wenn es Fragen oder Probleme geben sollte die Antworten hier mit einfließen lassen.</text:p>
+      <text:p text:style-name="P2"/>
       <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1">Hinweise, Fragen, Verbesserungen, Mitarbeit sind ausdrücklich erwünscht,</text:p>
-      <text:p text:style-name="P1">einfach Nachricht an heiko.fischer@aladin-gmbh.de</text:p>
       <text:p text:style-name="P1"/>
       <text:p text:style-name="P1">Viel Spaß.</text:p>
     </office:text>
