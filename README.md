@@ -12,7 +12,7 @@ auch ohne die implizierte Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR E
 Apache OpenOffice oder LibreOffice,  
 MariaDB oder MySQL,
 
-Die aktuelle Software kann man sich aus dem Ordner package herunter laden. 
+**Die aktuelle Software kann man sich aus dem Ordner package herunter laden.**
 
 ## Erforderliche Kenntnisse:
 
