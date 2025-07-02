@@ -87,7 +87,7 @@ Sub Blanko_Datensatz()
 	
 			nochmal:
 				sLeistungsbezeichnung=InputBox(&quot;Geben Sie bitte eine neue Leistungsbezeichnung ein!&quot;&amp;_
-				 Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal &amp; &quot; Blanko&quot;)
+					Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal &amp; &quot; Blanko&quot;)
 				if sLeistungsbezeichnung = &quot;&quot; then
 					vStatus=MsgBox(&quot;Sie haben noch keine Leistungsnummer eingegeben!&quot;,37,sTitle_lokal)
 					if vStatus=4 then
@@ -125,15 +125,15 @@ Sub Blanko_Datensatz()
 						&quot; WHERE t1.ClientID=&quot;&amp; iClientID &amp;_
 						&quot; AND t2.ProjektID=t1.ProjektID&quot;
 					SQL_execute(sSQL2)
-					if iLokation_eingeben=1	AND ifLokation &lt;&gt; sLokation	then
-						SQL_Steuerung_reset_1()
+					if iLokation_eingeben=1 AND ifLokation &lt;&gt; sLokation then
+						SQL_Steuerung_reset_Lokation()
 						init_Form_Tabellendaten()
-					else
-						if iCountUpdate &gt; 0 then
-							SQL_Steuerung_reset_2()
-							init_Form_Tabellendaten()
-						End if
 					End if
+					if iCountUpdate &gt; 0 then
+						SQL_Steuerung_reset_2()
+						init_Form_Tabellendaten()
+					End if
+					oForm_Steuerung.reload()
 					oForm_Tabellendaten.reload()
 					Summen_refresh()
 				End if
@@ -218,7 +218,7 @@ Sub Leistung_uebernehmen()
 							sIstZeit=fZahlMitKomma(sWert_2)
 						End if
 						if iGroup2Lokation=0 then
-						iLokation_eingeben=fLokation_eingeben(0)			
+							iLokation_eingeben=fLokation_eingeben(0)			
 							if iLokation_eingeben=1 then
 								sLokation=InputBox(&quot;Bitte geben Sie einen Lokation für die Leistung ein!&quot;)
 							else
@@ -240,16 +240,15 @@ Sub Leistung_uebernehmen()
 							&quot; AND t2.LeistungsID=t1.LeistungsID&quot;&amp;_
 							&quot; AND t3.ProjektID=t1.ProjektID&quot;
 						SQL_execute(sSQL2)
-						if iLokation_eingeben=1	AND ifLokation &lt;&gt; sLokation	then
-							SQL_Steuerung_reset_1()
+						if iLokation_eingeben=1 AND ifLokation &lt;&gt; sLokation then
+							SQL_Steuerung_reset_Lokation()
 							init_Form_Tabellendaten()
-							ifOption_Datum=oRecord1.getLong(4)
-						else
-							if iCountUpdate &gt; 0 then
-								SQL_Steuerung_reset_2()
-								init_Form_Tabellendaten()
-							End if
 						End if
+						if iCountUpdate &gt; 0 then
+							SQL_Steuerung_reset_2()
+							init_Form_Tabellendaten()
+						End if
+						oForm_Steuerung.reload()
 						oForm_Tabellendaten.reload()
 						Summen_refresh()
 					End if
@@ -348,14 +347,14 @@ Sub Leistung_Auftrag_uebernehmen()
 							&quot; AND t1.PositionsID=t2.PositionsID&quot;
 						SQL_execute(sSQL2)
 						if iLokation_eingeben=1 AND ifLokation &lt;&gt; sLokation then
-							SQL_Steuerung_reset_1()
+							SQL_Steuerung_reset_Lokation()
 							init_Form_Tabellendaten()
-						else
-							if iCountUpdate &gt; 0 then
-								SQL_Steuerung_reset_2()
-								init_Form_Tabellendaten()
-							End if
 						End if
+						if iCountUpdate &gt; 0 then
+							SQL_Steuerung_reset_2()
+							init_Form_Tabellendaten()
+						End if
+						oForm_Steuerung.reload()
 						oForm_Tabellendaten.reload()
 						Summen_refresh()
 					End if
@@ -454,14 +453,14 @@ Sub Leistung_Projekt_uebernehmen()
 							&quot; AND t2.PositionsID=t1.PositionsID2&quot;
 						SQL_execute(sSQL2)
 						if iLokation_eingeben=1 AND ifLokation &lt;&gt; sLokation then
-							SQL_Steuerung_reset_1()
+							SQL_Steuerung_reset_Lokation()
 							init_Form_Tabellendaten()
-						else
-							if iCountUpdate &gt; 0 then
-								SQL_Steuerung_reset_2()
-								init_Form_Tabellendaten()
-							End if
 						End if
+						if iCountUpdate &gt; 0 then
+							SQL_Steuerung_reset_2()
+							init_Form_Tabellendaten()
+						End if
+						oForm_Steuerung.reload()
 						oForm_Tabellendaten.reload()
 						Summen_refresh()
 					End if
@@ -536,16 +535,16 @@ Sub Leistung_duplizieren()
 			nocheinmal:
 			sLeistungsbezeichnung=InputBox(&quot;Geben Sie bitte die neue Leistungsbezeichnung&quot;&amp;_
 				&quot; für die zu kopierende Leistung ein!&quot;&amp; Chr$(10) &amp; &quot;(Für Zeilenumbruch: \n)&quot;,sTitle_lokal,sLeistungsbezeichnung)
-		if sLeistungsbezeichnung = &quot;&quot; then
-			vStatus=MsgBox(&quot;Sie haben noch keine Leistungsbezeichnung eingegeben!&quot;,37,sTitle_lokal)
-			if vStatus=4 then
-				goto nocheinmal
-			elseif vStatus=2 then
-				exit sub
+			if sLeistungsbezeichnung = &quot;&quot; then
+				vStatus=MsgBox(&quot;Sie haben noch keine Leistungsbezeichnung eingegeben!&quot;,37,sTitle_lokal)
+				if vStatus=4 then
+					goto nocheinmal
+				elseif vStatus=2 then
+					exit sub
+				End if
 			End if
-		End if
-		sBestellnummer=InputBox(&quot;Geben Sie bitte die neue Bestellnummer&quot;&amp;_
-			&quot; für die zu kopierende Leistung ein!&quot;,sTitle_lokal,sBestellnummer)
+			sBestellnummer=InputBox(&quot;Geben Sie bitte die neue Bestellnummer&quot;&amp;_
+				&quot; für die zu kopierende Leistung ein!&quot;,sTitle_lokal,sBestellnummer)
 
 			sSQL3=&quot;INSERT INTO  &quot;&amp; sLeistungsstamm &amp;&quot; (LeistungsID,Bestellnummer,Leistungsgruppe,Leistungsbezeichnung,Einheit,Bauzeit,&quot;&amp;_
 				&quot;Einkaufspreis,Listenpreis,Lieferant_1,Lieferant_2,Lieferant_3,Leistungsbeschreibung) VALUES (&apos;&quot;&amp; sLeistungsID &amp;_

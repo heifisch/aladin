@@ -273,6 +273,7 @@
               <form:column form:name="LV_Pos" form:control-implementation="ooo:TextField" form:label="LV-Pos" form:text-style-name="ctrl1">
                 <form:text xml:id="control11" form:id="control11" form:data-field="LV_Pos" form:input-required="false" form:convert-empty-to-null="true">
                   <form:properties>
+                    <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                     <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                     <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
                     <form:property form:property-name="Hidden" office:value-type="boolean" office:boolean-value="true"/>
@@ -901,7 +902,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Infos.Leistungsbeschreibung_anzeigen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:checkbox form:name="CheckBox_Bezeichnung" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control102" form:id="control102" form:label="Bezeichnung" form:tab-stop="false" form:tab-index="11" form:visual-effect="flat" form:value="1" form:data-field="Option_2" form:input-required="false" form:current-state="checked" form:image-position="center">
+          <form:checkbox form:name="CheckBox_Bezeichnung" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control102" form:id="control102" form:label="Bezeichnung" form:tab-stop="false" form:tab-index="11" form:visual-effect="flat" form:value="1" form:data-field="Option_2" form:input-required="false" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CheckBox"/>
@@ -996,7 +997,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.commit.Suchstring_reset?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:checkbox form:name="CheckBox_LeistungsID" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control111" form:id="control111" form:label="LeistungsID" form:tab-stop="false" form:tab-index="10" form:visual-effect="flat" form:value="1" form:data-field="Option_1" form:input-required="false" form:current-state="checked" form:image-position="center">
+          <form:checkbox form:name="CheckBox_LeistungsID" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control111" form:id="control111" form:label="LeistungsID" form:tab-stop="false" form:tab-index="10" form:visual-effect="flat" form:value="1" form:data-field="Option_1" form:input-required="false" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CheckBox"/>

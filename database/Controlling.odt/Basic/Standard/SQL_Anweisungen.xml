@@ -21,6 +21,13 @@ Sub SQL_Steuerung_reset_2()
 	SQL_execute(sSQL1)
 End Sub
 
+Sub SQL_Steuerung_reset_Lokation()
+	sSQL1=&quot;UPDATE Steuerung SET &quot;&amp;_
+		&quot;Lokation=NULL &quot;&amp;_
+		&quot;WHERE ClientID=&quot;&amp; iClientID
+	SQL_execute(sSQL1)
+End Sub
+
 Sub SQL_UPDATE_Tabelle1_export_DocumentID(iOption AS integer)
 	sSQL1=&quot;UPDATE &quot;&amp; sTabelle1_export &amp;&quot; SET DocumentID=&quot;&amp; lDocumentID_export(iOption) &amp;_
 		&quot; WHERE DocumentID=&quot;&amp; iMax_Datensatz(sTabelle1_export,&quot;DocumentID&quot;)
