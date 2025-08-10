@@ -288,6 +288,7 @@
                 <form:column form:name="Position" form:control-implementation="ooo:TextField" form:label="Pos." form:text-style-name="ctrl1">
                   <form:text xml:id="control6" form:id="control6" form:readonly="true" form:max-length="10" form:data-field="Pos" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
                       <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
@@ -298,6 +299,7 @@
                 <form:column form:name="LV_Position" form:control-implementation="ooo:TextField" form:label="LV_Pos." form:text-style-name="ctrl2">
                   <form:text xml:id="control7" form:id="control7" form:max-length="20" form:data-field="LV_Pos" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
                       <form:property form:property-name="Hidden" office:value-type="boolean" office:boolean-value="true"/>
@@ -309,6 +311,7 @@
                 <form:column form:name="LeistungsID" form:control-implementation="ooo:TextField" form:label="LeistungsID" form:text-style-name="ctrl2">
                   <form:text xml:id="control8" form:id="control8" form:data-field="LeistungsID" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="com.sun.star.form.control.TextField"/>
                       <form:property form:property-name="Hidden" office:value-type="boolean" office:boolean-value="true"/>
@@ -319,6 +322,7 @@
                 <form:column form:name="Leistungsbezeichnung" form:control-implementation="ooo:TextField" form:label="Leistungsbezeichnung" form:text-style-name="ctrl2">
                   <form:text xml:id="control9" form:id="control9" form:max-length="255" form:data-field="Leistungsbezeichnung" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
                       <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
@@ -340,6 +344,7 @@
                 <form:column form:name="Menge" form:control-implementation="ooo:TextField" form:label="Menge" form:text-style-name="ctrl2">
                   <form:text xml:id="control11" form:id="control11" form:max-length="9" form:data-field="Menge" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
                       <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
@@ -350,6 +355,7 @@
                 <form:column form:name="Einkaufspreis" form:control-implementation="ooo:TextField" form:label="Einkauf" form:text-style-name="ctrl2">
                   <form:text xml:id="control12" form:id="control12" form:max-length="11" form:data-field="Einkaufspreis" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
                       <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
@@ -360,6 +366,7 @@
                 <form:column form:name="Bauzeit" form:control-implementation="ooo:TextField" form:label="Bauzeit" form:text-style-name="ctrl2">
                   <form:text xml:id="control13" form:id="control13" form:max-length="9" form:data-field="Bauzeit" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
                       <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
@@ -370,6 +377,7 @@
                 <form:column form:name="Materialaufschlagsatz" form:control-implementation="ooo:TextField" form:label="MAS" form:text-style-name="ctrl2">
                   <form:text xml:id="control14" form:id="control14" form:max-length="5" form:data-field="Materialaufschlagsatz" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
                       <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
@@ -379,6 +387,7 @@
                 <form:column form:name="Minutenverrechnungssatz" form:control-implementation="ooo:TextField" form:label="MVS" form:text-style-name="ctrl2">
                   <form:text xml:id="control15" form:id="control15" form:max-length="-1" form:data-field="Minutenverrechnungssatz" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
                       <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
@@ -478,6 +487,7 @@
                 <form:column form:name="ZwiSuID" form:control-implementation="ooo:TextField" form:label="ZwiSuID" form:text-style-name="ctrl2">
                   <form:text xml:id="control24" form:id="control24" form:data-field="ZwiSuID" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="com.sun.star.form.control.TextField"/>
                       <form:property form:property-name="Hidden" office:value-type="boolean" office:boolean-value="true"/>
@@ -489,6 +499,7 @@
                 <form:column form:name="Zwischensummen_Name" form:control-implementation="ooo:TextField" form:label="Name" form:text-style-name="ctrl2">
                   <form:text xml:id="control25" form:id="control25" form:max-length="1000" form:data-field="ZwiSuName" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
                       <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
@@ -566,6 +577,7 @@
                 <form:column form:name="Bemerkung" form:control-implementation="ooo:TextField" form:label="Bemerkung" form:text-style-name="ctrl2">
                   <form:text xml:id="control32" form:id="control32" form:max-length="1000" form:data-field="Bemerkung" form:input-required="false" form:convert-empty-to-null="true">
                     <form:properties>
+                      <form:property form:property-name="CharAutoKerning" office:value-type="boolean" office:boolean-value="false"/>
                       <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                       <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
                       <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
@@ -1883,13 +1895,6 @@
       <text:p text:style-name="P1">
         <text:tab/>
       </text:p>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
       <text:p text:style-name="P1"/>
       <text:p text:style-name="P1"/>
       <text:p text:style-name="P1"/>

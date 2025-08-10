@@ -34,7 +34,8 @@ Sub Start()
 		Betriebsart_aendern(iStartoption)
 		sSQL2=&quot;UPDATE Start SET Startoption=0,Unloaded=1,Startlock=0,Export=0 WHERE StartID=&quot;&amp; iUserID_lokal
 		SQL_execute(sSQL2)
-
+		
+		XRechnungMenu()
 	 	StatusBar(False)
 		ToolBar(False)
 	End if

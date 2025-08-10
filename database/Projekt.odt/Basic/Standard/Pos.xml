@@ -240,4 +240,6 @@ Sub Pos_verschieben_sub(iReset as Integer)
 	End if
 End Sub
 
-</script:module>
+Sub Macro1
+
+End Sub</script:module>

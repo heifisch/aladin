@@ -21,7 +21,6 @@ Sub TestTablePos2()
 
 End Sub
 
-
 Sub DokumentName_bearbeiten()
 	if lDocumentID &lt;&gt; 0 then
 		Dim vStatus as Variant

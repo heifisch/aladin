@@ -9,7 +9,7 @@
   <office:styles>
     <style:default-style style:family="graphic">
       <style:graphic-properties svg:stroke-color="#808080" draw:fill-color="#cfe7f5" fo:wrap-option="no-wrap" draw:shadow-offset-x="0.3cm" draw:shadow-offset-y="0.3cm" draw:start-line-spacing-horizontal="0.283cm" draw:start-line-spacing-vertical="0.283cm" draw:end-line-spacing-horizontal="0.283cm" draw:end-line-spacing-vertical="0.283cm" style:writing-mode="lr-tb" style:flow-with-text="true"/>
-      <style:paragraph-properties fo:text-align="center" style:text-autospace="ideograph-alpha" style:line-break="strict" loext:tab-stop-distance="0cm" style:font-independent-line-spacing="false">
+      <style:paragraph-properties fo:text-align="center" style:text-autospace="ideograph-alpha" style:line-break="strict" loext:tab-stop-distance="0cm" style:writing-mode="lr-tb" style:font-independent-line-spacing="false">
         <style:tab-stops/>
       </style:paragraph-properties>
       <style:text-properties fo:color="#000000" loext:opacity="100%" style:font-name="Nimbus Roman No9 L" fo:font-size="12pt" fo:language="de" fo:country="DE" style:font-name-asian="Nimbus Sans L" style:font-size-asian="12pt" style:language-asian="de" style:country-asian="DE" style:font-name-complex="Lucidasans" style:font-size-complex="12pt" style:language-complex="de" style:country-complex="DE"/>
@@ -65,12 +65,12 @@
       <style:text-properties style:text-position="super 58%"/>
     </style:style>
     <style:style style:name="Frame" style:family="graphic">
-      <style:graphic-properties svg:width="1.757cm" style:rel-width="32%" fo:min-height="0.363cm" text:anchor-type="as-char" svg:x="0cm" svg:y="0cm" fo:margin-left="0.201cm" fo:margin-right="0.201cm" fo:margin-top="0.201cm" fo:margin-bottom="0.201cm" style:wrap="parallel" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:vertical-pos="top" style:vertical-rel="baseline" style:horizontal-pos="center" style:horizontal-rel="paragraph-content" fo:background-color="transparent" draw:fill="none" fo:padding="0cm" fo:border="0.06pt solid #000000" loext:rel-width-rel="paragraph">
+      <style:graphic-properties svg:width="1.757cm" style:rel-width="32%" fo:min-height="0.363cm" text:anchor-type="as-char" svg:x="0cm" svg:y="0cm" fo:margin-left="0.201cm" fo:margin-right="0.201cm" fo:margin-top="0.201cm" fo:margin-bottom="0.201cm" style:wrap="parallel" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:vertical-pos="top" style:vertical-rel="baseline" style:horizontal-pos="center" style:horizontal-rel="paragraph-content" fo:background-color="transparent" draw:fill="none" draw:fill-color="#cfe7f5" fo:padding="0cm" fo:border="0.06pt solid #000000" loext:rel-width-rel="paragraph">
         <style:columns fo:column-count="1" fo:column-gap="0cm"/>
       </style:graphic-properties>
     </style:style>
     <style:style style:name="Formula" style:family="graphic">
-      <style:graphic-properties text:anchor-type="as-char" svg:y="0cm" fo:margin-left="0.201cm" fo:margin-right="0.201cm" style:vertical-pos="middle" style:vertical-rel="text" fo:background-color="transparent" draw:fill="none"/>
+      <style:graphic-properties text:anchor-type="as-char" svg:y="0cm" fo:margin-left="0.201cm" fo:margin-right="0.201cm" style:vertical-pos="middle" style:vertical-rel="text" fo:background-color="transparent" draw:fill="none" draw:fill-color="#cfe7f5"/>
     </style:style>
     <style:style style:name="FieldContent" style:family="graphic">
       <style:graphic-properties svg:width="2cm" svg:height="0.499cm" text:anchor-type="as-char" svg:x="0cm" svg:y="-0.249cm" fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" style:protect="none" style:wrap="parallel" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:vertical-pos="middle" style:vertical-rel="text" style:horizontal-pos="center" style:horizontal-rel="paragraph" fo:background-color="#ffffff" style:background-transparency="0%" draw:fill="solid" draw:fill-color="#ffffff" draw:opacity="100%" fo:padding="0.101cm" fo:border="0.06pt solid #000000" style:editable="true">
@@ -91,7 +91,7 @@
       </office:event-listeners>
     </style:style>
     <style:style style:name="BigFrame" style:family="graphic">
-      <style:graphic-properties svg:width="0.041cm" fo:min-height="0.041cm" text:anchor-type="paragraph" svg:x="0cm" svg:y="0cm" fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" style:wrap="parallel" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:vertical-pos="top" style:vertical-rel="paragraph-content" style:horizontal-pos="left" style:horizontal-rel="paragraph-content" fo:background-color="transparent" draw:fill="none" fo:padding="0cm" fo:border="none">
+      <style:graphic-properties svg:width="0.041cm" fo:min-height="0.041cm" text:anchor-type="paragraph" svg:x="0cm" svg:y="0cm" fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" style:wrap="parallel" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:vertical-pos="top" style:vertical-rel="paragraph-content" style:horizontal-pos="left" style:horizontal-rel="paragraph-content" fo:background-color="transparent" draw:fill="none" draw:fill-color="#cfe7f5" fo:padding="0cm" fo:border="none">
         <style:columns fo:column-count="1" fo:column-gap="0cm"/>
       </style:graphic-properties>
       <office:event-listeners>
@@ -99,7 +99,7 @@
       </office:event-listeners>
     </style:style>
     <style:style style:name="FieldFrame" style:family="graphic">
-      <style:graphic-properties svg:width="0.499cm" fo:min-height="0.499cm" text:anchor-type="paragraph" svg:x="-0.212cm" svg:y="-0.318cm" fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" style:wrap="parallel" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:vertical-pos="from-top" style:vertical-rel="paragraph" style:horizontal-pos="from-left" style:horizontal-rel="paragraph" fo:background-color="transparent" draw:fill="none" fo:padding="0cm" fo:border="none">
+      <style:graphic-properties svg:width="0.499cm" fo:min-height="0.499cm" text:anchor-type="paragraph" svg:x="-0.212cm" svg:y="-0.318cm" fo:margin-left="0cm" fo:margin-right="0cm" fo:margin-top="0cm" fo:margin-bottom="0cm" style:wrap="parallel" style:number-wrapped-paragraphs="no-limit" style:wrap-contour="false" style:vertical-pos="from-top" style:vertical-rel="paragraph" style:horizontal-pos="from-left" style:horizontal-rel="paragraph" fo:background-color="transparent" draw:fill="none" draw:fill-color="#cfe7f5" fo:padding="0cm" fo:border="none">
         <style:columns fo:column-count="1" fo:column-gap="0cm"/>
       </style:graphic-properties>
       <office:event-listeners>

@@ -8,8 +8,9 @@ REM  *****  BASIC  *****
 option explicit
 
 Sub Test
-GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-WriteDbgInfo(oField_13bText)
+print iBetriebsart
+&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
+&apos;WriteDbgInfo(oField_13bText)
 End Sub
 
 

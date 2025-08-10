@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="XRechnung" script:language="StarBasic" script:moduleType="normal">REM ***** BASIC *****
+Option Explicit
+
+Sub XRechnungMenu()
+	If InStr(sTabelle1,&quot;Rechnungen1&quot;) &gt; 0 then
+		If lDocumentID &gt; 0 then
+			CreateMenuXRechnung()
+		Else
+			RemoveMenuXRechnung()
+		End If
+	Else
+		RemoveMenuXRechnung()
+	End If
+End Sub
+
+Sub RemoveMenuXRechnung()
+	Dim oMmoduleCfgMgr As Object
+	Dim oMenuBarSettings As Object
+	Dim vPopupMenu As Variant
+	Dim oPopupMenuContainer As Object
+	Dim vMenuItem as Variant
+	Dim sMenuBar As String
+	Dim iCount As Integer
+	Dim iRemoveItem As Integer
+	Dim i, j, k, l, m As Integer
+
+	iRemoveItem = -1
+	sMenuBar = &quot;private:resource/menubar/menubar&quot;
+
+	oMmoduleCfgMgr = ThisComponent.getUIConfigurationManager()
+	oMenuBarSettings = oMmoduleCfgMgr.getSettings(sMenuBar, True)
+
+	iCount = oMenuBarSettings.getCount()
+
+	For i = 0 to iCount-1
+		vPopupMenu() = oMenuBarSettings.getByIndex(i)
+		For j = 0 To UBound(vPopupMenu) - 1
+			If vPopupMenu(j).Name = &quot;Label&quot; And VarType(vPopupMenu(j).Value) = V_STRING Then
+				If vPopupMenu(j).Value = &quot;ALADIN&quot; Then
+					For k = 0 To UBound(vPopupMenu) - 1
+						If vPopupMenu(k).Name = &quot;ItemDescriptorContainer&quot; Then
+							oPopupMenuContainer = vPopupMenu(k).Value
+ 							For l = 0 To oPopupMenuContainer.Count() - 1
+								vMenuItem=oPopupMenuContainer.getByIndex(l)
+&apos;						Xray vMenuItem
+								For m = 0 To UBound(vMenuItem) - 1
+									If vMenuItem(m).Name = &quot;Label&quot; And VarType(vMenuItem(m).Value) = V_STRING Then
+										If vMenuItem(m).Value = &quot;XRechnung&quot; Then
+											iRemoveItem = l
+											Exit For
+										End if
+									End if
+								Next
+							Next
+						End If
+					Next
+				End If
+			End If
+		Next
+ 	Next
+ 	If iRemoveItem &gt; -1 then
+		oPopupMenuContainer.removeByIndex(iRemoveItem)
+		oPopupMenuContainer.removeByIndex(iRemoveItem-1)
+		oMmoduleCfgMgr.replaceSettings(sMenuBar, oMenuBarSettings)		
+	End If
+End Sub
+
+Sub CreateMenuXRechnung()
+	Dim oMmoduleCfgMgr As Object
+	Dim oMenuBarSettings As Object
+	Dim vPopupMenu As Variant
+	Dim vMenuItem as Variant
+	Dim vSubMenuItem as Variant
+	Dim vNewMenuItem as Variant
+	Dim oPopupMenuContainer As Object
+	Dim oPopupSubMenuContainer As Object
+	Dim sMenuBar As String
+	Dim sMyPopupMenuCmdId As String
+	Dim iCount As Integer
+	Dim iItemExists As Integer
+	Dim i, j, k, l, m, n As Integer
+
+	iItemExists = -1
+	sMenuBar = &quot;private:resource/menubar/menubar&quot;
+    sMyPopupMenuCmdId = &quot;vnd.openoffice.org:CustomMenu1&quot;
+
+	oMmoduleCfgMgr = ThisComponent.getUIConfigurationManager()
+	oMenuBarSettings = oMmoduleCfgMgr.getSettings(sMenuBar, True)
+
+	iCount = oMenuBarSettings.getCount()
+
+	For i = 0 to iCount-1
+		vPopupMenu() = oMenuBarSettings.getByIndex(i)
+		For j = 0 To UBound(vPopupMenu) - 1
+			If vPopupMenu(j).Name = &quot;Label&quot; And VarType(vPopupMenu(j).Value) = V_STRING Then
+				If vPopupMenu(j).Value = &quot;ALADIN&quot; Then
+					For k = 0 To UBound(vPopupMenu) - 1
+						If vPopupMenu(k).Name = &quot;ItemDescriptorContainer&quot; Then
+							oPopupMenuContainer = vPopupMenu(k).Value
+							For l = 0 To oPopupMenuContainer.Count() - 1
+								vMenuItem=oPopupMenuContainer.getByIndex(l)
+								For m = 0 To UBound(vMenuItem) - 1
+									If vMenuItem(m).Name = &quot;Label&quot; And VarType(vMenuItem(m).Value) = V_STRING Then
+										If vMenuItem(m).Value = &quot;XRechnung&quot; Then
+											iItemExists=j
+											Exit For
+										End if
+									End if
+								Next
+							Next
+							if iItemexists &lt; 0 Then
+						 		vNewMenuItem = fCreateMenuSeparator()
+						 		oPopupMenuContainer.insertByIndex( oPopupMenuContainer.Count(), vNewMenuItem )
+
+								vNewMenuItem = fCreatePopupMenu(sMyPopupMenuCmdId, &quot;XRechnung&quot;, oMenuBarSettings )
+								oPopupMenuContainer.insertByIndex(oPopupMenuContainer.Count(), vNewMenuItem)
+							End If
+							For l = 0 To oPopupMenuContainer.Count() - 1
+								vMenuItem=oPopupMenuContainer.getByIndex(l)
+
+								For m = 0 To UBound(vMenuItem) - 1
+									If vMenuItem(m).Name = &quot;Label&quot; And VarType(vMenuItem(m).Value) = V_STRING Then
+										If vMenuItem(m).Value = &quot;XRechnung&quot; Then
+											For n = 0 To UBound(vMenuItem) - 1
+												If vMenuItem(n).Name = &quot;ItemDescriptorContainer&quot; Then
+													oPopupSubMenuContainer = vMenuItem(n).Value
+													vNewMenuItem = fCreateMenuItem(&quot;vnd.sun.star.script:Standard.XRechnung.XRechnung_erzeugen?language=Basic&amp;location=document&quot;, &quot;XRechnung erzeugen&quot;)
+													oPopupSubMenuContainer.insertByIndex(oPopupSubMenuContainer.Count(), vNewMenuItem)													
+													vNewMenuItem = fCreateMenuItem(&quot;vnd.sun.star.script:Standard.XRechnung.XRechnung_versenden?language=Basic&amp;location=document&quot;, &quot;XRechnung versenden&quot;)
+													oPopupSubMenuContainer.insertByIndex(oPopupSubMenuContainer.Count(), vNewMenuItem)													
+												End If
+											Next
+										End if
+									End if
+								Next
+							Next
+						End If
+					Next
+				End If
+			End If
+		Next
+ 	Next
+
+	if iItemexists &lt; 0 Then
+		oMmoduleCfgMgr.replaceSettings(sMenuBar, oMenuBarSettings)	
+	End if
+	
+End Sub
+
+Sub XRechnung_erzeugen()
+	print &quot;XRechnung erzeugen&quot;
+End Sub
+
+Sub XRechnung_versenden()
+	print &quot;XRechnung versenden&quot;
+End Sub
+
+
+</script:module>

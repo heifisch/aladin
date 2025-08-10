@@ -465,5 +465,44 @@ Function GetDocUserProperty(sPropertyName as String) As String
 	end if
 End Function
 
+Function fCreatePopupMenu( sCommandId, sLabel, sFactory ) as Variant
+	Dim arrPopupMenu(6) as new com.sun.star.beans.PropertyValue
+		arrPopupMenu(0).Name = &quot;CommandURL&quot;
+		arrPopupMenu(0).Value = sCommandId
+		arrPopupMenu(1).Name = &quot;HelpURL&quot;
+		arrPopupMenu(1).Value = &quot;&quot;
+		arrPopupMenu(2).Name = &quot;ItemDescriptorContainer&quot;
+		arrPopupMenu(2).Value = sFactory.createInstanceWithContext( GetDefaultContext() )
+		arrPopupMenu(3).Name = &quot;Label&quot;
+		arrPopupMenu(3).Value = sLabel
+		arrPopupMenu(4).Name = &quot;Style&quot;
+		arrPopupMenu(4).Value = 0
+		arrPopupMenu(5).Name = &quot;Type&quot;
+		arrPopupMenu(5).Value = 0
+	fCreatePopupMenu = arrPopupMenu()
+End Function
 
+Function fCreateMenuItem( sCommand as String, sLabel as String ) as Variant
+	Dim arrMenuItem(6) as new com.sun.star.beans.PropertyValue
+		arrMenuItem(0).Name = &quot;CommandURL&quot;
+		arrMenuItem(0).Value = sCommand
+		arrMenuItem(1).Name = &quot;HelpURL&quot;
+		arrMenuItem(1).Value = &quot;&quot;
+		arrMenuItem(2).Name = &quot;ItemDescriptorContainer&quot;
+		arrMenuItem(2).Value = NULL
+		arrMenuItem(3).Name = &quot;Label&quot;
+		arrMenuItem(3).Value = sLabel
+		arrMenuItem(4).Name = &quot;Style&quot;
+		arrMenuItem(4).Value = 0
+		arrMenuItem(5).Name = &quot;Type&quot;
+		arrMenuItem(5).Value = 0
+	fCreateMenuItem = arrMenuItem()
+End Function
+ 
+Function fCreateMenuSeparator() as Variant
+	Dim arrMenuItem(0) as new com.sun.star.beans.PropertyValue
+		arrMenuItem(0).Name = &quot;Type&quot;
+		arrMenuItem(0).Value = 1
+	fCreateMenuSeparator = arrMenuItem()
+End Function
 </script:module>

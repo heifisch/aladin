@@ -157,6 +157,7 @@ nochmal:
 			Skontoziel_commit()
 			Korrektur_Vorzeichen_refresh()
 			Schreibschutz_setzen()
+			XRechnungMenu()
 		End if
 	End if
 End Sub
@@ -249,6 +250,7 @@ if lDocumentID &gt; 0 then
 			oList_Documentauswahl.refresh()
 			oForm_Steuerung.reload()
 			oForm_Steuerung.reset()
+			XRechnungMenu()
 		End if
 	End if
 End if
@@ -283,7 +285,8 @@ Sub Document_schliessen()
 		sSQL4=&quot;UPDATE Steuerung SET ProjektID = NULL,KontaktID = NULL,Suchstring_2 = NULL,Jahr=&apos;&quot;&amp; iJahr &amp;_
 			&quot;&apos;,Gesperrt=0,Stundenverrechnungssatz = NULL WHERE ClientID=&quot;&amp; iClientID
 		SQL_execute(sSQL4)
-	End if	
+	End if
+	XRechnungMenu()
 	StatusBar(True,oDoc)
 	ToolBar(True,oDoc)
 	oDoc.Modified = False
@@ -449,6 +452,7 @@ Sub Document_speichern()
 			SQL_DocumentID_entfernen()
 			oForm_Steuerung.reload()
 			oForm_Document.reset()
+			XRechnungMenu()
 		End if
 	End if
 End Sub
@@ -501,6 +505,7 @@ Sub Document_bearbeiten()
 			SQL_Update_Document1_Gesperrt_1(sTabelle1,lDocumentID)
 			Korrektur_Vorzeichen_refresh()
 			Schreibschutz_setzen()
+			XRechnungMenu()
 		End if
 	End if
 End Sub
@@ -531,7 +536,8 @@ nochmal:
 		SQL_Update_Document1_Gesperrt_1(sTabelle1,lDocumentID)	
 		SQL_Datum_setzen()
 		Korrektur_Vorzeichen_refresh()
-		Schreibschutz_setzen()	
+		Schreibschutz_setzen()
+		XRechnungMenu()
 	End if
 End Sub
 
