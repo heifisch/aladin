@@ -144,7 +144,7 @@ Sub Druck_vorbereiten()
 	Dim sSkonto as String
 	Dim sRechnungsbetrag as String,sAbschlagszahlungen as String,sRestbetrag as String
 	Dim iSkonto_Tage as integer,iFaellig_Tage as integer
-	Dim sPos as String,sIfKontaktID as String,sIfReferenzID as String
+	Dim sPos as String,sKontaktID as String
 	Dim sEP as String,sGP as String,sProjektName as String,sDocumentName as String
 	Dim sNummern as String,s13bText as String
 	Dim sErstellungsdatum as String,sGueltigBis as String,sSkontoBis as String
@@ -257,8 +257,8 @@ Sub Druck_vorbereiten()
 					sErstellungsdatum=oRecord1.getString(44)
 					sGueltigBis=oRecord1.getString(45)
 					sSkontoBis=oRecord1.getString(46)
-					sIfKontaktID=oRecord1.getString(47)
-					sIfReferenzID=oRecord1.getString(48)
+					sKontaktID=oRecord1.getString(47)
+					sReferenzID=oRecord1.getString(48)
 					sLand_Eigen=oRecord1.getString(49)
 					sProjektName=oRecord1.getString(50)
 					sDocumentName=oRecord1.getString(51)
@@ -514,18 +514,18 @@ Sub Druck_vorbereiten()
 				sNummern =  sNummern &amp;&quot;&apos;&quot;&amp; sPraefix &amp;&quot; &apos;,t1.DocumentID&quot;
 		
 				if InStr(sKontakte,&quot;Kunden&quot;) &gt; 0 then
-					if sIfKontaktID = &quot;&quot; then
+					if sKontaktID = &quot;&quot; then
 						sNummern =  sNummern
 					else	
 						sNummern =  sNummern + &quot;,&apos;\n\t&apos;,t2.KontaktID,&apos;\t&apos;,t1.KontaktID&quot;
 					End if
-					if sIfReferenzID = &quot;&quot; then
+					if sReferenzID = &quot;&quot; then
 						sNummern =  sNummern
 					else
 						sNummern =  sNummern + &quot;,&apos;\n\t&apos;,&apos;Lieferantennummer:&apos;,&apos;\t&apos;,t3.ReferenzID&quot;
 					End if
 				elseif InStr(sKontakte,&quot;Lieferanten&quot;) &gt; 0 then
-					if sIfReferenzID = &quot;&quot; then
+					if sReferenzID = &quot;&quot; then
 						sNummern =  sNummern
 					else
 						sNummern =  sNummern + &quot;,&apos;\n\t&apos;,t2.KontaktID,&apos;\t&apos;,t3.ReferenzID&quot;

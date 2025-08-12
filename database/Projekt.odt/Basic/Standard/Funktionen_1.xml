@@ -463,6 +463,10 @@ Function lDocumentID_Auswahl as long
 	lDocumentID_Auswahl=oList_Documentauswahl.BoundField.string
 End Function
 
+Function sField_Document_Typ as String
+	sField_Document_Typ=oField_Document_Typ.BoundField.string
+End Function
+
 Function fFaellig_Tage as integer
 	fFaellig_Tage=oField_Faellig_Tage.BoundField.short
 End Function

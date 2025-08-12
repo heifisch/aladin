@@ -4,7 +4,7 @@
 Option Explicit
 
 Sub XRechnungMenu()
-	If InStr(sTabelle1,&quot;Rechnungen1&quot;) &gt; 0 then
+	If iDocTypID = 5 OR iDocTypID = 6 then
 		If lDocumentID &gt; 0 then
 			CreateMenuXRechnung()
 		Else

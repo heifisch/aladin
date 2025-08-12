@@ -329,7 +329,7 @@ Function fLV_Pos(sWert) as String
 	End if
 End Function
 
-Function fMenge_eingeben (iAendern as integer) as integer
+Function fMenge_eingeben(iAendern as integer) as integer
 	Dim sTest as String
 	if iAendern=1 then
 		vStatus=MsgBox(&quot;Möchten Sie die Menge der einzelnen Positionen gleich eingeben?&quot;,36)
@@ -355,7 +355,7 @@ Function fMenge_eingeben (iAendern as integer) as integer
 	fMenge_eingeben=sMenge_eingeben_abfragen
 End Function
 
-Function fEinfuegen_abfragen (iAendern as integer) as integer
+Function fEinfuegen_abfragen(iAendern as integer) as integer
 	Dim sTest as String
 	if iAendern=1 then
 		vStatus=MsgBox(&quot;Möchten Sie das Einfügen von Leistungen bestätigen?&quot;,36)
@@ -438,11 +438,11 @@ Function fDocument_TypID as integer
 	Wend
 End Function
 
-Function fSkonto_Tage_ as integer
+Function fSkonto_Tage_SQL as integer
 	sSQL1=&quot;SELECT Skonto_Tage FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
 	oRecord1=oResult(sSQL1)
 	While oRecord1.next()
-		fSkonto_Tage=oRecord1.getInt(1)
+		fSkonto_Tage_SQL=oRecord1.getInt(1)
 	Wend
 End Function
 

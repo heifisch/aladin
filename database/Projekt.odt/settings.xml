@@ -2,10 +2,10 @@
 <office:document-settings xmlns:config="urn:oasis:names:tc:opendocument:xmlns:config:1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ooo="http://openoffice.org/2004/office" xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" office:version="1.4">
   <office:settings>
     <config:config-item-set config:name="ooo:view-settings">
-      <config:config-item config:name="ViewAreaTop" config:type="long">14894</config:config-item>
+      <config:config-item config:name="ViewAreaTop" config:type="long">13836</config:config-item>
       <config:config-item config:name="ViewAreaLeft" config:type="long">501</config:config-item>
       <config:config-item config:name="ViewAreaWidth" config:type="long">22941</config:config-item>
-      <config:config-item config:name="ViewAreaHeight" config:type="long">25984</config:config-item>
+      <config:config-item config:name="ViewAreaHeight" config:type="long">27016</config:config-item>
       <config:config-item config:name="ShowRedlineChanges" config:type="boolean">false</config:config-item>
       <config:config-item config:name="InBrowseMode" config:type="boolean">true</config:config-item>
       <config:config-item-map-indexed config:name="Views">
@@ -14,9 +14,9 @@
           <config:config-item config:name="ViewLeft" config:type="long">713</config:config-item>
           <config:config-item config:name="ViewTop" config:type="long">32904</config:config-item>
           <config:config-item config:name="VisibleLeft" config:type="long">501</config:config-item>
-          <config:config-item config:name="VisibleTop" config:type="long">14894</config:config-item>
+          <config:config-item config:name="VisibleTop" config:type="long">13836</config:config-item>
           <config:config-item config:name="VisibleRight" config:type="long">23440</config:config-item>
-          <config:config-item config:name="VisibleBottom" config:type="long">40876</config:config-item>
+          <config:config-item config:name="VisibleBottom" config:type="long">40850</config:config-item>
           <config:config-item config:name="ZoomType" config:type="short">0</config:config-item>
           <config:config-item config:name="ViewLayoutColumns" config:type="short">1</config:config-item>
           <config:config-item config:name="ViewLayoutBookMode" config:type="boolean">false</config:config-item>
@@ -142,7 +142,7 @@
       <config:config-item config:name="UseOldPrinterMetrics" config:type="boolean">false</config:config-item>
       <config:config-item config:name="RedlineProtectionKey" config:type="base64Binary"/>
       <config:config-item config:name="TabsRelativeToIndent" config:type="boolean">true</config:config-item>
-      <config:config-item config:name="Rsid" config:type="int">17107796</config:config-item>
+      <config:config-item config:name="Rsid" config:type="int">17458615</config:config-item>
       <config:config-item config:name="UpdateFromTemplate" config:type="boolean">true</config:config-item>
       <config:config-item config:name="ProtectForm" config:type="boolean">false</config:config-item>
       <config:config-item config:name="MsWordCompMinLineHeightByFly" config:type="boolean">false</config:config-item>
