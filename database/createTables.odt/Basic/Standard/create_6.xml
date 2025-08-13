@@ -8,7 +8,7 @@ REM  *****  BASIC  *****
 option explicit
 Sub SQL_create_Rechnungen1
 	sSQL=&quot;create table Rechnungen1 &quot;&amp;_
-		&quot;(DocumentID int(11)not null auto_increment,Document_TypID int(2) not null default 5,ProjektID int(10),&quot;&amp;_
+		&quot;(DocumentID int(11)not null auto_increment,RechnungsTypCodeID int(4) not null default 380,Document_TypID int(2) not null default 5,ProjektID int(10),&quot;&amp;_
 		&quot;Document_Typ varchar(100) default &apos;Rechnung&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
 		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),&quot;&amp;_
 		&quot;AnsprechpartnerID int(10),Erstellungsdatum date not null default 0,gueltig_bis date not null default 0,Skonto_bis date,&quot;&amp;_
@@ -146,4 +146,21 @@ Sub SQL_create_Bestellungen2
 	SQL_execute_mysql(sSQL)
 End Sub
 
+Sub SQL_create_RechnungsTypCode
+	sSQL=&quot;create table RechnungsTypCode &quot;&amp;_
+		&quot;(RechnungsTypCodeID int(4) not null,RechnungsTypCodeBezeichnung varchar(50),RechnungsTypCodeDruck varchar(50),primary key(RechnungsTypCodeID))&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into RechnungsTypCode(RechnungsTypCodeID,RechnungsTypCodeBezeichnung,RechnungsTypCodeDruck) values(326,&apos;Teilrechnung&apos;,&apos;Teilrechnung&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into RechnungsTypCode(RechnungsTypCodeID,RechnungsTypCodeBezeichnung,RechnungsTypCodeDruck) values(380,&apos;Rechnung&apos;,&apos;Rechnung&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into RechnungsTypCode(RechnungsTypCodeID,RechnungsTypCodeBezeichnung,RechnungsTypCodeDruck) values(384,&apos;Rechnungskorrektur&apos;,&apos;Rechnungskorrektur&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into RechnungsTypCode(RechnungsTypCodeID,RechnungsTypCodeBezeichnung,RechnungsTypCodeDruck) values(875,&apos;Abschlagsrechnung Bauleistung&apos;,&apos;Abschlagsrechnung&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into RechnungsTypCode(RechnungsTypCodeID,RechnungsTypCodeBezeichnung,RechnungsTypCodeDruck) values(876,&apos;Teilschlussrechnung Bauleistung&apos;,&apos;Teilschlussrechnung&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;insert into RechnungsTypCode(RechnungsTypCodeID,RechnungsTypCodeBezeichnung,RechnungsTypCodeDruck) values(877,&apos;Schlussrechnung Bauleistung&apos;,&apos;Schlussrechnung&apos;)&quot;
+	SQL_execute_mysql(sSQL)
+End Sub
 </script:module>

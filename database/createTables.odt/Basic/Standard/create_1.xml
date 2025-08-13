@@ -103,6 +103,7 @@ Sub create_DB()
 	SQL_create_Controlling
 	SQL_create_Personal
 	SQL_create_Rechnungstypen
+	SQL_create_RechnungsTypCode
 End Sub
 
 Sub SQL_Zugriffsrechte()

@@ -15,6 +15,13 @@ SQL_create_Arbeitstabellen()
 &apos;SQL_create_Druckertabelle1()
 End Sub
 
+Sub Alter_Table_20250813()
+Use_Aladin
+sSQL=&quot;ALTER TABLE Rechnungen1 ADD RechnungsTypCodeID int(4) not null default 380 AFTER DocumentID&quot;
+SQL_execute_mysql(sSQL)
+SQL_create_RechnungsTypCode()
+End Sub
+
 Sub Alter_Table_20160912()
 Use_Aladin
 sSQL=&quot;ALTER TABLE Projekte ADD Materialaufschlagsatz decimal(5,2) AFTER Stundenverrechnungssatz&quot;
