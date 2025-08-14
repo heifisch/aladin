@@ -10,6 +10,14 @@ option explicit
 Dim vSQLArray as Variant
 Dim sSQL1 as String
 
+Sub Test
+
+GlobalScope.BasicLibraries.LoadLibrary(&quot;XrayTool&quot;)
+&apos;Xray oList_Projektvorauswahl
+&apos;Xray oList_RechnungsTypCode
+Xray oOption_AZ
+End Sub
+
 Sub Start_einst()
 		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Projekt&quot;))
 		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 0)
@@ -187,6 +195,7 @@ Sub Formular_init_first()
 	init_List_Kontaktauswahl()
 	init_List_Projektauswahl()
 	init_List_Ansprechpartner()
+	init_List_RechnungsTypCode()
 	init_List_Kontaktvorauswahl()
 	init_List_Projektvorauswahl()
 	init_List_Documentauswahl()
@@ -290,6 +299,13 @@ End Sub
 
 Sub init_List_Ansprechpartner()
 	oList_Ansprechpartner.ListSourceType=4
+End Sub
+
+Sub init_List_RechnungsTypCode()
+	oList_RechnungsTypCode.ListSource=Array(&quot;SELECT distinct concat(RechnungsTypCodeID,&apos; - &apos;,RechnungsTypCodeBezeichnung),RechnungsTypCodeID&quot;&amp;_
+		&quot; FROM RechnungsTypCode ORDER BY RechnungsTypCodeID ASC&quot;)
+	oList_RechnungsTypCode.ListSourceType=4
+	oList_RechnungsTypCode.DataField=&quot;&quot;
 End Sub
 
 Sub init_List_Projektauswahl()

@@ -7,13 +7,6 @@
 REM  *****  BASIC  *****
 option explicit
 
-Sub Test
-print iBetriebsart
-&apos;GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-&apos;WriteDbgInfo(oField_13bText)
-End Sub
-
-
 Dim vStatus as Variant
 Dim iGesperrt as integer
 Dim iCount as Integer
@@ -141,7 +134,7 @@ End Sub
 Sub Betriebsart_aendern(iBetriebsart as integer)
 	oTextField_Betriebsart.Label=&quot;Initialisierung läuft&quot;
 	If iClientID&lt;&gt;0 then
-		Document_speichern
+		Document_speichern()
 		sSQL2=&quot;UPDATE Steuerung SET Gesperrt=0 WHERE ClientID=&quot;&amp; iClientID
 		SQL_execute(sSQL2)
 	End if
@@ -174,9 +167,19 @@ Sub Betriebsart_aendern(iBetriebsart as integer)
 			oTextField_DocumentID.Label=&quot;Angebotsnummer: &quot;
 			oTextField_Erstellungsdatum.Label=&quot;Angebotsdatum: &quot;
 &apos;			oButton_Document_berechnen.Label=&quot;Angebot&quot;&amp; chr$(13) &amp;&quot;berechnen&quot;
-			oOption_AZ.Enabled=False
-			oOption_13b.Enabled=True
-			oField_13bText.Enabled=True
+			oOption_AZ.EnableVisible=False
+			oButton_AZ.EnableVisible=False
+			oOption_13b.EnableVisible=True
+			oField_13bText.EnableVisible=True
+			oLabel_13bText.EnableVisible=True
+			oList_RechnungsTypCode.EnableVisible=False
+			oList_RechnungsTypCode.DataField=&quot;&quot;
+			oList_RechnungsTypCode.refresh()
+			oField_Document_Typ.EnableVisible=True
+			oField_Stundensatz_Kontakt.EnableVisible=True
+			oField_Stundensatz_Projekt.EnableVisible=True
+			oLabel_Stundensatz_Kontakt.EnableVisible=True
+			oLabel_Stundensatz_Projekt.EnableVisible=True
 			if iBetriebsart = 1 then
 				oTextField_Betriebsart.Label=&quot;Angebote (1)&quot;
 				if iUnloaded = 0 then
@@ -194,9 +197,19 @@ Sub Betriebsart_aendern(iBetriebsart as integer)
 			oTextField_DocumentID.Label=&quot;Auftragsnummer: &quot;
 			oTextField_Erstellungsdatum.Label=&quot;Auftragsdatum: &quot;
 &apos;			oButton_Document_berechnen.Label=&quot;Auftrag&quot;
-			oOption_AZ.Enabled=False
-			oOption_13b.Enabled=True
-			oField_13bText.Enabled=True
+			oOption_AZ.EnableVisible=False
+			oButton_AZ.EnableVisible=False
+			oOption_13b.EnableVisible=True
+			oField_13bText.EnableVisible=True
+			oLabel_13bText.EnableVisible=True
+			oList_RechnungsTypCode.EnableVisible=False
+			oList_RechnungsTypCode.DataField=&quot;&quot;
+			oList_RechnungsTypCode.refresh()
+			oField_Document_Typ.EnableVisible=True
+			oField_Stundensatz_Kontakt.EnableVisible=True
+			oField_Stundensatz_Projekt.EnableVisible=True
+			oLabel_Stundensatz_Kontakt.EnableVisible=True
+			oLabel_Stundensatz_Projekt.EnableVisible=True
 			if iBetriebsart = 3 then
 				oTextField_Betriebsart.Label=&quot;Auftragsbestätigungen (1)&quot;
 				if iUnloaded = 0 then
@@ -214,9 +227,19 @@ Sub Betriebsart_aendern(iBetriebsart as integer)
 			oTextField_DocumentID.Label=&quot;Lieferscheinnummer: &quot;
 			oTextField_Erstellungsdatum.Label=&quot;Lieferdatum: &quot;
 &apos;			oButton_Document_berechnen.Label=&quot;Lieferschein&quot;
-			oOption_AZ.Enabled=False
-			oOption_13b.Enabled=True
-			oField_13bText.Enabled=True
+			oOption_AZ.EnableVisible=False
+			oButton_AZ.EnableVisible=False
+			oOption_13b.EnableVisible=True
+			oField_13bText.EnableVisible=True
+			oLabel_13bText.EnableVisible=True
+			oList_RechnungsTypCode.EnableVisible=False
+			oList_RechnungsTypCode.DataField=&quot;&quot;
+			oList_RechnungsTypCode.refresh()
+			oField_Document_Typ.EnableVisible=True
+			oField_Stundensatz_Kontakt.EnableVisible=True
+			oField_Stundensatz_Projekt.EnableVisible=True
+			oLabel_Stundensatz_Kontakt.EnableVisible=True
+			oLabel_Stundensatz_Projekt.EnableVisible=True
 			if iBetriebsart = 5 then
 				oTextField_Betriebsart.Label=&quot;Lieferscheine (1)&quot;
 				if iUnloaded = 0 then
@@ -234,9 +257,19 @@ Sub Betriebsart_aendern(iBetriebsart as integer)
 			oTextField_DocumentID.Label=&quot;Aufmaßnummer: &quot;
 			oTextField_Erstellungsdatum.Label=&quot;Aufmaßdatum: &quot;
 &apos;			oButton_Document_berechnen.Label=&quot;Aufmaß&quot;
-			oOption_AZ.Enabled=False
-			oOption_13b.Enabled=True
-			oField_13bText.Enabled=True
+			oOption_AZ.EnableVisible=False
+			oButton_AZ.EnableVisible=False
+			oOption_13b.EnableVisible=True
+			oField_13bText.EnableVisible=True
+			oLabel_13bText.EnableVisible=True
+			oList_RechnungsTypCode.EnableVisible=False
+			oList_RechnungsTypCode.DataField=&quot;&quot;
+			oList_RechnungsTypCode.refresh()
+			oField_Document_Typ.EnableVisible=True
+			oField_Stundensatz_Kontakt.EnableVisible=True
+			oField_Stundensatz_Projekt.EnableVisible=True
+			oLabel_Stundensatz_Kontakt.EnableVisible=True
+			oLabel_Stundensatz_Projekt.EnableVisible=True
 			if iBetriebsart = 7 then
 				oTextField_Betriebsart.Label=&quot;Aufmaße (1)&quot;
 				if iUnloaded = 0 then
@@ -254,9 +287,19 @@ Sub Betriebsart_aendern(iBetriebsart as integer)
 			oTextField_DocumentID.Label=&quot;Rechnungsnummer: &quot;
 			oTextField_Erstellungsdatum.Label=&quot;Rechnungsdatum: &quot;
 &apos;			oButton_Document_berechnen.Label=&quot;Rechnung&quot;&amp; chr$(13) &amp;&quot;berechnen&quot;
-			oOption_AZ.Enabled=True
-			oOption_13b.Enabled=True
-			oField_13bText.Enabled=True
+			oOption_AZ.EnableVisible=True
+			oButton_AZ.EnableVisible=True
+			oOption_13b.EnableVisible=True
+			oField_13bText.EnableVisible=True
+			oLabel_13bText.EnableVisible=True
+			oList_RechnungsTypCode.EnableVisible=True
+			oList_RechnungsTypCode.DataField=&quot;RechnungsTypCodeID&quot;
+			oList_RechnungsTypCode.refresh()
+			oField_Document_Typ.EnableVisible=False
+			oField_Stundensatz_Kontakt.EnableVisible=True
+			oField_Stundensatz_Projekt.EnableVisible=True
+			oLabel_Stundensatz_Kontakt.EnableVisible=True
+			oLabel_Stundensatz_Projekt.EnableVisible=True
 			if iBetriebsart = 9 then
 				oTextField_Betriebsart.Label=&quot;Rechnungen (1)&quot;
 				if iUnloaded = 0 then
@@ -274,9 +317,19 @@ Sub Betriebsart_aendern(iBetriebsart as integer)
 			oTextField_DocumentID.Label=&quot;Gutschriftsnummer: &quot;
 			oTextField_Erstellungsdatum.Label=&quot;Gutschriftsdatum: &quot;
 &apos;			oButton_Document_berechnen.Label=&quot;Gutschrift&quot;&amp; chr$(13) &amp;&quot;berechnen&quot;
-			oOption_AZ.Enabled=True
-			oOption_13b.Enabled=True
-			oField_13bText.Enabled=True
+			oOption_AZ.EnableVisible=False
+			oButton_AZ.EnableVisible=False
+			oOption_13b.EnableVisible=True
+			oField_13bText.EnableVisible=True
+			oLabel_13bText.EnableVisible=True
+			oList_RechnungsTypCode.EnableVisible=False
+			oList_RechnungsTypCode.DataField=&quot;&quot;
+			oList_RechnungsTypCode.refresh()
+			oField_Document_Typ.EnableVisible=True
+			oField_Stundensatz_Kontakt.EnableVisible=True
+			oField_Stundensatz_Projekt.EnableVisible=True
+			oLabel_Stundensatz_Kontakt.EnableVisible=True
+			oLabel_Stundensatz_Projekt.EnableVisible=True
 			if iBetriebsart = 11 then
 				oTextField_Betriebsart.Label=&quot;Gutschriften (1)&quot;
 				if iUnloaded = 0 then
@@ -294,9 +347,19 @@ Sub Betriebsart_aendern(iBetriebsart as integer)
 			oTextField_DocumentID.Label=&quot;Anfragenummer: &quot;
 			oTextField_Erstellungsdatum.Label=&quot;Anfragedatum: &quot;
 &apos;			oButton_Document_berechnen.Label=&quot;Preisanfrage&quot;
-			oOption_AZ.Enabled=False
-			oOption_13b.Enabled=False
-			oField_13bText.Enabled=False
+			oOption_AZ.EnableVisible=False
+			oButton_AZ.EnableVisible=False
+			oOption_13b.EnableVisible=False
+			oField_13bText.EnableVisible=False
+			oLabel_13bText.EnableVisible=False
+			oList_RechnungsTypCode.EnableVisible=False
+			oList_RechnungsTypCode.DataField=&quot;&quot;
+			oList_RechnungsTypCode.refresh()
+			oField_Document_Typ.EnableVisible=True
+			oField_Stundensatz_Kontakt.EnableVisible=False
+			oField_Stundensatz_Projekt.EnableVisible=False
+			oLabel_Stundensatz_Kontakt.EnableVisible=False
+			oLabel_Stundensatz_Projekt.EnableVisible=False
 			if iBetriebsart = 13 then
 				oTextField_Betriebsart.Label=&quot;Preisanfragen (1)&quot;
 				if iUnloaded = 0 then
@@ -314,9 +377,19 @@ Sub Betriebsart_aendern(iBetriebsart as integer)
 			oTextField_DocumentID.Label=&quot;Bestellnummer: &quot;
 			oTextField_Erstellungsdatum.Label=&quot;Bestelldatum: &quot;
 &apos;			oButton_Document_berechnen.Label=&quot;Bestellung&quot;
-			oOption_AZ.Enabled=False
-			oOption_13b.Enabled=False
-			oField_13bText.Enabled=False
+			oOption_AZ.EnableVisible=False
+			oButton_AZ.EnableVisible=False
+			oOption_13b.EnableVisible=False
+			oField_13bText.EnableVisible=False
+			oLabel_13bText.EnableVisible=False
+			oList_RechnungsTypCode.EnableVisible=False
+			oList_RechnungsTypCode.DataField=&quot;&quot;
+			oList_RechnungsTypCode.refresh()
+			oField_Document_Typ.EnableVisible=True
+			oField_Stundensatz_Kontakt.EnableVisible=False
+			oField_Stundensatz_Projekt.EnableVisible=False
+			oLabel_Stundensatz_Kontakt.EnableVisible=False
+			oLabel_Stundensatz_Projekt.EnableVisible=False
 			if iBetriebsart = 15 then
 				oTextField_Betriebsart.Label=&quot;Bestellungen (1)&quot;
 				if iUnloaded = 0 then
@@ -336,6 +409,7 @@ Sub Betriebsart_aendern(iBetriebsart as integer)
 			Datum_setzen_manuel()
 		End if
 		oForm_Document.reload()
+		Schreibschutz_setzen(1)
 		if lDocumentID &lt;&gt; 0 then
 			Korrektur_Vorzeichen_commit()
 		End if

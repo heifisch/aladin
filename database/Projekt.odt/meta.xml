@@ -4,9 +4,9 @@
     <meta:generator>LibreOffice/25.2.5.2$Linux_X86_64 LibreOffice_project/520$Build-2</meta:generator>
     <meta:initial-creator> </meta:initial-creator>
     <meta:creation-date>2000-07-26T22:04:45</meta:creation-date>
-    <dc:date>2025-08-14T06:46:11.553714891</dc:date>
-    <meta:editing-cycles>3786</meta:editing-cycles>
-    <meta:editing-duration>P19DT18H23M32S</meta:editing-duration>
+    <dc:date>2025-08-14T19:56:48.914793557</dc:date>
+    <meta:editing-cycles>3817</meta:editing-cycles>
+    <meta:editing-duration>P19DT22H20M49S</meta:editing-duration>
     <meta:document-statistic meta:table-count="0" meta:image-count="0" meta:object-count="0" meta:page-count="1" meta:paragraph-count="1" meta:word-count="0" meta:character-count="1" meta:non-whitespace-character-count="0"/>
     <meta:user-defined meta:name="Info 0"/>
     <meta:user-defined meta:name="Info 1"/>
@@ -15,12 +15,13 @@
     <meta:user-defined meta:name="oAnsprechpartner" meta:value-type="string">Ansprechpartner_Kunden</meta:user-defined>
     <meta:user-defined meta:name="oAnsprechpartner_old" meta:value-type="string">Ansprechpartner_Kunden</meta:user-defined>
     <meta:user-defined meta:name="oArbeitstabelle" meta:value-type="string">Angebote2_TEMP1</meta:user-defined>
-    <meta:user-defined meta:name="oArbeitstabelle_old" meta:value-type="string">Angebote2_TEMP-1</meta:user-defined>
+    <meta:user-defined meta:name="oArbeitstabelle_old" meta:value-type="string">Rechnungen2_TEMP2</meta:user-defined>
     <meta:user-defined meta:name="oBemerkungen" meta:value-type="string">ZwiBemAngebote</meta:user-defined>
-    <meta:user-defined meta:name="oBemerkungen_old" meta:value-type="string">ZwiBemAngebote</meta:user-defined>
+    <meta:user-defined meta:name="oBemerkungen_old" meta:value-type="string">ZwiBemRechnungen</meta:user-defined>
     <meta:user-defined meta:name="oClientID" meta:value-type="string">1</meta:user-defined>
     <meta:user-defined meta:name="oDocTypID" meta:value-type="string">1</meta:user-defined>
     <meta:user-defined meta:name="oEinstellungsID_lokal" meta:value-type="string">1</meta:user-defined>
+    <meta:user-defined meta:name="oGueltig" meta:value-type="string">14</meta:user-defined>
     <meta:user-defined meta:name="oHauptgruppen" meta:value-type="string">Hauptgruppen</meta:user-defined>
     <meta:user-defined meta:name="oKontakte" meta:value-type="string">Kunden</meta:user-defined>
     <meta:user-defined meta:name="oKontakte_old" meta:value-type="string">Kunden</meta:user-defined>
@@ -28,11 +29,11 @@
     <meta:user-defined meta:name="oLeistungsstamm" meta:value-type="string">Leistungsstamm</meta:user-defined>
     <meta:user-defined meta:name="oProjekte" meta:value-type="string">Projekte</meta:user-defined>
     <meta:user-defined meta:name="oTabelle1" meta:value-type="string">Angebote1</meta:user-defined>
-    <meta:user-defined meta:name="oTabelle1_old" meta:value-type="string">Angebote1</meta:user-defined>
+    <meta:user-defined meta:name="oTabelle1_old" meta:value-type="string">Rechnungen1</meta:user-defined>
     <meta:user-defined meta:name="oTabelle2" meta:value-type="string">Angebote2</meta:user-defined>
-    <meta:user-defined meta:name="oTabelle2_old" meta:value-type="string">Angebote2</meta:user-defined>
+    <meta:user-defined meta:name="oTabelle2_old" meta:value-type="string">Rechnungen2</meta:user-defined>
     <meta:user-defined meta:name="oUserID_lokal" meta:value-type="string">1</meta:user-defined>
     <meta:user-defined meta:name="oZwischensummen" meta:value-type="string">ZwiSuAngebote</meta:user-defined>
-    <meta:user-defined meta:name="oZwischensummen_old" meta:value-type="string">ZwiSuAngebote</meta:user-defined>
+    <meta:user-defined meta:name="oZwischensummen_old" meta:value-type="string">ZwiSuRechnungen</meta:user-defined>
   </office:meta>
 </office:document-meta>

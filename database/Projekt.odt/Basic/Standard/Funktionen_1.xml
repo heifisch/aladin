@@ -231,6 +231,14 @@ Function oField_Stundensatz_Projekt as Object
 	oField_Stundensatz_Projekt=oForm_Projektdaten.getByName(&quot;Field_Stundensatz_Projekt&quot;)
 End Function
 
+Function oLabel_Stundensatz_Kontakt as Object
+	oLabel_Stundensatz_Kontakt=oForm_Kontaktdaten.getByName(&quot;Label_Stundensatz_Kontakt&quot;)
+End Function
+
+Function oLabel_Stundensatz_Projekt as Object
+	oLabel_Stundensatz_Projekt=oForm_Projektdaten.getByName(&quot;Label_Stundensatz_Projekt&quot;)
+End Function
+
 Function oField_Ordner as Object
 	oField_Ordner=oForm_Kontaktdaten.getByName(&quot;Field_Ordner&quot;)
 End Function
@@ -303,6 +311,10 @@ Function oList_Ansprechpartner as Object
 	oList_Ansprechpartner=oForm_Document.getByName(&quot;List_Ansprechpartner&quot;)
 End Function
 
+Function oList_RechnungsTypCode as Object
+	oList_RechnungsTypCode=oForm_Document.getByName(&quot;List_RechnungsTypCode&quot;)
+End Function
+
 Function oList_Leerzeilen as Object
 	oList_Leerzeilen=oForm_Document.getByName(&quot;List_Leerzeilen&quot;)
 End Function
@@ -333,6 +345,10 @@ End Function
 
 Function oTextField_gueltig_bis as Object
 	oTextField_gueltig_bis=oForm_Document.getByName(&quot;Label_gueltig_bis&quot;)
+End Function
+
+Function oLabel_13bText as Object
+	oLabel_13bText=oForm_Document.getByName(&quot;Label_13bText&quot;)
 End Function
 
 Function oTextField_DocumentID as Object

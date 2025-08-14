@@ -11,18 +11,25 @@ Dim vStatus as Variant
 Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
 
 Sub SET_AZ()
-	Dim sDocumentTyp as String
-	if lDocumentID &lt;&gt; 0 then
-		if iDocTypID = 5 OR iDocTypID = 6 then
+	Dim sDocumentTypCodeID as String
+	if iDocTypID = 5 then
+		if lDocumentID &gt; 0 then
 			oForm_Document.updateRow()
 			wait 10
+			
 			if iOption_AZ = 0 then
-				sDocumentTyp=&quot;Rechnung&quot;
+				sDocumentTypCodeID=&quot;380&quot;
 			elseif iOption_AZ = 1 then
-				sDocumentTyp=&quot;Abschlagsrechnung&quot;
+				sDocumentTypCodeID=&quot;875&quot;
 			end if
-			sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Document_Typ=&apos;&quot;&amp; sDocumentTyp &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
+			
+			sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET RechnungsTypCodeID=&apos;&quot;&amp; sDocumentTypCodeID &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
 			SQL_execute(sSQL1)
+			sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Document_Typ = &quot;&amp;_
+				&quot;(SELECT t1.RechnungsTypCodeDruck FROM RechnungsTypCode AS t1,&quot;&amp; sTabelle1 &amp;&quot; AS t2 &quot;&amp;_
+				&quot;WHERE t1.RechnungsTypCodeID=t2.RechnungsTypCodeID AND t2.DocumentID=&quot;&amp; lDocumentID &amp;&quot;) &quot;&amp;_
+				&quot;WHERE DocumentID=&quot;&amp; lDocumentID
+			SQL_execute(sSQL2)
 			oForm_Document.reload()
 			wait 1
 			oForm_Tabellendaten.last()

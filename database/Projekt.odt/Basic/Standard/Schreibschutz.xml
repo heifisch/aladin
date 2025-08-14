@@ -7,13 +7,23 @@
 REM  *****  BASIC  *****
 option explicit
 
-Sub Schreibschutz_setzen()
+Sub Schreibschutz_setzen_Formular()
 	oForm_Document.updateRow()
-	if iOption_Schreibschutz = 1 then
+	Schreibschutz_setzen(iOption_Schreibschutz)
+End Sub
+
+Sub Schreibschutz_setzen(Optional iSchreibschutz As Integer)
+	If IsMissing(iSchreibschutz) Then
+		oForm_Document.updateRow()
+        iSchreibschutz = iOption_Schreibschutz
+    End If
+
+	if iSchreibschutz = 1 then
 		oList_Projektauswahl.Enabled=False
 		oField_ProjektID.Enabled=False
 		oList_Kontaktauswahl.Enabled=False
 		oList_Ansprechpartner.Enabled=False
+		oList_RechnungsTypCode.Enabled=False
 		oField_Stundensatz_Kontakt.Enabled=False
 		oField_Stundensatz_Projekt.Enabled=False
 		oButton_Projekt_ruecksetzen.Enabled=False
@@ -87,6 +97,7 @@ Sub Schreibschutz_setzen()
 		oField_ProjektID.Enabled=True
 		oList_Kontaktauswahl.Enabled=True
 		oList_Ansprechpartner.Enabled=True
+		oList_RechnungsTypCode.Enabled=True
 		oField_Stundensatz_Kontakt.Enabled=True
 		oField_Stundensatz_Projekt.Enabled=True
 		oButton_Projekt_ruecksetzen.Enabled=True
