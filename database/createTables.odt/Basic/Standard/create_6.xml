@@ -8,9 +8,9 @@ REM  *****  BASIC  *****
 option explicit
 Sub SQL_create_Rechnungen1
 	sSQL=&quot;create table Rechnungen1 &quot;&amp;_
-		&quot;(DocumentID int(11)not null auto_increment,RechnungsTypCodeID int(4) not null default 380,Document_TypID int(2) not null default 5,ProjektID int(10),&quot;&amp;_
+		&quot;(DocumentID int(11)not null auto_increment,DocumentID_Korrekturrechnung int(11),RechnungsTypCodeID int(4) not null default 380,Document_TypID int(2) not null default 5,ProjektID int(10),&quot;&amp;_
 		&quot;Document_Typ varchar(100) default &apos;Rechnung&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
-		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),&quot;&amp;_
+		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),USt_befreit int(1) not null default &apos;0&apos;,USt_befreit_Text varchar(255),&quot;&amp;_
 		&quot;AnsprechpartnerID int(10),Erstellungsdatum date not null default 0,gueltig_bis date not null default 0,Skonto_bis date,&quot;&amp;_
 		&quot;Minutenverrechnungssatz decimal(7,4),Materialaufschlagsatz decimal(5,2),MwSt_Satz decimal(4,1) not null default 0,&quot;&amp;_
 		&quot;Rabatt_Satz decimal(4,1) not null default 0,Skonto_Satz decimal(4,1),&quot;&amp;_
@@ -46,7 +46,7 @@ Sub SQL_create_Gutschriften1
 	sSQL=&quot;create table Gutschriften1 &quot;&amp;_
 		&quot;(DocumentID int(11)not null auto_increment,Document_TypID int(2) not null default 6,ProjektID int(10),&quot;&amp;_
 		&quot;Document_Typ varchar(100) default &apos;Gutschrift&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
-		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),&quot;&amp;_
+		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),USt_befreit int(1) not null default &apos;0&apos;,USt_befreit_Text varchar(255),&quot;&amp;_
 		&quot;AnsprechpartnerID int(10),Erstellungsdatum date not null default 0,gueltig_bis date not null default 0,Skonto_bis date,&quot;&amp;_
 		&quot;Minutenverrechnungssatz decimal(7,4),Materialaufschlagsatz decimal(5,2),MwSt_Satz decimal(4,1) not null default 0,&quot;&amp;_
 		&quot;Rabatt_Satz decimal(4,1) not null default 0,Skonto_Satz decimal(4,1),&quot;&amp;_

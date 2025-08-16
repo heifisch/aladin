@@ -16,10 +16,39 @@ SQL_create_Arbeitstabellen()
 End Sub
 
 Sub Alter_Table_20250813()
-Use_Aladin
-sSQL=&quot;ALTER TABLE Rechnungen1 ADD RechnungsTypCodeID int(4) not null default 380 AFTER DocumentID&quot;
-SQL_execute_mysql(sSQL)
-SQL_create_RechnungsTypCode()
+	Use_Aladin
+	SQL_drop_Einheit()
+	SQL_create_Einheit()
+
+	sSQL=&quot;ALTER TABLE Einstellungen ADD USt_befreit_Text varchar(255) default &quot;&amp;_
+		&quot;&apos;Die Lieferung bzw. Abrechnung betrifft die Installation einer PV-Anlage und erfolgt gemäß §12 Abs.3 UStG ohne Umsatzsteuer.&apos; AFTER 13bText&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;ALTER TABLE Rechnungen1 ADD RechnungsTypCodeID int(4) not null default 380 AFTER DocumentID&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;ALTER TABLE Rechnungen1 ADD DocumentID_Korrekturrechnung int(11) AFTER DocumentID,&quot;&amp;_
+		&quot;ADD USt_befreit int(1) not null default &apos;0&apos; AFTER 13bText,&quot;&amp;_
+		&quot;ADD USt_befreit_Text varchar(255) AFTER USt_befreit&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;ALTER TABLE Angebote1 ADD USt_befreit int(1) not null default &apos;0&apos; AFTER 13bText,&quot;&amp;_
+		&quot;ADD USt_befreit_Text varchar(255) AFTER USt_befreit&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;ALTER TABLE Auftragsbestaetigungen1 ADD USt_befreit int(1) not null default &apos;0&apos; AFTER 13bText,&quot;&amp;_
+		&quot;ADD USt_befreit_Text varchar(255) AFTER USt_befreit&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;ALTER TABLE Lieferscheine1 ADD USt_befreit int(1) not null default &apos;0&apos; AFTER 13bText,&quot;&amp;_
+		&quot;ADD USt_befreit_Text varchar(255) AFTER USt_befreit&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;ALTER TABLE Aufmasze1 ADD USt_befreit int(1) not null default &apos;0&apos; AFTER 13bText,&quot;&amp;_
+		&quot;ADD USt_befreit_Text varchar(255) AFTER USt_befreit&quot;
+	SQL_execute_mysql(sSQL)
+	sSQL=&quot;ALTER TABLE Gutschriften1 ADD USt_befreit int(1) not null default &apos;0&apos; AFTER 13bText,&quot;&amp;_
+		&quot;ADD USt_befreit_Text varchar(255) AFTER USt_befreit&quot;
+	SQL_execute_mysql(sSQL)
+	
+	SQL_create_RechnungsTypCode()
+	
+	SQL_drop_Druckertabelle1()
+	SQL_create_Druckertabelle1()
 End Sub
 
 Sub Alter_Table_20160912()

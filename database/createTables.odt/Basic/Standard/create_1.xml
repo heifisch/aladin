@@ -8,7 +8,7 @@ REM  *****  BASIC  *****
 option explicit
 
 global const sDatabase_Name= &quot;aladin&quot;
-Global const iDatenAnlegen=&quot;0&quot;
+Global const iDatenAnlegen=&quot;1&quot;
 
 Dim oStatement as Object
 Dim sSQL as String,sSQL1 as String,sSQL2 as String

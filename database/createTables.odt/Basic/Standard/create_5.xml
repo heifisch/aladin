@@ -121,7 +121,7 @@ End if
 		&quot;Summe_mit_MwSt varchar(50),Rechnungsbetrag varchar(100),Abschlagszahlungen varchar(100),Restbetrag varchar(100),&quot;&amp;_
 		&quot;Bemerkung varchar(2000),Schluss_Text varchar(2000),&quot;&amp;_
 		&quot;Anschrift varchar(255),Mindestangaben varchar(255),Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),&quot;&amp;_
-		&quot;13bText varchar(255),&quot;&amp;_
+		&quot;UStText varchar(255),&quot;&amp;_
 		&quot;Leerzeilen varchar(50),Print_Logo int(1) default 0,&quot;&amp;_
 		&quot;primary key(DocumentID)) ENGINE = InnoDB&quot;
 	SQL_execute_mysql(sSQL)

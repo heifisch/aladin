@@ -135,7 +135,7 @@ Sub SQL_create_Bemerkungen_Bestellungen
 	SQL_execute_mysql(sSQL)
 End Sub
 
-Sub SQL_create_Einstellungen
+Sub SQL_create_Einstellungen()
 	sSQL=&quot;create table Einstellungen (EinstellungsID int(2)not null auto_increment,Name1 varchar(100)not null default &apos;&apos;,&quot;&amp;_
 		&quot;Name2 varchar(100)not null default &apos;&apos;,Name3 varchar(100)not null default &apos;&apos;,Name4 varchar(100)not null default &apos;&apos;,NameKurz varchar(100)not null default &apos;&apos;,&quot;&amp;_
 		&quot;Land varchar(20),PLZ varchar(6),Ort varchar(50)not null default &apos;&apos;,Strasse varchar(50),&quot;&amp;_
@@ -151,7 +151,10 @@ Sub SQL_create_Einstellungen
 		&quot;Nummern_Format varchar(5) default &apos;001&apos;,Mahngebuehr decimal(5,2),Zinssatz decimal(5,2),&quot;&amp;_
 		&quot;13bText varchar(255) default &quot;&amp;_
 		&quot;&apos;Die Lieferung bzw. Abrechnung betrifft Bauleistungen und erfolgt gemäß §13b UStG ohne Umsatzsteuer. &quot;&amp;_
-		&quot;Die Umsatzsteuer wird vom Leistungsempfänger geschuldet.&apos;,ExportVerzeichnissBuchhaltung varchar(255),&quot;&amp;_
+		&quot;Die Umsatzsteuer wird vom Leistungsempfänger geschuldet.&apos;,&quot;&amp;_
+		&quot;USt_befreit_Text varchar(255) default &quot;&amp;_
+		&quot;&apos;Die Lieferung bzw. Abrechnung betrifft die Installation einer PV-Anlage und erfolgt gemäß §12 Abs.3 UStG ohne Umsatzsteuer.&apos;,&quot;&amp;_
+		&quot;ExportVerzeichnissBuchhaltung varchar(255),&quot;&amp;_
 		&quot;primary key(EinstellungsID))&quot;
 	SQL_execute_mysql(sSQL)
 	if iDatenAnlegen=1 then

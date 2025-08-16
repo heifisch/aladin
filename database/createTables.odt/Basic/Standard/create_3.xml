@@ -92,33 +92,56 @@ Sub SQL_create_Pos_Typ()
 	End If
 End Sub
 
-Sub SQL_create_Einheit()
-	sSQL=&quot;create table Einheit (EinheitID int(2)not null auto_increment,Einheit varchar(20),primary key(EinheitID))&quot;
+Sub SQL_drop_Einheit()
+	sSQL=&quot;DROP table Einheit&quot;
 	SQL_execute_mysql(sSQL)
-	if iDatenAnlegen=1 then
-		sSQL= &quot;insert into Einheit(Einheit)values(&apos;Stück&apos;)&quot;
+End Sub
+
+Sub SQL_create_Einheit()
+	sSQL=&quot;create table Einheit (EinheitID int(3)not null auto_increment,Einheit varchar(20),Code varchar(20),primary key(EinheitID))&quot;
+	SQL_execute_mysql(sSQL)
+&apos;	if iDatenAnlegen=1 then
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;pauschal&apos;,&apos;LS&apos;)&quot;
 		SQL_execute_mysql(sSQL)
-		sSQL= &quot;insert into Einheit(Einheit)values(&apos;m&apos;)&quot;
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Stück&apos;,&apos;XPP&apos;)&quot;
 		SQL_execute_mysql(sSQL)
-		sSQL= &quot;insert into Einheit(Einheit)values(&apos;pauschal&apos;)&quot;
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;100 St.&apos;,&apos;CNP&apos;)&quot;
 		SQL_execute_mysql(sSQL)
-		sSQL= &quot;insert into Einheit(Einheit)values(&apos;VPE&apos;)&quot;
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;1000 St.&apos;,&apos;T3&apos;)&quot;
 		SQL_execute_mysql(sSQL)
-		sSQL= &quot;insert into Einheit(Einheit)values(&apos;100 St.&apos;)&quot;
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Meter&apos;,&apos;MTR&apos;)&quot;
 		SQL_execute_mysql(sSQL)
-		sSQL= &quot;insert into Einheit(Einheit)values(&apos;Paar&apos;)&quot;
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;lfm&apos;,&apos;LM&apos;)&quot;
 		SQL_execute_mysql(sSQL)
-		sSQL= &quot;insert into Einheit(Einheit)values(&apos;Sack&apos;)&quot;
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;100m&apos;,&apos;JPS&apos;)&quot;
 		SQL_execute_mysql(sSQL)
-		sSQL= &quot;insert into Einheit(Einheit)values(&apos;Stunde&apos;)&quot;
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;km&apos;,&apos;KMT&apos;)&quot;
 		SQL_execute_mysql(sSQL)
-		sSQL= &quot;insert into Einheit(Einheit)values(&apos;100 m&apos;)&quot;
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;VPE&apos;,&apos;XUN&apos;)&quot;
 		SQL_execute_mysql(sSQL)
-		sSQL= &quot;insert into Einheit(Einheit)values(&apos;Minute&apos;)&quot;
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Paar&apos;,&apos;PR&apos;)&quot;
 		SQL_execute_mysql(sSQL)
-		sSQL= &quot;insert into Einheit(Einheit)values(&apos;Tag&apos;)&quot;
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Sack&apos;,&apos;XSA&apos;)&quot;
 		SQL_execute_mysql(sSQL)
-	End If
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Jahr&apos;,&apos;ANN&apos;)&quot;
+		SQL_execute_mysql(sSQL)
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Monat&apos;,&apos;MON&apos;)&quot;
+		SQL_execute_mysql(sSQL)
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Woche&apos;,&apos;WEE&apos;)&quot;
+		SQL_execute_mysql(sSQL)
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Tag&apos;,&apos;DAY&apos;)&quot;
+		SQL_execute_mysql(sSQL)
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Stunde&apos;,&apos;HUR&apos;)&quot;
+		SQL_execute_mysql(sSQL)
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Minute&apos;,&apos;MIN&apos;)&quot;
+		SQL_execute_mysql(sSQL)
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;kg&apos;,&apos;KGM&apos;)&quot;
+		SQL_execute_mysql(sSQL)
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Gramm&apos;,&apos;GRM&apos;)&quot;
+		SQL_execute_mysql(sSQL)
+		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Liter&apos;,&apos;LTR&apos;)&quot;
+		SQL_execute_mysql(sSQL)
+&apos;	End If
 End Sub
 
 Sub SQL_create_Status()

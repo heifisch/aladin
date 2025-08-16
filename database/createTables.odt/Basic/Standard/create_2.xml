@@ -11,7 +11,7 @@ Sub SQL_create_Angebote1
 	sSQL=&quot;create table Angebote1 &quot;&amp;_
 		&quot;(DocumentID int(10)not null auto_increment,Document_TypID int(2) not null default 1,ProjektID int(10),&quot;&amp;_
 		&quot;Document_Typ varchar(100) default &apos;Angebot&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
-		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),&quot;&amp;_
+		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),USt_befreit int(1) not null default &apos;0&apos;,USt_befreit_Text varchar(255),&quot;&amp;_
 		&quot;AnsprechpartnerID int(10),Erstellungsdatum date not null default 0,gueltig_bis date not null default 0,Skonto_bis date,&quot;&amp;_
 		&quot;Minutenverrechnungssatz decimal(7,4),Materialaufschlagsatz decimal(5,2),MwSt_Satz decimal(4,1) not null default 0,&quot;&amp;_
 		&quot;Rabatt_Satz decimal(4,1) not null default 0,Skonto_Satz decimal(4,1),&quot;&amp;_
@@ -47,7 +47,7 @@ Sub SQL_create_Auftragsbestaetigungen1
 	sSQL=&quot;create table Auftragsbestaetigungen1 &quot;&amp;_
 		&quot;(DocumentID int(10)not null auto_increment,Document_TypID int(2) not null default 2,ProjektID int(10),&quot;&amp;_
 		&quot;Document_Typ varchar(100) default &apos;Auftragsbestätigung&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
-		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),&quot;&amp;_
+		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),USt_befreit int(1) not null default &apos;0&apos;,USt_befreit_Text varchar(255),&quot;&amp;_
 		&quot;AnsprechpartnerID int(10),Erstellungsdatum date not null default 0,gueltig_bis date not null default 0,Skonto_bis date,&quot;&amp;_
 		&quot;Minutenverrechnungssatz decimal(7,4),Materialaufschlagsatz decimal(5,2),MwSt_Satz decimal(4,1) not null default 0,&quot;&amp;_
 		&quot;Rabatt_Satz decimal(4,1) not null default 0,Skonto_Satz decimal(4,1),&quot;&amp;_
@@ -83,7 +83,7 @@ Sub SQL_create_Lieferscheine1
 	sSQL=&quot;create table Lieferscheine1 &quot;&amp;_
 		&quot;(DocumentID int(10)not null auto_increment,Document_TypID int(2) not null default 3,ProjektID int(10),&quot;&amp;_
 		&quot;Document_Typ varchar(100) default &apos;Lieferschein&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
-		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),&quot;&amp;_
+		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),USt_befreit int(1) not null default &apos;0&apos;,USt_befreit_Text varchar(255),&quot;&amp;_
 		&quot;AnsprechpartnerID int(10),Erstellungsdatum date not null default 0,gueltig_bis date not null default 0,Skonto_bis date,&quot;&amp;_
 		&quot;Minutenverrechnungssatz decimal(7,4),Materialaufschlagsatz decimal(5,2),MwSt_Satz decimal(4,1) not null default 0,&quot;&amp;_
 		&quot;Rabatt_Satz decimal(4,1) not null default 0,Skonto_Satz decimal(4,1),&quot;&amp;_
@@ -119,7 +119,7 @@ Sub SQL_create_Aufmass1
 	sSQL=&quot;create table Aufmasze1 &quot;&amp;_
 		&quot;(DocumentID int(10)not null auto_increment,Document_TypID int(2) not null default 4,ProjektID int(10),&quot;&amp;_
 		&quot;Document_Typ varchar(100) default &apos;Aufmaß&apos;,Document_Name varchar(255) not null default &apos;&apos;,KontaktID int(11),&quot;&amp;_
-		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),&quot;&amp;_
+		&quot;Leistungsempfaenger varchar(255),Lieferbemerkung varchar(500),13b int(1) not null default &apos;0&apos;,13bText varchar(255),USt_befreit int(1) not null default &apos;0&apos;,USt_befreit_Text varchar(255),&quot;&amp;_
 		&quot;AnsprechpartnerID int(10),Erstellungsdatum date not null default 0,gueltig_bis date not null default 0,Skonto_bis date,&quot;&amp;_
 		&quot;Minutenverrechnungssatz decimal(7,4),Materialaufschlagsatz decimal(5,2),MwSt_Satz decimal(4,1) not null default 0,&quot;&amp;_
 		&quot;Rabatt_Satz decimal(4,1) not null default 0,Skonto_Satz decimal(4,1),&quot;&amp;_
