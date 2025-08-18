@@ -19,7 +19,7 @@ Sub Arbeitsblatt_drucken()
 	Dim sLand as String,sLand_Eigen as String,sPLZ as String,sOrt as String
 	Dim sStrasse as String,sHausnummer as String,sPos as String,sNummern as String
 	
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		Drucktabellen_leeren(iUserID_lokal)
 		Pos_neu()
 	
@@ -102,7 +102,6 @@ Sub Arbeitsblatt_drucken()
 		else
 			sProjektBezeichnung=sProjekt_Name
 		End if
-		
 		
 		sSQL3=&quot;INSERT INTO &quot;&amp; sDrucker1_TEMP(iUserID_lokal) &amp;_
 			&quot; (DocumentID,Document_TypID,Document_Name,Nummern,Anschrift)&quot;&amp;_

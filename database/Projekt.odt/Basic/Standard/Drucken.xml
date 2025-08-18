@@ -9,106 +9,6 @@ option explicit
 
 Dim oDialogPrint AS Object, oDialogPrintModel as Object
 
-Sub DruckSchreibschutz()
-	Dim oOption_Print as Object,oOption_Fax as Object,oOption_Mail as Object
-	Dim oOption_Zusammenstellung as Object,oBox_LogoDrucken as Object,oBox_BestEP as Object
-	Dim oBox_Leistungsbeschreibung as Object,oBox_Leistungsbezeichnung as Object
-	Dim oBox_LiefuLeist as Object,oBox_Bestellnummer as Object
-	Dim oOption_Pos_drucken as Object,oOption_LV_Pos_drucken as Object,oOption_Bestellnummer_drucken as Object
-	Dim sSQL2 as String,oRecord2 as Object,sifLV_Pos as String
-
-	oOption_Print = oDialogPrintModel.getByName(&quot;Button_Druck&quot;)
-	oOption_Fax = oDialogPrintModel.getByName(&quot;Button_Fax&quot;)
-	oOption_Mail = oDialogPrintModel.getByName(&quot;Button_Mail&quot;)
-	oOption_Zusammenstellung = oDialogPrintModel.getByName(&quot;Button_Zusammenstellung&quot;)
-	oBox_LogoDrucken = oDialogPrintModel.getByName(&quot;CheckBox_Logo_drucken&quot;)
-	oBox_Bestellnummer = oDialogPrintModel.getByName(&quot;CheckBox_Bestellnummer&quot;)
-	oBox_Leistungsbezeichnung = oDialogPrintModel.getByName(&quot;CheckBox_Leistungsbezeichnung&quot;)
-	oBox_Leistungsbeschreibung = oDialogPrintModel.getByName(&quot;CheckBox_Leistungsbeschreibung&quot;)
-	oBox_LiefuLeist = oDialogPrintModel.getByName(&quot;CheckBox_LiefuLeist&quot;)
-	oBox_BestEP = oDialogPrintModel.getByName(&quot;CheckBox_BestEP&quot;)
-	oOption_Pos_drucken = oDialogPrintModel.getByName(&quot;Option_Pos_drucken&quot;)
-	oOption_LV_Pos_drucken = oDialogPrintModel.getByName(&quot;Option_LV_Pos_drucken&quot;)
-	oOption_Bestellnummer_drucken = oDialogPrintModel.getByName(&quot;Option_Bestellnummer_drucken&quot;)
-
-	if oOption_Fax.State=1 OR oOption_Mail.State=1 then
-		oBox_LogoDrucken.Enabled=0
-	elseif oOption_Print.State=1 then
-		oBox_LogoDrucken.Enabled=1
-		if ifPrintLogoDefault(iUserID_lokal) = 0 then
-			oBox_LogoDrucken.State = 0
-		elseif ifPrintLogoDefault(iUserID_lokal) = 1 then
-			oBox_LogoDrucken.State = 1
-		End if
-	End If
-	if 	oOption_Zusammenstellung.State=1 then
-		oBox_Bestellnummer.Enabled=0
-		oBox_Leistungsbezeichnung.Enabled=0
-		oBox_Leistungsbeschreibung.Enabled=0
-		oBox_LiefuLeist.Enabled=0
-		oBox_BestEP.Enabled=0
-		oOption_Pos_drucken.Enabled=0
-		oOption_LV_Pos_drucken.Enabled=0
-		oOption_Bestellnummer_drucken.Enabled=0
-	else
-		SELECT case iDocTypID 
-			case 1
-				oOption_Zusammenstellung.Enabled = 1
-				oBox_LiefuLeist.Enabled = 1
-				oBox_BestEP.Enabled = 0
-			case 2, 5, 6
-				oOption_Zusammenstellung.Enabled = 0
-				oBox_LiefuLeist.Enabled = 1
-				oBox_BestEP.Enabled = 0
-			case 3, 4
-				oOption_Zusammenstellung.Enabled = 0
-				oBox_LiefuLeist.Enabled = 0
-				oBox_BestEP.Enabled = 0
-			case 7
-				oOption_Zusammenstellung.Enabled = 0
-				oBox_LiefuLeist.Enabled = 0
-				oBox_BestEP.Enabled = 0
-			case 8
-				oOption_Zusammenstellung.Enabled = 0
-				oBox_LiefuLeist.Enabled = 0
-				oBox_BestEP.Enabled = 1
-		end SELECT
-		oBox_Bestellnummer.Enabled=1
-		oBox_Leistungsbezeichnung.Enabled=1
-		oBox_Leistungsbeschreibung.Enabled=1
-		
-		sSQL2=&quot;SELECT LV_Pos FROM &quot;&amp; sArbeitstabelle &amp;&quot; ORDER BY LV_Pos ASC limit 1&quot;
-		oRecord2=oResult(sSQL2)
-		While oRecord2.next()
-			sifLV_Pos = oRecord2.getString(1)
-		Wend
-		oOption_Pos_drucken.Enabled=1
-		oOption_Pos_drucken.State=1
-		oOption_Bestellnummer_drucken.Enabled=1
-		
-		if sifLV_Pos = &quot;&quot; then
-			oOption_LV_Pos_drucken.Enabled = 0
-		else
-			oOption_LV_Pos_drucken.Enabled = 1
-		End if
-&apos;		if ifPrintBestellnummerDefault(iUserID_lokal) = 0 then
-&apos;			oOption_Bestellnummer_drucken.State = 0
-&apos;		elseif ifPrintBestellnummerDefault(iUserID_lokal) = 1 then
-&apos;			oOption_Bestellnummer_drucken.State = 1
-&apos;		End if
-&apos;		if ifPrintLeistungsbezeichnungDefault(iUserID_lokal) = 0 then
-&apos;			oBox_Leistungsbezeichnung.State = 0
-&apos;		elseif ifPrintLeistungsbezeichnungDefault(iUserID_lokal) = 1 then
-&apos;			oBox_Leistungsbezeichnung.State = 1
-&apos;		End if
-&apos;		if ifPrintLeistungsbeschreibungDefault(iUserID_lokal) = 0 then
-&apos;			oBox_Leistungsbeschreibung.State = 0
-&apos;		elseif ifPrintLeistungsbeschreibungDefault(iUserID_lokal) = 1 then
-&apos;			oBox_Leistungsbeschreibung.State = 1
-&apos;		End if
-	End If	
-End Sub
-
 Sub Druck_vorbereiten()
 	Dim vStatus as Variant
 	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String,sSQL5 as String
@@ -135,25 +35,25 @@ Sub Druck_vorbereiten()
 	Dim sVorname_Ansprechpartner as String,sName_Ansprechpartner as String
 	Dim sFunktelefon_Ansprechpartner as String,sFax_Ansprechpartner as String
 	Dim sEMail_Ansprechpartner as String,sTelefon_Ansprechpartner as String
-	Dim sAbteilung_Ansprechpartner as String
+	Dim sAbteilung_Ansprechpartner as String,sLieferbemerkung as String
 	Dim sMwSt_Satz as String,sSkonto_Satz as String
 	Dim sRabatt_Satz as String,sKorrektur_Satz as String
 	Dim sSumme_ohne_MwSt as String,sMwSt as String
 	Dim sRabatt as String,sSumme_nach_Rabatt as String
 	Dim sKorrektur_Vorzeichen as String,sKorrektur as String,sSumme_nach_Korrektur as String,sSumme_mit_MwSt as String
-	Dim sSkonto as String
+	Dim sSkonto as String,lRechnungsTypCodeID as Long,lDocumentID_Korrekturrechnung as Long
 	Dim sRechnungsbetrag as String,sAbschlagszahlungen as String,sRestbetrag as String
 	Dim iSkonto_Tage as integer,iFaellig_Tage as integer
 	Dim sPos as String,sKontaktID as String
 	Dim sEP as String,sGP as String,sProjektName as String,sDocumentName as String
-	Dim sNummern as String,s13bText as String
-	Dim sErstellungsdatum as String,sGueltigBis as String,sSkontoBis as String
+	Dim sNummern as String,s13bText as String,sUSt_befreit_Text as String
+	Dim sErstellungsdatum as String,sErstellungsdatum_Korrekturrechnung as String,sGueltigBis as String,sSkontoBis as String
 	Dim sAZ_ohne_MwSt as String,sAZ_MwSt as String,sAZ_mit_MwSt as String
 	Dim sZahlbetrag_ohne_MwSt as String,sZahlbetrag_MwSt as String,sZahlbetrag_mit_MwSt as String
 	Dim sSQL_MwSt as String,sSQL_Summe_mit_MwSt as String
 	
 	if check_AZ = 6 then
-		if lDocumentID &lt;&gt; 0 then
+		if lDocumentID &gt; 0 then
 			if lKontaktID &gt; 0 then
 				Drucktabellen_leeren(iUserID_lokal)
 			
@@ -186,16 +86,17 @@ Sub Druck_vorbereiten()
 					&quot;t1.PLZ,t1.Ort,t1.Strasse,t1.Hausnummer,t1.Mindestangaben,t1.Fax,t1.EMail,&quot;&amp;_
 					&quot;t2.Abteilung,t2.Anrede,t2.Titel,t2.Vorname,t2.Name,t2.Fax,t2.EMail,&quot;&amp;_
 					&quot;t3.Document_TypID,t3.Skonto_Tage,t3.Skonto_Satz,t3.Rabatt_Satz,t3.Korrektur_Satz,t3.MwSt_Satz,&quot;&amp;_
-					&quot;t3.Summe_ohne_MwSt,t3.Rabatt,t3.Summe_nach_Rabatt,t3.Korrektur_Vorzeichen,t3.Korrektur,t3.Summe_nach_Korrektur,t3.MwSt,t3.Summe_mit_MwSt,&quot;&amp;_
-					&quot;t3.AZ_ohne_MwSt,t3.AZ_MwSt,t3.AZ_mit_MwSt,t3.Zahlbetrag_ohne_MwSt,t3.Zahlbetrag_MwSt,t3.Zahlbetrag_mit_MwSt,t3.Skonto,&quot;&amp;_
-					&quot;t3.Erstellungsdatum,t3.gueltig_bis,t3.Skonto_bis,t3.KontaktID,t1.ReferenzID,t4.Land,t5.Projekt_Name,t3.Document_Name&quot;
+					&quot;t3.Summe_ohne_MwSt,t3.Rabatt,t3.Summe_nach_Rabatt,t3.Korrektur_Vorzeichen,t3.Korrektur,&quot;&amp;_
+					&quot;t3.Summe_nach_Korrektur,t3.MwSt,t3.Summe_mit_MwSt,t3.AZ_ohne_MwSt,t3.AZ_MwSt,t3.AZ_mit_MwSt,&quot;&amp;_
+					&quot;t3.Zahlbetrag_ohne_MwSt,t3.Zahlbetrag_MwSt,t3.Zahlbetrag_mit_MwSt,t3.Skonto,t3.Erstellungsdatum,&quot;&amp;_
+					&quot;t3.gueltig_bis,t3.Skonto_bis,t3.KontaktID,t1.ReferenzID,t4.Land,t5.Projekt_Name,t3.Document_Name,t3.Lieferbemerkung&quot;
 					
 				if iDocTypID &lt; 7 then
-					sSQL1=sSQL1 &amp;&quot;,t3.13bText AS Text&quot;
+					sSQL1=sSQL1 &amp;&quot;,t3.13bText,t3.USt_befreit_Text&quot;
 				end if
 				
 				if iDocTypID = 5 then
-					sSQL1=sSQL1 &amp;&quot;,t3.AZ&quot;
+					sSQL1=sSQL1 &amp;&quot;,t3.AZ,t3.RechnungsTypCodeID,t3.DocumentID_Korrekturrechnung&quot;
 				end if
 				
 				sSQL1=sSQL1 &amp;&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t3 &quot;&amp;_
@@ -262,13 +163,18 @@ Sub Druck_vorbereiten()
 					sLand_Eigen=oRecord1.getString(49)
 					sProjektName=oRecord1.getString(50)
 					sDocumentName=oRecord1.getString(51)
+					sLieferbemerkung=oRecord1.getString(52)
 					if iDocTypID &lt; 7 then
-						s13bText=oRecord1.getString(52)
+						s13bText=oRecord1.getString(53)
+						sUSt_befreit_Text=oRecord1.getString(54)
 					else
 						s13bText=&quot;&quot;
+						sUSt_befreit_Text=&quot;&quot;
 					end if		
 					if iDocTypID = 5 then
-						iAZ=oRecord1.getLong(53)
+						iAZ=oRecord1.getLong(55)
+						lRechnungsTypCodeID=oRecord1.getLong(56)
+						lDocumentID_Korrekturrechnung=oRecord1.getLong(57)
 					end if		
 				Wend
 			
@@ -598,11 +504,34 @@ Sub Druck_vorbereiten()
 					sDocumentName=&quot;t1.Document_Name&quot;
 				end if
 			
-				sSQL3=&quot;INSERT INTO &quot;&amp; sDrucker1_TEMP(iUserID_lokal) &amp;_
+				if iDocTypID = 5 Then
+					If lRechnungsTypCodeID = 384 Then
+						if lDocumentID_Korrekturrechnung &gt; 0 Then
+							sSQL3=&quot;SELECT DISTINCT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID_Korrekturrechnung
+							oRecord3=oResult(sSQL3)
+							While oRecord3.next()
+								sErstellungsdatum_Korrekturrechnung=oRecord3.getString(1)
+							Wend
+							If sLieferbemerkung &lt;&gt; &quot;&quot; Then
+								sLieferbemerkung=&quot;Korrektur zu Rechnung &quot;&amp; lDocumentID_Korrekturrechnung &amp;_
+									&quot; vom &quot;&amp; fConvDatum(sErstellungsdatum_Korrekturrechnung) &amp;&quot;\n\n&quot;&amp; sLieferbemerkung
+							Else
+								sLieferbemerkung=&quot;Korrektur zu Rechnung &quot;&amp; lDocumentID_Korrekturrechnung &amp;_
+										&quot; vom &quot;&amp; fConvDatum(sErstellungsdatum_Korrekturrechnung)
+							End If
+						Else
+							MsgBox(&quot;Sie haben noch keine Rechnung ausgewählt, die korrigiert werden soll.&quot;&amp; Chr$(13) &amp;_
+								&quot;Das ist aber zwingend erforderlich!&quot;,16,sTitle_lokal)
+							Exit Sub
+						End If
+					End if
+				End If
+
+				sSQL4=&quot;INSERT INTO &quot;&amp; sDrucker1_TEMP(iUserID_lokal) &amp;_
 					&quot;(DocumentID,EinstellungsID,UserID,Document_TypID,Document_Typ,Print_Typ,LV_Pos,Bestellnummer,&quot;&amp;_
 					&quot;Leistungsbezeichnung,Leistungsbeschreibung,LiefuLeist,Document_Name,Betreff,Nummern,EMail,Fax,&quot;&amp;_
 					&quot;Summe_ohne_MwSt,Rabatt,Summe_nach_Rabatt,Korrektur,Summe_nach_Korrektur,MwSt,Summe_mit_MwSt,Rechnungsbetrag,Abschlagszahlungen,Restbetrag,&quot;&amp;_
-					&quot;Bemerkung,Schluss_Text,Anschrift,Mindestangaben,Leistungsempfaenger,Lieferbemerkung,Leerzeilen,Print_Logo,13bText,AZ)&quot;&amp;_
+					&quot;Bemerkung,Schluss_Text,Anschrift,Mindestangaben,Leistungsempfaenger,Lieferbemerkung,Leerzeilen,Print_Logo,UstText,AZ)&quot;&amp;_
 					&quot; SELECT distinct &quot;&amp;_
 					&quot;t1.DocumentID,&apos;&quot;&amp; iEinstellungsID_lokal &amp;&quot;&apos;,&apos;&quot;&amp; iUserID_lokal &amp;&quot;&apos;,t1.Document_TypID,t1.Document_Typ,&quot;&amp;_
 					&quot;&apos;&quot;&amp; iPrint_Typ &amp;&quot;&apos;,&apos;&quot;&amp; ifLV_Pos &amp;&quot;&apos;,&apos;&quot;&amp; ifBestellnummer &amp;&quot;&apos;,&apos;&quot;&amp; ifLeistungsbezeichnung &amp;&quot;&apos;,&apos;&quot;&amp; ifLeistungsbeschreibung &amp;&quot;&apos;,&quot;&amp;_
@@ -612,13 +541,13 @@ Sub Druck_vorbereiten()
 					&quot;concat(t2.Summe_ohne_MwSt,&apos;\t&quot;&amp; sSumme_nach_Korrektur &amp;&quot;&apos;),&quot;&amp; sSQL_MwSt &amp;&quot;,&quot;&amp; sSQL_Summe_mit_MwSt &amp;&quot;,&quot;&amp;_
 					&quot;concat(&apos;&quot;&amp; sRechnungsbetrag &amp;&quot;&apos;),concat(&apos;&quot;&amp; sAbschlagszahlungen &amp;&quot;&apos;),concat(&apos;&quot;&amp; sRestbetrag &amp;&quot;&apos;),&quot;&amp;_
 					&quot;t1.Bemerkung,concat(&quot;&amp; sSchlusstext &amp;&quot;),&quot;&amp;_
-					&quot;concat(&apos;&quot;&amp; sAnschrift &amp;&quot;&apos;),&apos;&quot;&amp; fsConvertApostroph(sMindestangaben) &amp;&quot;&apos;,t1.Leistungsempfaenger,t1.Lieferbemerkung,&quot;&amp;_
-					&quot;t1.Leerzeilen,&apos;&quot;&amp; ifLogoDrucken &amp;&quot;&apos;,&apos;&quot;&amp; s13bText &amp;&quot;&apos;,&apos;&quot; &amp; iAZ &amp;&quot;&apos;&quot;&amp;_
+					&quot;concat(&apos;&quot;&amp; sAnschrift &amp;&quot;&apos;),&apos;&quot;&amp; fsConvertApostroph(sMindestangaben) &amp;&quot;&apos;,t1.Leistungsempfaenger,&apos;&quot;&amp; sLieferbemerkung &amp;&quot;&apos;,&quot;&amp;_
+					&quot;t1.Leerzeilen,&apos;&quot;&amp; ifLogoDrucken &amp;&quot;&apos;,TRIM(CONCAT(&apos;&quot;&amp; s13bText &amp;&quot;&apos;,&apos;&quot;&amp; sUSt_befreit_Text &amp;&quot;&apos;)),&apos;&quot; &amp; iAZ &amp;&quot;&apos;&quot;&amp;_
 					&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t1,Document_Typ as t2,&quot;&amp; sKontakte &amp;&quot; as t3&quot;&amp;_
 					&quot; WHERE t1.DocumentID=&quot;&amp; lDocumentID &amp;_
 					&quot; AND t2.Document_TypID=t1.Document_TypID&quot;&amp;_
 					&quot; AND t3.KontaktID=t1.KontaktID&quot;
-				SQL_execute(sSQL3)
+				SQL_execute(sSQL4)
 			
 				if ifPos = 1 then
 					sPos=&quot;Pos&quot;
@@ -628,13 +557,13 @@ Sub Druck_vorbereiten()
 					sPos=&quot;Bestellnummer&quot;
 				End if
 				if ifZusammenstellung = 0 Then
-					sSQL4=&quot;INSERT INTO &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; (PosID,Pos,Pos_TypID,DocumentID,LeistungsID,Bestellnummer,&quot;&amp;_
+					sSQL5=&quot;INSERT INTO &quot;&amp; sDrucker2_TEMP(iUserID_lokal) &amp;&quot; (PosID,Pos,Pos_TypID,DocumentID,LeistungsID,Bestellnummer,&quot;&amp;_
 						&quot;Leistungsbezeichnung,Leistungsbeschreibung,Einheit,Menge,Lieferung,Leistung,EP,GP) &quot;&amp;_
 						&quot;SELECT distinct t1.Pos,t1.&quot;&amp; sPos &amp;&quot;,t1.Pos_TypID,t1.DocumentID,t1.LeistungsID,t1.Bestellnummer,&quot;&amp;_
 						&quot;t1.Leistungsbezeichnung,t1.Leistungsbeschreibung,t1.Einheit,t1.Menge,&quot;&amp;_
 						&quot;t1.Lieferung,t1.Leistung,&quot;&amp; sEP &amp;&quot;,&quot;&amp; sGP &amp;_
 						&quot; FROM &quot;&amp; sArbeitstabelle &amp;&quot; as t1 ORDER BY Pos ASC&quot;
-					SQL_execute(sSQL4)
+					SQL_execute(sSQL5)
 				End if
 				SetUserID(iUserID_lokal)
 				ProjectPrint()
@@ -646,6 +575,5 @@ Sub Druck_vorbereiten()
 		End if
 	End if
 End sub
-
 
 </script:module>

@@ -10,65 +10,62 @@ option explicit
 Dim vSQLArray as Variant
 Dim sSQL1 as String
 
-Sub Test
-
-GlobalScope.BasicLibraries.LoadLibrary(&quot;XrayTool&quot;)
-&apos;Xray oList_Projektvorauswahl
-&apos;Xray oList_RechnungsTypCode
-Xray oOption_AZ
-End Sub
-
 Sub Start_einst()
-		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Projekt&quot;))
-		SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 0)
-		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
-
-		oTextField_Betriebsart.Label=&quot;Initialisierung läuft&quot;
-		oTextField_Kontaktvorauswahl.Label=&quot;Filter (Kunden): &quot;
-		oTextField_Kontaktdaten.Label=&quot;Kunde: &quot;
-		oTextField_Document_Name_List.Label=&quot;Angebotsname: &quot;
-		oTextField_Document_Name.Label=&quot;Angebotsname&quot;
-		oTextField_gueltig_bis.Label=&quot;gültig bis: &quot;
-		oTextField_DocumentID.Label=&quot;Angebotsnummer: &quot;
-		oTextField_Erstellungsdatum.Label=&quot;Angebotsdatum: &quot;
-		oButton_Document_berechnen.Label=&quot;berechnen&quot;
-		oForm_Document.Command=&quot;SELECT *  FROM Angebote1 WHERE DocumentID=:c&quot;
-		oForm_Kontaktdaten.Command=&quot;SELECT * FROM Kunden WHERE KontaktID=:a&quot;
-		oForm_Projektdaten.Command=&quot;SELECT * FROM Projekte WHERE ProjektID=:e&quot;
-		oForm_Zwischensummen.Command=&quot;SELECT * FROM ZwiSuAngebote WHERE DocumentID=:b ORDER BY Pos ASC&quot;
-		oForm_Bemerkungen.Command=&quot;SELECT * FROM ZwiBemAngebote WHERE DocumentID=:b ORDER BY Pos ASC,ZwiBemID ASC&quot;
-		oList_Kontaktauswahl.ListSource=Array(&quot;SELECT distinct concat(t1.Name1,&apos;, &apos;,t1.Vorname,&apos; &apos;,t1.Name2,&apos;  --&gt;  &apos;,t1.Ort) as Name,&quot;&amp;_
-			&quot;t1.KontaktID FROM Kunden as t1 ORDER BY t1.Name1 ASC&quot;)
-		oList_Jahrauswahl.ListSource=Array(&quot;SELECT distinct YEAR(Erstellungsdatum),YEAR(Erstellungsdatum) as Jahr FROM &quot;&amp; sTabelle1 &amp;_
-										 &quot; ORDER BY Jahr DESC&quot;)
-		SET_ClientID(1)
-		SET_Tabellen(1)
-		Formular_init_first()
-		Formular_init()
+	SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;Projekt&quot;))
+	SetDocUserProperty(&quot;oClientID&quot;, iClientIDOffset(iUserID_lokal) + 0)
+	SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
+	
+	oTextField_Betriebsart.Label=&quot;Initialisierung läuft&quot;
+	oTextField_Kontaktvorauswahl.Label=&quot;Filter (Kunden): &quot;
+	oTextField_Kontaktdaten.Label=&quot;Kunde: &quot;
+	oTextField_Document_Name_List.Label=&quot;Angebotsname: &quot;
+	oTextField_Document_Name.Label=&quot;Angebotsname&quot;
+	oTextField_gueltig_bis.Label=&quot;gültig bis: &quot;
+	oTextField_DocumentID.Label=&quot;Angebotsnummer: &quot;
+	oTextField_Erstellungsdatum.Label=&quot;Angebotsdatum: &quot;
+	
+	oButton_Document_berechnen.Label=&quot;berechnen&quot;
+	oForm_Document.Command=&quot;SELECT *  FROM Angebote1 WHERE DocumentID=:c&quot;
+	oForm_Kontaktdaten.Command=&quot;SELECT * FROM Kunden WHERE KontaktID=:a&quot;
+	oForm_Projektdaten.Command=&quot;SELECT * FROM Projekte WHERE ProjektID=:e&quot;
+	oForm_Zwischensummen.Command=&quot;SELECT * FROM ZwiSuAngebote WHERE DocumentID=:b ORDER BY Pos ASC&quot;
+	oForm_Bemerkungen.Command=&quot;SELECT * FROM ZwiBemAngebote WHERE DocumentID=:b ORDER BY Pos ASC,ZwiBemID ASC&quot;
+	oList_Kontaktauswahl.ListSource=Array(&quot;SELECT distinct concat(t1.Name1,&apos;, &apos;,t1.Vorname,&apos; &apos;,t1.Name2,&apos;  --&gt;  &apos;,t1.Ort) as Name,&quot;&amp;_
+		&quot;t1.KontaktID FROM Kunden as t1 ORDER BY t1.Name1 ASC&quot;)
+	oList_Jahrauswahl.ListSource=Array(&quot;SELECT distinct YEAR(Erstellungsdatum),YEAR(Erstellungsdatum) as Jahr FROM &quot;&amp; sTabelle1 &amp;_
+									 &quot; ORDER BY Jahr DESC&quot;)
+	SET_ClientID(1)
+	SET_Tabellen(1)
+	Formular_init_first()
+	Formular_init()
 End Sub
 
 Sub Formular_init()
-	if sTabelle1 &lt;&gt; sTabelle1_old then
-		oForm_Document.Command=&quot;SELECT *  FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=:c&quot;
-	End if
+	Dim sCommand AS String
 	
 	oForm_Steuerung.Command=&quot;SELECT * FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
 	oForm_Steuerung_1.Command=&quot;SELECT * FROM Steuerung WHERE ClientID=&quot;&amp; iClientID
-	
-	if sKontakte &lt;&gt; sKontakte_old then
-		oForm_Kontaktdaten.Command=&quot;SELECT * FROM &quot;&amp; sKontakte &amp;&quot; WHERE KontaktID=:a&quot;
-	End if
-
 	oForm_Projektdaten.Command=&quot;SELECT * FROM &quot;&amp; sProjekte &amp;&quot; WHERE ProjektID=:e&quot;
-	
 	oForm_Tabellendaten.Command=&quot;SELECT * FROM &quot;&amp; sArbeitstabelle &amp;&quot; WHERE DocumentID=:b&quot;
 	
-	if sZwischensummen &lt;&gt; sZwischensummen_old then
-		oForm_Zwischensummen.Command=&quot;SELECT * FROM &quot;&amp; sZwischensummen &amp;&quot; WHERE DocumentID=:b ORDER BY Pos ASC&quot;
+	sCommand=&quot;SELECT *  FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=:c&quot;
+	if oForm_Document.Command &lt;&gt; sCommand then
+		oForm_Document.Command=sCommand
 	End if
 	
-	if sBemerkungen &lt;&gt; sBemerkungen_old then
-		oForm_Bemerkungen.Command=&quot;SELECT * FROM &quot;&amp; sBemerkungen &amp;&quot; WHERE DocumentID=:b ORDER BY Pos ASC,ZwiBemID ASC&quot;
+	sCommand=&quot;SELECT * FROM &quot;&amp; sKontakte &amp;&quot; WHERE KontaktID=:a&quot;
+	if oForm_Kontaktdaten.Command &lt;&gt; sCommand then
+		oForm_Kontaktdaten.Command=sCommand
+	End if
+
+	sCommand=&quot;SELECT * FROM &quot;&amp; sZwischensummen &amp;&quot; WHERE DocumentID=:b ORDER BY Pos ASC&quot;
+	if oForm_Zwischensummen.Command &lt;&gt; sCommand then
+		oForm_Zwischensummen.Command=sCommand
+	End if
+	
+	sCommand=&quot;SELECT * FROM &quot;&amp; sBemerkungen &amp;&quot; WHERE DocumentID=:b ORDER BY Pos ASC,ZwiBemID ASC&quot;
+	if oForm_Bemerkungen.Command &lt;&gt; sCommand then
+		oForm_Bemerkungen.Command=sCommand
 	End if
 	
 	oList_Gruppenauswahl.ListSource=Array(&quot;SELECT distinct&quot;&amp;_
@@ -98,11 +95,6 @@ Sub Formular_init()
 		&quot; ORDER BY LeistungsID ASC LIMIT 5000&quot;)
 	
 	oList_Projektauswahl.ListSource=Array(&quot;SELECT distinct Projekt_Name,ProjektID FROM &quot;&amp; sProjekte &amp;&quot;  ORDER BY Projekt_Name ASC&quot;)
-
-	if sKontakte &lt;&gt; sKontakte_old then
-		oList_Kontaktauswahl.ListSource=Array(&quot;SELECT distinct concat(t1.Name1,&apos;, &apos;,t1.Vorname,&apos; &apos;,t1.Name2,&apos;  --&gt;  &apos;,t1.Ort) as Name,&quot;&amp;_
-			&quot;t1.KontaktID FROM &quot;&amp; sKontakte &amp;&quot; as t1 ORDER BY t1.Name1 ASC&quot;)
-	End if
 
 	oList_Ansprechpartner.ListSource=Array(&quot;SELECT distinct concat(t1.Name,&apos;, &apos;,t1.Vorname) as Name,t1.AnsprechpartnerID&quot;&amp;_
 		&quot; FROM &quot;&amp; sAnsprechpartner &amp;&quot; as t1&quot;&amp;_
@@ -158,7 +150,7 @@ Sub Formular_init()
 &apos;		&quot; ORDER BY t1.DocumentID DESC&quot;)
 
 	 oList_Documentauswahl.ListSource=Array(&quot;SELECT DISTINCT t1.Document_Name,t1.DocumentID&quot;&amp;_
-		&quot; FROM Steuerung AS t2,&quot;&amp; sTabelle1 &amp;&quot; as t1&quot;&amp;_
+		&quot; FROM Steuerung AS t2,&quot;&amp; sTabelle1 &amp;&quot; AS t1&quot;&amp;_
 		&quot; LEFT JOIN &quot;&amp; sTabelle2 &amp;&quot; AS t3&quot;&amp;_
 		&quot; ON t3.DocumentID=t1.DocumentID&quot;&amp;_
 		&quot; AND t3.Leistungsbezeichnung LIKE CONCAT(&apos;%&apos;,(SELECT Suchstring_2 FROM Steuerung WHERE ClientID=&quot;&amp; iClientID &amp;&quot;),&apos;%&apos;)&quot;&amp;_
@@ -174,11 +166,16 @@ Sub Formular_init()
 		&quot; OR t1.DocumentID=t3.DocumentID)&quot;&amp;_
 		&quot; OR t1.DocumentID=t2.DocumentID)&quot;&amp;_
 		&quot; ORDER BY t1.DocumentID DESC&quot;)
-
+		
+	sCommand=&quot;SELECT distinct concat(t1.Name1,&apos;, &apos;,t1.Vorname,&apos; &apos;,t1.Name2,&apos;  --&gt;  &apos;,t1.Ort) as Name,&quot;&amp;_
+			&quot;t1.KontaktID FROM &quot;&amp; sKontakte &amp;&quot; as t1 ORDER BY t1.Name1 ASC&quot;
+	if oList_Kontaktauswahl.ListSource(0) &lt;&gt; sCommand then
+		oList_Kontaktauswahl.ListSource=Array(sCommand)
+	End if
 	
-	if sTabelle1 &lt;&gt; sTabelle1_old then
-		oList_Jahrauswahl.ListSource=Array(&quot;SELECT distinct YEAR(Erstellungsdatum),YEAR(Erstellungsdatum) as Jahr FROM &quot;&amp; sTabelle1 &amp;_
-									 &quot; ORDER BY Jahr DESC&quot;)
+	sCommand=&quot;SELECT DISTINCT YEAR(Erstellungsdatum),YEAR(Erstellungsdatum) AS Jahr FROM &quot;&amp; sTabelle1 &amp;&quot; ORDER BY Jahr DESC&quot;
+	if oList_Jahrauswahl.ListSource(0) &lt;&gt; sCommand then
+		oList_Jahrauswahl.ListSource=Array(sCommand)
 	end if
 End Sub
 
@@ -196,6 +193,7 @@ Sub Formular_init_first()
 	init_List_Projektauswahl()
 	init_List_Ansprechpartner()
 	init_List_RechnungsTypCode()
+	init_List_Korrekturrechnung()
 	init_List_Kontaktvorauswahl()
 	init_List_Projektvorauswahl()
 	init_List_Documentauswahl()
@@ -280,7 +278,7 @@ Sub init_Form_Bemerkungen()
 End Sub
 
 Sub init_List_Hauptgruppenauswahl()
-	vSQLArray=Array(&quot;SELECT concat(Hauptgruppenname),HauptgruppenID FROM &quot;&amp; sHauptgruppen)
+	vSQLArray=Array(&quot;SELECT CONCAT(Hauptgruppenname),HauptgruppenID FROM &quot;&amp; sHauptgruppen)
 	oList_Hauptgruppenauswahl.ListSourceType=4
 	oList_Hauptgruppenauswahl.ListSource=vSQLArray
 End Sub
@@ -302,10 +300,15 @@ Sub init_List_Ansprechpartner()
 End Sub
 
 Sub init_List_RechnungsTypCode()
-	oList_RechnungsTypCode.ListSource=Array(&quot;SELECT distinct concat(RechnungsTypCodeID,&apos; - &apos;,RechnungsTypCodeBezeichnung),RechnungsTypCodeID&quot;&amp;_
+	oList_RechnungsTypCode.ListSource=Array(&quot;SELECT DISTINCT CONCAT(RechnungsTypCodeID,&apos; - &apos;,RechnungsTypCodeBezeichnung),RechnungsTypCodeID&quot;&amp;_
 		&quot; FROM RechnungsTypCode ORDER BY RechnungsTypCodeID ASC&quot;)
 	oList_RechnungsTypCode.ListSourceType=4
 	oList_RechnungsTypCode.DataField=&quot;&quot;
+End Sub
+
+Sub init_List_Korrekturrechnung()
+	oList_Korrekturrechnung.ListSourceType=4
+	oList_Korrekturrechnung.DataField=&quot;&quot;
 End Sub
 
 Sub init_List_Projektauswahl()

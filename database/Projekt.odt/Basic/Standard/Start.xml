@@ -30,6 +30,8 @@ Sub Start()
 		Wend
 
 		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+		SetDocUserProperty(&quot;oPosGruppeUnten_X&quot;, Thiscomponent.Drawpage.getbyIndex(1).getPosition.X)
+		SetDocUserProperty(&quot;oPosGruppeUnten_Y&quot;, Thiscomponent.Drawpage.getbyIndex(1).getPosition.Y)
 
 		Betriebsart_aendern(iStartoption)
 		sSQL2=&quot;UPDATE Start SET Startoption=0,Unloaded=1,Startlock=0,Export=0 WHERE StartID=&quot;&amp; iUserID_lokal

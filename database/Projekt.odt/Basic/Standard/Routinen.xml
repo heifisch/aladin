@@ -58,7 +58,7 @@ Sub Tabellendaten_neu_einlesen()
 End Sub
 
 Sub AZ_anhaengen()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		if lKontaktID &gt; 0 then
 			if lProjektID &gt; 0 then
 				if iDocTypID = 5 then
@@ -90,7 +90,7 @@ Sub AZ_anhaengen()
 End Sub
 
 Sub Blanko_Datensatz()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		if lKontaktID &gt; 0 then
 			SetDocUserProperty(&quot;oPos_neu&quot;, fPos_neu)
 			iPos_neu=fPos_neu
@@ -174,8 +174,8 @@ Sub Blanko_Datensatz()
 End Sub
 
 Sub Zischensumme()
-	if lDocumentID &lt;&gt; 0then
-		if fVorhanden(sZwischensummen)&gt;0 then
+	if lDocumentID &gt; 0 then
+		if fVorhanden(sZwischensummen) &gt; 0 then
 			MsgBox(&quot;Nach Position &quot;&amp; fPos_neu &amp;&quot; gibt es schon eine Zwischensumme!&quot;,48,sTitle_lokal)
 			Exit Sub
 		else
@@ -195,8 +195,8 @@ Sub Zischensumme()
 End Sub
 
 Sub Bemerkung()
-	if lDocumentID &lt;&gt; 0 then
-		if fVorhanden(sBemerkungen)&gt;0 then
+	if lDocumentID &gt; 0 then
+		if fVorhanden(sBemerkungen) &gt; 0 then
 			sSQL1=&quot;SELECT Bemerkung FROM &quot;&amp; sBemerkungen &amp;&quot; WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; fPos_neu
 			oRecord1=oResult(sSQL1)
 			While oRecord1.next()
@@ -246,7 +246,7 @@ End Sub
 
 Sub AusgefuehrtAm()
 	Dim sLieferdatum as String
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		if fVorhanden(sBemerkungen)&gt;0 then
 			sSQL1=&quot;SELECT Bemerkung FROM &quot;&amp; sBemerkungen &amp;&quot; WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; fPos_neu
 			oRecord1=oResult(sSQL1)
@@ -1043,25 +1043,5 @@ Sub Leistungen_Menge_0_loeschen()
 	oForm_Tabellendaten.last()
 End Sub
 
-Sub RechnungsTyp_uebernehmen()
-	If iDocTypID = 5 then
-		if lDocumentID &gt; 0 then
-			oList_RechnungsTypCode.commit()
-			oForm_Document.updateRow()			
-			sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Document_Typ = &quot;&amp;_
-				&quot;(SELECT t1.RechnungsTypCodeDruck FROM RechnungsTypCode AS t1,&quot;&amp; sTabelle1 &amp;&quot; AS t2 &quot;&amp;_
-				&quot;WHERE t1.RechnungsTypCodeID=t2.RechnungsTypCodeID AND t2.DocumentID=&quot;&amp; lDocumentID &amp;&quot;) &quot;&amp;_
-				&quot;WHERE DocumentID=&quot;&amp; lDocumentID
-			SQL_execute(sSQL1)
-			If oList_RechnungsTypCode.BoundField.String = &quot;875&quot; Then
-				oOption_AZ.State = 1
-			Else
-				oOption_AZ.State = 0
-			End If
-		else
-			MsgBox(&quot;Sie haben noch kein Document ausgewählt oder angelegt!&quot;,48,sTitle_lokal)
-		End if
-	End If
-End Sub
 
 </script:module>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="Formular" script:language="StarBasic" script:moduleType="normal">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+
+REM  *****  BASIC  *****
+option explicit
+
+Sub Korrekturrechnung_anzeigen()
+	DIM arrPosGruppeUnten AS New com.sun.star.awt.Point
+	arrPosGruppeUnten.X=iPosGruppeUnten_X
+	arrPosGruppeUnten.Y=iPosGruppeUnten_Y-500
+	oForm_Document.reload()
+	oList_RechnungsTypCode.refresh()
+	If iDocTypID = 5 and lDocumentID &gt; 0 then
+		If oList_RechnungsTypCode.BoundField.String = &quot;384&quot; Then
+			arrPosGruppeUnten.Y=iPosGruppeUnten_Y
+			oList_Korrekturrechnung.EnableVisible=True
+			oList_Korrekturrechnung.ListSource=Array(&quot;SELECT DISTINCT CONCAT(DocumentID,&apos; - &apos;,Document_Name),DocumentID&quot;&amp;_
+				&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID &amp;&quot; ORDER BY DocumentID ASC&quot;)
+			oList_Korrekturrechnung.DataField=&quot;DocumentID_Korrekturrechnung&quot;
+			oList_Korrekturrechnung.refresh()
+			oLabel_Korrekturrechnung.EnableVisible=True
+			oForm_Document.reload()
+		Else
+			sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET DocumentID_Korrekturrechnung=NULL WHERE DocumentID=&quot;&amp; lDocumentID
+			SQL_execute(sSQL1)
+			oList_Korrekturrechnung.EnableVisible=False
+			oList_Korrekturrechnung.ListSource=Array(&quot;&quot;)
+			oList_Korrekturrechnung.refresh()
+			oList_Korrekturrechnung.DataField=&quot;&quot;
+			oLabel_Korrekturrechnung.EnableVisible=False
+		End If
+	else
+		oList_Korrekturrechnung.EnableVisible=False
+		oList_Korrekturrechnung.ListSource=Array(&quot;&quot;)
+		oList_Korrekturrechnung.refresh()
+		oList_Korrekturrechnung.DataField=&quot;&quot;
+		oLabel_Korrekturrechnung.EnableVisible=False
+	End if
+	Thiscomponent.Drawpage.getbyIndex(1).Position = arrPosGruppeUnten
+End Sub
+
+Sub Stundensatz_anzeigen()
+	If iDocTypID &lt; 7 and lDocumentID &gt; 0 then
+		oField_Stundensatz_Kontakt.EnableVisible=True
+		oLabel_Stundensatz_Kontakt.EnableVisible=True
+		If lProjektID &gt; 0 Then
+			oField_Stundensatz_Projekt.EnableVisible=True
+			oLabel_Stundensatz_Projekt.EnableVisible=True
+		Else
+			oField_Stundensatz_Projekt.EnableVisible=False
+			oLabel_Stundensatz_Projekt.EnableVisible=False
+		End If
+	else
+		oField_Stundensatz_Kontakt.EnableVisible=False
+		oField_Stundensatz_Projekt.EnableVisible=False
+		oLabel_Stundensatz_Kontakt.EnableVisible=False
+		oLabel_Stundensatz_Projekt.EnableVisible=False
+	End If
+End Sub
+
+Sub UStText_anzeigen(Optional iSichtbar as Integer)
+	If IsMissing(iSichtbar) Then
+		if iOption_13b = 0 and iOption_USt_befreit = 0 then
+			oLabel_USt.EnableVisible=False
+			oField_13bText.EnableVisible=False
+			oField_USt_befreit_Text.EnableVisible=False
+		else
+			oLabel_USt.EnableVisible=True
+			if iOption_13b = 1 then
+				oField_13bText.EnableVisible=True
+				oField_USt_befreit_Text.EnableVisible=False
+			end if
+			if iOption_USt_befreit = 1 then
+				oField_13bText.EnableVisible=False
+				oField_USt_befreit_Text.EnableVisible=True
+			end if
+		End if
+	Else
+		if iSichtbar = 0 Then
+			oLabel_USt.EnableVisible=False
+			oField_13bText.EnableVisible=False
+			oField_USt_befreit_Text.EnableVisible=False
+		End If
+    End If
+End Sub
+
+</script:module>

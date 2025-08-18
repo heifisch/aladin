@@ -24,6 +24,7 @@ Sub Schreibschutz_setzen(Optional iSchreibschutz As Integer)
 		oList_Kontaktauswahl.Enabled=False
 		oList_Ansprechpartner.Enabled=False
 		oList_RechnungsTypCode.Enabled=False
+		oList_Korrekturrechnung.Enabled=False
 		oField_Stundensatz_Kontakt.Enabled=False
 		oField_Stundensatz_Projekt.Enabled=False
 		oButton_Projekt_ruecksetzen.Enabled=False
@@ -88,7 +89,9 @@ Sub Schreibschutz_setzen(Optional iSchreibschutz As Integer)
 		oForm_Bemerkungen.AllowDeletes=False
 		oOption_AZ.Enabled=False
 		oOption_13b.Enabled=False
+		oOption_USt_befreit.Enabled=False
 		oField_13bText.Enabled=False
+		oField_USt_befreit_Text.Enabled=False
 		oForm_Document.reload()
 		wait 1
 		oForm_Tabellendaten.last()
@@ -98,6 +101,7 @@ Sub Schreibschutz_setzen(Optional iSchreibschutz As Integer)
 		oList_Kontaktauswahl.Enabled=True
 		oList_Ansprechpartner.Enabled=True
 		oList_RechnungsTypCode.Enabled=True
+		oList_Korrekturrechnung.Enabled=True
 		oField_Stundensatz_Kontakt.Enabled=True
 		oField_Stundensatz_Projekt.Enabled=True
 		oButton_Projekt_ruecksetzen.Enabled=True
@@ -165,7 +169,9 @@ Sub Schreibschutz_setzen(Optional iSchreibschutz As Integer)
 				oButton_AZ.Enabled=True
 			End if
 			oOption_13b.Enabled=True
+			oOption_USt_befreit.Enabled=True
 			oField_13bText.Enabled=True
+			oField_USt_befreit_Text.Enabled=True
 		end if
 		oForm_Document.reload()
 		wait 1

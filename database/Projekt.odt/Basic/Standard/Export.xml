@@ -8,7 +8,7 @@ REM  *****  BASIC  *****
 Option Explicit
 
 Sub Datensaetze_importieren()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		if lKontaktID &gt; 0 then
 			Dim vStatus as Variant
 			Dim iGesperrt as integer
@@ -1548,7 +1548,7 @@ Sub Document_exportieren()
 					&quot;Summe_nach_Rabatt,Summe_nach_Korrektur,Summe_nach_Skonto,Skonto_Tage,Faellig_Tage,Materialeinsatz,&quot;&amp;_
 					&quot;Bauzeit_Stunden,Bauzeit_Tage,Leerzeilen,Leistungsempfaenger,Lieferbemerkung&quot;
 				if iDocTypID_export &lt; 7 AND iDocTypID &lt; 7 then
-					sSQL2 = sSQL2 &amp; &quot;,13b,13bText&quot;
+					sSQL2 = sSQL2 &amp; &quot;,13b,13bText,USt_befreit,USt_befreit_Text&quot;
 				End if
 				sSQL2 = sSQL2 &amp;&quot;) SELECT t1.ProjektID,t1.Document_Name,t1.KontaktID,t1.AnsprechpartnerID,&quot;&amp;_
 					&quot;date_add(now(),interval 0 day),date_add(now(),interval 0 day),&quot;&amp;_
@@ -1559,7 +1559,7 @@ Sub Document_exportieren()
 					&quot;t1.Skonto_Tage,t1.Faellig_Tage,t1.Materialeinsatz,&quot;&amp;_
 					&quot;t1.Bauzeit_Stunden,t1.Bauzeit_Tage,t1.Leerzeilen,t1.Leistungsempfaenger,t1.Lieferbemerkung&quot;
 				if iDocTypID_export &lt; 7 AND iDocTypID &lt; 7 then
-					sSQL2 = sSQL2 &amp; &quot;,t1.13b,t1.13bText&quot;
+					sSQL2 = sSQL2 &amp; &quot;,t1.13b,t1.13bText,t1.USt_befreit,t1.USt_befreit_Text&quot;
 				End if
 				sSQL2 = sSQL2 &amp;&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t1,Steuerung as t2 WHERE t2.ClientID=&quot;&amp; iClientID &amp;&quot; AND t1.DocumentID=t2.DocumentID&quot;
 			else

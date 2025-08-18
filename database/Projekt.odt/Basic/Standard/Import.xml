@@ -12,7 +12,7 @@ Sub Import_d83()
 	Dim oFilePicker as Object
 	Dim vStatus as Variant,vStatusFilePicker as Variant
 
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		if lKontaktID &gt; 0 then
 			if Msg_Schreibschutz=1 then
 				MsgBox(&quot;Sie müssen erst den Schreibschutz entfernen!&quot;,16,sTitle_lokal)

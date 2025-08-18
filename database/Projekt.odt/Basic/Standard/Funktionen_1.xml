@@ -215,6 +215,10 @@ Function oField_13bText as Object
 	oField_13bText=oForm_Document.getByName(&quot;Field_13bText&quot;)
 End Function
 
+Function oField_USt_befreit_Text as Object
+	oField_USt_befreit_Text=oForm_Document.getByName(&quot;Field_USt_befreit_Text&quot;)
+End Function
+
 Function oField_Leistungsempfaenger as Object
 	oField_Leistungsempfaenger=oForm_Document.getByName(&quot;Field_Leistungsempfaenger&quot;)
 End Function
@@ -319,6 +323,10 @@ Function oList_Leerzeilen as Object
 	oList_Leerzeilen=oForm_Document.getByName(&quot;List_Leerzeilen&quot;)
 End Function
 
+Function oList_Korrekturrechnung as Object
+	oList_Korrekturrechnung=oForm_Document.getByName(&quot;List_Korrekturrechnung&quot;)
+End Function
+
 Function oList_Kontaktvorauswahl as Object
 	oList_Kontaktvorauswahl=oForm_Steuerung.getByName(&quot;List_Kontaktvorauswahl&quot;)
 End Function
@@ -347,8 +355,12 @@ Function oTextField_gueltig_bis as Object
 	oTextField_gueltig_bis=oForm_Document.getByName(&quot;Label_gueltig_bis&quot;)
 End Function
 
-Function oLabel_13bText as Object
-	oLabel_13bText=oForm_Document.getByName(&quot;Label_13bText&quot;)
+Function oLabel_USt as Object
+	oLabel_USt=oForm_Document.getByName(&quot;Label_USt&quot;)
+End Function
+
+Function oLabel_Korrekturrechnung as Object
+	oLabel_Korrekturrechnung=oForm_Document.getByName(&quot;Label_Korrekturrechnung&quot;)
 End Function
 
 Function oTextField_DocumentID as Object
@@ -467,6 +479,10 @@ Function oOption_13b as Object
 	oOption_13b=oForm_Document.getByName(&quot;Option_13b&quot;)
 End Function
 
+Function oOption_USt_befreit as Object
+	oOption_USt_befreit=oForm_Document.getByName(&quot;Option_USt_befreit&quot;)
+End Function
+
 Function oOption_AZ as Object
 	oOption_AZ=oForm_Document.getByName(&quot;Option_AZ&quot;)
 End Function
@@ -505,6 +521,10 @@ End Function
 
 Function iOption_13b as integer
 	iOption_13b=oOption_13b.BoundField.short
+End Function
+
+Function iOption_USt_befreit as integer
+	iOption_USt_befreit=oOption_USt_befreit.BoundField.short
 End Function
 
 Function iOption_AZ as integer

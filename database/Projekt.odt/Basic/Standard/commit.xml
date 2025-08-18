@@ -11,37 +11,35 @@ Dim vStatus as Variant
 Dim sSQL1 as String,sSQL2 as String,sSQL3 as String
 
 Sub SET_AZ()
-	Dim sDocumentTypCodeID as String
-	if iDocTypID = 5 then
-		if lDocumentID &gt; 0 then
-			oForm_Document.updateRow()
-			wait 10
-			
-			if iOption_AZ = 0 then
-				sDocumentTypCodeID=&quot;380&quot;
-			elseif iOption_AZ = 1 then
-				sDocumentTypCodeID=&quot;875&quot;
-			end if
-			
-			sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET RechnungsTypCodeID=&apos;&quot;&amp; sDocumentTypCodeID &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
-			SQL_execute(sSQL1)
-			sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Document_Typ = &quot;&amp;_
-				&quot;(SELECT t1.RechnungsTypCodeDruck FROM RechnungsTypCode AS t1,&quot;&amp; sTabelle1 &amp;&quot; AS t2 &quot;&amp;_
-				&quot;WHERE t1.RechnungsTypCodeID=t2.RechnungsTypCodeID AND t2.DocumentID=&quot;&amp; lDocumentID &amp;&quot;) &quot;&amp;_
-				&quot;WHERE DocumentID=&quot;&amp; lDocumentID
+	if iDocTypID = 5 AND lDocumentID &gt; 0 then
+		Dim sDocumentTypCodeID as String
+		If oList_RechnungsTypCode.BoundField.String = &quot;384&quot; Then
+			sSQL2=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Menge=Menge*-1&quot;
 			SQL_execute(sSQL2)
-			oForm_Document.reload()
-			wait 1
-			oForm_Tabellendaten.last()
+		End if
+		oForm_Document.updateRow()
+		wait 10
+		if iOption_AZ = 0 then
+			sDocumentTypCodeID=&quot;380&quot;
+		elseif iOption_AZ = 1 then
+			sDocumentTypCodeID=&quot;875&quot;
 		end if
+		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET RechnungsTypCodeID=&apos;&quot;&amp; sDocumentTypCodeID &amp;&quot;&apos;,Document_Typ=&quot;&amp;_
+			&quot;(SELECT RechnungsTypCodeDruck FROM RechnungsTypCode WHERE RechnungsTypCodeID=&apos;&quot;&amp; sDocumentTypCodeID &amp;&quot;&apos;) &quot;&amp;_
+			&quot;WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		oForm_Document.reload()
+		Korrekturrechnung_anzeigen()
+		wait 1
+		oForm_Tabellendaten.last()
 	End if
 End Sub
 
 Sub SET_13b()
-	Dim sMwSt_Satz as String,s13bText as String
+	Dim sMwSt_Satz as String,s13bText as String,sUst_befreit_Text as String
 	Dim oRecord1 as Object
-	if lDocumentID &lt;&gt; 0 then
-		sSQL1=&quot;SELECT MwSt_Satz,13bText as Text FROM Einstellungen WHERE EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+	if lDocumentID &gt; 0 then
+		sSQL1=&quot;SELECT MwSt_Satz,13bText FROM Einstellungen WHERE EinstellungsID=&quot;&amp; iEinstellungsID_lokal
 		oRecord1=oResult(sSQL1)
 		While oRecord1.next()
 			sMwSt_Satz=oRecord1.getString(1)
@@ -52,9 +50,42 @@ Sub SET_13b()
 		if iOption_13b = 0 then
 			s13bText=&quot;&quot;
 		elseif iOption_13b = 1 then
+			sUst_befreit_Text=&quot;&quot;
 			sMwSt_Satz=&quot;0&quot;
+			oOption_USt_befreit.State = 0
+			oForm_Document.updateRow()
 		end if
-		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET MwSt_Satz=&quot;&amp; sMwSt_Satz &amp;&quot;, 13bText=&apos;&quot;&amp; s13bText &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
+		UStText_anzeigen()
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET MwSt_Satz=&quot;&amp; sMwSt_Satz &amp;&quot;,13bText=&apos;&quot;&amp; s13bText &amp;&quot;&apos;,USt_befreit_Text=&apos;&quot;&amp; sUst_befreit_Text &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL2)
+		oForm_Document.reload()
+		wait 1
+		oForm_Tabellendaten.last()
+	End if
+End Sub
+
+Sub SET_USt_befreit()
+	Dim sMwSt_Satz as String,sUst_befreit_Text as String,s13bText as String
+	Dim oRecord1 as Object
+	if lDocumentID &gt; 0 then
+		sSQL1=&quot;SELECT MwSt_Satz,USt_befreit_Text FROM Einstellungen WHERE EinstellungsID=&quot;&amp; iEinstellungsID_lokal
+		oRecord1=oResult(sSQL1)
+		While oRecord1.next()
+			sMwSt_Satz=oRecord1.getString(1)
+			sUst_befreit_Text=oRecord1.getString(2)
+		Wend
+		oForm_Document.updateRow()
+		wait 10
+		if iOption_USt_befreit = 0 then
+			sUst_befreit_Text=&quot;&quot;
+		elseif iOption_USt_befreit = 1 then
+			s13bText=&quot;&quot;
+			sMwSt_Satz=&quot;0&quot;
+			oOption_13b.State = 0
+			oForm_Document.updateRow()
+		end if
+		UStText_anzeigen()
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET MwSt_Satz=&quot;&amp; sMwSt_Satz &amp;&quot;,USt_befreit_Text=&apos;&quot;&amp; sUst_befreit_Text &amp;&quot;&apos;,13bText=&apos;&quot;&amp; s13bText &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID
 		SQL_execute(sSQL2)
 		oForm_Document.reload()
 		wait 1
@@ -68,7 +99,7 @@ End Sub
 
 Sub SET_DocumentID_new()
 	oField_DocumentID.commit()
-	if lDocumentID &lt;&gt; 0 AND lDocumentID &lt;&gt; lDocumentID_old then
+	if lDocumentID &gt; 0 AND lDocumentID &lt;&gt; lDocumentID_old then
 		if fAnzahl_Datensaetze(sTabelle1,lDocumentID) = 0 then
 			sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET DocumentID=&quot;&amp; lDocumentID &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID_old
 			SQL_execute(sSQL1)
@@ -174,28 +205,28 @@ Sub Projektvorauswahl_reset()
 End Sub
 
 Sub Field_MwSt_Satz_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_MwSt_Satz.commit()
 		oForm_Document.updateRow()
 	End if
 End Sub
 
 Sub Field_Skonto_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_Skonto_Satz.commit()
 		oForm_Document.updateRow()
 	End if
 End Sub
 
 Sub Field_Rabatt_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_Rabatt_Satz.commit()
 		oForm_Document.updateRow()
 	End if
 End Sub
 
 Sub Field_Ordner_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		if lKontaktID &lt;&gt; 0 then
 			oField_Ordner.commit()
 			oForm_Kontaktdaten.updateRow()
@@ -257,7 +288,7 @@ Sub Suchstring_2_reset()
 End Sub
 
 Sub Skontoziel_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_Skonto_Tage.commit()
 		oForm_Document.updateRow()
 		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Skonto_bis=(date_add(Erstellungsdatum,interval &quot;&amp; fSkonto_Tage &amp;_
@@ -268,7 +299,7 @@ Sub Skontoziel_commit()
 End Sub
 
 Sub Zahlungsziel_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_Faellig_Tage.commit()
 		oForm_Document.updateRow()
 		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; fFaellig_Tage &amp;_
@@ -279,7 +310,7 @@ Sub Zahlungsziel_commit()
 End Sub
 
 Sub Ansprechpartner_reset()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET AnsprechpartnerID = NULL WHERE DocumentID=&quot;&amp; lDocumentID
 		SQL_execute(sSQL1)
 		oForm_Document.reload()
@@ -289,7 +320,7 @@ Sub Ansprechpartner_reset()
 End Sub
 
 Sub Projektauswahl_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oList_Projektauswahl.commit()
 		oForm_Document.updateRow()
 		oForm_Projektdaten.reload()
@@ -310,23 +341,25 @@ Sub Projektauswahl_commit()
 			oForm_Document.updateRow()
 		End if
 		oForm_Document.refreshRow()
+		Stundensatz_anzeigen()
 	End if
 End Sub
 
 Sub Projektauswahl_reset()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET ProjektID = 0 WHERE DocumentID=&quot;&amp; lDocumentID
 		SQL_execute(sSQL1)
 		oList_Projektvorauswahl.refresh()
 		oForm_Steuerung.reload()
 		wait 1
 		oForm_Tabellendaten.last()
+		Stundensatz_anzeigen()
 	End if
 End Sub
 
 Sub Field_Stundensatz_Projekt_commit()
-	if lDocumentID &lt;&gt; 0 then
-		if lProjektID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
+		if lProjektID &gt; 0 then
 			if CDbl_with_Dot(oField_Stundensatz_Projekt.value()) &lt;&gt; CDbl_with_Dot(oField_Stundensatz_Projekt.boundfield.string) then
 				oForm_Projektdaten.updateRow()
 				if CDbl_with_Dot(oField_MVS.BoundField.string) &gt; 0 then
@@ -352,8 +385,8 @@ Sub Field_Stundensatz_Projekt_commit()
 End Sub
 
 Sub Field_Stundensatz_Kontakt_commit()
-	if lDocumentID &lt;&gt; 0 then
-		if lKontaktID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
+		if lKontaktID &gt; 0 then
 			if CDbl_with_Dot(oField_Stundensatz_Kontakt.value()) &lt;&gt; CDbl_with_Dot(oField_Stundensatz_Kontakt.boundfield.string()) then
 				oForm_Kontaktdaten.updateRow()
 				if CDbl_with_Dot(oField_MVS.BoundField.string) &gt; 0 then
@@ -385,7 +418,7 @@ Sub Leistungsauswahl_commit()
 End Sub
 
 Sub Document_Name_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_Document_Name.commit()
 		oForm_Document.updateRow()
 		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Document_Name=&apos;&quot;&amp; fsConvertApostroph(oField_Document_Name.BoundField.String) &amp;_
@@ -400,21 +433,21 @@ Sub Document_Name_commit()
 End Sub
 
 Sub Bemerkung_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_Bemerkung.commit()
 		oForm_Document.updateRow()
 	End if
 End Sub
 
 Sub Lieferbemerkung_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_Lieferbemerkung.commit()
 		oForm_Document.updateRow()
 	End if
 End Sub
 
 Sub Leistungsempfaenger_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_Leistungsempfaenger.commit()
 		oForm_Document.updateRow()
 	End if
@@ -463,15 +496,20 @@ Sub Ansprechpartner_commit()
 	oForm_Document.updateRow()
 End Sub
 
+Sub Korrekturrechnung_commit()
+	oList_Korrekturrechnung.commit()
+	oForm_Document.updateRow()
+End Sub
+
 Sub MVS_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_MVS.commit()
 		oForm_Document.updateRow()
 	End if
 End Sub
 
 Sub MAS_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_MAS.commit()
 		oForm_Document.updateRow()
 	End if
@@ -479,7 +517,7 @@ End Sub
 
 Sub Korrektur_Satz_commit()
 	Dim sAnlass as String
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_Korrektur_Satz.commit()
 		if oField_Korrektur_Satz.BoundField.float &gt; 0 then
 			if oField_Korrektur_Anlass.BoundField.String = &quot;&quot; OR  oField_Korrektur_Anlass.BoundField.String = &quot; &quot; then
@@ -512,14 +550,14 @@ Sub Korrektur_Satz_commit()
 End Sub
 
 Sub Korrektur_Anlass_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_Korrektur_Anlass.commit()
 		oForm_Document.updateRow()
 	End if
 End Sub
 
 Sub Document_Typ_commit()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		oField_Document_Typ.commit()
 		oForm_Document.updateRow()
 	End if
@@ -544,5 +582,32 @@ Sub Jahr_reset()
 	Jahr_zuruecksetzen(1)
 End Sub
 
-
+Sub RechnungsTyp_uebernehmen()
+	If iDocTypID = 5 and lDocumentID &gt; 0 then
+		Dim sRechnungsTypCodeBevor AS String
+		Dim sRechnungsTypCodeNach AS String
+		sRechnungsTypCodeBevor=oList_RechnungsTypCode.BoundField.String
+		oList_RechnungsTypCode.commit()
+		oForm_Document.updateRow()
+		sRechnungsTypCodeNach=oList_RechnungsTypCode.BoundField.String
+		If (sRechnungsTypCodeBevor = &quot;384&quot; OR sRechnungsTypCodeNach = &quot;384&quot;) AND sRechnungsTypCodeBevor &lt;&gt; sRechnungsTypCodeNach Then
+			sSQL2=&quot;UPDATE &quot;&amp; sArbeitstabelle &amp;&quot; SET Menge=Menge*-1&quot;
+			SQL_execute(sSQL2)
+			oForm_Tabellendaten.reload()
+			oForm_Tabellendaten.last()
+		End If
+		sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET Document_Typ=&quot;&amp;_
+			&quot;(SELECT t1.RechnungsTypCodeDruck FROM RechnungsTypCode AS t1,&quot;&amp; sTabelle1 &amp;&quot; AS t2 &quot;&amp;_
+			&quot;WHERE t1.RechnungsTypCodeID=t2.RechnungsTypCodeID AND t2.DocumentID=&quot;&amp; lDocumentID &amp;&quot;) &quot;&amp;_
+			&quot;WHERE DocumentID=&quot;&amp; lDocumentID
+		SQL_execute(sSQL1)
+		If sRechnungsTypCodeNach = &quot;875&quot; Then
+			oOption_AZ.State = 1
+		Else
+			oOption_AZ.State = 0
+		End If
+		oForm_Document.updateRow()
+		Korrekturrechnung_anzeigen()
+	End If
+End Sub
 </script:module>

@@ -24,7 +24,7 @@ WriteDbgInfo(oList_Kontaktauswahl)
 End Sub
 
 Function check_AZ as Integer
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		if lKontaktID &gt; 0 then
 			if iDocTypID = 5 then
 				Dim sDocumentName as String,iAZ as Integer

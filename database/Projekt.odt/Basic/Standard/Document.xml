@@ -23,7 +23,7 @@ Dim sLeistungsID as string,sDocument_Name as String
 Dim sLeistungsbezeichnung as string,sLeistungsbeschreibung as String,sEinheit as String
 Dim sWert as String,sFaktor as String,sLeistungsempfaenger as String,sLieferbemerkung as String
 Dim sMenge as String,iMenge_eingeben as Integer
-Dim iEinfuegen_abfragen as Integer,i13b as Integer,s13bText as String
+Dim iEinfuegen_abfragen as Integer,i13b as Integer,s13bText as String,iUSt_befreit as Integer,sUSt_befreit_Text as String
 Dim iPos as integer,iPos_alt as integer
 Dim iPos_TypID as integer
 Dim sBezeichnung as String,sBemerkung as String
@@ -56,7 +56,7 @@ Sub Document_kopieren()
 				&quot;t1.Summe_nach_Korrektur,t1.Summe_nach_Skonto,t1.Faellig_Tage,&quot;&amp;_
 				&quot;t1.Skonto_Tage,t1.Bemerkung,t1.Leerzeilen,t3.MwSt_Satz&quot;
 			if iDocTypID &lt; 7 then
-				sSQL1=sSQL1 &amp; &quot;,t1.13b,t1.13bText&quot;
+				sSQL1=sSQL1 &amp; &quot;,t1.13b,t1.13bText,t1.USt_befreit,t1.USt_befreit_Text&quot;
 			End if
 			sSQL1=sSQL1 &amp; &quot; FROM &quot;&amp; sTabelle1 &amp;&quot; AS t1,Steuerung AS t2,Einstellungen AS t3 &quot;&amp;_
 				&quot;WHERE t2.ClientID=&quot;&amp; iClientID &amp;_
@@ -94,6 +94,8 @@ Sub Document_kopieren()
 				if iDocTypID &lt; 7 then
 					i13b=oRecord1.getInt(28)
 					s13bText=oRecord1.getString(29)
+					iUSt_befreit=oRecord1.getInt(30)
+					sUSt_befreit_Text=oRecord1.getString(31)
 				End if
 			Wend
 nochmal:
@@ -108,7 +110,7 @@ nochmal:
 				End if
 			End if
 			
-			if i13b = 1 then
+			if i13b = 1 OR iUSt_befreit then
 				sMwSt_Satz_aktuell=sMwSt_Satz
 			End if
 			
@@ -130,7 +132,7 @@ nochmal:
 				&quot;MwSt,Summe_mit_MwSt,Rabatt_Satz,Korrektur_Satz,Skonto_Satz,Rabatt,Korrektur,Korrektur_Anlass,Skonto,&quot;&amp;_
 				&quot;Summe_nach_Rabatt,Summe_nach_Korrektur,Summe_nach_Skonto,Faellig_Tage,Skonto_Tage,Bemerkung,Leerzeilen&quot;
 			if iDocTypID &lt; 7 then
-				sSQL2=sSQL2 &amp; &quot;,13b,13bText&quot;
+				sSQL2=sSQL2 &amp; &quot;,13b,13bText,USt_befreit,USt_befreit_Text&quot;
 			End if
 			sSQL2=sSQL2 &amp; &quot;) VALUES(&apos;&quot;&amp; fsConvertApostroph(sDocument_Name) &amp;&quot;&apos;,&apos;&quot;&amp; sProjektID &amp;&quot;&apos;,&apos;&quot;&amp; sKontaktID &amp;&quot;&apos;,&apos;&quot;&amp; sAnsprechpartnerID &amp;_
 				&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsempfaenger) &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLieferbemerkung) &amp;_
@@ -140,7 +142,7 @@ nochmal:
 				&quot;&apos;,&apos;&quot;&amp; sSumme_nach_Rabatt &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_nach_Korrektur &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_nach_Skonto &amp;_
 				&quot;&apos;,&apos;&quot;&amp; iFaellig_Tage &amp;&quot;&apos;,&apos;&quot;&amp; iSkonto_Tage &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sBemerkung) &amp;&quot;&apos;,&apos;&quot;&amp; sLeerzeilen &amp;&quot;&apos;&quot;
 			if iDocTypID &lt; 7 then
-				sSQL2=sSQL2 &amp; &quot;,&quot;&amp; i13b &amp;&quot;,&apos;&quot;&amp; s13bText &amp;&quot;&apos;&quot;
+				sSQL2=sSQL2 &amp; &quot;,&quot;&amp; i13b &amp;&quot;,&apos;&quot;&amp; s13bText &amp;&quot;&apos;,&apos;&quot;&amp; iUSt_befreit &amp;&quot;&apos;,&apos;&quot;&amp; sUSt_befreit_Text &amp;&quot;&apos;&quot;
 			End if
 			SQL_Reset_AutoIncrement(sTabelle1)
 			SQL_execute(sSQL2 &amp; &quot;)&quot;)
@@ -157,6 +159,9 @@ nochmal:
 			Skontoziel_commit()
 			Korrektur_Vorzeichen_refresh()
 			Schreibschutz_setzen()
+			UStText_anzeigen()
+			Korrekturrechnung_anzeigen()
+			Stundensatz_anzeigen()
 			XRechnungMenu()
 		End if
 	End if
@@ -250,6 +255,9 @@ if lDocumentID &gt; 0 then
 			oList_Documentauswahl.refresh()
 			oForm_Steuerung.reload()
 			oForm_Steuerung.reset()
+			UStText_anzeigen(0)
+			Korrekturrechnung_anzeigen()
+			Stundensatz_anzeigen()
 			XRechnungMenu()
 		End if
 	End if
@@ -286,6 +294,9 @@ Sub Document_schliessen()
 			&quot;&apos;,Gesperrt=0,Stundenverrechnungssatz = NULL WHERE ClientID=&quot;&amp; iClientID
 		SQL_execute(sSQL4)
 	End if
+	UStText_anzeigen(0)
+	Korrekturrechnung_anzeigen()
+	Stundensatz_anzeigen()
 	XRechnungMenu()
 	StatusBar(True,oDoc)
 	ToolBar(True,oDoc)
@@ -298,7 +309,7 @@ Sub Document_berechnen()
 		Dim sBauzeit_Stunden as String
 		Dim sBauzeit_Tage as String
 		Dim sMaterialeinsatz as String
-		Dim i13b as Integer
+		Dim i13b as Integer,iUSt_befreit as Integer
 		Dim sAZ_ohne_MwSt as String,sAZ_MwSt as String,sAZ_mit_MwSt as String,sSkonto_Satz as String
 		Dim sMwSt_Satz as string,sMwSt_Satz_aktuell as string,sMwSt_Satz_Msg as String,sKorrektur_Vorzeichen as String
 		Dim iPos as integer,iRowNumber as Integer
@@ -326,7 +337,7 @@ Sub Document_berechnen()
 		Wend
 		sSQL3=&quot;SELECT t1.Skonto_Satz,t1.Skonto_Tage,t1.MwSt_Satz,t2.MwSt_Satz,t1.Korrektur_Vorzeichen&quot;
 		if iDocTypID &lt; 7 then
-			sSQL3=sSQL3 &amp;&quot;,t1.13b&quot;
+			sSQL3=sSQL3 &amp;&quot;,t1.13b,t1.USt_befreit&quot;
 		end if
 		sSQL3=sSQL3 &amp;&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t1,Einstellungen as t2 &quot;&amp;_
 				&quot; WHERE t1.DocumentID=&quot;&amp; lDocumentID &amp;_
@@ -341,14 +352,20 @@ Sub Document_berechnen()
 			sKorrektur_Vorzeichen=oRecord2.getString(5)
 			if iDocTypID &lt; 7 then
 				i13b=oRecord2.getInt(6)
+				iUSt_befreit=oRecord2.getInt(7)
 			else
 				i13b=0
+				iUSt_befreit=0
 			end if
 		Wend
 
-		if i13b=1 then
+		if i13b=1 OR iUSt_befreit=1 then
 			sMwSt_Satz_aktuell=&quot;0.0&quot;
-			sMwSt_Satz_Msg=fZahlMitPunkt(sMwSt_Satz_aktuell) &amp;&quot;% gemäß §13b&quot;
+			if i13b=1 then
+				sMwSt_Satz_Msg=fZahlMitPunkt(sMwSt_Satz_aktuell) &amp;&quot;% gemäß §13b&quot;
+			elseif iUSt_befreit=1 then
+				sMwSt_Satz_Msg=fZahlMitPunkt(sMwSt_Satz_aktuell) &amp;&quot;% USt befreit gemäß UStG&quot;
+			End if
 		else
 			sMwSt_Satz_Msg=fZahlMitPunkt(sMwSt_Satz_aktuell) &amp;&quot;%&quot;
 		end if
@@ -452,6 +469,9 @@ Sub Document_speichern()
 			SQL_DocumentID_entfernen()
 			oForm_Steuerung.reload()
 			oForm_Document.reset()
+			UStText_anzeigen(0)
+			Korrekturrechnung_anzeigen()
+			Stundensatz_anzeigen()
 			XRechnungMenu()
 		End if
 	End if
@@ -505,6 +525,9 @@ Sub Document_bearbeiten()
 			SQL_Update_Document1_Gesperrt_1(sTabelle1,lDocumentID)
 			Korrektur_Vorzeichen_refresh()
 			Schreibschutz_setzen()
+			UStText_anzeigen()
+			Korrekturrechnung_anzeigen()
+			Stundensatz_anzeigen()
 			XRechnungMenu()
 		End if
 	End if
@@ -537,12 +560,15 @@ nochmal:
 		SQL_Datum_setzen()
 		Korrektur_Vorzeichen_refresh()
 		Schreibschutz_setzen()
+		UStText_anzeigen(0)
+		Korrekturrechnung_anzeigen()
+		Stundensatz_anzeigen()
 		XRechnungMenu()
 	End if
 End Sub
 
 Sub Document_Name_aendern()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		if oDoc.isReadOnly then 
 			if Msg_Schreibschutz=1 then
 		 		exit Sub

@@ -7,22 +7,8 @@
 REM  *****  BASIC  *****
 option explicit
 
-Sub TestTablePos()
-
-	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-	WritedbgInfo(oColumn_Position.BoundField)
-
-End Sub
-
-Sub TestTablePos2()
-
-	GlobalScope.BasicLibraries.LoadLibrary(&quot;Tools&quot;)
-	WritedbgInfo(oColumn_Position)
-
-End Sub
-
 Sub DokumentName_bearbeiten()
-	if lDocumentID &lt;&gt; 0 then
+	if lDocumentID &gt; 0 then
 		Dim vStatus as Variant
 		Dim sSQL1 as String,sSQL2 as String
 		Dim oRecordText as Object

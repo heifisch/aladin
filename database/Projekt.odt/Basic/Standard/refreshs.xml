@@ -23,6 +23,10 @@ Sub Ansprechpartner_refresh()
 	oList_Ansprechpartner.refresh()
 End Sub
 
+Sub Korrekturrechnung_refresh()
+	oList_Korrekturrechnung.refresh()
+End Sub
+
 Sub Hauptgruppen_refresh()
 	oList_Hauptgruppenauswahl.refresh()
 End Sub

@@ -39,6 +39,14 @@ Function iGueltig as Integer
 	iGueltig=CInt(GetDocUserProperty(&quot;oGueltig&quot;))
 End Function
 
+Function iPosGruppeUnten_X as Integer
+	iPosGruppeUnten_X=CInt(GetDocUserProperty(&quot;oPosGruppeUnten_X&quot;))
+End Function
+
+Function iPosGruppeUnten_Y as Integer
+	iPosGruppeUnten_Y=CInt(GetDocUserProperty(&quot;oPosGruppeUnten_Y&quot;))
+End Function
+
 Function sMenge_eingeben_abfragen as String
 	sMenge_eingeben_abfragen=GetDocUserProperty(&quot;oMenge_eingeben_abfragen&quot;)
 End Function
@@ -87,14 +95,6 @@ Function sTabelle2_import as String
 	sTabelle2_import=GetDocUserProperty(&quot;oTabelle2_import&quot;)
 End Function
 
-Function sTabelle1_old as String
-	sTabelle1_old=GetDocUserProperty(&quot;oTabelle1_old&quot;)
-End Function
-
-Function sTabelle2_old as String
-	sTabelle2_old=GetDocUserProperty(&quot;oTabelle2_old&quot;)
-End Function
-
 Function sArbeitstabelle as String
 	sArbeitstabelle=GetDocUserProperty(&quot;oArbeitstabelle&quot;)
 End Function
@@ -107,20 +107,12 @@ Function sArbeitstabelle_import as String
 	sArbeitstabelle_import=GetDocUserProperty(&quot;oArbeitstabelle_import&quot;)
 End Function
 
-Function sArbeitstabelle_old as String
-	sArbeitstabelle_old=GetDocUserProperty(&quot;oArbeitstabelle_old&quot;)
-End Function
-
 Function sKontakte as String
 	sKontakte=GetDocUserProperty(&quot;oKontakte&quot;)
 End Function
 
 Function sKontakte_export as String
 	sKontakte_export=GetDocUserProperty(&quot;oKontakte_export&quot;)
-End Function
-
-Function sKontakte_old as String
-	sKontakte_old=GetDocUserProperty(&quot;oKontakte_old&quot;)
 End Function
 
 Function sAnsprechpartner as String
@@ -131,10 +123,6 @@ Function sAnsprechpartner_export as String
 	sAnsprechpartner_export=GetDocUserProperty(&quot;oAnsprechpartner_export&quot;)
 End Function
 
-Function sAnsprechpartner_old as String
-	sAnsprechpartner_old=GetDocUserProperty(&quot;oAnsprechpartner_old&quot;)
-End Function
-
 Function sZwischensummen as String
 	sZwischensummen=GetDocUserProperty(&quot;oZwischensummen&quot;)
 End Function
@@ -143,20 +131,12 @@ Function sZwischensummen_export as String
 	sZwischensummen_export=GetDocUserProperty(&quot;oZwischensummen_export&quot;)
 End Function
 
-Function sZwischensummen_old as String
-	sZwischensummen_old=GetDocUserProperty(&quot;oZwischensummen_old&quot;)
-End Function
-
 Function sBemerkungen as String
 	sBemerkungen=GetDocUserProperty(&quot;oBemerkungen&quot;)
 End Function
 
 Function sBemerkungen_export as String
 	sBemerkungen_export=GetDocUserProperty(&quot;oBemerkungen_export&quot;)
-End Function
-
-Function sBemerkungen_old as String
-	sBemerkungen_old=GetDocUserProperty(&quot;oBemerkungen_old&quot;)
 End Function
 
 Function iVorgang_cp as Integer
