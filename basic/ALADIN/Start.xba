@@ -64,8 +64,8 @@ Sub SerienbriefverteilerPrint()
 	Modul_oeffnen(&quot;PrintSerienbriefverteiler.ott&quot;)
 end Sub
 
-Sub ProjectPrint()
-	Modul_oeffnen(&quot;PrintProject.odt&quot;)
+Sub ProjektPrint()
+	Modul_oeffnen(&quot;PrintProjekt.odt&quot;)
 end Sub
 
 Sub ArbeitsblattPrint()
