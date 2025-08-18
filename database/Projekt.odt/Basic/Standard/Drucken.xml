@@ -513,11 +513,11 @@ Sub Druck_vorbereiten()
 								sErstellungsdatum_Korrekturrechnung=oRecord3.getString(1)
 							Wend
 							If sLieferbemerkung &lt;&gt; &quot;&quot; Then
-								sLieferbemerkung=&quot;Korrektur zu Rechnung &quot;&amp; lDocumentID_Korrekturrechnung &amp;_
+								sLieferbemerkung=&quot;Korrektur zu Rechnung &quot;&amp; sPraefix &amp;&quot; &quot;&amp; lDocumentID_Korrekturrechnung &amp;_
 									&quot; vom &quot;&amp; fConvDatum(sErstellungsdatum_Korrekturrechnung) &amp;&quot;\n\n&quot;&amp; sLieferbemerkung
 							Else
-								sLieferbemerkung=&quot;Korrektur zu Rechnung &quot;&amp; lDocumentID_Korrekturrechnung &amp;_
-										&quot; vom &quot;&amp; fConvDatum(sErstellungsdatum_Korrekturrechnung)
+								sLieferbemerkung=&quot;Korrektur zu Rechnung &quot;&amp; sPraefix &amp;&quot; &quot;&amp; lDocumentID_Korrekturrechnung &amp;_
+									&quot; vom &quot;&amp; fConvDatum(sErstellungsdatum_Korrekturrechnung)
 							End If
 						Else
 							MsgBox(&quot;Sie haben noch keine Rechnung ausgewählt, die korrigiert werden soll.&quot;&amp; Chr$(13) &amp;_
