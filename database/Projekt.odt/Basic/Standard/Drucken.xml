@@ -566,7 +566,7 @@ Sub Druck_vorbereiten()
 					SQL_execute(sSQL5)
 				End if
 				SetUserID(iUserID_lokal)
-				ProjectPrint()
+				ProjektPrint()
 			else
 				MsgBox(&quot;Sie haben noch keinen &quot;&amp; sKontakte &amp;&quot; ausgewählt!&quot;,16,sTitle_lokal)
 			End if

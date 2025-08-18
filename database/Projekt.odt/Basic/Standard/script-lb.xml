@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE library:library PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "library.dtd">
 <library:library xmlns:library="http://openoffice.org/2000/library" library:name="Standard" library:readonly="false" library:passwordprotected="false">
+ <library:element library:name="Infos"/>
+ <library:element library:name="Control"/>
+ <library:element library:name="Export"/>
+ <library:element library:name="SQL_Anweisungen"/>
+ <library:element library:name="Pos"/>
+ <library:element library:name="Routinen"/>
+ <library:element library:name="Funktionen_1"/>
+ <library:element library:name="Initialisierung"/>
+ <library:element library:name="Rechtschreibtest"/>
  <library:element library:name="commit"/>
+ <library:element library:name="Import"/>
  <library:element library:name="refreshs"/>
  <library:element library:name="aktualisieren"/>
- <library:element library:name="Import"/>
  <library:element library:name="XRechnung"/>
  <library:element library:name="Funktionen_2"/>
  <library:element library:name="Arbeitsblatt"/>
@@ -12,15 +21,6 @@
  <library:element library:name="Formular"/>
  <library:element library:name="Betriebsart"/>
  <library:element library:name="Schreibschutz"/>
- <library:element library:name="Document"/>
  <library:element library:name="Start"/>
- <library:element library:name="Rechtschreibtest"/>
- <library:element library:name="Initialisierung"/>
- <library:element library:name="Funktionen_1"/>
- <library:element library:name="Routinen"/>
- <library:element library:name="Pos"/>
- <library:element library:name="SQL_Anweisungen"/>
- <library:element library:name="Export"/>
- <library:element library:name="Control"/>
- <library:element library:name="Infos"/>
+ <library:element library:name="Document"/>
 </library:library>
