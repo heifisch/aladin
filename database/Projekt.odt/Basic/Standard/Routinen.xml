@@ -247,7 +247,7 @@ End Sub
 Sub AusgefuehrtAm()
 	Dim sLieferdatum as String
 	if lDocumentID &gt; 0 then
-		if fVorhanden(sBemerkungen)&gt;0 then
+		if fVorhanden(sBemerkungen) &gt; 0 then
 			sSQL1=&quot;SELECT Bemerkung FROM &quot;&amp; sBemerkungen &amp;&quot; WHERE DocumentID= &quot;&amp; lDocumentID &amp;&quot; AND Pos= &quot;&amp; fPos_neu
 			oRecord1=oResult(sSQL1)
 			While oRecord1.next()
@@ -465,7 +465,7 @@ Sub Kontaktdaten_setzen()
 	Dim sStundenverrechnungssatz as String
 
 	i13b=0
-	if InStr(sKontakte,&quot;Kunden&quot;) &gt; 0 then
+	if iDocTypID &lt; 7 Then
 		sSQL1=&quot;SELECT COALESCE(t1.Rabatt_Satz,0),&quot;&amp;_
 			&quot;COALESCE(t1.Skonto_Satz,0),&quot;&amp;_
 			&quot;COALESCE(t1.MwST_Satz,0),&quot;&amp;_
@@ -488,6 +488,10 @@ Sub Kontaktdaten_setzen()
 			s13bText=oRecord1.getString(9)
 		Wend
 
+		If iOption_USt_befreit = 1 Then
+			i13b=0
+		End If
+
 		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
 			&quot; SET AnsprechpartnerID=NULL&quot;&amp;_
 			&quot;,Rabatt_Satz=&quot;&amp; sRabatt_Satz &amp;_
@@ -498,7 +502,7 @@ Sub Kontaktdaten_setzen()
 			&quot;,Materialaufschlagsatz=&quot;&amp; sMaterialaufschlagsatz &amp;_
 			&quot;,Erstellungsdatum=(date_add(now(),interval 0 month))&quot;
 
-		if InStr(sTabelle1,&quot;Angebote1&quot;)&gt;0 then 	
+		if iDocTypID = 1 Then 	
 			if CDbl_with_Dot(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day))&quot;&amp;_
 					&quot;,Skonto_bis=NULL &quot;&amp;_
@@ -510,7 +514,7 @@ Sub Kontaktdaten_setzen()
 					&quot;,13b=&quot;&amp; i13b &amp;_
 					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
 			End if
-		elseif InStr(sTabelle1,&quot;Rechnungen1&quot;)&gt;0 then
+		elseif iDocTypID = 5 then
 			if CDbl_with_Dot(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 				sSQL2=sSQL2 &amp;&quot;,gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iFaellig_Tage &amp;&quot; day))&quot;&amp;_
 					&quot;,Skonto_bis=NULL&quot;&amp;_
@@ -534,6 +538,7 @@ Sub Kontaktdaten_setzen()
 					&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
 			End if
 		End if
+		SQL_execute(sSQL2)
 	
 		if CDbl_with_Dot(oField_MVS.BoundField.string) &gt; 0 then
 			if CDbl_with_Dot(oField_MVS.BoundField.string) &lt;&gt; CDbl_with_Dot(sSQL_Result(sStundenverrechnungssatz &amp;&quot;/60&quot;)) then
@@ -551,12 +556,6 @@ Sub Kontaktdaten_setzen()
 			oField_MVS.commit()
 			oForm_Document.updateRow()
 		End if
-	else
-		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET AnsprechpartnerID=NULL WHERE DocumentID=&quot;&amp; lDocumentID	
-	End if
-
-	SQL_execute(sSQL2)
-	if iDocTypID &lt; 7 then
 		if i13b=0 then
 			sSQL3=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET 13bText=&apos;&apos; WHERE DocumentID=&quot;&amp; lDocumentID	
 			SQL_execute(sSQL3)
@@ -564,14 +563,17 @@ Sub Kontaktdaten_setzen()
 			sSQL3=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET 13bText=&apos;&quot;&amp; s13bText &amp;&quot;&apos; WHERE DocumentID=&quot;&amp; lDocumentID	
 			SQL_execute(sSQL3)
 		End if
-	end if
+	else
+		sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET AnsprechpartnerID=NULL WHERE DocumentID=&quot;&amp; lDocumentID	
+		SQL_execute(sSQL2)
+	End if
 End Sub
 
 Sub Datum_setzen_manuel()
 	Dim sSkonto_Satz as String
 
 	if lKontaktID &gt; 0 then
-		if InStr(sKontakte,&quot;Kunden&quot;) &gt; 0 then
+		if iDocTypID &lt; 7 then
 			sSQL1=&quot;SELECT COALESCE(Skonto_Satz,0),&quot;&amp;_
 				&quot;Skonto_Tage,Faellig_Tage&quot;&amp;_
 				&quot; FROM &quot;&amp; sKontakte &amp;_
@@ -582,7 +584,7 @@ Sub Datum_setzen_manuel()
 				iSkonto_Tage=oRecord1.getInt(2)
 				iFaellig_Tage=oRecord1.getInt(3)
 			Wend
-			if InStr(sTabelle1,&quot;Angebote1&quot;)&gt;0 then 	
+			if iDocTypID = 1 then 	
 				if CDbl_with_Dot(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 					sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
 						&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; iGueltig &amp;&quot; Day))&quot;&amp;_
@@ -595,7 +597,7 @@ Sub Datum_setzen_manuel()
 						&quot; WHERE DocumentID=&quot;&amp; lDocumentID	
 				End if
 				SQL_execute(sSQL2)
-			elseif InStr(sTabelle1,&quot;Rechnungen1&quot;)&gt;0 then
+			elseif iDocTypID = 5 then
 				if CDbl_with_Dot(sSkonto_Satz) = 0 OR iSkonto_Tage = 0 then
 					sSQL2=&quot;UPDATE &quot;&amp; sTabelle1 &amp;_
 						&quot; SET gueltig_bis=(date_add(Erstellungsdatum,interval &quot;&amp; fFaellig_Tage &amp;&quot; day))&quot;&amp;_

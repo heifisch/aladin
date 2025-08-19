@@ -20,6 +20,14 @@ Function iExport as Integer
 End Function
 
 Function iDocTypID as Integer
+&apos; 1: Angebote
+&apos; 2: Auftragsbestätigungen
+&apos; 3: Lieferscheine
+&apos; 4: Aufmaße
+&apos; 5: Rechnungen
+&apos; 6: Gutschriften
+&apos; 7: Preisanfragen
+&apos; 8: Bestellungen
 	iDocTypID=CInt(GetDocUserProperty(&quot;oDocTypID&quot;))
 End Function
 

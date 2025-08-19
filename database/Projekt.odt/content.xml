@@ -1555,7 +1555,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.aktualisieren.ZwischenBemerkung_bearbeiten?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:checkbox form:name="CheckBox_LeistungsID" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control153" form:id="control153" form:label="LeistungsID" form:tab-stop="false" form:tab-index="10" form:visual-effect="flat" form:data-field="Option_1" form:input-required="false" form:image-position="center">
+          <form:checkbox form:name="CheckBox_LeistungsID" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control153" form:id="control153" form:label="LeistungsID" form:tab-stop="false" form:tab-index="10" form:visual-effect="flat" form:data-field="Option_1" form:input-required="false" form:current-state="checked" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CheckBox"/>
@@ -1600,7 +1600,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.AZ_anhaengen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:checkbox form:name="CheckBox_Bezeichnung" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control157" form:id="control157" form:label="Bezeichnung" form:tab-stop="false" form:tab-index="11" form:visual-effect="flat" form:data-field="Option_2" form:input-required="false" form:image-position="center">
+          <form:checkbox form:name="CheckBox_Bezeichnung" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control157" form:id="control157" form:label="Bezeichnung" form:tab-stop="false" form:tab-index="11" form:visual-effect="flat" form:data-field="Option_2" form:input-required="false" form:current-state="checked" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CheckBox"/>
