@@ -392,7 +392,7 @@ Sub Kontaktdaten_uebernehmen()
 		oList_Kontaktauswahl.commit()
 		if lKontaktID_old &gt; 0 then
 			if lKontaktID_old &lt;&gt; oList_Kontaktauswahl.BoundField.long then
-				vStatus=MsgBox(&quot;Wollen Sie den aktuellen &quot;&amp; sKontakte &amp;&quot; überschreiben?&quot;,36,sTitle_lokal)
+				vStatus=MsgBox(&quot;Wollen Sie den ausgewählten &quot;&amp; sKontakte &amp;&quot; für dieses Dokument ändern?&quot;,36,sTitle_lokal)
 				if vStatus=7 then
 					oList_Kontaktauswahl.BoundField.value = lKontaktID_old
 					oForm_Document.updateRow()
@@ -403,13 +403,35 @@ Sub Kontaktdaten_uebernehmen()
 				exit sub
 			End if
 		End if
+		If iDocTypID = 5 Then
+			If oList_RechnungsTypCode.BoundField.Long = 384 Then
+				vStatus=MsgBox(&quot;Die aktuelle Rechnung ist eine Rechnungskorrektur, &quot;&amp;_
+					&quot;bei der eine zu korrigierende Rechnung an den alten Kunden ausgewählt wurde.&quot;&amp; Chr$(13) &amp;_
+					&quot;Wenn Sie den Kunden ändern, wird die Auswahl der Rechnung aufgehoben.&quot;&amp; Chr$(13) &amp; Chr$(13) &amp;_
+					&quot;Wollen Sie mit der Änderung das Kunden fortfahren?&quot;,36,sTitle_lokal)
+				if vStatus=7 then
+					oList_Kontaktauswahl.BoundField.value = lKontaktID_old
+					oForm_Document.updateRow()
+					oForm_Document.reload()
+					exit Sub
+				Else
+					sSQL1=&quot;UPDATE &quot;&amp; sTabelle1 &amp;&quot; SET DocumentID_Korrekturrechnung=NULL WHERE DocumentID=&quot;&amp; lDocumentID
+					SQL_execute(sSQL1)
+					oForm_Document.updateRow()
+					Korrekturrechnung_anzeigen()
+				End if
+			End If
+		End If
+		
+		oList_Kontaktauswahl.commit()		
 		oForm_Document.updateRow()
 		Kontaktdaten_setzen()
+		
 		oList_Ansprechpartner.refresh()
 		if lKontaktID &gt; 0 then
 			Dim sBemerkung as String
-			sSQL1=&quot;SELECT distinct Bemerkung FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
-			oRecord1=oResult(sSQL1)
+			sSQL2=&quot;SELECT distinct Bemerkung FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID
+			oRecord1=oResult(sSQL2)
 			While oRecord1.next()
 				sBemerkung=oRecord1.getString(1)
 			Wend

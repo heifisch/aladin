@@ -18,7 +18,7 @@ Sub Korrekturrechnung_anzeigen()
 			arrPosGruppeUnten.Y=iPosGruppeUnten_Y
 			oList_Korrekturrechnung.EnableVisible=True
 			oList_Korrekturrechnung.ListSource=Array(&quot;SELECT DISTINCT CONCAT(DocumentID,&apos; - &apos;,Document_Name),DocumentID&quot;&amp;_
-				&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID &amp;&quot; ORDER BY DocumentID ASC&quot;)
+				&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE KontaktID=&quot;&amp; lKontaktID &amp;&quot; AND DocumentID &lt;&gt; &quot;&amp; lDocumentID &amp;&quot; ORDER BY DocumentID DESC&quot;)
 			oList_Korrekturrechnung.DataField=&quot;DocumentID_Korrekturrechnung&quot;
 			oList_Korrekturrechnung.refresh()
 			oLabel_Korrekturrechnung.EnableVisible=True
