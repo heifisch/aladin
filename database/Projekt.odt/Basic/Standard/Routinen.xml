@@ -65,7 +65,7 @@ Sub AZ_anhaengen()
 					sSQL2=&quot;INSERT INTO &quot;&amp; sArbeitstabelle &amp;_
 						&quot;(DocumentID,LeistungsID,Leistungsbezeichnung,Menge,&quot;&amp;_
 						&quot;Bauzeit,Einkaufspreis,Minutenverrechnungssatz,Materialaufschlagsatz,Lieferung,Leistung,EP,GP,Pos_TypID) &quot;&amp;_
-						&quot;SELECT &quot;&amp; lDocumentID &amp;&quot;,0,concat(t1.Document_Name,&apos; \nRE &apos;,t1.DocumentID,&apos; vom &apos;,DATE_FORMAT(t1.Erstellungsdatum,&apos;%d.%m.%Y&apos;)),1,&quot;&amp;_
+						&quot;SELECT &quot;&amp; lDocumentID &amp;&quot;,0,CONCAT(t1.Document_Name,&apos; \nAZ &apos;,t1.DocumentID,&apos; vom &apos;,DATE_FORMAT(t1.Erstellungsdatum,&apos;%d.%m.%Y&apos;)),1,&quot;&amp;_
 						&quot;0,t1.Zahlbetrag_ohne_MwSt,0,1,t1.MwSt_Satz,t1.Zahlbetrag_MwSt,t1.Zahlbetrag_ohne_MwSt,t1.Zahlbetrag_mit_MwSt,4 &quot;&amp;_
 						&quot;FROM &quot;&amp; sTabelle1 &amp;&quot; as t1 &quot;&amp;_
 						&quot;WHERE t1.DocumentID!=&quot;&amp; lDocumentID &amp;_
