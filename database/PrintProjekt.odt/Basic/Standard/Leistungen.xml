@@ -373,7 +373,7 @@ Sub Leistungen()
 			end if
 	
 			sLeistungstext=&quot;&quot;
-			if ifBestellnummer = 1 AND sBestellnummer &lt;&gt; &quot;&quot; then
+			if ifBestellnummer = 1 AND sBestellnummer &lt;&gt; &quot;&quot; AND iAZ = 0 then
 				sLeistungstext = sBestellnummer &amp; Chr(10)
 			End if
 			if ifLeistungsbezeichnung = 1 AND sLeistungsbezeichnung &lt;&gt; &quot;&quot; then
