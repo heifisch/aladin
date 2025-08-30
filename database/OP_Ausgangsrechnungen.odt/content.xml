@@ -91,8 +91,12 @@
       <style:paragraph-properties fo:text-align="end"/>
       <style:text-properties fo:font-family="Arial" style:font-style-name="Normal" style:font-family-generic="swiss" fo:font-size="10pt"/>
     </style:style>
+    <style:style style:name="P21" style:family="paragraph">
+      <style:paragraph-properties fo:text-align="center"/>
+      <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" fo:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable" fo:font-size="16pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
+    </style:style>
     <style:style style:name="gr1" style:family="graphic">
-      <style:graphic-properties style:protect="position size" style:writing-mode="lr-tb" loext:decorative="false" style:run-through="foreground" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page" draw:wrap-influence-on-position="once-concurrent" loext:allow-overlap="true" style:flow-with-text="false"/>
+      <style:graphic-properties style:protect="position size" style:writing-mode="lr-tb" loext:decorative="false" style:run-through="foreground" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page"/>
     </style:style>
     <style:style style:name="gr2" style:family="graphic">
       <style:graphic-properties fo:background-color="#00b8ff" style:protect="position size" loext:decorative="false"/>
@@ -132,6 +136,9 @@
     </style:style>
     <style:style style:name="gr14" style:family="graphic">
       <style:graphic-properties style:protect="position size" loext:decorative="false" style:run-through="foreground"/>
+    </style:style>
+    <style:style style:name="gr15" style:family="graphic">
+      <style:graphic-properties fo:background-color="#ffffcc" fo:border="solid #000000" style:protect="position size" loext:decorative="false" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="paragraph"/>
     </style:style>
     <number:date-style style:name="C129" number:language="en" number:country="US">
       <number:day number:style="long"/>
@@ -475,7 +482,7 @@
                 <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
               </form:properties>
             </form:formatted-text>
-            <form:fixed-text form:name="Label_Summe_nach_Abzug" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control61" form:id="control61" form:label="Summe nach Abzug"/>
+            <form:fixed-text form:name="Label_Summe_nach_Korrektur" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control61" form:id="control61" form:label="Summe nach Korrektur" form:for="control65"/>
             <form:formatted-text form:name="Field_MwSt_Satz" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control62" form:id="control62" form:readonly="true" form:tab-stop="false" form:tab-index="15" form:data-field="MwSt_Satz" form:input-required="false" form:validation="true" form:min-value="0" form:max-value="100">
               <form:properties>
                 <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
@@ -484,9 +491,9 @@
                 <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
               </form:properties>
             </form:formatted-text>
-            <form:fixed-text form:name="Label_Abzug_Satz" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control63" form:id="control63" form:label="Abzug-Satz"/>
-            <form:fixed-text form:name="Label_Abzug_Anlass" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control64" form:id="control64" form:label="Abzug wegen"/>
-            <form:formatted-text form:name="Field_Summe_nach_Abzug" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control65" form:id="control65" form:readonly="true" form:tab-stop="false" form:tab-index="18" form:data-field="Summe_nach_Abzug" form:input-required="false" form:validation="true" form:min-value="-1000000000" form:max-value="1000000000">
+            <form:fixed-text form:name="Label_Korrektur_Satz" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control63" form:id="control63" form:label="Korektur-Satz" form:for="control67"/>
+            <form:fixed-text form:name="Label_Korrektur_Anlass" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control64" form:id="control64" form:label="Korrektur wegen" form:for="control69"/>
+            <form:formatted-text form:name="Field_Summe_nach_Korrektur" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control65" form:id="control65" form:readonly="true" form:tab-stop="false" form:tab-index="18" form:data-field="Summe_nach_Korrektur" form:input-required="false" form:validation="true" form:min-value="-1000000000" form:max-value="1000000000">
               <form:properties>
                 <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                 <form:property form:property-name="CurrencySymbol" office:value-type="string" office:string-value=" €"/>
@@ -495,8 +502,8 @@
                 <form:property form:property-name="ShowThousandsSeparator" office:value-type="boolean" office:boolean-value="true"/>
               </form:properties>
             </form:formatted-text>
-            <form:fixed-text form:name="Label_Abzug" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control66" form:id="control66" form:label="Abzug"/>
-            <form:formatted-text form:name="Field_Abzug_Satz" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control67" form:id="control67" form:readonly="true" form:tab-stop="false" form:tab-index="21" form:data-field="Abzug_Satz" form:input-required="false" form:validation="true" form:min-value="-1000000000" form:max-value="1000000000">
+            <form:fixed-text form:name="Label_Korrektur" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control66" form:id="control66" form:label="Korrektur" form:for="control71,control83"/>
+            <form:formatted-text form:name="Field_Korrektur_Satz" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control67" form:id="control67" form:readonly="true" form:tab-stop="false" form:tab-index="21" form:data-field="Korrektur_Satz" form:input-required="false" form:validation="true" form:min-value="-1000000000" form:max-value="1000000000">
               <form:properties>
                 <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                 <form:property form:property-name="CurrencySymbol" office:value-type="string" office:string-value=" %"/>
@@ -514,7 +521,7 @@
                 <form:property form:property-name="SecondaryRefValue" office:value-type="string" office:string-value="0"/>
               </form:properties>
             </form:checkbox>
-            <form:text form:name="Field_Abzug_Anlass" form:control-implementation="ooo:com.sun.star.form.component.TextField" xml:id="control69" form:id="control69" form:readonly="true" form:tab-stop="false" form:tab-index="23" form:data-field="Abzug_Anlass" form:input-required="false" form:convert-empty-to-null="true">
+            <form:text form:name="Field_Korrektur_Anlass" form:control-implementation="ooo:com.sun.star.form.component.TextField" xml:id="control69" form:id="control69" form:readonly="true" form:tab-stop="false" form:tab-index="23" form:data-field="Korrektur_Anlass" form:input-required="false" form:convert-empty-to-null="true">
               <form:properties>
                 <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                 <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
@@ -522,7 +529,7 @@
               </form:properties>
             </form:text>
             <form:fixed-text form:name="Label_Sicherheitseinbehalt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control70" form:id="control70" form:label="Sicherheitseinbehalt"/>
-            <form:formatted-text form:name="Field_Abzug" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control71" form:id="control71" form:readonly="true" form:tab-stop="false" form:tab-index="25" form:data-field="Abzug" form:input-required="false" form:validation="true" form:min-value="0" form:max-value="1000">
+            <form:formatted-text form:name="Field_Korrektur" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control71" form:id="control71" form:readonly="true" form:tab-stop="false" form:tab-index="25" form:data-field="Korrektur" form:input-required="false" form:validation="true" form:min-value="0" form:max-value="1000">
               <form:properties>
                 <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                 <form:property form:property-name="CurrencySymbol" office:value-type="string" office:string-value=" €"/>
@@ -597,8 +604,15 @@
                 <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
               </form:properties>
             </form:formatted-text>
+            <form:text form:name="Field_Korrektur_Vorzeichen" form:control-implementation="ooo:com.sun.star.form.component.TextField" xml:id="control83" form:id="control83" form:readonly="true" form:tab-stop="false" form:tab-index="25" form:data-field="Korrektur_Vorzeichen" form:input-required="false" form:convert-empty-to-null="true">
+              <form:properties>
+                <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
+                <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="com.sun.star.form.control.TextField"/>
+                <form:property form:property-name="ObjIDinMSO" office:value-type="float" office:value="0"/>
+              </form:properties>
+            </form:text>
           </form:form>
-          <form:button form:name="Button_reset" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control83" form:id="control83" form:label="Filter reset" form:tab-stop="false" form:tab-index="7" office:target-frame="" form:delay-for-repeat="P0D" form:image-position="center">
+          <form:button form:name="Button_reset" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control84" form:id="control84" form:label="Filter reset" form:tab-stop="false" form:tab-index="7" office:target-frame="" form:delay-for-repeat="P0D" form:image-position="center">
             <form:properties>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
               <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
@@ -608,11 +622,11 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.Filter_reset?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:fixed-text form:name="Label_Tabelle" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control84" form:id="control84" form:label="Ausgangsrechnungen"/>
-          <form:fixed-text form:name="Label_Filter_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control85" form:id="control85" form:label="Filter (Jahr)"/>
-          <form:fixed-text form:name="Label_Filter_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control86" form:id="control86" form:label="Filter (Monat)"/>
-          <form:fixed-text form:name="Label_Filter_Status" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control87" form:id="control87" form:label="Filter (Status)"/>
-          <form:listbox form:name="List_Filter_Jahr" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control88" form:id="control88" form:dropdown="true" form:tab-stop="false" form:size="10" form:tab-index="1" form:data-field="Jahr" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct year(Erstellungsdatum),year(Erstellungsdatum) as Jahr from Rechnungen1 order by Jahr DESC">
+          <form:fixed-text form:name="Label_Tabelle" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control85" form:id="control85" form:label="Ausgangsrechnungen"/>
+          <form:fixed-text form:name="Label_Filter_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control86" form:id="control86" form:label="Filter (Jahr)"/>
+          <form:fixed-text form:name="Label_Filter_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control87" form:id="control87" form:label="Filter (Monat)"/>
+          <form:fixed-text form:name="Label_Filter_Status" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control88" form:id="control88" form:label="Filter (Status)"/>
+          <form:listbox form:name="List_Filter_Jahr" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control89" form:id="control89" form:dropdown="true" form:tab-stop="false" form:size="10" form:tab-index="1" form:data-field="Jahr" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct year(Erstellungsdatum),year(Erstellungsdatum) as Jahr from Rechnungen1 order by Jahr DESC">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
@@ -625,8 +639,8 @@
               <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn" xlink:href="vnd.sun.star.script:Standard.Routinen.Filter_Jahr_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:listbox>
-          <form:fixed-text form:name="Label_Rechnungsname" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control89" form:id="control89" form:label="Rechnungsname"/>
-          <form:listbox form:name="List_Filter_Monat" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control90" form:id="control90" form:dropdown="true" form:tab-stop="false" form:size="13" form:tab-index="2" form:data-field="Monat" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct t1.Monat,t1.MonatID FROM (Monate as t1 INNER JOIN Rechnungen1 as t2 ON t1.MonatID = Month(t2.Erstellungsdatum)) INNER JOIN Steuerung as t3 ON t3.ClientID=30 where (((YEAR(t2.Erstellungsdatum)=t3.Jahr and LENGTH(t3.Jahr) &gt; 0) or (YEAR(t2.Erstellungsdatum) like '%' and (LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0))) or t1.MonatID=t3.Monat) order by t1.MonatID ASC">
+          <form:fixed-text form:name="Label_Rechnungsname" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control90" form:id="control90" form:label="Rechnungsname"/>
+          <form:listbox form:name="List_Filter_Monat" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control91" form:id="control91" form:dropdown="true" form:tab-stop="false" form:size="13" form:tab-index="2" form:data-field="Monat" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct t1.Monat,t1.MonatID FROM (Monate as t1 INNER JOIN Rechnungen1 as t2 ON t1.MonatID = Month(t2.Erstellungsdatum)) INNER JOIN Steuerung as t3 ON t3.ClientID=30 where (((YEAR(t2.Erstellungsdatum)=t3.Jahr and LENGTH(t3.Jahr) &gt; 0) or (YEAR(t2.Erstellungsdatum) like '%' and (LENGTH(t3.Jahr) IS NULL OR LENGTH(t3.Jahr)=0))) or t1.MonatID=t3.Monat) order by t1.MonatID ASC">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
@@ -639,7 +653,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn" xlink:href="vnd.sun.star.script:Standard.Routinen.Filter_Monat_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:listbox>
-          <form:text form:name="Field_Suchstring" form:control-implementation="ooo:com.sun.star.form.component.TextField" xml:id="control91" form:id="control91" form:tab-stop="false" form:tab-index="5" form:max-length="255" form:data-field="Suchstring" form:input-required="false" form:convert-empty-to-null="true">
+          <form:text form:name="Field_Suchstring" form:control-implementation="ooo:com.sun.star.form.component.TextField" xml:id="control92" form:id="control92" form:tab-stop="false" form:tab-index="5" form:max-length="255" form:data-field="Suchstring" form:input-required="false" form:convert-empty-to-null="true">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.Edit"/>
@@ -649,7 +663,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.Routinen.Filter_Suchstring_setzen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:text>
-          <form:listbox form:name="List_Filter_Status" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control92" form:id="control92" form:dropdown="true" form:tab-stop="false" form:size="10" form:tab-index="3" form:data-field="Status" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct t1.Status,t1.Status as Stat from Rechnungen1 as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=30 where (((YEAR(t1.Erstellungsdatum)=t2.Jahr and LENGTH(t2.Jahr) &gt; 0) or (YEAR(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0))) and ((MONTH(t1.Erstellungsdatum)=t2.Monat and LENGTH(t2.Monat) &gt; 0) or (MONTH(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0))) or t1.Status=t2.Status)">
+          <form:listbox form:name="List_Filter_Status" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control93" form:id="control93" form:dropdown="true" form:tab-stop="false" form:size="10" form:tab-index="3" form:data-field="Status" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct t1.Status,t1.Status as Stat from Rechnungen1 as t1 INNER JOIN Steuerung as t2 ON t2.ClientID=30 where (((YEAR(t1.Erstellungsdatum)=t2.Jahr and LENGTH(t2.Jahr) &gt; 0) or (YEAR(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0))) and ((MONTH(t1.Erstellungsdatum)=t2.Monat and LENGTH(t2.Monat) &gt; 0) or (MONTH(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0))) or t1.Status=t2.Status)">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
@@ -662,7 +676,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn" xlink:href="vnd.sun.star.script:Standard.Routinen.Filter_Status_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:listbox>
-          <form:radio form:name="Option_Rechnungen" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control93" form:id="control93" form:label="Rechnungen" form:current-selected="true" form:selected="true" form:visual-effect="flat" form:value="1" form:data-field="Option_1" form:input-required="false" form:image-position="center">
+          <form:radio form:name="Option_Rechnungen" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control94" form:id="control94" form:label="Rechnungen" form:current-selected="true" form:selected="true" form:visual-effect="flat" form:value="1" form:data-field="Option_1" form:input-required="false" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.RadioButton"/>
@@ -674,7 +688,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:itemstatechange" xlink:href="vnd.sun.star.script:Standard.Routinen.Tabelle_setzen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:radio>
-          <form:listbox form:name="List_Documentauswahl" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control94" form:id="control94" form:dropdown="true" form:tab-stop="false" form:size="50" form:tab-index="6" form:data-field="DocumentID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct concat(t3.Name1,'  --&gt;  ',t1.Document_Name) as Name,t1.DocumentID from (Rechnungen1 as t1 INNER JOIN Kunden as t3 ON t3.KontaktID=t1.KontaktID) INNER JOIN Steuerung as t2 ON t2.ClientID=30 where ((((YEAR(t1.Erstellungsdatum)=t2.Jahr and LENGTH(t2.Jahr) &gt; 0) or (YEAR(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0))) and ((MONTH(t1.Erstellungsdatum)=t2.Monat and LENGTH(t2.Monat) &gt; 0) or (MONTH(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0))) and ((t1.Status=t2.Status and LENGTH(t2.Status) &gt; 0) or (t1.Status like '%' and (LENGTH(t2.Status) IS NULL OR LENGTH(t2.Status)=0))) and ((t1.Document_Name like concat('%',t2.Suchstring,'%') and LENGTH(t2.Suchstring) &gt; 0) or (t1.Document_Name like '%' and (LENGTH(t2.Suchstring) IS NULL OR LENGTH(t2.Suchstring)=0))) and ((t1.KontaktID=t2.KundenID and LENGTH(t2.KundenID) &gt; 0) or (t1.KontaktID like '%' and (LENGTH(t2.KundenID) IS NULL OR LENGTH(t2.KundenID)=0)))) or t1.DocumentID=t2.DocumentID) order by t1.DocumentID DESC">
+          <form:listbox form:name="List_Documentauswahl" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control95" form:id="control95" form:dropdown="true" form:tab-stop="false" form:size="50" form:tab-index="6" form:data-field="DocumentID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct concat(t3.Name1,'  --&gt;  ',t1.Document_Name) as Name,t1.DocumentID from (Rechnungen1 as t1 INNER JOIN Kunden as t3 ON t3.KontaktID=t1.KontaktID) INNER JOIN Steuerung as t2 ON t2.ClientID=30 where ((((YEAR(t1.Erstellungsdatum)=t2.Jahr and LENGTH(t2.Jahr) &gt; 0) or (YEAR(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0))) and ((MONTH(t1.Erstellungsdatum)=t2.Monat and LENGTH(t2.Monat) &gt; 0) or (MONTH(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0))) and ((t1.Status=t2.Status and LENGTH(t2.Status) &gt; 0) or (t1.Status like '%' and (LENGTH(t2.Status) IS NULL OR LENGTH(t2.Status)=0))) and ((t1.Document_Name like concat('%',t2.Suchstring,'%') and LENGTH(t2.Suchstring) &gt; 0) or (t1.Document_Name like '%' and (LENGTH(t2.Suchstring) IS NULL OR LENGTH(t2.Suchstring)=0))) and ((t1.KontaktID=t2.KundenID and LENGTH(t2.KundenID) &gt; 0) or (t1.KontaktID like '%' and (LENGTH(t2.KundenID) IS NULL OR LENGTH(t2.KundenID)=0)))) or t1.DocumentID=t2.DocumentID) order by t1.DocumentID DESC">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
@@ -687,7 +701,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn" xlink:href="vnd.sun.star.script:Standard.Routinen.List_Rechnungsname_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:listbox>
-          <form:radio form:name="Option_Gutschriften" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control95" form:id="control95" form:label="Gutschriften" form:visual-effect="flat" form:value="2" form:data-field="Option_1" form:input-required="false" form:image-position="center">
+          <form:radio form:name="Option_Gutschriften" form:control-implementation="ooo:com.sun.star.form.component.RadioButton" xml:id="control96" form:id="control96" form:label="Gutschriften" form:visual-effect="flat" form:value="2" form:data-field="Option_1" form:input-required="false" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.RadioButton"/>
@@ -699,21 +713,21 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:itemstatechange" xlink:href="vnd.sun.star.script:Standard.Routinen.Tabelle_setzen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:radio>
-          <form:fixed-text form:name="Label_Filter_Suchstring" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control96" form:id="control96" form:label="Filter (Suchstring)"/>
-          <form:fixed-text form:name="Field_Umsatz_Monat_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control97" form:id="control97">
+          <form:fixed-text form:name="Label_Filter_Suchstring" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control97" form:id="control97" form:label="Filter (Suchstring)"/>
+          <form:fixed-text form:name="Field_Umsatz_Monat_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control98" form:id="control98">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Umsatz ohne MwSt"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Summe_Rechnungen_Kunde" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control98" form:id="control98"/>
-          <form:fixed-text form:name="Field_Umsatz_aktuelles_Jahr_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control99" form:id="control99">
+          <form:fixed-text form:name="Field_Summe_Rechnungen_Kunde" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control99" form:id="control99"/>
+          <form:fixed-text form:name="Field_Umsatz_aktuelles_Jahr_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control100" form:id="control100">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Umsatz ohne MwSt"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Summe_aller_offenen_Rechnungen" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control100" form:id="control100"/>
-          <form:fixed-text form:name="Label_Umsatz_im_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control101" form:id="control101" form:label="Umsatz im Monat"/>
-          <form:button form:name="Button_Dokument_ansehen" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control102" form:id="control102" form:label="Dokument ansehen" form:tab-stop="false" form:tab-index="7" office:target-frame="" form:delay-for-repeat="P0D" form:image-position="center">
+          <form:fixed-text form:name="Field_Summe_aller_offenen_Rechnungen" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control101" form:id="control101"/>
+          <form:fixed-text form:name="Label_Umsatz_im_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control102" form:id="control102" form:label="Umsatz im Monat"/>
+          <form:button form:name="Button_Dokument_ansehen" form:control-implementation="ooo:com.sun.star.form.component.CommandButton" xml:id="control103" form:id="control103" form:label="Dokument ansehen" form:tab-stop="false" form:tab-index="7" office:target-frame="" form:delay-for-repeat="P0D" form:image-position="center">
             <form:properties>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CommandButton"/>
               <form:property form:property-name="DispatchURLInternal" office:value-type="boolean" office:boolean-value="true"/>
@@ -723,19 +737,19 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.Dokument_Anzeigen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:fixed-text form:name="Field_Umsatz_aktueller_Monat_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control103" form:id="control103">
+          <form:fixed-text form:name="Field_Umsatz_aktueller_Monat_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control104" form:id="control104">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Umsatz ohne MwSt"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Umsatz_Jahr_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control104" form:id="control104">
+          <form:fixed-text form:name="Field_Umsatz_Jahr_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control105" form:id="control105">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Umsatz ohne MwSt"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Label_Summe_Rechnungen_Kunde" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control105" form:id="control105" form:label="Summe der offenen Rechnungen des Kunden"/>
-          <form:fixed-text form:name="Label_Umsatz_Kalenderjahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control106" form:id="control106" form:label="Umsatz im aktuellen Kalenderjahr"/>
-          <form:listbox form:name="List_Kalenderjahr" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control107" form:id="control107" form:dropdown="true" form:tab-stop="false" form:size="30" form:tab-index="3" form:data-field="GruppenID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct year(t1.Erstellungsdatum),year(t1.Erstellungsdatum) as Jahr from Rechnungen1 as t1 order by Jahr DESC">
+          <form:fixed-text form:name="Label_Summe_Rechnungen_Kunde" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control106" form:id="control106" form:label="Summe der offenen Rechnungen des Kunden"/>
+          <form:fixed-text form:name="Label_Umsatz_Kalenderjahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control107" form:id="control107" form:label="Umsatz im aktuellen Kalenderjahr"/>
+          <form:listbox form:name="List_Kalenderjahr" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control108" form:id="control108" form:dropdown="true" form:tab-stop="false" form:size="30" form:tab-index="3" form:data-field="GruppenID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct year(t1.Erstellungsdatum),year(t1.Erstellungsdatum) as Jahr from Rechnungen1 as t1 order by Jahr DESC">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
@@ -747,9 +761,9 @@
               <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.Routinen.Kalenderjahr_uebernehmen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:listbox>
-          <form:fixed-text form:name="Label_Umsatz_im_aktuellen_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control108" form:id="control108" form:label="Umsatz im aktuellen Monat"/>
-          <form:fixed-text form:name="Label_Kalenderjahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control109" form:id="control109" form:label="Kalenderjahr"/>
-          <form:listbox form:name="List_Monat" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control110" form:id="control110" form:dropdown="true" form:tab-stop="false" form:size="13" form:tab-index="3" form:data-field="HauptgruppenID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct Monat,MonatID from Monate">
+          <form:fixed-text form:name="Label_Umsatz_im_aktuellen_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control109" form:id="control109" form:label="Umsatz im aktuellen Monat"/>
+          <form:fixed-text form:name="Label_Kalenderjahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control110" form:id="control110" form:label="Kalenderjahr"/>
+          <form:listbox form:name="List_Monat" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control111" form:id="control111" form:dropdown="true" form:tab-stop="false" form:size="13" form:tab-index="3" form:data-field="HauptgruppenID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct Monat,MonatID from Monate">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
@@ -761,67 +775,67 @@
               <script:event-listener script:language="ooo:script" script:event-name="dom:change" xlink:href="vnd.sun.star.script:Standard.Routinen.Monat_uebernehmen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:listbox>
-          <form:fixed-text form:name="Field_Umsatz_bis_Monat_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control111" form:id="control111">
+          <form:fixed-text form:name="Field_Umsatz_bis_Monat_ohne_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control112" form:id="control112">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Umsatz ohne MwSt"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Label_Umsatz_im_Kalenderjahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control112" form:id="control112" form:label="Umsatz im Kalenderjahr"/>
-          <form:fixed-text form:name="Label_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control113" form:id="control113" form:label="Monat"/>
-          <form:fixed-text form:name="Label_Umsatz_bis_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control114" form:id="control114" form:label="Umsatz bis Monat"/>
-          <form:fixed-text form:name="Label_Summe_aller_offenen_Rechnungen" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control115" form:id="control115" form:label="Summe aller offenen Rechnungen"/>
-          <form:fixed-text form:name="Field_Umsatz_aktuelles_Jahr_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control116" form:id="control116">
+          <form:fixed-text form:name="Label_Umsatz_im_Kalenderjahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control113" form:id="control113" form:label="Umsatz im Kalenderjahr"/>
+          <form:fixed-text form:name="Label_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control114" form:id="control114" form:label="Monat"/>
+          <form:fixed-text form:name="Label_Umsatz_bis_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control115" form:id="control115" form:label="Umsatz bis Monat"/>
+          <form:fixed-text form:name="Label_Summe_aller_offenen_Rechnungen" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control116" form:id="control116" form:label="Summe aller offenen Rechnungen"/>
+          <form:fixed-text form:name="Field_Umsatz_aktuelles_Jahr_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control117" form:id="control117">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Umsatz mit MwSt"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Zahlungen_aktuelles_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control117" form:id="control117">
+          <form:fixed-text form:name="Field_Zahlungen_aktuelles_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control118" form:id="control118">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe Zahlungen"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Umsatz_aktueller_Monat_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control118" form:id="control118">
+          <form:fixed-text form:name="Field_Umsatz_aktueller_Monat_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control119" form:id="control119">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Umsatz mit MwSt"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Zahlungen_aktueller_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control119" form:id="control119">
+          <form:fixed-text form:name="Field_Zahlungen_aktueller_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control120" form:id="control120">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe Zahlungen"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Umsatz_Jahr_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control120" form:id="control120">
+          <form:fixed-text form:name="Field_Umsatz_Jahr_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control121" form:id="control121">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Umsatz mit MwSt"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Zahlungen_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control121" form:id="control121">
+          <form:fixed-text form:name="Field_Zahlungen_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control122" form:id="control122">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Zahlungen Jahr"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Umsatz_Monat_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control122" form:id="control122">
+          <form:fixed-text form:name="Field_Umsatz_Monat_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control123" form:id="control123">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Umsatz mit MwSt"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Zahlungen_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control123" form:id="control123">
+          <form:fixed-text form:name="Field_Zahlungen_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control124" form:id="control124">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Zahlungen Monat"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Umsatz_bis_Monat_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control124" form:id="control124">
+          <form:fixed-text form:name="Field_Umsatz_bis_Monat_mit_MwSt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control125" form:id="control125">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Umsatz mit MwSt"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Zahlungen_bis_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control125" form:id="control125">
+          <form:fixed-text form:name="Field_Zahlungen_bis_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control126" form:id="control126">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Zahlungen bis Monat"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Label_Filter_Kunde" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control126" form:id="control126" form:label="Filter (Kunde)"/>
-          <form:listbox form:name="List_Filter_Projekte" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control127" form:id="control127" form:dropdown="true" form:tab-stop="false" form:size="30" form:tab-index="4" form:data-field="ProjektID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through">
+          <form:fixed-text form:name="Label_Filter_Kunde" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control127" form:id="control127" form:label="Filter (Kunde)"/>
+          <form:listbox form:name="List_Filter_Projekte" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control128" form:id="control128" form:dropdown="true" form:tab-stop="false" form:size="30" form:tab-index="4" form:data-field="ProjektID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
@@ -833,8 +847,8 @@
               <script:event-listener script:language="ooo:script" script:event-name="dom:DOMFocusIn" xlink:href="vnd.sun.star.script:Standard.Routinen.Filter_Projekte_refresh?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:listbox>
-          <form:fixed-text form:name="Label_Filter_Projekt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control128" form:id="control128" form:label="Filter (Projekt)"/>
-          <form:listbox form:name="List_Filter_Kunde" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control129" form:id="control129" form:dropdown="true" form:tab-stop="false" form:size="30" form:tab-index="4" form:data-field="KundenID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct concat(t3.Name1,' ',t3.Vorname,' ',t3.Name2,'  --&gt;  ',t3.Ort) as Name,t1.KontaktID from (Rechnungen1 as t1 INNER JOIN Kunden as t3 ON t3.KontaktID=t1.KontaktID) INNER JOIN Steuerung as t2 ON t2.ClientID=30 where (((YEAR(t1.Erstellungsdatum)=t2.Jahr and LENGTH(t2.Jahr) &gt; 0) or (YEAR(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0))) and ((MONTH(t1.Erstellungsdatum)=t2.Monat and LENGTH(t2.Monat) &gt; 0) or (MONTH(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0))) and ((t1.Status=t2.Status and LENGTH(t2.Status) &gt; 0) or (t1.Status like '%' and (LENGTH(t2.Status) IS NULL OR LENGTH(t2.Status)=0))) or t1.KontaktID=t2.KundenID) order by t3.Name1 ASC">
+          <form:fixed-text form:name="Label_Filter_Projekt" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control129" form:id="control129" form:label="Filter (Projekt)"/>
+          <form:listbox form:name="List_Filter_Kunde" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control130" form:id="control130" form:dropdown="true" form:tab-stop="false" form:size="30" form:tab-index="4" form:data-field="KundenID" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select distinct concat(t3.Name1,' ',t3.Vorname,' ',t3.Name2,'  --&gt;  ',t3.Ort) as Name,t1.KontaktID from (Rechnungen1 as t1 INNER JOIN Kunden as t3 ON t3.KontaktID=t1.KontaktID) INNER JOIN Steuerung as t2 ON t2.ClientID=30 where (((YEAR(t1.Erstellungsdatum)=t2.Jahr and LENGTH(t2.Jahr) &gt; 0) or (YEAR(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Jahr) IS NULL OR LENGTH(t2.Jahr)=0))) and ((MONTH(t1.Erstellungsdatum)=t2.Monat and LENGTH(t2.Monat) &gt; 0) or (MONTH(t1.Erstellungsdatum) like '%' and (LENGTH(t2.Monat) IS NULL OR LENGTH(t2.Monat)=0))) and ((t1.Status=t2.Status and LENGTH(t2.Status) &gt; 0) or (t1.Status like '%' and (LENGTH(t2.Status) IS NULL OR LENGTH(t2.Status)=0))) or t1.KontaktID=t2.KundenID) order by t3.Name1 ASC">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.ListBox"/>
@@ -905,151 +919,152 @@
         <text:user-field-decl office:value-type="string" office:string-value="" text:name="DB_ReadOnlyField"/>
         <text:user-field-decl office:value-type="string" office:string-value="111111111111" text:name="DB_InputUsed"/>
       </text:user-field-decls>
-      <draw:g text:anchor-type="page" text:anchor-page-number="1" draw:z-index="0" draw:name="Form1" draw:style-name="gr1">
-        <draw:control draw:style-name="gr2" draw:text-style-name="P1" svg:width="4.5cm" svg:height="1.001cm" svg:x="14.847cm" svg:y="0.3cm" draw:control="control83"/>
-        <draw:control draw:style-name="gr3" draw:text-style-name="P2" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="0.801cm" draw:control="control92"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="0.3cm" draw:control="control87"/>
-        <draw:control draw:style-name="gr3" draw:text-style-name="P2" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="0.801cm" draw:control="control90"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="0.3cm" draw:control="control86"/>
-        <draw:control draw:style-name="gr3" draw:text-style-name="P2" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="0.801cm" draw:control="control88"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="0.3cm" draw:control="control85"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.247cm" svg:height="0.502cm" svg:x="10.1cm" svg:y="1.551cm" draw:control="control96"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P4" svg:width="9.249cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="2.052cm" draw:control="control91"/>
-        <draw:control draw:style-name="gr6" draw:text-style-name="P5" svg:width="12.048cm" svg:height="1.001cm" svg:x="3.8cm" svg:y="5.308cm" draw:control="control84"/>
-        <draw:control draw:style-name="gr3" draw:text-style-name="P2" svg:width="19.031cm" svg:height="0.502cm" svg:x="0.3cm" svg:y="4.528cm" draw:control="control94"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="19.031cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="4.027cm" draw:control="control89"/>
-        <draw:control draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="17.36cm" draw:control="control24"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="16.861cm" draw:control="control20"/>
-        <draw:control draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="17.362cm" draw:control="control23"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="16.861cm" draw:control="control17"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="14.842cm" draw:control="control26"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="14.341cm" draw:control="control18"/>
-        <draw:control draw:style-name="gr8" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.1cm" svg:y="14.84cm" draw:control="control19"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.1cm" svg:y="14.341cm" draw:control="control15"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.491cm" svg:x="5.098cm" svg:y="16.094cm" draw:control="control32"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="15.591cm" draw:control="control28"/>
-        <draw:control draw:style-name="gr3" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="19.863cm" draw:control="control48"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="19.362cm" draw:control="control45"/>
-        <draw:control draw:style-name="gr8" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.491cm" svg:x="10.098cm" svg:y="16.092cm" draw:control="control34"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="15.591cm" draw:control="control27"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="19.863cm" draw:control="control50"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="19.362cm" draw:control="control35"/>
-        <draw:control draw:style-name="gr2" draw:text-style-name="P8" svg:width="4.499cm" svg:height="0.997cm" svg:x="14.847cm" svg:y="19.362cm" draw:control="control14"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P9" svg:width="6.282cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="8.507cm" draw:control="control5"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.296cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="8.001cm" draw:control="control3"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P9" svg:width="3.001cm" svg:height="0.5cm" svg:x="6.581cm" svg:y="8.507cm" draw:control="control1"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P2" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="7.269cm" draw:control="control42"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="6.768cm" draw:control="control30"/>
-        <draw:control draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="17.364cm" draw:control="control21"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="16.861cm" draw:control="control16"/>
-        <draw:control draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="19.863cm" draw:control="control47"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="19.362cm" draw:control="control40"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P2" svg:width="4.49cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="7.28cm" draw:control="control29"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.49cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="6.779cm" draw:control="control22"/>
-        <draw:control draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.499cm" svg:height="0.5cm" svg:x="14.849cm" svg:y="18.618cm" draw:control="control44"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.499cm" svg:height="0.5cm" svg:x="14.849cm" svg:y="18.117cm" draw:control="control38"/>
-        <draw:control draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="18.613cm" draw:control="control43"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="18.112cm" draw:control="control37"/>
-        <draw:control draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="18.613cm" draw:control="control41"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="18.112cm" draw:control="control36"/>
-        <draw:control draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="18.613cm" draw:control="control39"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="18.112cm" draw:control="control33"/>
-        <draw:line draw:style-name="gr9" draw:text-style-name="P10" svg:x1="0.3cm" svg:y1="20.569cm" svg:x2="19.395cm" svg:y2="20.569cm">
+      <draw:g text:anchor-type="page" text:anchor-page-number="1" draw:z-index="3" draw:name="DrawObject1" draw:style-name="gr1">
+        <draw:control draw:name="Form1" draw:style-name="gr2" draw:text-style-name="P1" svg:width="4.5cm" svg:height="1.001cm" svg:x="14.847cm" svg:y="0.3cm" draw:control="control84"/>
+        <draw:control draw:name="Form2" draw:style-name="gr3" draw:text-style-name="P2" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="0.801cm" draw:control="control93"/>
+        <draw:control draw:name="Form3" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="0.3cm" draw:control="control88"/>
+        <draw:control draw:name="Form4" draw:style-name="gr3" draw:text-style-name="P2" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="0.801cm" draw:control="control91"/>
+        <draw:control draw:name="Form5" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="0.3cm" draw:control="control87"/>
+        <draw:control draw:name="Form6" draw:style-name="gr3" draw:text-style-name="P2" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="0.801cm" draw:control="control89"/>
+        <draw:control draw:name="Form7" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="0.3cm" draw:control="control86"/>
+        <draw:control draw:name="Form8" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.247cm" svg:height="0.502cm" svg:x="10.1cm" svg:y="1.551cm" draw:control="control97"/>
+        <draw:control draw:name="Form9" draw:style-name="gr5" draw:text-style-name="P4" svg:width="9.249cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="2.052cm" draw:control="control92"/>
+        <draw:control draw:name="Form10" draw:style-name="gr6" draw:text-style-name="P5" svg:width="12.048cm" svg:height="1.001cm" svg:x="3.8cm" svg:y="5.308cm" draw:control="control85"/>
+        <draw:control draw:name="Form11" draw:style-name="gr3" draw:text-style-name="P2" svg:width="19.031cm" svg:height="0.502cm" svg:x="0.3cm" svg:y="4.528cm" draw:control="control95"/>
+        <draw:control draw:name="Form12" draw:style-name="gr4" draw:text-style-name="P3" svg:width="19.031cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="4.027cm" draw:control="control90"/>
+        <draw:control draw:name="Form13" draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="17.36cm" draw:control="control24"/>
+        <draw:control draw:name="Form14" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="16.861cm" draw:control="control20"/>
+        <draw:control draw:name="Form15" draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="17.362cm" draw:control="control23"/>
+        <draw:control draw:name="Form16" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="16.861cm" draw:control="control17"/>
+        <draw:control draw:name="Form17" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="14.842cm" draw:control="control26"/>
+        <draw:control draw:name="Form18" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="14.341cm" draw:control="control18"/>
+        <draw:control draw:name="Form19" draw:style-name="gr8" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.1cm" svg:y="14.84cm" draw:control="control19"/>
+        <draw:control draw:name="Form20" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.1cm" svg:y="14.341cm" draw:control="control15"/>
+        <draw:control draw:name="Form21" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.491cm" svg:x="5.098cm" svg:y="16.094cm" draw:control="control32"/>
+        <draw:control draw:name="Form22" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="15.591cm" draw:control="control28"/>
+        <draw:control draw:name="Form23" draw:style-name="gr3" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="19.863cm" draw:control="control48"/>
+        <draw:control draw:name="Form24" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="19.362cm" draw:control="control45"/>
+        <draw:control draw:name="Form25" draw:style-name="gr8" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.491cm" svg:x="10.098cm" svg:y="16.092cm" draw:control="control34"/>
+        <draw:control draw:name="Form26" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="15.591cm" draw:control="control27"/>
+        <draw:control draw:name="Form27" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="19.863cm" draw:control="control50"/>
+        <draw:control draw:name="Form28" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="19.362cm" draw:control="control35"/>
+        <draw:control draw:name="Form29" draw:style-name="gr2" draw:text-style-name="P8" svg:width="4.499cm" svg:height="0.997cm" svg:x="14.847cm" svg:y="19.362cm" draw:control="control14"/>
+        <draw:control draw:name="Form30" draw:style-name="gr5" draw:text-style-name="P9" svg:width="6.282cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="8.507cm" draw:control="control5"/>
+        <draw:control draw:name="Form31" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.296cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="8.001cm" draw:control="control3"/>
+        <draw:control draw:name="Form32" draw:style-name="gr5" draw:text-style-name="P9" svg:width="3.001cm" svg:height="0.5cm" svg:x="6.581cm" svg:y="8.507cm" draw:control="control1"/>
+        <draw:control draw:name="Form33" draw:style-name="gr5" draw:text-style-name="P2" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="7.269cm" draw:control="control42"/>
+        <draw:control draw:name="Form34" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="6.768cm" draw:control="control30"/>
+        <draw:control draw:name="Form35" draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="17.364cm" draw:control="control21"/>
+        <draw:control draw:name="Form36" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="16.861cm" draw:control="control16"/>
+        <draw:control draw:name="Form37" draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="19.863cm" draw:control="control47"/>
+        <draw:control draw:name="Form38" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="19.362cm" draw:control="control40"/>
+        <draw:control draw:name="Form39" draw:style-name="gr5" draw:text-style-name="P2" svg:width="4.49cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="7.28cm" draw:control="control29"/>
+        <draw:control draw:name="Form40" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.49cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="6.779cm" draw:control="control22"/>
+        <draw:control draw:name="Form41" draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.499cm" svg:height="0.5cm" svg:x="14.849cm" svg:y="18.618cm" draw:control="control44"/>
+        <draw:control draw:name="Form42" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.499cm" svg:height="0.5cm" svg:x="14.849cm" svg:y="18.117cm" draw:control="control38"/>
+        <draw:control draw:name="Form43" draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="18.613cm" draw:control="control43"/>
+        <draw:control draw:name="Form44" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="18.112cm" draw:control="control37"/>
+        <draw:control draw:name="Form45" draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="18.613cm" draw:control="control41"/>
+        <draw:control draw:name="Form46" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="18.112cm" draw:control="control36"/>
+        <draw:control draw:name="Form47" draw:style-name="gr7" draw:text-style-name="P6" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="18.613cm" draw:control="control39"/>
+        <draw:control draw:name="Form48" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="18.112cm" draw:control="control33"/>
+        <draw:line draw:name="Form49" draw:style-name="gr9" draw:text-style-name="P10" svg:x1="0.3cm" svg:y1="20.569cm" svg:x2="19.395cm" svg:y2="20.569cm">
           <text:p/>
         </draw:line>
-        <draw:line draw:style-name="gr10" draw:text-style-name="P10" svg:x1="0.3cm" svg:y1="6.536cm" svg:x2="19.346cm" svg:y2="6.536cm">
+        <draw:line draw:name="Form50" draw:style-name="gr10" draw:text-style-name="P10" svg:x1="0.3cm" svg:y1="6.536cm" svg:x2="19.346cm" svg:y2="6.536cm">
           <text:p/>
         </draw:line>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.85cm" svg:y="11.27cm" draw:control="control31"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.85cm" svg:y="10.77cm" draw:control="control25"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="11.268cm" draw:control="control52"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="10.769cm" draw:control="control46"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="11.271cm" draw:control="control54"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="10.769cm" draw:control="control49"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="11.27cm" draw:control="control56"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="10.769cm" draw:control="control51"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P11" svg:width="2.497cm" svg:height="0.5cm" svg:x="16.849cm" svg:y="9.77cm" draw:control="control4"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="2.497cm" svg:height="0.5cm" svg:x="16.849cm" svg:y="9.268cm" draw:control="control2"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P9" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="9.769cm" draw:control="control9"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="9.268cm" draw:control="control6"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P9" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="9.769cm" draw:control="control11"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="9.268cm" draw:control="control7"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P9" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="9.77cm" draw:control="control12"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="9.268cm" draw:control="control8"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.249cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="8.001cm" draw:control="control13"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P9" svg:width="9.249cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="8.502cm" draw:control="control10"/>
-        <draw:line draw:style-name="gr11" draw:text-style-name="P10" svg:x1="0.308cm" svg:y1="10.52cm" svg:x2="19.354cm" svg:y2="10.52cm">
+        <draw:control draw:name="Form51" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.85cm" svg:y="11.27cm" draw:control="control31"/>
+        <draw:control draw:name="Form52" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.85cm" svg:y="10.77cm" draw:control="control25"/>
+        <draw:control draw:name="Form53" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="11.268cm" draw:control="control52"/>
+        <draw:control draw:name="Form54" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="10.769cm" draw:control="control46"/>
+        <draw:control draw:name="Form55" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="11.271cm" draw:control="control54"/>
+        <draw:control draw:name="Form56" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="10.769cm" draw:control="control49"/>
+        <draw:control draw:name="Form57" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="11.27cm" draw:control="control56"/>
+        <draw:control draw:name="Form58" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="10.769cm" draw:control="control51"/>
+        <draw:control draw:name="Form59" draw:style-name="gr5" draw:text-style-name="P11" svg:width="2.497cm" svg:height="0.5cm" svg:x="16.849cm" svg:y="9.77cm" draw:control="control4"/>
+        <draw:control draw:name="Form60" draw:style-name="gr4" draw:text-style-name="P3" svg:width="2.497cm" svg:height="0.5cm" svg:x="16.849cm" svg:y="9.268cm" draw:control="control2"/>
+        <draw:control draw:name="Form61" draw:style-name="gr5" draw:text-style-name="P9" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="9.769cm" draw:control="control9"/>
+        <draw:control draw:name="Form62" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="9.268cm" draw:control="control6"/>
+        <draw:control draw:name="Form63" draw:style-name="gr5" draw:text-style-name="P9" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="9.769cm" draw:control="control11"/>
+        <draw:control draw:name="Form64" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="9.268cm" draw:control="control7"/>
+        <draw:control draw:name="Form65" draw:style-name="gr5" draw:text-style-name="P9" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="9.77cm" draw:control="control12"/>
+        <draw:control draw:name="Form66" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="9.268cm" draw:control="control8"/>
+        <draw:control draw:name="Form67" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.249cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="8.001cm" draw:control="control13"/>
+        <draw:control draw:name="Form68" draw:style-name="gr5" draw:text-style-name="P9" svg:width="9.249cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="8.502cm" draw:control="control10"/>
+        <draw:line draw:name="Form69" draw:style-name="gr11" draw:text-style-name="P10" svg:x1="0.308cm" svg:y1="10.52cm" svg:x2="19.354cm" svg:y2="10.52cm">
           <text:p/>
         </draw:line>
-        <draw:control draw:style-name="gr2" draw:text-style-name="P8" svg:width="4.5cm" svg:height="0.999cm" svg:x="14.847cm" svg:y="15.591cm" draw:control="control53"/>
-        <draw:control draw:style-name="gr2" draw:text-style-name="P8" svg:width="4.5cm" svg:height="0.999cm" svg:x="14.847cm" svg:y="14.344cm" draw:control="control55"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P12" svg:width="4.5cm" svg:height="0.491cm" svg:x="0.3cm" svg:y="16.083cm" draw:control="control60"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="15.582cm" draw:control="control57"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P12" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="14.843cm" draw:control="control62"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="14.342cm" draw:control="control58"/>
-        <draw:control draw:style-name="gr12" draw:text-style-name="P13" svg:width="3.001cm" svg:height="0.502cm" svg:x="0.349cm" svg:y="5.556cm" draw:control="control93"/>
-        <draw:control draw:style-name="gr12" draw:text-style-name="P14" svg:width="3.001cm" svg:height="0.5cm" svg:x="16.336cm" svg:y="5.578cm" draw:control="control95"/>
-        <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.088cm" svg:y="6.779cm" draw:control="control59"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="12.437cm" draw:control="control65"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="11.938cm" draw:control="control61"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="12.437cm" draw:control="control67"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="11.938cm" draw:control="control63"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P9" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="12.443cm" draw:control="control69"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="11.938cm" draw:control="control64"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="12.441cm" draw:control="control71"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="11.938cm" draw:control="control66"/>
-        <draw:control draw:style-name="gr12" draw:text-style-name="P15" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.088cm" svg:y="7.278cm" draw:control="control68"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="17.362cm" draw:control="control74"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="16.861cm" draw:control="control70"/>
-        <draw:control draw:style-name="gr12" draw:text-style-name="P16" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="6.779cm" draw:control="control72"/>
-        <draw:control draw:style-name="gr12" draw:text-style-name="P16" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="7.278cm" draw:control="control73"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="13.639cm" draw:control="control78"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.502cm" svg:x="14.847cm" svg:y="13.138cm" draw:control="control75"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="13.639cm" draw:control="control80"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.502cm" svg:x="0.3cm" svg:y="13.138cm" draw:control="control76"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P17" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="13.644cm" draw:control="control81"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.502cm" svg:x="5.098cm" svg:y="13.138cm" draw:control="control77"/>
-        <draw:control draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="13.642cm" draw:control="control82"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.502cm" svg:x="10.098cm" svg:y="13.138cm" draw:control="control79"/>
-        <draw:control draw:style-name="gr2" draw:text-style-name="P18" svg:width="4.525cm" svg:height="1.003cm" svg:x="14.849cm" svg:y="2.769cm" draw:control="control102"/>
-        <draw:line draw:style-name="gr11" draw:text-style-name="P10" svg:x1="0.3cm" svg:y1="21.97cm" svg:x2="19.395cm" svg:y2="21.97cm">
+        <draw:control draw:name="Form70" draw:style-name="gr2" draw:text-style-name="P8" svg:width="4.5cm" svg:height="0.999cm" svg:x="14.847cm" svg:y="15.591cm" draw:control="control53"/>
+        <draw:control draw:name="Form71" draw:style-name="gr2" draw:text-style-name="P8" svg:width="4.5cm" svg:height="0.999cm" svg:x="14.847cm" svg:y="14.344cm" draw:control="control55"/>
+        <draw:control draw:name="Form72" draw:style-name="gr5" draw:text-style-name="P12" svg:width="4.5cm" svg:height="0.491cm" svg:x="0.3cm" svg:y="16.083cm" draw:control="control60"/>
+        <draw:control draw:name="Form73" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="15.582cm" draw:control="control57"/>
+        <draw:control draw:name="Form74" draw:style-name="gr5" draw:text-style-name="P12" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="14.843cm" draw:control="control62"/>
+        <draw:control draw:name="Form75" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="14.342cm" draw:control="control58"/>
+        <draw:control draw:name="Form76" draw:style-name="gr12" draw:text-style-name="P13" svg:width="3.001cm" svg:height="0.502cm" svg:x="0.349cm" svg:y="5.556cm" draw:control="control94"/>
+        <draw:control draw:name="Form77" draw:style-name="gr12" draw:text-style-name="P14" svg:width="3.001cm" svg:height="0.5cm" svg:x="16.336cm" svg:y="5.578cm" draw:control="control96"/>
+        <draw:control draw:name="Form78" draw:style-name="gr12" draw:text-style-name="P15" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.088cm" svg:y="6.779cm" draw:control="control59"/>
+        <draw:control draw:name="Form79" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="12.437cm" draw:control="control65"/>
+        <draw:control draw:name="Form80" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="11.938cm" draw:control="control61"/>
+        <draw:control draw:name="Form81" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="12.437cm" draw:control="control67"/>
+        <draw:control draw:name="Form82" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="11.938cm" draw:control="control63"/>
+        <draw:control draw:name="Form83" draw:style-name="gr5" draw:text-style-name="P9" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="12.443cm" draw:control="control69"/>
+        <draw:control draw:name="Form84" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="11.938cm" draw:control="control64"/>
+        <draw:control draw:name="Form85" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.001cm" svg:height="0.5cm" svg:x="10.599cm" svg:y="12.441cm" draw:control="control71"/>
+        <draw:control draw:name="Form86" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="11.938cm" draw:control="control66"/>
+        <draw:control draw:name="Form87" draw:style-name="gr12" draw:text-style-name="P15" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.088cm" svg:y="7.278cm" draw:control="control68"/>
+        <draw:control draw:name="Form88" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="17.362cm" draw:control="control74"/>
+        <draw:control draw:name="Form89" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="16.861cm" draw:control="control70"/>
+        <draw:control draw:name="Form90" draw:style-name="gr12" draw:text-style-name="P16" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="6.779cm" draw:control="control72"/>
+        <draw:control draw:name="Form91" draw:style-name="gr12" draw:text-style-name="P16" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="7.278cm" draw:control="control73"/>
+        <draw:control draw:name="Form92" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="14.847cm" svg:y="13.639cm" draw:control="control78"/>
+        <draw:control draw:name="Form93" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.502cm" svg:x="14.847cm" svg:y="13.138cm" draw:control="control75"/>
+        <draw:control draw:name="Form94" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="13.639cm" draw:control="control80"/>
+        <draw:control draw:name="Form95" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.502cm" svg:x="0.3cm" svg:y="13.138cm" draw:control="control76"/>
+        <draw:control draw:name="Form96" draw:style-name="gr5" draw:text-style-name="P17" svg:width="4.5cm" svg:height="0.5cm" svg:x="5.098cm" svg:y="13.644cm" draw:control="control81"/>
+        <draw:control draw:name="Form97" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.502cm" svg:x="5.098cm" svg:y="13.138cm" draw:control="control77"/>
+        <draw:control draw:name="Form98" draw:style-name="gr5" draw:text-style-name="P7" svg:width="4.5cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="13.642cm" draw:control="control82"/>
+        <draw:control draw:name="Form99" draw:style-name="gr4" draw:text-style-name="P3" svg:width="4.5cm" svg:height="0.502cm" svg:x="10.098cm" svg:y="13.138cm" draw:control="control79"/>
+        <draw:control draw:name="Form100" draw:style-name="gr2" draw:text-style-name="P18" svg:width="4.525cm" svg:height="1.003cm" svg:x="14.849cm" svg:y="2.769cm" draw:control="control103"/>
+        <draw:line draw:name="Form101" draw:style-name="gr11" draw:text-style-name="P10" svg:x1="0.3cm" svg:y1="21.97cm" svg:x2="19.395cm" svg:y2="21.97cm">
           <text:p/>
         </draw:line>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="20.759cm" draw:control="control105"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P19" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="21.259cm" draw:control="control98"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.249cm" svg:height="0.5cm" svg:x="10.102cm" svg:y="20.761cm" draw:control="control115"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P19" svg:width="9.249cm" svg:height="0.5cm" svg:x="10.102cm" svg:y="21.26cm" draw:control="control100"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.502cm" svg:x="0.3cm" svg:y="22.13cm" draw:control="control106"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="22.631cm" draw:control="control99"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.502cm" svg:x="10.102cm" svg:y="22.156cm" draw:control="control108"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="10.102cm" svg:y="22.657cm" draw:control="control103"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="24.656cm" draw:control="control112"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="25.155cm" draw:control="control104"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="24.656cm" draw:control="control101"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="25.151cm" draw:control="control97"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="25.896cm" draw:control="control114"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="23.405cm" draw:control="control109"/>
-        <draw:control draw:style-name="gr3" draw:text-style-name="P6" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="23.904cm" draw:control="control107"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="23.405cm" draw:control="control113"/>
-        <draw:control draw:style-name="gr3" draw:text-style-name="P6" svg:width="9.298cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="23.904cm" draw:control="control110"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.098cm" svg:height="0.5cm" svg:x="3.399cm" svg:y="22.631cm" draw:control="control116"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="6.497cm" svg:y="22.631cm" draw:control="control117"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.098cm" svg:height="0.5cm" svg:x="13.201cm" svg:y="22.657cm" draw:control="control118"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="16.3cm" svg:y="22.657cm" draw:control="control119"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.098cm" svg:height="0.5cm" svg:x="3.399cm" svg:y="25.155cm" draw:control="control120"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="6.498cm" svg:y="25.155cm" draw:control="control121"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.098cm" svg:height="0.5cm" svg:x="13.198cm" svg:y="25.151cm" draw:control="control122"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="16.297cm" svg:y="25.151cm" draw:control="control123"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.098cm" svg:height="0.5cm" svg:x="13.198cm" svg:y="26.391cm" draw:control="control124"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="16.297cm" svg:y="26.391cm" draw:control="control125"/>
-        <draw:control draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="26.391cm" draw:control="control111"/>
-        <draw:g draw:style-name="gr14">
-          <draw:control draw:style-name="gr3" draw:text-style-name="P2" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="2.052cm" draw:control="control129"/>
-          <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="1.551cm" draw:control="control126"/>
+        <draw:control draw:name="Form102" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="20.759cm" draw:control="control106"/>
+        <draw:control draw:name="Form103" draw:style-name="gr13" draw:text-style-name="P19" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="21.259cm" draw:control="control99"/>
+        <draw:control draw:name="Form104" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.249cm" svg:height="0.5cm" svg:x="10.102cm" svg:y="20.761cm" draw:control="control116"/>
+        <draw:control draw:name="Form105" draw:style-name="gr13" draw:text-style-name="P19" svg:width="9.249cm" svg:height="0.5cm" svg:x="10.102cm" svg:y="21.26cm" draw:control="control101"/>
+        <draw:control draw:name="Form106" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.502cm" svg:x="0.3cm" svg:y="22.13cm" draw:control="control107"/>
+        <draw:control draw:name="Form107" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="22.631cm" draw:control="control100"/>
+        <draw:control draw:name="Form108" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.502cm" svg:x="10.102cm" svg:y="22.156cm" draw:control="control109"/>
+        <draw:control draw:name="Form109" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="10.102cm" svg:y="22.657cm" draw:control="control104"/>
+        <draw:control draw:name="Form110" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="24.656cm" draw:control="control113"/>
+        <draw:control draw:name="Form111" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="25.155cm" draw:control="control105"/>
+        <draw:control draw:name="Form112" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="24.656cm" draw:control="control102"/>
+        <draw:control draw:name="Form113" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="25.151cm" draw:control="control98"/>
+        <draw:control draw:name="Form114" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="25.896cm" draw:control="control115"/>
+        <draw:control draw:name="Form115" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="23.405cm" draw:control="control110"/>
+        <draw:control draw:name="Form116" draw:style-name="gr3" draw:text-style-name="P6" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="23.904cm" draw:control="control108"/>
+        <draw:control draw:name="Form117" draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="23.405cm" draw:control="control114"/>
+        <draw:control draw:name="Form118" draw:style-name="gr3" draw:text-style-name="P6" svg:width="9.298cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="23.904cm" draw:control="control111"/>
+        <draw:control draw:name="Form119" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.098cm" svg:height="0.5cm" svg:x="3.399cm" svg:y="22.631cm" draw:control="control117"/>
+        <draw:control draw:name="Form120" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="6.497cm" svg:y="22.631cm" draw:control="control118"/>
+        <draw:control draw:name="Form121" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.098cm" svg:height="0.5cm" svg:x="13.201cm" svg:y="22.657cm" draw:control="control119"/>
+        <draw:control draw:name="Form122" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="16.3cm" svg:y="22.657cm" draw:control="control120"/>
+        <draw:control draw:name="Form123" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.098cm" svg:height="0.5cm" svg:x="3.399cm" svg:y="25.155cm" draw:control="control121"/>
+        <draw:control draw:name="Form124" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="6.498cm" svg:y="25.155cm" draw:control="control122"/>
+        <draw:control draw:name="Form125" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.098cm" svg:height="0.5cm" svg:x="13.198cm" svg:y="25.151cm" draw:control="control123"/>
+        <draw:control draw:name="Form126" draw:style-name="gr13" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="16.297cm" svg:y="25.151cm" draw:control="control124"/>
+        <draw:g draw:name="Form130" draw:style-name="gr14">
+          <draw:control draw:style-name="gr3" draw:text-style-name="P2" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="2.052cm" draw:control="control130"/>
+          <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="9.298cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="1.551cm" draw:control="control127"/>
         </draw:g>
-        <draw:control draw:style-name="gr3" draw:text-style-name="P2" svg:width="14.331cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="3.272cm" draw:control="control127"/>
-        <draw:control draw:style-name="gr4" draw:text-style-name="P3" svg:width="14.331cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="2.771cm" draw:control="control128"/>
+        <draw:control draw:name="Form131" draw:style-name="gr3" draw:text-style-name="P2" svg:width="14.331cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="3.272cm" draw:control="control128"/>
+        <draw:control draw:name="Form132" draw:style-name="gr4" draw:text-style-name="P3" svg:width="14.331cm" svg:height="0.5cm" svg:x="0.3cm" svg:y="2.771cm" draw:control="control129"/>
+        <draw:control draw:style-name="gr5" draw:text-style-name="P21" svg:width="0.5cm" svg:height="0.5cm" svg:x="10.1cm" svg:y="12.441cm" draw:control="control83"/>
       </draw:g>
+      <draw:control text:anchor-type="page" text:anchor-page-number="1" draw:z-index="2" draw:name="Form129" draw:style-name="gr15" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="10.098cm" svg:y="26.391cm" draw:control="control112"/>
+      <draw:control text:anchor-type="page" text:anchor-page-number="1" draw:z-index="1" draw:name="Form128" draw:style-name="gr15" draw:text-style-name="P20" svg:width="3.1cm" svg:height="0.5cm" svg:x="16.297cm" svg:y="26.391cm" draw:control="control126"/>
+      <draw:control text:anchor-type="page" text:anchor-page-number="1" draw:z-index="0" draw:name="Form127" draw:style-name="gr15" draw:text-style-name="P20" svg:width="3.098cm" svg:height="0.5cm" svg:x="13.197cm" svg:y="26.391cm" draw:control="control125"/>
       <text:p text:style-name="FieldContent"/>
       <text:p text:style-name="FieldContent"/>
       <text:p text:style-name="FieldContent"/>
