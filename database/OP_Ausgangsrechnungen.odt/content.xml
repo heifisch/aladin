@@ -96,7 +96,7 @@
       <style:text-properties style:text-line-through-style="none" style:text-line-through-type="none" fo:font-family="Arial" style:font-family-generic="swiss" style:font-pitch="variable" fo:font-size="16pt" fo:font-style="normal" style:text-underline-style="none" fo:font-weight="normal"/>
     </style:style>
     <style:style style:name="gr1" style:family="graphic">
-      <style:graphic-properties style:protect="position size" style:writing-mode="lr-tb" loext:decorative="false" style:run-through="foreground" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page"/>
+      <style:graphic-properties style:protect="position size" style:writing-mode="lr-tb" loext:decorative="false" style:run-through="foreground" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page" draw:wrap-influence-on-position="once-concurrent" loext:allow-overlap="true" style:flow-with-text="false"/>
     </style:style>
     <style:style style:name="gr2" style:family="graphic">
       <style:graphic-properties fo:background-color="#00b8ff" style:protect="position size" loext:decorative="false"/>
@@ -138,7 +138,7 @@
       <style:graphic-properties style:protect="position size" loext:decorative="false" style:run-through="foreground"/>
     </style:style>
     <style:style style:name="gr15" style:family="graphic">
-      <style:graphic-properties fo:background-color="#ffffcc" fo:border="solid #000000" style:protect="position size" loext:decorative="false" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="paragraph"/>
+      <style:graphic-properties fo:background-color="#ffffcc" fo:border="solid #000000" style:protect="position size" loext:decorative="false" style:vertical-pos="from-top" style:vertical-rel="page" style:horizontal-pos="from-left" style:horizontal-rel="page" draw:wrap-influence-on-position="once-concurrent" loext:allow-overlap="true" style:flow-with-text="false"/>
     </style:style>
     <number:date-style style:name="C129" number:language="en" number:country="US">
       <number:day number:style="long"/>

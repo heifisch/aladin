@@ -67,12 +67,17 @@ Sub Start_OP_Ausgangsrechnungen()
 		Refresh_Summen()
 		if lDocumentID &gt; 0 then
 			Praefix_setzen()
-			if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) _
-			then
+			sUrl=&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp;&quot;/&quot;&amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp;  sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+			if Not FileExists(sUrl) Then
+				sUrl=&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp;&quot;/&quot;&amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+				if Not FileExists(sUrl) Then
+					oButton_Dokument_ansehen.Enabled=0
+				Else
+					oButton_Dokument_ansehen.Enabled=1
+				End If
+			Else
 				oButton_Dokument_ansehen.Enabled=1
-			else
-				oButton_Dokument_ansehen.Enabled=0
-			end if
+			End if
 		else
 			oButton_Dokument_ansehen.Enabled=0
 		end if
@@ -98,12 +103,14 @@ End Sub
 Sub Dokument_Anzeigen()
 	Dim oShell as Object,sUrl as String
 	Praefix_setzen()
-	if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) then
-		sUrl=&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
-	else
-		oButton_Dokument_ansehen.Enabled=0
-		MsgBox(&quot;Kein Dokument vorhanden!&quot;,16)
-		exit Sub
+	sUrl=&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp;&quot;/&quot;&amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp;  sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+	if Not FileExists(sUrl) Then
+		sUrl=&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp;&quot;/&quot;&amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+		if Not FileExists(sUrl) Then
+			oButton_Dokument_ansehen.Enabled=0
+			MsgBox(&quot;Kein Dokument vorhanden!&quot;,16)
+			exit Sub
+		End If
 	End if
 
 	oShell = createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;)
@@ -614,6 +621,7 @@ Sub SET_Tabelle()
 End Sub
 
 Sub Daten_uebernehmen()
+	Dim sUrl As String
 	if lDocumentID &lt;&gt; 0 then
 		SQL_DocumentID_entfernen()
 		wait 10
@@ -627,12 +635,17 @@ Sub Daten_uebernehmen()
 		Refresh_Summen()
 		if lDocumentID &gt; 0 then
 			Praefix_setzen()
-			if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) _
-			then
+			sUrl=&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp;&quot;/&quot;&amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp;  sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+			if Not FileExists(sUrl) Then
+				sUrl=&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp;&quot;/&quot;&amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+				if Not FileExists(sUrl) Then
+					oButton_Dokument_ansehen.Enabled=0
+				Else
+					oButton_Dokument_ansehen.Enabled=1
+				End If
+			Else
 				oButton_Dokument_ansehen.Enabled=1
-			else
-				oButton_Dokument_ansehen.Enabled=0
-			end if
+			End if
 		else
 			oButton_Dokument_ansehen.Enabled=0
 		end if
@@ -855,6 +868,7 @@ Sub Filter_Projekte_setzen()
 End Sub
 
 Sub Rechnung_uebernehmen()
+	Dim sUrl As String
 	oList_Documentauswahl.commit()
 	oForm_Steuerung.updateRow()
 	wait 10
@@ -864,10 +878,16 @@ Sub Rechnung_uebernehmen()
 	Refresh_Summen()
 	if lDocumentID &gt; 0 then
 		Praefix_setzen()
-		if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;) then
+		sUrl=&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp;&quot;/&quot;&amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;/&quot;&amp;  sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+		if Not FileExists(sUrl) Then
+			sUrl=&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp;&quot;/&quot;&amp; sPraefix &amp; CStr(lDocumentID) &amp;&quot;.pdf&quot;
+			if Not FileExists(sUrl) Then
+				oButton_Dokument_ansehen.Enabled=0
+			Else
+				oButton_Dokument_ansehen.Enabled=1
+			End If
+		Else
 			oButton_Dokument_ansehen.Enabled=1
-		else
-			oButton_Dokument_ansehen.Enabled=0
 		End if
 	End if
 End sub
