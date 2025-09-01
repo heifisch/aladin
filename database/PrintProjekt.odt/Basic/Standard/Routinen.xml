@@ -22,6 +22,8 @@ Sub createRepord()
 		SetDocUserProperty(&quot;oUserID_lokal&quot;, iUserID(&quot;PrintProjekt&quot;))
 		SetDocUserProperty(&quot;oEinstellungsID_lokal&quot;, iEinstellungsID(iUserID_lokal))
 		SetDocUserProperty(&quot;oTitle_lokal&quot;,sTitle(iUserID_lokal))
+		SetDocUserProperty(&quot;oDocumentArchiviert&quot;,0)	
+
 		Kontaktdaten.KontaktDaten()
 		Leistungen.Leistungen()
 		Drucktabellen_leeren(iUserID_lokal)
@@ -30,7 +32,7 @@ Sub createRepord()
 End Sub
 
 Sub DokumentDrucken()
-	Dim sFaxEmpfaenger AS String
+	Dim sFaxEmpfaenger AS String,sDocumentDir As String,sDocumentPath As String
 	Dim vStatus AS Variant
 
 	if GetGUIType = 1 then
@@ -43,18 +45,26 @@ Sub DokumentDrucken()
 			Set_FritzFax(&quot;PrintProject&quot;,sFaxEmpfaenger)		
 		End if
 	End if
+
+	if (iDocument_TypID = 5 or iDocument_TypID = 6) and iDocumentArchiviert = 0 Then
+		sDocumentDir = &quot;file:///&quot; &amp; sPathAusgangsRechnungen &amp; &quot;/&quot; &amp; sPraefixArchiv &amp; CStr(lDocumentID)
 	
-	if (iDocument_TypID = 5 or iDocument_TypID = 6) and iDocumentArchiviert = 0 then
-		if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;) _
-		then
-			vStatus=MsgBox(&quot;Es ist schon ein Dokument im Archiv abgelegt.&quot;&amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+		If NOT FileExists(sDocumentDir) then
+			MkDir sDocumentDir
+		End If
+		
+		sDocumentPath = sDocumentDir &amp; &quot;/&quot; &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;
+
+		if FileExists(sDocumentPath) Then
+			vStatus=MsgBox(&quot;Es ist schon folgendes Dokument im Archiv abgelegt.&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+				sDocumentPath &amp; Chr(13) &amp; Chr(13) &amp;_
 				&quot;Soll das vorhandene Dokument überschrieben werden?&quot;,36,sTitle)
 			If vStatus &lt;&gt; 6 then
 				SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
 				exit Sub		
 			End if
 		End if
-		oDoc.storeToURL(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+		oDoc.storeToURL(sDocumentPath,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
 		SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
 	End if
 End Sub
@@ -68,7 +78,7 @@ Sub DokumentSchlieszen()
 End Sub
 
 Sub ConvertToPdfAndSendMail()
-	Dim sURL AS String,oPfad AS Object
+	Dim sURL AS String,oPfad AS Object,sDocumentDir As String,sDocumentPath As String
 	Dim vStatus AS Variant,sSubject AS String,sBody AS String
 	
 	oPfad = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
@@ -83,17 +93,25 @@ Sub ConvertToPdfAndSendMail()
 	
  	SendMail(sEMail_Empfaenger,sEMail,sSubject,sBody,sURL)
 
-	if (iDocument_TypID = 5 or iDocument_TypID = 6) and iDocumentArchiviert = 0 then
-		if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;) _
-		then
-			vStatus=MsgBox(&quot;Es ist schon ein Dokument im Archiv abgelegt.&quot;&amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+	if (iDocument_TypID = 5 or iDocument_TypID = 6) and iDocumentArchiviert = 0 Then
+		sDocumentDir = &quot;file:///&quot; &amp; sPathAusgangsRechnungen &amp; &quot;/&quot; &amp; sPraefixArchiv &amp; CStr(lDocumentID)
+	
+		If NOT FileExists(sDocumentDir) then
+			MkDir sDocumentDir
+		End If
+		
+		sDocumentPath = sDocumentDir &amp; &quot;/&quot; &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;
+		
+		if FileExists(sDocumentPath) then
+			vStatus=MsgBox(&quot;Es ist schon folgendes Dokument im Archiv abgelegt.&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+				sDocumentPath &amp; Chr(13) &amp; Chr(13) &amp;_
 				&quot;Soll das vorhandene Dokument überschrieben werden?&quot;,36,sTitle)
 			If vStatus &lt;&gt; 6 then
 				SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
 				exit Sub		
 			End if
 		End if
-		oDoc.storeToURL(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+		oDoc.storeToURL(sDocumentPath,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
 		SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
 	End if
 End Sub
