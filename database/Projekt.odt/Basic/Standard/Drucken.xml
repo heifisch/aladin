@@ -41,7 +41,7 @@ Sub Druck_vorbereiten()
 	Dim sSumme_ohne_MwSt as String,sMwSt as String
 	Dim sRabatt as String,sSumme_nach_Rabatt as String
 	Dim sKorrektur_Vorzeichen as String,sKorrektur as String,sSumme_nach_Korrektur as String,sSumme_mit_MwSt as String
-	Dim sSkonto as String,lRechnungsTypCodeID as Long,lDocumentID_Korrekturrechnung as Long
+	Dim sSkonto as String,lRechnungsTypCodeID as Long,sDocumentID_Korrekturrechnung as String
 	Dim sRechnungsbetrag as String,sAbschlagszahlungen as String,sRestbetrag as String
 	Dim iSkonto_Tage as integer,iFaellig_Tage as integer
 	Dim sPos as String,sKontaktID as String
@@ -96,7 +96,9 @@ Sub Druck_vorbereiten()
 				end if
 				
 				if iDocTypID = 5 then
-					sSQL1=sSQL1 &amp;&quot;,t3.AZ,t3.RechnungsTypCodeID,t3.DocumentID_Korrekturrechnung&quot;
+					sSQL1=sSQL1 &amp;&quot;,t3.AZ,t3.RechnungsTypCodeID,t3.DocumentID_Korrekturrechnung AS DocumentID_Korrekturrechnung_57&quot;
+					sSQL1=sSQL1 &amp;&quot;,(SELECT CONCAT(CASE WHEN AZ=1 THEN &apos;AZ&apos; ELSE &apos;RE&apos; END,&apos; &apos;,DocumentID) FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=DocumentID_Korrekturrechnung_57)&quot;
+					sSQL1=sSQL1 &amp;&quot;,(SELECT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=DocumentID_Korrekturrechnung_57)&quot;
 				end if
 				
 				sSQL1=sSQL1 &amp;&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t3 &quot;&amp;_
@@ -174,7 +176,8 @@ Sub Druck_vorbereiten()
 					if iDocTypID = 5 then
 						iAZ=oRecord1.getLong(55)
 						lRechnungsTypCodeID=oRecord1.getLong(56)
-						lDocumentID_Korrekturrechnung=oRecord1.getLong(57)
+						sDocumentID_Korrekturrechnung=oRecord1.getString(58)
+						sErstellungsdatum_Korrekturrechnung=oRecord1.getString(59)
 					end if		
 				Wend
 			
@@ -506,17 +509,12 @@ Sub Druck_vorbereiten()
 			
 				if iDocTypID = 5 Then
 					If lRechnungsTypCodeID = 384 Then
-						if lDocumentID_Korrekturrechnung &gt; 0 Then
-							sSQL3=&quot;SELECT DISTINCT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=&quot;&amp; lDocumentID_Korrekturrechnung
-							oRecord3=oResult(sSQL3)
-							While oRecord3.next()
-								sErstellungsdatum_Korrekturrechnung=oRecord3.getString(1)
-							Wend
+						if Len(sDocumentID_Korrekturrechnung) &gt; 0 Then
 							If sLieferbemerkung &lt;&gt; &quot;&quot; Then
-								sLieferbemerkung=&quot;Korrektur zu Rechnung &quot;&amp; sPraefix &amp;&quot; &quot;&amp; lDocumentID_Korrekturrechnung &amp;_
+								sLieferbemerkung=&quot;Korrektur zu Rechnung &quot;&amp; sDocumentID_Korrekturrechnung &amp;_
 									&quot; vom &quot;&amp; fConvDatum(sErstellungsdatum_Korrekturrechnung) &amp;&quot;\n\n&quot;&amp; sLieferbemerkung
 							Else
-								sLieferbemerkung=&quot;Korrektur zu Rechnung &quot;&amp; sPraefix &amp;&quot; &quot;&amp; lDocumentID_Korrekturrechnung &amp;_
+								sLieferbemerkung=&quot;Korrektur zu Rechnung &quot;&amp; sDocumentID_Korrekturrechnung &amp;_
 									&quot; vom &quot;&amp; fConvDatum(sErstellungsdatum_Korrekturrechnung)
 							End If
 						Else
