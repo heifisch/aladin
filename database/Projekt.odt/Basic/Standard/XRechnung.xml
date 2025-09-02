@@ -150,20 +150,103 @@ Sub CreateMenuXRechnung()
 End Sub
 
 Sub XRechnung_erzeugen()
-&apos;	print &quot;XRechnung erzeugen&quot;
-	SaveXRechnung(&quot;/tmp/&quot; &amp; lDocumentID &amp; &quot;.xml&quot;)
+	Dim sPraefix As String,stXRechnungDir As String,stXRechnungPath As String,stXRechnungBaseName As String
+	Dim sValidatorReturnCode As String,sValidatorReturnCodeFile As String,sValidatorReportHtml as String,sValidatorReportXml as String
+	Dim oShell As Object,oSimpleFileAccess As Object,oTextInputStream As Object,vStatus As Variant
+	
+	If iDocTypID = 5 Then
+		If iOption_AZ = 1 then
+			sPraefix=&quot;AZ&quot;
+		else
+			sPraefix=&quot;RE&quot;
+		End if
+	Elseif iDocTypID = 6 then
+		sPraefix=&quot;GU&quot;
+	End If
+	
+	stXRechnungDir = sPathAusgangsRechnungen &amp; &quot;/&quot; &amp; sPraefix &amp; CStr(lDocumentID)
+
+	If NOT FileExists(ConvertToURL(stXRechnungDir)) then
+		MkDir ConvertToURL(stXRechnungDir)
+	End If
+	
+	stXRechnungBaseName = stXRechnungDir &amp; &quot;/&quot; &amp; sPraefix &amp; CStr(lDocumentID) &amp; &quot;_XRechnung&quot;
+	
+	If (iDocTypID = 5 or iDocTypID = 6) Then
+		stXRechnungPath = stXRechnungBaseName &amp; &quot;.xml&quot;
+		If FileExists(ConvertToURL(stXRechnungPath)) then
+			vStatus=MsgBox(&quot;Es ist schon folgende XRechnung im Archiv abgelegt:&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+				stXRechnungPath &amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
+				&quot;Soll die vorhandene XRechnung überschrieben werden?&quot;,36,sTitle)
+			If vStatus &lt;&gt; 6 Then
+				MsgBox(&quot;Die vorhandene XRechnung wurde nicht überschrieben!&quot;,64,sTitle_lokal)
+				exit Sub		
+			End if
+		End if
+	End If
+	
+	Document_berechnen()
+	SaveXRechnung(ConvertToURL(stXRechnungPath))
+
+	If Not FileExists(ConvertToURL(stXRechnungPath)) Then
+		MsgBox(&quot;XRechnung wurde nicht erzeugt!&quot;,64,sTitle_lokal)
+		exit Sub		
+	Else
+		If Not FileExists(ConvertToURL(sPathXRechnungValidator)) Then
+			MsgBox(&quot;Kein Validator gefunden!&quot;,64,sTitle_lokal)
+			exit Sub		
+		End If
+	End If
+	
+	sValidatorReportHtml=ConvertToURL(stXRechnungBaseName &amp; &quot;-report.html&quot;)
+	sValidatorReportXml=ConvertToURL(stXRechnungBaseName &amp; &quot;-report.xml&quot;)
+	sValidatorReturnCodeFile=ConvertToURL(stXRechnungBaseName &amp; &quot;-returncode.txt&quot;)
+	
+	If FileExists(sValidatorReportHtml) Then Kill sValidatorReportHtml
+	If FileExists(sValidatorReportXml) Then Kill sValidatorReportXml
+	If FileExists(sValidatorReturnCodeFile) Then Kill sValidatorReturnCodeFile
+	
+	Shell(sPathXRechnungValidator,1,stXRechnungPath,True)
+	
+	oSimpleFileAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+	oTextInputStream = CreateUnoService(&quot;com.sun.star.io.TextInputStream&quot;)
+
+	If oSimpleFileAccess.Exists(sValidatorReturnCodeFile) Then
+		oTextInputStream.setInputStream(oSimpleFileAccess.openFileRead(sValidatorReturnCodeFile))
+		Do While Not oTextInputStream.isEOF
+			sValidatorReturnCode=oTextInputStream.readLine
+		Loop
+		oTextInputStream.closeInput()
+		If sValidatorReturnCode &lt;&gt; &quot;0&quot; Then
+			If FileExists(sValidatorReportHtml) Then
+				vStatus=MsgBox(&quot;Achtung! Es ist ein Fehler bei der Validierung der XRechnung aufgetreten!&quot; &amp; Chr$(13) &amp; Chr$(13) &amp;_
+				&quot;Wollen Sie sich das Ergebnis der Validierung ansehen?&quot;,52,sTitle_lokal)
+				if vStatus=6 Then
+					oShell = createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;)
+					oShell.execute(sValidatorReportHtml,&quot;&quot;,0)
+				End If
+			Else
+				MsgBox(&quot;Es ist ein Fehler bei der Validierung der XRechnung aufgetreten!&quot; &amp; Chr$(13) &amp; Chr$(13) &amp;_
+				&quot;Fehlercode: &quot;&amp; sValidatorReturnCode,64,sTitle_lokal)
+			End If
+		End if
+	Else
+		MsgBox(&quot;Es wurde kein Return-Code vom Validator gefunden!&quot;,64,sTitle_lokal)
+	End if
 End Sub
 
 Sub XRechnung_versenden()
 	print &quot;XRechnung versenden&quot;
 End Sub
 
+REM Folgender Code basiert auf den Code aus dem Program XRechnung von Robert Großkopf https://www.familiegrosskopf.de/robert/
+
 REM XRechnungen dürfen nach 2 verschiedenen System erstellt werden.
 REM Dies sind ISO/IEC 19845 Information technology — Universal business language version 2.1 (in der Spezifikation Standard XRechnung als &quot;UBL&quot; abgekürzt)
 REM und UN/CEFACT Cross Industry Invoice in XML Schemas 16B (in der Spezifikation Standard XRechnung als &quot;CII&quot; abgekürzt).
 REM Die Rechnung wird in der folgenden Prozedur nach dem UBL-System erstellt (beginnend mit &lt;ubl:Invoice:
 REM +++ Wird aus &quot;Druck → ExportPDF&quot; aufgerufen
-SUB SaveXRechnung(stXRechnungDatei AS String)
+SUB SaveXRechnung(stXRechnungPath AS String)
 	Dim vStatus as Variant
 	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String,sSQL5 as String
 	Dim oRecord1 as Object,oRecord2 as Object,oRecord3 as Object
@@ -184,7 +267,7 @@ SUB SaveXRechnung(stXRechnungDatei AS String)
 	DIM stGlaeubID AS STRING, stIBANEmpfaenger AS STRING, stMandatID AS STRING, stSteuerfreiheit AS STRING, stRStellSteuerNr AS STRING, stPurchaseID As String, stSalesID As String
 	DIM stTenderID AS STRING, stObjectID AS STRING, stAccounting AS STRING, stSellerID AS STRING, stSellerICDCode AS STRING, stProjectID As String, stContractID As String
 	Dim stKaufAnsprechP As String, stKaufAnsprechPTel As String, stKaufAnsprechPEMail As String, stRStartDate As String, stREndDate As String, stRAnmerkung As String
-	Dim stVorRechnungenID As String, stPrepaidAmount As String, stPayableAmount As String
+	Dim stVorRechnungID As String, stPrepaidAmount As String, stPayableAmount As String
 
 	DIM inTab AS INTEGER, inI AS INTEGER, i AS INTEGER, inAttach AS Integer, t As Integer
 	DIM doDataAmountTotal AS DOUBLE, doAllowanceTotalAmount AS DOUBLE, doChargeTotalAmount AS DOUBLE
@@ -228,13 +311,19 @@ SUB SaveXRechnung(stXRechnungDatei AS String)
 		&quot;t3.KontaktID AS stRKaufRef_35,CONCAT(&apos;&quot;&amp; sPraefix &amp;&quot; &apos;,t3.DocumentID) AS stRNummer_36,t1.UmsatzsteuerID AS stKaufUST_IdNr_37,&quot;&amp;_
 		sInvoiceTypeCode &amp;&quot; AS stInvoiceTypeCode_38,t3.Erstellungsdatum AS stLDatum_39,NULL AS stLFirma_40,NULL AS stLStr_41,NULL AS stLPlz_42,NULL AS stLStadt_43,&quot;&amp;_
 		&quot;NULL AS stLLandCode_44,NULL AS stRStartDate_45,NULL AS stREndDate_46,NULL AS stProjectID_47,NULL AS stContractID_48,&quot;&amp;_
-		&quot;NULL AS stPurchaseID_49,NULL AS stSalesID_50,NULL AS stVorRechnungenID_51,NULL AS stKaufCompID_52,&quot;&amp;_
+		&quot;NULL AS stPurchaseID_49,NULL AS stSalesID_50,&quot;&amp;_
+		&quot;(CASE WHEN &quot;&amp; sInvoiceTypeCode &amp;&quot;=384 AND t3.DocumentID_Korrekturrechnung&gt;0 THEN t3.DocumentID_Korrekturrechnung END) AS stVorRechnungID_51,&quot;&amp;_
+		&quot;NULL AS stKaufCompID_52,&quot;&amp;_
 		&quot;TRIM(CONCAT(&quot;&amp;_
-			&quot;CASE WHEN t3.ProjektID&gt;0 THEN CONCAT(t5.Projekt_Name,&apos;\n&apos;) ELSE &apos;&apos; END,&quot;&amp;_
-			&quot;CASE WHEN LENGTH(t3.Document_Name)&gt;0 THEN CONCAT(t3.Document_Name,&apos;\n\n&apos;) ELSE &apos;&apos; END,&quot;&amp;_
-			&quot;CASE WHEN LENGTH(t3.Leistungsempfaenger)&gt;0 THEN CONCAT(&apos;Leistungsempfänger:\n&apos;,t3.Leistungsempfaenger,&apos;\n\n&apos;) ELSE &apos;&apos; END,&quot;&amp;_
-			&quot;CASE WHEN LENGTH(t3.Lieferbemerkung)&gt;0 THEN CONCAT(t3.Lieferbemerkung,&apos;\n\n&apos;) ELSE &apos;&apos; END,&quot;&amp;_
-			&quot;CASE WHEN LENGTH(t3.Bemerkung)&gt;0 THEN CONCAT(t3.Bemerkung,&apos;\n\n&apos;) ELSE &apos;&apos; END)) AS stRAnmerkung_53,&quot;&amp;_
+			&quot;(CASE WHEN t3.ProjektID&gt;0 THEN CONCAT(t5.Projekt_Name,&apos;\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
+			&quot;(CASE WHEN LENGTH(t3.Document_Name)&gt;0 THEN CONCAT(t3.Document_Name,&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
+			&quot;(CASE WHEN &quot;&amp; sInvoiceTypeCode &amp;&quot;=384 AND t3.DocumentID_Korrekturrechnung&gt;0 THEN &quot;&amp;_
+				&quot;CONCAT(&apos;Korrektur zu Rechnung &apos;,&quot;&amp;_
+				&quot;(SELECT CONCAT(CASE WHEN AZ=1 THEN &apos;AZ&apos; ELSE &apos;RE&apos; END,&apos; &apos;,DocumentID) FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51),&quot;&amp;_
+				&quot;&apos; vom &apos;,DATE_FORMAT((SELECT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51),&apos;%d.%m.%Y&apos;),&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
+			&quot;(CASE WHEN LENGTH(t3.Leistungsempfaenger)&gt;0 THEN CONCAT(&apos;Leistungsempfänger:\n&apos;,t3.Leistungsempfaenger,&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
+			&quot;(CASE WHEN LENGTH(t3.Lieferbemerkung)&gt;0 THEN CONCAT(t3.Lieferbemerkung,&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
+			&quot;(CASE WHEN LENGTH(t3.Bemerkung)&gt;0 THEN CONCAT(t3.Bemerkung,&apos;\n\n&apos;) ELSE &apos;&apos; END))) AS stRAnmerkung_53,&quot;&amp;_
 		&quot;NULL AS stGlaeubID_54,NULL AS stIBANEmpfaenger_55,NULL AS stMandatID_56,&quot;&amp;_
 		&quot;(CASE WHEN t3.13b=1 THEN t3.13bText WHEN t3.USt_befreit=1 THEN t3.USt_befreit_Text ELSE NULL END) AS stSteuerfreiheit_57,&quot;&amp;_
 		&quot;t4.Umsatzsteuernummer AS stRStellSteuerNr_58,NULL AS stTenderID_59,NULL AS stObjectID_60,NULL AS stAccounting_61,NULL AS stSellerID_62,&quot;&amp;_
@@ -247,7 +336,9 @@ SUB SaveXRechnung(stXRechnungDatei AS String)
 		&quot;t3.Summe_nach_Rabatt AS arAllowanceChargeBaseAmount_77,t3.Korrektur AS arAllowanceChargeAmount_78,&quot;&amp;_
 		&quot;t3.Summe_nach_Korrektur AS arTaxNetto_79,t3.MwSt AS arTaxTax_80,t3.Summe_mit_MwSt AS stBrutto_81,t3.AZ_mit_MwSt AS stPrepaidAmount_82,&quot;&amp;_
 		&quot;t3.Zahlbetrag_mit_MwSt AS stPayableAmount_83,t3.Skonto_Satz AS stSkontoSatz_84,t3.Skonto_Tage As stSkontoTage_85,&quot;&amp;_
-		&quot;DATE_FORMAT(t3.Skonto_bis,&apos;%d.%m.%Y&apos;) AS stSkontoBis_86,t3.Skonto AS stSkonto_87&quot;
+		&quot;DATE_FORMAT(t3.Skonto_bis,&apos;%d.%m.%Y&apos;) AS stSkontoBis_86,t3.Skonto AS stSkonto_87,&quot;&amp;_
+		&quot;(SELECT CONCAT(CASE WHEN AZ=1 THEN &apos;AZ&apos; ELSE &apos;RE&apos; END,&apos; &apos;,DocumentID) FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51) AS stVorRechnungID_88,&quot;&amp;_
+		&quot;(SELECT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51) AS stVorRechnungDatum_89&quot;
 
 	sSQL2=sSQL2 &amp;&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t3 &quot;&amp;_
 		&quot;LEFT OUTER JOIN &quot;&amp; sAnsprechpartner &amp;&quot; as t2 &quot;&amp;_
@@ -369,7 +460,7 @@ SUB SaveXRechnung(stXRechnungDatei AS String)
 		stRAnmerkung = CharToXMLChar(oRecord2.getString(53))			&apos;Invoice note : Text [1] [BT-22]
 
 		REM Gruppe PRECEDING INVOICE REFERENCE [0..*] [BG-3]
-		stVorRechnungenID = oRecord2.getString(51)
+		stVorRechnungID = oRecord2.getString(51)
 		
 		REM Gruppe PAYMENT INSTRUCTIONS → DIRECT DEBIT [0..1] [BG-19]
 		stGlaeubID = CharToXMLChar(oRecord2.getString(54))				&apos;Bank assigned creditor identifier : Identifier [1] [BT-90]
@@ -463,6 +554,13 @@ SUB SaveXRechnung(stXRechnungDatei AS String)
 		stSkontoTage = oRecord2.getString(85)
 		stSkontoBis = oRecord2.getString(86)
 		stSkonto = oRecord2.getString(87)
+		If oRecord2.getString(88) &lt;&gt; &quot;&quot; Then
+			ReDim Preserve arDocRefID(0)
+			ReDim Preserve arDocRefDate(0)
+			arDocRefID(0) = oRecord2.getString(88)
+			arDocRefDate(0) = oRecord2.getString(89)
+		End If
+		
 	Wend
 	REM Dummy für die Identifikation, falls BT-29, BT-30 und BT-31 leer sind
 	IF stSellerID = &quot;&quot; AND stRStellHRAEintragID = &quot;&quot; AND stRStellUST_IdNr = &quot;&quot; THEN
@@ -498,7 +596,7 @@ SUB SaveXRechnung(stXRechnungDatei AS String)
 	oRecord3=oResult_Scroll(sSql3)
 
 	inI = 0
-	i = 0
+	i = UBOUND(arDocRefID())+1
 	doDataAmountTotal = 0
 	WHILE oRecord3.Next
 		If oRecord3.getInt(13) &lt; 4 Then
@@ -599,7 +697,7 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 	
 	oUcb = createUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
 	oOutputStream = createUnoService(&quot;com.sun.star.io.TextOutputStream&quot;)
-	stFileUrl = stXRechnungDatei
+	stFileUrl = stXRechnungPath
 	IF oUcb.exists(stFileUrl) THEN
 		oUcb.kill(stFileUrl)
 	END IF
@@ -661,7 +759,7 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 		stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;/cac:OrderReference&gt;&quot; &amp; CHR(13)
 	END IF 
 	REM Möglichkeit zur Angabe von Rechnungsdokumenten, auf die sich das aktuelle Dokument bezieht (Teilrechnungen)
-	IF stVorRechnungenID &lt;&gt; &quot;&quot; THEN
+	IF UBOUND(arDocRefID()) &gt; -1 THEN
 		FOR i = 0 TO UBOUND(arDocRefID())
 			stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cac:BillingReference&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…n [BG-3]
 			stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;cac:InvoiceDocumentReference&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1, wenn BillingReference vorhanden ist
@@ -914,7 +1012,7 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 	IF doAllowanceTotalAmount &gt; 0 THEN
 		stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;cbc:AllowanceTotalAmount currencyID=&quot;&quot;&quot; &amp; stDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; stAllowanceTotalAmount &amp; &quot;&lt;/cbc:AllowanceTotalAmount&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…1; Nachlassbetrag ohne Steuer	[BT-107]
 	END IF	
-	IF doChargeTotalAmount &gt; 0 THEN
+	IF doChargeTotalAmount &lt;&gt; 0 THEN
 		stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;cbc:ChargeTotalAmount currencyID=&quot;&quot;&quot; &amp; stDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; stChargeTotalAmount &amp; &quot;&lt;/cbc:ChargeTotalAmount&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…1; Zuschlag ohne Steuer	[BT-108]
 	END IF	
 	IF stPrepaidAmount &lt;&gt; &quot;&quot; THEN

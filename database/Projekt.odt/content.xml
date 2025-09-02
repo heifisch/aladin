@@ -1555,7 +1555,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.aktualisieren.ZwischenBemerkung_bearbeiten?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:checkbox form:name="CheckBox_LeistungsID" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control153" form:id="control153" form:label="LeistungsID" form:tab-stop="false" form:tab-index="10" form:visual-effect="flat" form:data-field="Option_1" form:input-required="false" form:image-position="center">
+          <form:checkbox form:name="CheckBox_LeistungsID" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control153" form:id="control153" form:label="LeistungsID" form:tab-stop="false" form:tab-index="10" form:visual-effect="flat" form:data-field="Option_1" form:input-required="false" form:current-state="checked" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CheckBox"/>
@@ -1600,7 +1600,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.AZ_anhaengen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:checkbox form:name="CheckBox_Bezeichnung" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control157" form:id="control157" form:label="Bezeichnung" form:tab-stop="false" form:tab-index="11" form:visual-effect="flat" form:data-field="Option_2" form:input-required="false" form:image-position="center">
+          <form:checkbox form:name="CheckBox_Bezeichnung" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control157" form:id="control157" form:label="Bezeichnung" form:tab-stop="false" form:tab-index="11" form:visual-effect="flat" form:data-field="Option_2" form:input-required="false" form:current-state="checked" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CheckBox"/>
@@ -1961,15 +1961,6 @@
         <draw:control draw:name="Form126" draw:style-name="gr18" draw:text-style-name="P27" svg:width="1.001cm" svg:height="0.5cm" svg:x="21.269cm" svg:y="8.393cm" draw:control="control74"/>
         <draw:control draw:name="Steuerelement 1" draw:style-name="gr12" draw:text-style-name="P36" svg:width="6.501cm" svg:height="0.5cm" svg:x="15.769cm" svg:y="6.892cm" draw:control="control103"/>
       </draw:g>
-      <text:p text:style-name="P1">
-        <text:tab/>
-      </text:p>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
-      <text:p text:style-name="P1"/>
       <text:p text:style-name="P1"/>
       <text:p text:style-name="P1"/>
       <text:p text:style-name="P1"/>
