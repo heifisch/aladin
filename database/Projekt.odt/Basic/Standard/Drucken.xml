@@ -61,7 +61,7 @@ Sub Druck_vorbereiten()
 				oDialogPrint = LoadDialog_Projekt(&quot;Standard&quot;, &quot;Drucken&quot;)
 			
 				Pos_neu()
-				Document_berechnen()
+				XRechnung_erzeugen()
 			
 				oDialogPrintModel = oDialogPrint.Model
 				oOption_Print = oDialogPrintModel.getByName(&quot;Button_Druck&quot;)

@@ -923,12 +923,12 @@
                 <form:property form:property-name="ShowThousandsSeparator" office:value-type="boolean" office:boolean-value="true"/>
               </form:properties>
             </form:formatted-text>
-            <form:fixed-text form:name="Beschriftungsfeld 1" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control83" form:id="control83" form:label="+">
+            <form:fixed-text form:name="Field_Plus" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control83" form:id="control83" form:label="+">
               <office:event-listeners>
                 <script:event-listener script:language="ooo:StarBasic" script:event-name="form:performaction" script:macro-name="document:Standard.Infos.Aufwand_anzeigen"/>
               </office:event-listeners>
             </form:fixed-text>
-            <form:fixed-text form:name="Beschriftungsfeld 2" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control84" form:id="control84" form:label="-"/>
+            <form:fixed-text form:name="Field_Minus" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control84" form:id="control84" form:label="-"/>
             <form:listbox form:name="List_Korrektur_Vorzeichen" form:control-implementation="ooo:com.sun.star.form.component.ListBox" xml:id="control85" form:id="control85" form:disabled="true" form:dropdown="true" form:printable="false" form:size="2" form:data-field="Korrektur_Vorzeichen" form:input-required="false" form:bound-column="1" form:list-source-type="sql-pass-through" form:list-source="select '-','-' union select '+','+'">
               <form:properties>
                 <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
@@ -967,7 +967,7 @@
                 <script:event-listener script:language="ooo:StarBasic" script:event-name="dom:DOMFocusOut" script:macro-name="document:Standard.commit.Document_Typ_commit"/>
               </office:event-listeners>
             </form:fixed-text>
-            <form:formatted-text form:name="Währungsfeld 1" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control89" form:id="control89" form:printable="false" form:readonly="true" form:tab-stop="false" form:tab-index="29" form:data-field="Skonto" form:input-required="false" form:min-value="-1000000" form:max-value="1000000">
+            <form:formatted-text form:name="Field_Skonto" form:control-implementation="ooo:com.sun.star.form.component.CurrencyField" xml:id="control89" form:id="control89" form:printable="false" form:readonly="true" form:tab-stop="false" form:tab-index="29" form:data-field="Skonto" form:input-required="false" form:min-value="-1000000" form:max-value="1000000">
               <form:properties>
                 <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
                 <form:property form:property-name="CurrencySymbol" office:value-type="string" office:string-value=" €"/>
@@ -1555,7 +1555,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.aktualisieren.ZwischenBemerkung_bearbeiten?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:checkbox form:name="CheckBox_LeistungsID" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control153" form:id="control153" form:label="LeistungsID" form:tab-stop="false" form:tab-index="10" form:visual-effect="flat" form:data-field="Option_1" form:input-required="false" form:current-state="checked" form:image-position="center">
+          <form:checkbox form:name="CheckBox_LeistungsID" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control153" form:id="control153" form:label="LeistungsID" form:tab-stop="false" form:tab-index="10" form:visual-effect="flat" form:data-field="Option_1" form:input-required="false" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CheckBox"/>
@@ -1600,7 +1600,7 @@
               <script:event-listener script:language="ooo:script" script:event-name="form:performaction" xlink:href="vnd.sun.star.script:Standard.Routinen.AZ_anhaengen?language=Basic&amp;location=document" xlink:type="simple"/>
             </office:event-listeners>
           </form:button>
-          <form:checkbox form:name="CheckBox_Bezeichnung" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control157" form:id="control157" form:label="Bezeichnung" form:tab-stop="false" form:tab-index="11" form:visual-effect="flat" form:data-field="Option_2" form:input-required="false" form:current-state="checked" form:image-position="center">
+          <form:checkbox form:name="CheckBox_Bezeichnung" form:control-implementation="ooo:com.sun.star.form.component.CheckBox" xml:id="control157" form:id="control157" form:label="Bezeichnung" form:tab-stop="false" form:tab-index="11" form:visual-effect="flat" form:data-field="Option_2" form:input-required="false" form:image-position="center">
             <form:properties>
               <form:property form:property-name="ControlTypeinMSO" office:value-type="float" office:value="0"/>
               <form:property form:property-name="DefaultControl" office:value-type="string" office:string-value="stardiv.one.form.control.CheckBox"/>

@@ -3,6 +3,9 @@
 <script:module xmlns:script="http://openoffice.org/2000/script" script:name="XRechnung" script:language="StarBasic" script:moduleType="normal">REM ***** BASIC *****
 Option Explicit
 
+Dim stXRechnungPath As String,sXRechnungAbsender As String,sXRechnungEmpfaenger As String
+
+
 Sub XRechnungMenu()
 	If iDocTypID = 5 OR iDocTypID = 6 then
 		If lDocumentID &gt; 0 then
@@ -150,10 +153,12 @@ Sub CreateMenuXRechnung()
 End Sub
 
 Sub XRechnung_erzeugen()
-	Dim sPraefix As String,stXRechnungDir As String,stXRechnungPath As String,stXRechnungBaseName As String
+	Dim sPraefix As String,stXRechnungDir As String,stXRechnungBaseName As String
 	Dim sValidatorReturnCode As String,sValidatorReturnCodeFile As String,sValidatorReportHtml as String,sValidatorReportXml as String
 	Dim oShell As Object,oSimpleFileAccess As Object,oTextInputStream As Object,vStatus As Variant
 	
+	Document_berechnen()
+
 	If iDocTypID = 5 Then
 		If iOption_AZ = 1 then
 			sPraefix=&quot;AZ&quot;
@@ -185,7 +190,6 @@ Sub XRechnung_erzeugen()
 		End if
 	End If
 	
-	Document_berechnen()
 	SaveXRechnung(ConvertToURL(stXRechnungPath))
 
 	If Not FileExists(ConvertToURL(stXRechnungPath)) Then
@@ -236,7 +240,20 @@ Sub XRechnung_erzeugen()
 End Sub
 
 Sub XRechnung_versenden()
-	print &quot;XRechnung versenden&quot;
+	XRechnung_erzeugen()
+	
+	Dim sBody AS String,sSubject As String
+	
+	sSubject=sField_Document_Typ &amp;&quot; - &quot;&amp;_
+		fsInTrim(fsReplace(fsReplace(fsReplace(fsReplace(oField_Document_Name.BoundField.String,Chr(34),&quot; &quot;),Chr(10),&quot; - &quot;),Chr(13),&quot; - &quot;),&quot;,&quot;,&quot; &quot;))
+
+	sBody=&quot;Sehr geehrte Damen und Herren, &quot; &amp; Chr(10) &amp; Chr(10) &amp; &quot;anbei erhalten Sie die Rechnung zu Ihrem Auftrag im XRechnung-Format.&quot;
+	
+ 	SendMail(sXRechnungEmpfaenger,sXRechnungAbsender,sSubject,sBody,ConvertToURL(stXRechnungPath))
+
+	sXRechnungEmpfaenger=&quot;&quot;
+	sXRechnungAbsender=&quot;&quot;
+	stXRechnungPath=&quot;&quot;
 End Sub
 
 REM Folgender Code basiert auf den Code aus dem Program XRechnung von Robert Großkopf https://www.familiegrosskopf.de/robert/
@@ -315,6 +332,7 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 		&quot;(CASE WHEN &quot;&amp; sInvoiceTypeCode &amp;&quot;=384 AND t3.DocumentID_Korrekturrechnung&gt;0 THEN t3.DocumentID_Korrekturrechnung END) AS stVorRechnungID_51,&quot;&amp;_
 		&quot;NULL AS stKaufCompID_52,&quot;&amp;_
 		&quot;TRIM(CONCAT(&quot;&amp;_
+			&quot;(CASE WHEN LENGTH(t3.Document_Typ)&gt;0 THEN CONCAT(t3.Document_Typ,&apos;\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
 			&quot;(CASE WHEN t3.ProjektID&gt;0 THEN CONCAT(t5.Projekt_Name,&apos;\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
 			&quot;(CASE WHEN LENGTH(t3.Document_Name)&gt;0 THEN CONCAT(t3.Document_Name,&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
 			&quot;(CASE WHEN &quot;&amp; sInvoiceTypeCode &amp;&quot;=384 AND t3.DocumentID_Korrekturrechnung&gt;0 THEN &quot;&amp;_
@@ -560,7 +578,8 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 			arDocRefID(0) = oRecord2.getString(88)
 			arDocRefDate(0) = oRecord2.getString(89)
 		End If
-		
+		sXRechnungAbsender=stRStellEMail
+		sXRechnungEmpfaenger=stKaufEMail
 	Wend
 	REM Dummy für die Identifikation, falls BT-29, BT-30 und BT-31 leer sind
 	IF stSellerID = &quot;&quot; AND stRStellHRAEintragID = &quot;&quot; AND stRStellUST_IdNr = &quot;&quot; THEN
