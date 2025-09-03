@@ -24,7 +24,7 @@ CONTENT='
 ./database/PrintSerienbriefverteiler.ott
 ./database/PrintMahnung.odt 
 ./database/PrintPreisliste.odt 
-./database/PrintProject.odt 
+./database/PrintProjekt.odt 
 ./database/PrintZahlungserinnerung.odt 
 ./database/PrintZahlungsziele.ott 
 ./database/Projekte.odt 
