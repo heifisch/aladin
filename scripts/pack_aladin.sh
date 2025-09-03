@@ -31,8 +31,8 @@ CONTENT='
 ./database/Projekt.odt 
 ./database/Umsatz.odt 
 ./database/Alternative/PrintKorrespondenz.odt 
-./database/Alternative/PrintProject.odt  
-./database/Alternative/PrintMahnung.odt  
+./database/Alternative/PrintProjekt.odt 
+./database/Alternative/PrintMahnung.odt 
 ./database/Alternative/PrintZahlungserinnerung.odt 
 ./basic/ALADIN/dialog.xlb 
 ./basic/ALADIN/script.xlb 
