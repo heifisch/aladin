@@ -7,6 +7,29 @@ Diese Bibliothek wird in der Hoffnung weiterverbreitet, dass sie nützlich sein 
 jedoch OHNE IRGENDEINE GARANTIE, 
 auch ohne die implizierte Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR EINEN BESTIMMTEN ZWECK.
 
+## Neu! Erstellung von E-Rechnung als ZUGFeRD und XRechnung mit Validierung
+
+Es sind Funktionen zur Erstellung von E-Rechnungen hinzu gekommen.  
+Diesen basieren auf der Arbeit von Robert Großkopf und seinem Programm XRechnung.  
+Zu finden hier: https://www.familiegrosskopf.de/robert/
+
+Für die Validierung und das Erzeugen der ZUGFeRD-Rechnung sind exerne Java-Bibliotheken notwendig:  
+
+Validator:  
+https://github.com/itplr-kosit/validator  
+https://github.com/itplr-kosit/validator-configuration-xrechnung  
+https://github.com/itplr-kosit/xrechnung-schematron  
+
+ZUGFeRD:  
+https://github.com/ZUGFeRD/mustangproject  
+
+Die externen Programme werden mittels Basic-Routine über die beiliegenden Scripte aufgerufen.
+Die Pfade in den Scripten müssen entsprechend der Installationsorte, der oben angegebenen Programme anepasst werden.
+In der Basic Bibliothek ALADIN_Global muss die Variable "sScriptsPath" entsprechend der Ablage der Scripte angepasst werden.  
+
+Das Ganze ist erstmal nur unter Linux nutzbar.
+Für Windows müssen entsprechende Scripte erstellt werden.
+
 ## Vorausetzungen:
 
 Apache OpenOffice oder LibreOffice,  
