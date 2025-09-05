@@ -1,5 +1,5 @@
 #!/bin/bash
-if [ "$#" -ne "1" ] || [ "$1" = "-h" -o "$1" = "-H" -o -z "${1#\-[hH][eE][lL][pP]}" ] || [ "$1" -lt "1" ]; then
+if [ "$#" -ne "1" ] || [ "$1" = "-h" -o "$1" = "-H" -o -z "${1#\-[hH][eE][lL][pP]}" ]; then
         cat << EOF
 Usage:
      ${0} <Pfad zu XRechnung XML-Datei mit den Rechnungsdaten>

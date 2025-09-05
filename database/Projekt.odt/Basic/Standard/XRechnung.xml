@@ -276,8 +276,7 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 	Dim oRecord1 as Object,oRecord2 as Object,oRecord3 as Object
 	Dim	iOptionInhaber as Integer,sGeschaeftsfuehrer as String,sHRB as String,sAmtsgericht as String,sSitz as String
 	Dim sHREintragForm As String,sPraefix As String,sInvoiceTypeCode As String,stSkontoSatz As String,stSkontoTage As String,stSkontoBis As String,stSkonto As String
-	Dim sAZ_Text As String,stFaelligTage As String
-
+	Dim sAZ_Text As String,stFaelligTage As String,sDocumentID_Korrekturrechnung As String
 
 	DIM oUcb AS OBJECT, oOutputStream AS OBJECT, oFile AS OBJECT
 	DIM stID AS STRING, stSql AS STRING, stNetto AS STRING, stSteuer AS STRING, stBrutto AS STRING
@@ -312,9 +311,11 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 			sPraefix=&quot;RE&quot;
 		End if
 		sInvoiceTypeCode=&quot;t3.RechnungsTypCodeID&quot;
+		sDocumentID_Korrekturrechnung=&quot;t3.DocumentID_Korrekturrechnung&quot;
 	Elseif iDocTypID = 6 then
 		sPraefix=&quot;GU&quot;
 		sInvoiceTypeCode=&quot;&apos;381&apos;&quot;
+		sDocumentID_Korrekturrechnung=0
 	End If
 
 	sSQL2=&quot;SELECT DISTINCT &quot;&amp;_
@@ -336,13 +337,13 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 		sInvoiceTypeCode &amp;&quot; AS stInvoiceTypeCode_38,t3.Erstellungsdatum AS stLDatum_39,NULL AS stLFirma_40,NULL AS stLStr_41,NULL AS stLPlz_42,NULL AS stLStadt_43,&quot;&amp;_
 		&quot;NULL AS stLLandCode_44,NULL AS stRStartDate_45,NULL AS stREndDate_46,NULL AS stProjectID_47,NULL AS stContractID_48,&quot;&amp;_
 		&quot;NULL AS stPurchaseID_49,NULL AS stSalesID_50,&quot;&amp;_
-		&quot;(CASE WHEN &quot;&amp; sInvoiceTypeCode &amp;&quot;=384 AND t3.DocumentID_Korrekturrechnung&gt;0 THEN t3.DocumentID_Korrekturrechnung END) AS stVorRechnungID_51,&quot;&amp;_
+		&quot;(CASE WHEN &quot;&amp; sInvoiceTypeCode &amp;&quot;=384 AND &quot; &amp; sDocumentID_Korrekturrechnung &amp; &quot;&gt;0 THEN &quot; &amp; sDocumentID_Korrekturrechnung &amp; &quot; END) AS stVorRechnungID_51,&quot;&amp;_
 		&quot;NULL AS stKaufCompID_52,&quot;&amp;_
 		&quot;TRIM(CONCAT(&quot;&amp;_
 			&quot;(CASE WHEN LENGTH(t3.Document_Typ)&gt;0 THEN CONCAT(t3.Document_Typ,&apos;\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
 			&quot;(CASE WHEN t3.ProjektID&gt;0 THEN CONCAT(t5.Projekt_Name,&apos;\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
 			&quot;(CASE WHEN LENGTH(t3.Document_Name)&gt;0 THEN CONCAT(t3.Document_Name,&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
-			&quot;(CASE WHEN &quot;&amp; sInvoiceTypeCode &amp;&quot;=384 AND t3.DocumentID_Korrekturrechnung&gt;0 THEN &quot;&amp;_
+			&quot;(CASE WHEN &quot;&amp; sInvoiceTypeCode &amp;&quot;=384 AND &quot; &amp; sDocumentID_Korrekturrechnung &amp; &quot;&gt;0 THEN &quot;&amp;_
 				&quot;CONCAT(&apos;Korrektur zu Rechnung &apos;,&quot;&amp;_
 				&quot;(SELECT CONCAT(CASE WHEN AZ=1 THEN &apos;AZ&apos; ELSE &apos;RE&apos; END,&apos; &apos;,DocumentID) FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51),&quot;&amp;_
 				&quot;&apos; vom &apos;,DATE_FORMAT((SELECT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51),&apos;%d.%m.%Y&apos;),&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
@@ -612,8 +613,9 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 		&quot;t1.EP AS arDataPrice_4,&apos;0&apos; AS arDataRabatt_5,&quot;&amp;_
 		&quot;(CASE WHEN t1.Pos_TypID=1 THEN t1.GP ELSE 0 END) AS arDataAmount_6,&quot;&amp;_
 		&quot;t2.MwSt_Satz AS arDataTax_7,&apos;&quot;&amp; arTaxID(0) &amp;&quot;&apos; AS arDataTaxID_8,t3.Code AS arDataQuantityUnitCode_9,NULL AS arDataStartDate_10,NULL AS arDataEndDate_11,&quot;&amp;_
-		&quot;&apos;Main&apos; AS arDataRow_12,t1.Pos_TypID AS iPosTypID_13,NULL AS arDataKonto_14,COALESCE(t1.LeistungsID,t1.Pos) AS arDataSellID_15,NULL AS arDataRabattIndicator_16,&quot;&amp;_
-		&quot;(CASE WHEN t1.Pos_TypID=1 OR t1.Pos_TypID=4 THEN t1.Leistungsbezeichnung ELSE TRIM(CONCAT(t4.Pos_Typ,&apos;\n&apos;,t1.Leistungsbezeichnung)) END) AS arDataName_17,&quot;&amp;_
+		&quot;&apos;Main&apos; AS arDataRow_12,t1.Pos_TypID AS iPosTypID_13,NULL AS arDataKonto_14,&quot;&amp;_
+		&quot;COALESCE((CASE WHEN LENGTH(t1.Bestellnummer)=0 THEN NULL ELSE t1.Bestellnummer END),(CASE WHEN LENGTH(t1.LeistungsID)=0 THEN NULL ELSE t1.LeistungsID END),t1.Pos) AS arDataSellID_15,&quot;&amp;_
+		&quot;NULL AS arDataRabattIndicator_16,(CASE WHEN t1.Pos_TypID=1 OR t1.Pos_TypID=4 THEN t1.Leistungsbezeichnung ELSE TRIM(CONCAT(t4.Pos_Typ,&apos;\n&apos;,t1.Leistungsbezeichnung)) END) AS arDataName_17,&quot;&amp;_
 		&quot;t1.Leistung AS arrDataLeistung_18,t1.Lieferung AS arrDataLieferung_19,t1.LeistungsID AS arDocRefID_20,t1.Bestellnummer AS arDocRefDate_21&quot;&amp;_
 		&quot; FROM &quot;&amp; sArbeitstabelle &amp;&quot; AS t1 LEFT OUTER JOIN Einheit AS t3 ON t3.Einheit LIKE t1.Einheit,&quot;&amp; sTabelle1 &amp;&quot; AS t2,Pos_Typ AS t4&quot;&amp;_
 		&quot; WHERE t2.DocumentID=t1.DocumentID&quot;&amp;_
@@ -743,12 +745,21 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 	REM 0…n bedeutet: 0 von belibig vielen darf vorhanden sein
 	REM [BT-1] - Einzelnummer
 	REM [BG-14] - Gruppennummer
-	stString = &quot;&lt;?xml version=&quot;&quot;1.0&quot;&quot; encoding=&quot;&quot;UTF-8&quot;&quot;?&gt;&quot; &amp; CHR(13) &amp; _
-		&quot;&lt;ubl:Invoice xmlns:ubl=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2&quot;&quot;&quot; &amp; CHR(13) &amp; _
-		Space(2 * inTab) &amp; &quot;xmlns:cac=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2&quot;&quot;&quot; &amp; CHR(13) &amp; _
-		Space(2 * inTab) &amp; &quot;xmlns:cbc=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2&quot;&quot;&quot; &amp; CHR(13) &amp; _
-        Space(2 * inTab) &amp; &quot;xmlns:xsi=&quot;&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&quot;&quot; &amp; CHR(13) &amp; _
-        Space(2 * inTab) &amp; &quot;xsi:schemaLocation=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.3/xsd/maindoc/UBL-Invoice-2.3.xsd&quot;&quot;&gt;&quot; &amp; CHR(13)
+
+	stString = &quot;&lt;?xml version=&quot;&quot;1.0&quot;&quot; encoding=&quot;&quot;UTF-8&quot;&quot;?&gt;&quot; &amp; CHR(13)
+	If stInvoiceTypeCode = &quot;381&quot; Then
+		stString = stString &amp; &quot;&lt;ubl:CreditNote xmlns:ubl=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2&quot;&quot;&quot; &amp; CHR(13)
+	Else
+		stString = stString &amp; &quot;&lt;ubl:Invoice xmlns:ubl=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2&quot;&quot;&quot; &amp; CHR(13)
+	End if
+	stString = stString &amp; Space(2 * inTab) &amp; &quot;xmlns:cac=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2&quot;&quot;&quot; &amp; CHR(13)
+	stString = stString &amp; Space(2 * inTab) &amp; &quot;xmlns:cbc=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2&quot;&quot;&quot; &amp; CHR(13)
+	stString = stString &amp; Space(2 * inTab) &amp; &quot;xmlns:xsi=&quot;&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&quot;&quot; &amp; CHR(13)
+	If stInvoiceTypeCode = &quot;381&quot; Then
+		stString = stString &amp; Space(2 * inTab) &amp; &quot;xsi:schemaLocation=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 http://docs.oasis-open.org/ubl/os-UBL-2.3/xsd/maindoc/UBL-CreditNote-2.3.xsd&quot;&quot;&gt;&quot; &amp; CHR(13)
+	Else
+		stString = stString &amp; Space(2 * inTab) &amp; &quot;xsi:schemaLocation=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.3/xsd/maindoc/UBL-Invoice-2.3.xsd&quot;&quot;&gt;&quot; &amp; CHR(13)
+	End if
 	REM Rechnung ist zu XRechnung 3.0 kompatible, Identifier Gruppe PROCESS CONTROL, erforderlich [BT-24]
 	stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:CustomizationID&gt;urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0&lt;/cbc:CustomizationID&gt;&quot; &amp; CHR(13)
 	REM Default Value Gruppe PROCESS CONTROL, erforderlich [BT-23]
@@ -757,10 +768,14 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 	REM ID → Rechnungsnummer, muss eindeutig sein, IssueDate → Rechnungsdatum (Ausstellungsdatum), DueDate → Fälligkeitsdatum des Rechnungsbetrages.
     stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; stRNummer &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; CHR(13)					&apos;erforderlich 1…1	[BT-1]
 	stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:IssueDate&gt;&quot; &amp; stRDatum &amp; &quot;&lt;/cbc:IssueDate&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1	[BT-2]
-	IF stRZahlungBisDatum &lt;&gt; &quot;&quot; THEN
+	IF stRZahlungBisDatum &lt;&gt; &quot;&quot; AND stInvoiceTypeCode &lt;&gt; &quot;381&quot; THEN
 		stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:DueDate&gt;&quot; &amp; stRZahlungBisDatum &amp; &quot;&lt;/cbc:DueDate&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…1	[BT-9]
 	END IF
-	stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:InvoiceTypeCode&gt;&quot; &amp; stInvoiceTypeCode &amp; &quot;&lt;/cbc:InvoiceTypeCode&gt;&quot; &amp; CHR(13)		&apos;erforderlich 1…1	[BT-3]	
+	If stInvoiceTypeCode = &quot;381&quot; Then
+		stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:CreditNoteTypeCode&gt;&quot; &amp; stInvoiceTypeCode &amp; &quot;&lt;/cbc:CreditNoteTypeCode&gt;&quot; &amp; CHR(13)		&apos;erforderlich 1…1	[BT-3]	
+	Else
+		stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:InvoiceTypeCode&gt;&quot; &amp; stInvoiceTypeCode &amp; &quot;&lt;/cbc:InvoiceTypeCode&gt;&quot; &amp; CHR(13)		&apos;erforderlich 1…1	[BT-3]	
+	End if
 	IF stRAnmerkung &lt;&gt; &quot;&quot; Then
 		stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:Note&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…1	[BT-22]
 		stString = stString &amp; Trim(stRAnmerkung)
@@ -1051,19 +1066,18 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 	REM Schleife für die einzelnen Einträge in der Rechnung (Rechnungszeile), Lieferkosten können hier ebenfalls erscheinen.
 	REM Lieferkosten wären auch über einen separaten Eintrag für die Gesamtrechnung möglich
 	FOR i = 0 TO UBOUND(arDataID())
-		IF arDataRow(i) = &quot;Main&quot; OR arDataRow(i) = &quot;MainToSub&quot; THEN
+		If stInvoiceTypeCode = &quot;381&quot; Then
+			stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cac:CreditNoteLine&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…n	[BG-25]
+		Else
 			stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cac:InvoiceLine&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…n	[BG-25]
-			t = 0
-		ELSEIF arDataRow(i) = &quot;Sub&quot; OR arDataRow(i) = &quot;SubToSubSub&quot; OR arDataRow(i) = &quot;SubToMain&quot; THEN
-			stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;cac:SubInvoiceLine&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 1…n
-			t = 1
-		ELSEIF arDataRow(i) = &quot;SubSub&quot; OR arDataRow(i) = &quot;SubSubToSub&quot; OR arDataRow(i) = &quot;SubSubToMain&quot;	THEN		
-			stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;cac:SubInvoiceLine&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 1…n
-			t = 2
-		ELSE
-		END If
+		End if
+		t = 0
 		stString = stString &amp; Space((2+t) * inTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; arDataID(i) &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1	[BT-126]
-		stString = stString &amp; Space((2+t) * inTab) &amp; &quot;&lt;cbc:InvoicedQuantity unitCode=&quot;&quot;&quot; &amp; arDataQuantityUnitCode(i) &amp; &quot;&quot;&quot;&gt;&quot; &amp; arDataQuantity(i) &amp; &quot;&lt;/cbc:InvoicedQuantity&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1	[BT-129]
+		If stInvoiceTypeCode = &quot;381&quot; Then
+			stString = stString &amp; Space((2+t) * inTab) &amp; &quot;&lt;cbc:CreditedQuantity unitCode=&quot;&quot;&quot; &amp; arDataQuantityUnitCode(i) &amp; &quot;&quot;&quot;&gt;&quot; &amp; arDataQuantity(i) &amp; &quot;&lt;/cbc:CreditedQuantity&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1	[BT-129]
+		Else
+			stString = stString &amp; Space((2+t) * inTab) &amp; &quot;&lt;cbc:InvoicedQuantity unitCode=&quot;&quot;&quot; &amp; arDataQuantityUnitCode(i) &amp; &quot;&quot;&quot;&gt;&quot; &amp; arDataQuantity(i) &amp; &quot;&lt;/cbc:InvoicedQuantity&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1	[BT-129]
+		End if
 		stString = stString &amp; Space((2+t) * inTab) &amp; &quot;&lt;cbc:LineExtensionAmount currencyID=&quot;&quot;&quot; &amp; stDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; arDataAmount(i) &amp; &quot;&lt;/cbc:LineExtensionAmount&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1; Gesamtpreis aus Price * Quantity * Allowance; genau 2 Nachkommastellen	[BT-131]
 		IF arDataKonto(i) &lt;&gt; &quot;&quot; THEN
 			stString = stString &amp; Space((2+t) * inTab) &amp; &quot;&lt;cbc:AccountingCost&gt;&quot; &amp; arDataKonto(i) &amp; &quot;&lt;/cbc:AccountingCost&gt;&quot; &amp; CHR(13)	&apos; nicht erforderlich 0…1; [BT-133]
@@ -1089,7 +1103,7 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 			stString = stString &amp; Space((3+t) * inTab) &amp; &quot;&lt;cbc:Description&gt;&quot; &amp; CHR(13) &apos;nicht erforderlich 0…1; kann ausführlicher sein	[BT-154]
 			stString = stString &amp; arDataDescription(i) &amp; CHR(13)
 			stString = stString &amp; Space((3+t) * inTab) &amp; &quot;&lt;/cbc:Description&gt;&quot; &amp; CHR(13)
-		End if
+		End If
 		stString = stString &amp; Space((3+t) * inTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; arDataName(i) &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1	[BT-153]
 		stString = stString &amp; Space((3+t) * inTab) &amp; &quot;&lt;cac:SellersItemIdentification&gt;&quot; &amp; CHR(13) &apos;nicht erforderlich 0…1
 		stString = stString &amp; Space((4+t) * inTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; arDataSellID(i) &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1, wenn SellersItemIdentification vorhanden ist	[BT-155]
@@ -1105,17 +1119,17 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 		stString = stString &amp; Space((2+t) * inTab) &amp; &quot;&lt;cac:Price&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1	[BG-29]
 		stString = stString &amp; Space((3+t) * inTab) &amp; &quot;&lt;cbc:PriceAmount currencyID=&quot;&quot;&quot; &amp; stDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; arDataPrice(i) &amp; &quot;&lt;/cbc:PriceAmount&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1	[BT-146]
 		stString = stString &amp; Space((2+t) * inTab) &amp; &quot;&lt;/cac:Price&gt;&quot; &amp; CHR(13)		
-		IF arDataRow(i) = &quot;SubSub&quot; OR arDataRow(i) = &quot;SubSubToSub&quot; OR arDataRow(i) = &quot;SubSubToMain&quot; THEN
-			stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;/cac:SubInvoiceLine&gt;&quot; &amp; CHR(13)
-		END IF
-		IF arDataRow(i) = &quot;Sub&quot; OR arDataRow(i) = &quot;SubToMain&quot; OR arDataRow(i) = &quot;SubSubToMain&quot; THEN
-			stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;/cac:SubInvoiceLine&gt;&quot; &amp; CHR(13)
-		END IF
-		IF arDataRow(i) = &quot;Main&quot; OR arDataRow(i) = &quot;SubToMain&quot; OR arDataRow(i) = &quot;SubSubToMain&quot; THEN
+		If stInvoiceTypeCode = &quot;381&quot; Then
+			stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;/cac:CreditNoteLine&gt;&quot; &amp; CHR(13)
+		Else
 			stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;/cac:InvoiceLine&gt;&quot; &amp; CHR(13)
-		END IF
-    NEXT
-	stString = stString &amp; &quot;&lt;/ubl:Invoice&gt;&quot;
+		End If
+    Next
+	If stInvoiceTypeCode = &quot;381&quot; Then
+		stString = stString &amp; &quot;&lt;/ubl:CreditNote&gt;&quot;
+	Else	
+		stString = stString &amp; &quot;&lt;/ubl:Invoice&gt;&quot;
+	End If	
 	oOutputStream.writeString(stString)
 	oOutputStream.closeOutput()
 END SUB
