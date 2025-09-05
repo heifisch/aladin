@@ -62,7 +62,7 @@ Global const iScannerAktiv=1
 Global const sScanDevice=&quot;fujitsu:ScanSnap S500:18197&quot;
 Global const sPathEingangsRechnungen=&quot;/daten/aladin/ALADIN/Eingangsrechnungen/&quot;
 Global const sPathAusgangsRechnungen=&quot;/daten/aladin/ALADIN/Ausgangsrechnungen/&quot;
-Global Const sPathXRechnungValidator=&quot;/usr/local/lib/validator/validator.sh&quot;
+Global Const sScriptsPath=&quot;/usr/local/lib/aladin/&quot;    &apos; Verzeichnis in den Shell-Scripte liegen die für die Benutzung von externen Anwendungen genutzt werden können
 
 Sub Main
 
