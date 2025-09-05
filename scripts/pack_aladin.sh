@@ -57,10 +57,10 @@ CONTENT='
 ./basic/ALADIN_Global/Global.xba 
 ./basic/ALADIN_Global/dialog.xlb 
 ./basic/ALADIN_Global/script.xlb 
-./ALADIN.lnk
-./ALADIN.ico
-./ALADIN.xpm
-./ALADIN_INSTALL.odt
+./ALADIN.lnk 
+./ALADIN.ico 
+./ALADIN.xpm 
+./ALADIN_INSTALL.odt 
 ./openldap'
 
 echo $CONTENT

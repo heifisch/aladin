@@ -13,12 +13,12 @@ Dim sKontaktID as String,sMinutenverrechnungssatz as String,sAnsprechpartnerID a
 Dim sMaterialaufschlagsatz as String,sSumme_ohne_MwSt as String,sNummern as String
 Dim sMwSt as String,sSumme_mit_MwSt as String,sRabatt_Satz as String,sSkonto_Satz as String
 Dim sRabatt as String,sSkonto as String,sSumme_nach_Rabatt as String,sKorrektur_Satz as String
-Dim sKorrektur as String,sSumme_nach_Korrektur as String,sKorrektur_Anlass as String,sSumme_nach_Skonto as String
+Dim sKorrektur_Vorzeichen as string,sKorrektur as String,sSumme_nach_Korrektur as String,sKorrektur_Anlass as String
 Dim sLV_Pos_alt as String,sLV_Pos_neu as String,sLeerzeilen as String,sMwSt_Satz_aktuell as String
 Dim sLeistungsgruppe as String,sBauzeit as String,sEinkaufspreis as String,sLeistungsID_old as String
 Dim sLieferant_1 as String,sLieferant_2 as String,sLieferant_3 as String
 Dim iCount as Long,iCount_MAX as Long,iGesperrt as integer
-Dim sMwSt_Satz as String,sProjektID as String
+Dim sMwSt_Satz as String,sProjektID as String,sSumme_nach_Skonto as String
 Dim sLeistungsID as string,sDocument_Name as String
 Dim sLeistungsbezeichnung as string,sLeistungsbeschreibung as String,sEinheit as String
 Dim sWert as String,sFaktor as String,sLeistungsempfaenger as String,sLieferbemerkung as String
@@ -52,7 +52,7 @@ Sub Document_kopieren()
 				&quot;t1.Minutenverrechnungssatz,t1.Materialaufschlagsatz,&quot;&amp;_
 				&quot;t1.Summe_ohne_MwSt,t1.MwSt_Satz,t1.MwSt,t1.Summe_mit_MwSt,&quot;&amp;_
 				&quot;t1.Rabatt_Satz,t1.Skonto_Satz,t1.Korrektur_Satz,&quot;&amp;_
-				&quot;t1.Rabatt,t1.Skonto,t1.Korrektur,t1.Korrektur_Anlass,t1.Summe_nach_Rabatt,&quot;&amp;_
+				&quot;t1.Rabatt,t1.Skonto,t1.Korrektur_Vorzeichen,t1.Korrektur,t1.Korrektur_Anlass,t1.Summe_nach_Rabatt,&quot;&amp;_
 				&quot;t1.Summe_nach_Korrektur,t1.Summe_nach_Skonto,t1.Faellig_Tage,&quot;&amp;_
 				&quot;t1.Skonto_Tage,t1.Bemerkung,t1.Leerzeilen,t3.MwSt_Satz&quot;
 			if iDocTypID &lt; 7 then
@@ -81,21 +81,22 @@ Sub Document_kopieren()
 				sKorrektur_Satz=oRecord1.getString(15)
 				sRabatt=oRecord1.getString(16)
 				sSkonto=oRecord1.getString(17)
-				sKorrektur=oRecord1.getString(18)
-				sKorrektur_Anlass=oRecord1.getString(19)
-				sSumme_nach_Rabatt=oRecord1.getString(20)
-				sSumme_nach_Korrektur=oRecord1.getString(21)
-				sSumme_nach_Skonto=oRecord1.getString(22)
-				iFaellig_Tage=oRecord1.getInt(23)
-				iSkonto_Tage=oRecord1.getInt(24)
-				sBemerkung=oRecord1.getString(25)
-				sLeerzeilen=oRecord1.getString(26)
-				sMwSt_Satz_aktuell=oRecord1.getString(27)
+				sKorrektur_Vorzeichen=oRecord1.getString(18)
+				sKorrektur=oRecord1.getString(19)
+				sKorrektur_Anlass=oRecord1.getString(20)
+				sSumme_nach_Rabatt=oRecord1.getString(21)
+				sSumme_nach_Korrektur=oRecord1.getString(22)
+				sSumme_nach_Skonto=oRecord1.getString(23)
+				iFaellig_Tage=oRecord1.getInt(24)
+				iSkonto_Tage=oRecord1.getInt(25)
+				sBemerkung=oRecord1.getString(26)
+				sLeerzeilen=oRecord1.getString(27)
+				sMwSt_Satz_aktuell=oRecord1.getString(28)
 				if iDocTypID &lt; 7 then
-					i13b=oRecord1.getInt(28)
-					s13bText=oRecord1.getString(29)
-					iUSt_befreit=oRecord1.getInt(30)
-					sUSt_befreit_Text=oRecord1.getString(31)
+					i13b=oRecord1.getInt(29)
+					s13bText=oRecord1.getString(30)
+					iUSt_befreit=oRecord1.getInt(31)
+					sUSt_befreit_Text=oRecord1.getString(32)
 				End if
 			Wend
 nochmal:
@@ -129,7 +130,7 @@ nochmal:
 			sSQL2=&quot;INSERT INTO &quot;&amp; sTabelle1 &amp;_
 				&quot;(Document_Name,ProjektID,KontaktID,AnsprechpartnerID,Leistungsempfaenger,Lieferbemerkung,&quot;&amp;_
 				&quot;Minutenverrechnungssatz,Materialaufschlagsatz,Summe_ohne_MwSt,MwSt_Satz,&quot;&amp;_
-				&quot;MwSt,Summe_mit_MwSt,Rabatt_Satz,Korrektur_Satz,Skonto_Satz,Rabatt,Korrektur,Korrektur_Anlass,Skonto,&quot;&amp;_
+				&quot;MwSt,Summe_mit_MwSt,Rabatt_Satz,Korrektur_Satz,Skonto_Satz,Rabatt,Korrektur_Vorzeichen,Korrektur,Korrektur_Anlass,Skonto,&quot;&amp;_
 				&quot;Summe_nach_Rabatt,Summe_nach_Korrektur,Summe_nach_Skonto,Faellig_Tage,Skonto_Tage,Bemerkung,Leerzeilen&quot;
 			if iDocTypID &lt; 7 then
 				sSQL2=sSQL2 &amp; &quot;,13b,13bText,USt_befreit,USt_befreit_Text&quot;
@@ -138,8 +139,8 @@ nochmal:
 				&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLeistungsempfaenger) &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sLieferbemerkung) &amp;_
 				&quot;&apos;,&apos;&quot;&amp; sMinutenverrechnungssatz &amp;&quot;&apos;,&apos;&quot;&amp; sMaterialaufschlagsatz &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_ohne_MwSt &amp;_
 				&quot;&apos;,&apos;&quot;&amp; sMwSt_Satz &amp;&quot;&apos;,&apos;&quot;&amp; sMwSt &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_mit_MwSt &amp;&quot;&apos;,&apos;&quot;&amp; sRabatt_Satz &amp;&quot;&apos;,&apos;&quot;&amp; sKorrektur_Satz &amp;_
-				&quot;&apos;,&apos;&quot;&amp; sSkonto_Satz &amp;&quot;&apos;,&apos;&quot;&amp; sRabatt &amp;&quot;&apos;,&apos;&quot;&amp; sKorrektur &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sKorrektur_Anlass) &amp;&quot;&apos;,&apos;&quot;&amp; sSkonto &amp;_
-				&quot;&apos;,&apos;&quot;&amp; sSumme_nach_Rabatt &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_nach_Korrektur &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_nach_Skonto &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sSkonto_Satz &amp;&quot;&apos;,&apos;&quot;&amp; sRabatt &amp;&quot;&apos;,&apos;&quot;&amp; sKorrektur_Vorzeichen &amp;&quot;&apos;,&apos;&quot;&amp; sKorrektur &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sKorrektur_Anlass) &amp;_
+				&quot;&apos;,&apos;&quot;&amp; sSkonto &amp; &quot;&apos;,&apos;&quot;&amp; sSumme_nach_Rabatt &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_nach_Korrektur &amp;&quot;&apos;,&apos;&quot;&amp; sSumme_nach_Skonto &amp;_
 				&quot;&apos;,&apos;&quot;&amp; iFaellig_Tage &amp;&quot;&apos;,&apos;&quot;&amp; iSkonto_Tage &amp;&quot;&apos;,&apos;&quot;&amp; fsConvertApostroph(sBemerkung) &amp;&quot;&apos;,&apos;&quot;&amp; sLeerzeilen &amp;&quot;&apos;&quot;
 			if iDocTypID &lt; 7 then
 				sSQL2=sSQL2 &amp; &quot;,&quot;&amp; i13b &amp;&quot;,&apos;&quot;&amp; s13bText &amp;&quot;&apos;,&apos;&quot;&amp; iUSt_befreit &amp;&quot;&apos;,&apos;&quot;&amp; sUSt_befreit_Text &amp;&quot;&apos;&quot;

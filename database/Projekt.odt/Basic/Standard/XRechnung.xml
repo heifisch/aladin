@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE script:module PUBLIC "-//OpenOffice.org//DTD OfficeDocument 1.0//EN" "module.dtd">
-<script:module xmlns:script="http://openoffice.org/2000/script" script:name="XRechnung" script:language="StarBasic" script:moduleType="normal">REM ***** BASIC *****
+<script:module xmlns:script="http://openoffice.org/2000/script" script:name="XRechnung" script:language="StarBasic" script:moduleType="normal">&apos; Erstellt von Heiko Fischer
+&apos; heiko.fischer@aladin-gmbh.de  -  www.aladin-gmbh.de
+&apos; Veröffentlicht unter GPL
+REM ***** BASIC *****
 Option Explicit
 
 Dim stXRechnungPath As String,sXRechnungAbsender As String,sXRechnungEmpfaenger As String
@@ -196,7 +199,7 @@ Sub XRechnung_erzeugen()
 		MsgBox(&quot;XRechnung wurde nicht erzeugt!&quot;,64,sTitle_lokal)
 		exit Sub		
 	Else
-		If Not FileExists(ConvertToURL(sPathXRechnungValidator)) Then
+		If Not FileExists(ConvertToURL(sScriptsPath &amp; &quot;validator.sh&quot;)) Then
 			MsgBox(&quot;Kein Validator gefunden!&quot;,64,sTitle_lokal)
 			exit Sub		
 		End If
@@ -210,7 +213,9 @@ Sub XRechnung_erzeugen()
 	If FileExists(sValidatorReportXml) Then Kill sValidatorReportXml
 	If FileExists(sValidatorReturnCodeFile) Then Kill sValidatorReturnCodeFile
 	
-	Shell(sPathXRechnungValidator,1,stXRechnungPath,True)
+	Shell(sScriptsPath &amp; &quot;validator.sh&quot;,1,stXRechnungPath,True)
+	
+	If FileExists(sValidatorReportXml) Then Kill sValidatorReportXml
 	
 	oSimpleFileAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
 	oTextInputStream = CreateUnoService(&quot;com.sun.star.io.TextInputStream&quot;)
@@ -233,7 +238,9 @@ Sub XRechnung_erzeugen()
 				MsgBox(&quot;Es ist ein Fehler bei der Validierung der XRechnung aufgetreten!&quot; &amp; Chr$(13) &amp; Chr$(13) &amp;_
 				&quot;Fehlercode: &quot;&amp; sValidatorReturnCode,64,sTitle_lokal)
 			End If
-		End if
+		Else
+			If FileExists(sValidatorReturnCodeFile) Then Kill sValidatorReturnCodeFile
+		End If
 	Else
 		MsgBox(&quot;Es wurde kein Return-Code vom Validator gefunden!&quot;,64,sTitle_lokal)
 	End if
@@ -269,7 +276,7 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 	Dim oRecord1 as Object,oRecord2 as Object,oRecord3 as Object
 	Dim	iOptionInhaber as Integer,sGeschaeftsfuehrer as String,sHRB as String,sAmtsgericht as String,sSitz as String
 	Dim sHREintragForm As String,sPraefix As String,sInvoiceTypeCode As String,stSkontoSatz As String,stSkontoTage As String,stSkontoBis As String,stSkonto As String
-	Dim sAZ_Text As String
+	Dim sAZ_Text As String,stFaelligTage As String
 
 
 	DIM oUcb AS OBJECT, oOutputStream AS OBJECT, oFile AS OBJECT
@@ -281,7 +288,7 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 	DIM stInvoiceTypeCode AS STRING, stDocumentCurrencyCode AS STRING, stCountryIdentificationCode AS STRING, stPaymentMeansCode AS STRING, stKaufUST_IdNr As String
 	DIM stFileUrl AS STRING, stString AS STRING, stDataAmountTotal AS STRING, stAllowanceTotalAmount AS STRING, stChargeTotalAmount AS STRING, stKaufCompID AS STRING
 	DIM stLDatum AS STRING, stLFirma AS STRING, stLStr AS STRING, stLPlz AS STRING, stLStadt AS STRING, stLLandCode AS STRING, stLAddress AS STRING, stDelivery AS STRING
-	DIM stGlaeubID AS STRING, stIBANEmpfaenger AS STRING, stMandatID AS STRING, stSteuerfreiheit AS STRING, stRStellSteuerNr AS STRING, stPurchaseID As String, stSalesID As String
+	DIM stGlaeubID AS STRING, stIBANEmpfaenger AS STRING, stMandateID AS STRING, stSteuerfreiheit AS STRING, stRStellSteuerNr AS STRING, stPurchaseID As String, stSalesID As String
 	DIM stTenderID AS STRING, stObjectID AS STRING, stAccounting AS STRING, stSellerID AS STRING, stSellerICDCode AS STRING, stProjectID As String, stContractID As String
 	Dim stKaufAnsprechP As String, stKaufAnsprechPTel As String, stKaufAnsprechPEMail As String, stRStartDate As String, stREndDate As String, stRAnmerkung As String
 	Dim stVorRechnungID As String, stPrepaidAmount As String, stPayableAmount As String
@@ -342,7 +349,7 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 			&quot;(CASE WHEN LENGTH(t3.Leistungsempfaenger)&gt;0 THEN CONCAT(&apos;Leistungsempfänger:\n&apos;,t3.Leistungsempfaenger,&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
 			&quot;(CASE WHEN LENGTH(t3.Lieferbemerkung)&gt;0 THEN CONCAT(t3.Lieferbemerkung,&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
 			&quot;(CASE WHEN LENGTH(t3.Bemerkung)&gt;0 THEN CONCAT(t3.Bemerkung,&apos;\n\n&apos;) ELSE &apos;&apos; END))) AS stRAnmerkung_53,&quot;&amp;_
-		&quot;NULL AS stGlaeubID_54,NULL AS stIBANEmpfaenger_55,NULL AS stMandatID_56,&quot;&amp;_
+		&quot;NULL AS stGlaeubID_54,NULL AS stIBANEmpfaenger_55,NULL AS stMandateID_56,&quot;&amp;_
 		&quot;(CASE WHEN t3.13b=1 THEN t3.13bText WHEN t3.USt_befreit=1 THEN t3.USt_befreit_Text ELSE NULL END) AS stSteuerfreiheit_57,&quot;&amp;_
 		&quot;t4.Umsatzsteuernummer AS stRStellSteuerNr_58,NULL AS stTenderID_59,NULL AS stObjectID_60,NULL AS stAccounting_61,NULL AS stSellerID_62,&quot;&amp;_
 		&quot;NULL AS stSellerICDCode_63,NULL AS stDocumentCurrencyCode_64,t2.Telefon AS stKaufAnsprechPTel_65,t2.EMail AS stKaufAnsprechPEMail_66,&quot;&amp;_
@@ -356,7 +363,7 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 		&quot;t3.Zahlbetrag_mit_MwSt AS stPayableAmount_83,t3.Skonto_Satz AS stSkontoSatz_84,t3.Skonto_Tage As stSkontoTage_85,&quot;&amp;_
 		&quot;DATE_FORMAT(t3.Skonto_bis,&apos;%d.%m.%Y&apos;) AS stSkontoBis_86,t3.Skonto AS stSkonto_87,&quot;&amp;_
 		&quot;(SELECT CONCAT(CASE WHEN AZ=1 THEN &apos;AZ&apos; ELSE &apos;RE&apos; END,&apos; &apos;,DocumentID) FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51) AS stVorRechnungID_88,&quot;&amp;_
-		&quot;(SELECT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51) AS stVorRechnungDatum_89&quot;
+		&quot;(SELECT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51) AS stVorRechnungDatum_89,t3.Faellig_Tage AS stFaelligTage_90&quot;
 
 	sSQL2=sSQL2 &amp;&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t3 &quot;&amp;_
 		&quot;LEFT OUTER JOIN &quot;&amp; sAnsprechpartner &amp;&quot; as t2 &quot;&amp;_
@@ -483,7 +490,7 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 		REM Gruppe PAYMENT INSTRUCTIONS → DIRECT DEBIT [0..1] [BG-19]
 		stGlaeubID = CharToXMLChar(oRecord2.getString(54))				&apos;Bank assigned creditor identifier : Identifier [1] [BT-90]
 		stIBANEmpfaenger = CharToXMLChar(oRecord2.getString(55))		&apos;Debited account identifier : Identifier [1] [BT-91]
-		stMandatID = CharToXMLChar(oRecord2.getString(56))				&apos;Mandate reference identifier : Identifier [1] [BT-89]
+		stMandateID = CharToXMLChar(oRecord2.getString(56))				&apos;Mandate reference identifier : Identifier [1] [BT-89]
 		
 		REM Gruppe VAT BREAKDOWN [1..*] [BG-23]		
 		stSteuerfreiheit = CharToXMLChar(oRecord2.getString(57))		&apos;VAT exemption reason text : Text [0..1] [BT-120]
@@ -578,6 +585,7 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 			arDocRefID(0) = oRecord2.getString(88)
 			arDocRefDate(0) = oRecord2.getString(89)
 		End If
+		stFaelligTage = oRecord2.getString(90)
 		sXRechnungAbsender=stRStellEMail
 		sXRechnungEmpfaenger=stKaufEMail
 	Wend
@@ -693,8 +701,10 @@ SUB SaveXRechnung(stXRechnungPath AS String)
 			&quot;% Skonto aus &quot;&amp; fTausenderpunkt(fZahlMitPunkt(stPayableAmount)) &amp;&quot; &quot;&amp; sWaehrung &amp;&quot; = &quot;&amp; fTausenderpunkt(fZahlMitPunkt(stSkonto)) &amp;&quot; &quot;&amp; sWaehrung &amp; Chr$(13) &amp;_
 			&quot;sonst bis &quot;&amp; fConvDatum(stRZahlungBisDatum) &amp;&quot; ohne Abzug&quot; &amp; Chr$(13)
 		stZahlungNotiz = stZahlungNotiz &amp; Chr$(13) &amp; &quot;#SKONTO#TAGE=&quot; &amp; stSkontoTage &amp; &quot;#PROZENT=&quot; &amp; stSkontoSatz &amp; &quot;#BASISBETRAG=&quot; &amp; stPayableAmount &amp; &quot;#&quot;
+		stZahlungNotiz = stZahlungNotiz &amp; Chr$(13) &amp; &quot;#SKONTO#TAGE=&quot; &amp; stFaelligTage &amp; &quot;#PROZENT=0.00#BASISBETRAG=&quot; &amp; stPayableAmount &amp; &quot;#&quot;
 	Else
-		stZahlungNotiz = stZahlungNotiz &amp; &quot;Zahlbar bis zum &quot;&amp; fConvDatum(stRZahlungBisDatum) &amp;&quot; ohne Abzug&quot;
+		stZahlungNotiz = stZahlungNotiz &amp; &quot;Zahlbar bis zum &quot;&amp; fConvDatum(stRZahlungBisDatum) &amp;&quot; ohne Abzug&quot; &amp; Chr$(13)
+		stZahlungNotiz = stZahlungNotiz &amp; Chr$(13) &amp; &quot;#SKONTO#TAGE=&quot; &amp; stFaelligTage &amp; &quot;#PROZENT=0.00#BASISBETRAG=&quot; &amp; stPayableAmount &amp; &quot;#&quot;
 	End If
 
 	REM Gruppe DOCUMENT TOTALS [1] [BG-22] (Kontrollwert aus den Einzelzeilen)
@@ -836,7 +846,7 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 		stString = stString &amp; &quot;&gt;&quot; &amp; stSellerID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1, wenn PartyIdentification vorhanden ist	[BT-29]
 		stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;/cac:PartyIdentification&gt;&quot; &amp; CHR(13)
 	END IF    
-	IF stIBANEmpfaenger &lt;&gt; &quot;&quot; AND stMandatID &lt;&gt; &quot;&quot; AND stGlaeubID &lt;&gt; &quot;&quot; THEN
+	IF stIBANEmpfaenger &lt;&gt; &quot;&quot; AND stMandateID &lt;&gt; &quot;&quot; AND stGlaeubID &lt;&gt; &quot;&quot; THEN
 		stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;cac:PartyIdentification&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…1
 		stString = stString &amp; Space(4 * inTab) &amp; &quot;&lt;cbc:ID schemeID=&quot;&quot;SEPA&quot;&quot;&gt;&quot; &amp; stGlaeubID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1, wenn PartyIdentification vorhanden ist	[BT-90]
 		stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;/cac:PartyIdentification&gt;&quot; &amp; CHR(13)
@@ -966,10 +976,10 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 		END IF
 		stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;/cac:PayeeFinancialAccount&gt;&quot; &amp; CHR(13)
 	END IF
-	IF stIBANEmpfaenger &lt;&gt; &quot;&quot; AND stMandatID &lt;&gt; &quot;&quot; AND stGlaeubID &lt;&gt; &quot;&quot; THEN
+	IF stIBANEmpfaenger &lt;&gt; &quot;&quot; AND stMandateID &lt;&gt; &quot;&quot; AND stGlaeubID &lt;&gt; &quot;&quot; THEN
 		REM PaymentMeansCode hier 59
 		stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;cac:PaymentMandate&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…1	[BG-19]
-		stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; stMandatID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…1	[BT-89]	
+		stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; stMandateID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…1	[BT-89]	
 		stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;cac:PayerFinancialAccount&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…1
 		stString = stString &amp; Space(4 * inTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; stIBANEmpfaenger &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1, wenn PayerFinancialAccount vorhanden ist	[BT-91]
 		stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;/cac:PayerFinancialAccount&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…1
@@ -1001,7 +1011,6 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 		stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;/cac:TaxCategory&gt;&quot; &amp; CHR(13)
 		stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;/cac:AllowanceCharge&gt;&quot; &amp; CHR(13)
     NEXT
-    
 
 	REM Steuer	
 	stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cac:TaxTotal&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…2 (When tax currency code is provided, two instances of the tax total must be present, but only one with tax subtotal.) [BG-23]
@@ -1028,7 +1037,7 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 	stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;cbc:LineExtensionAmount currencyID=&quot;&quot;&quot; &amp; stDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; stDataAmountTotal &amp; &quot;&lt;/cbc:LineExtensionAmount&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1; genau 2 Nachkommastellen	[BT-106]
 	stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;cbc:TaxExclusiveAmount currencyID=&quot;&quot;&quot; &amp; stDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; stNetto &amp; &quot;&lt;/cbc:TaxExclusiveAmount&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1	[BT-109]
 	stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;cbc:TaxInclusiveAmount currencyID=&quot;&quot;&quot; &amp; stDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; stBrutto &amp; &quot;&lt;/cbc:TaxInclusiveAmount&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1	[BT-112]
-	IF doAllowanceTotalAmount &gt; 0 THEN
+	IF doAllowanceTotalAmount &lt;&gt; 0 THEN
 		stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;cbc:AllowanceTotalAmount currencyID=&quot;&quot;&quot; &amp; stDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; stAllowanceTotalAmount &amp; &quot;&lt;/cbc:AllowanceTotalAmount&gt;&quot; &amp; CHR(13)	&apos;nicht erforderlich 0…1; Nachlassbetrag ohne Steuer	[BT-107]
 	END IF	
 	IF doChargeTotalAmount &lt;&gt; 0 THEN
