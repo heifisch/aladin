@@ -255,8 +255,8 @@
         <text:user-field-decl office:value-type="string" office:string-value="Korrektur" text:name="Korrektur"/>
         <text:user-field-decl office:value-type="string" office:string-value="UStText" text:name="UStText"/>
       </text:user-field-decls>
-      <draw:control text:anchor-type="page" text:anchor-page-number="1" draw:z-index="3" draw:name="Form1" draw:style-name="gr1" draw:text-style-name="P13" svg:width="6.351cm" svg:height="0.745cm" svg:x="14.649cm" svg:y="0cm" draw:control="control2"/>
-      <draw:control text:anchor-type="page" text:anchor-page-number="1" draw:z-index="2" draw:name="Form2" draw:style-name="gr1" draw:text-style-name="P13" svg:width="6.132cm" svg:height="0.745cm" svg:x="0.044cm" svg:y="0cm" draw:control="control1"/>
+      <draw:control text:anchor-type="page" text:anchor-page-number="1" draw:z-index="3" draw:name="Form1" draw:style-name="gr1" draw:text-style-name="P13" svg:width="7.002cm" svg:height="0.742cm" svg:x="13.998cm" svg:y="0cm" draw:control="control2"/>
+      <draw:control text:anchor-type="page" text:anchor-page-number="1" draw:z-index="2" draw:name="Form2" draw:style-name="gr1" draw:text-style-name="P13" svg:width="7.002cm" svg:height="0.742cm" svg:x="0.041cm" svg:y="0cm" draw:control="control1"/>
       <table:table table:name="Leistungen" table:style-name="Leistungen">
         <table:table-column table:style-name="Leistungen.A"/>
         <table:table-column table:style-name="Leistungen.B"/>

@@ -30,10 +30,11 @@ Sub createRepord()
 End Sub
 
 Sub DokumentDrucken()
-	Dim sFaxEmpfaenger AS String
-	Dim vStatus AS Variant
+	Dim sFaxEmpfaenger AS String,sDocumentDir As String,sDocumentBaseName As String,sDocumentPath As String,sZugferdPath As String
+	Dim sValidatorReturnCode As String,sValidatorReturnCodeFile As String,sMustangReportPdf As String,sZugferdBaseName As String
+	Dim oShell As Object,oSimpleFileAccess As Object,oTextInputStream As Object,vStatus As Variant
 
-	if GetGUIType = 1 then
+	if GetGUIType = 1 Then
 		if iPrint_Typ = 1 AND fsInTrim(sFax_Empfaenger) &lt;&gt; &quot;&quot; AND LCase(sFaxTyp) = &quot;fritzfax&quot; then
 			if sFaxNumberPraefix &lt;&gt; &quot;&quot; AND Len(fsLeerzeichenEntfernen(sFax_Empfaenger)) &gt; CInt(iFaxLenInternNumber) then
 				sFaxEmpfaenger=fsLeerzeichenEntfernen(sFaxNumberPraefix &amp; fsPlusErsetzen(sFax_Empfaenger))
@@ -43,19 +44,68 @@ Sub DokumentDrucken()
 			Set_FritzFax(&quot;PrintProject&quot;,sFaxEmpfaenger)		
 		End if
 	End if
-	
-	if (iDocument_TypID = 5 or iDocument_TypID = 6) and iDocumentArchiviert = 0 then
-		if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;) _
-		then
-			vStatus=MsgBox(&quot;Es ist schon ein Dokument im Archiv abgelegt.&quot;&amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
-				&quot;Soll das vorhandene Dokument überschrieben werden?&quot;,36,sTitle)
+
+	if (iDocument_TypID = 5 or iDocument_TypID = 6) and iDocumentArchiviert = 0 Then
+		sDocumentDir = sPathAusgangsRechnungen &amp; &quot;/&quot; &amp; sPraefixArchiv &amp; CStr(lDocumentID)
+		
+		If NOT FileExists(sDocumentDir) then
+			MkDir sDocumentDir
+		End If
+		
+		sDocumentBaseName = sDocumentDir &amp; &quot;/&quot; &amp; sPraefixArchiv &amp; CStr(lDocumentID)
+		sDocumentPath = sDocumentBaseName &amp; &quot;.pdf&quot;
+		sZugferdBaseName = sDocumentDir &amp; &quot;/&quot; &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;_ZUGFeRD&quot;
+		sZugferdPath = sZugferdBaseName &amp; &quot;.pdf&quot;
+		
+		if FileExists(ConvertToURL(sZugferdPath)) Then
+			vStatus=MsgBox(&quot;Es ist schon folgende ZUGFeRD-Datei im Archiv abgelegt:&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+				sZugferdPath &amp; Chr(13) &amp; Chr(13) &amp;_
+				&quot;Soll die vorhandene ZUGFeRD-Datei überschrieben werden?&quot;,36,sTitle)
 			If vStatus &lt;&gt; 6 then
+				MsgBox(&quot;Die vorhandene ZUGFeRD-Datei wurde nicht überschrieben!&quot;,64,sTitle_lokal)
 				SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
 				exit Sub		
 			End if
-		End if
-		oDoc.storeToURL(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
-		SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
+		End If
+		sMustangReportPdf=ConvertToURL(sZugferdBaseName &amp; &quot;_result.pdf&quot;)
+		sValidatorReturnCodeFile=ConvertToURL(sDocumentBaseName &amp; &quot;-returncode.txt&quot;)
+
+		If FileExists(ConvertToURL(sDocumentPath)) Then Kill sDocumentPath		
+		If FileExists(sMustangReportPdf) Then Kill sMustangReportPdf		
+		If FileExists(sValidatorReturnCodeFile) Then Kill sValidatorReturnCodeFile
+		
+		oDoc.storeToURL(ConvertToURL(sDocumentPath),Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+		
+		Shell(sScriptsPath &amp; &quot;mustang.sh&quot;,1,sDocumentPath,True)
+				
+		oSimpleFileAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+		oTextInputStream = CreateUnoService(&quot;com.sun.star.io.TextInputStream&quot;)
+	
+		If oSimpleFileAccess.Exists(sValidatorReturnCodeFile) Then
+			oTextInputStream.setInputStream(oSimpleFileAccess.openFileRead(sValidatorReturnCodeFile))
+			Do While Not oTextInputStream.isEOF
+				sValidatorReturnCode=oTextInputStream.readLine
+			Loop
+			oTextInputStream.closeInput()
+			If sValidatorReturnCode &lt;&gt; &quot;0&quot; Then
+				If FileExists(sMustangReportPdf) Then
+					vStatus=MsgBox(&quot;Achtung! Es ist ein Fehler bei der Validierung der ZUGFeRD-Datei aufgetreten!&quot; &amp; Chr$(13) &amp; Chr$(13) &amp;_
+					&quot;Wollen Sie sich das Ergebnis der Validierung ansehen?&quot;,52,sTitle_lokal)
+					if vStatus=6 Then
+						oShell = createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;)
+						oShell.execute(sMustangReportPdf,&quot;&quot;,0)
+					End If
+				Else
+					MsgBox(&quot;Es ist ein Fehler bei der Validierung der ZUGFeRD-Datei aufgetreten!&quot; &amp; Chr$(13) &amp; Chr$(13) &amp;_
+					&quot;Fehlercode: &quot;&amp; sValidatorReturnCode,64,sTitle_lokal)
+				End If
+			Else
+				If FileExists(sValidatorReturnCodeFile) Then Kill sValidatorReturnCodeFile
+				SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
+			End if
+		Else
+			MsgBox(&quot;Es wurde kein Return-Code vom Validator gefunden!&quot;,64,sTitle_lokal)
+		End if			
 	End if
 End Sub
 
@@ -68,34 +118,91 @@ Sub DokumentSchlieszen()
 End Sub
 
 Sub ConvertToPdfAndSendMail()
-	Dim sURL AS String,oPfad AS Object
-	Dim vStatus AS Variant,sSubject AS String,sBody AS String
+	Dim sURL AS String,oPfad AS Object,sDocumentDir As String,sDocumentBaseName As String,sDocumentPath As String,sZugferdBaseName As String,sZugferdPath As String
+	Dim sValidatorReturnCode As String,sValidatorReturnCodeFile As String,sMustangReportPdf As String,sSubject AS String,sBody AS String
+	Dim oShell As Object,oSimpleFileAccess As Object,oTextInputStream As Object,vStatus As Variant
 	
-	oPfad = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+	If (iDocument_TypID = 5 or iDocument_TypID = 6) Then
+		sDocumentDir = sPathAusgangsRechnungen &amp; &quot;/&quot; &amp; sPraefixArchiv &amp; CStr(lDocumentID)
+	
+		If NOT FileExists(sDocumentDir) then
+			MkDir sDocumentDir
+		End If
+		
+		sDocumentBaseName = sDocumentDir &amp; &quot;/&quot; &amp; sPraefixArchiv &amp; CStr(lDocumentID)
+		sDocumentPath = sDocumentBaseName &amp; &quot;.pdf&quot;
+		sZugferdBaseName = sDocumentDir &amp; &quot;/&quot; &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;_ZUGFeRD&quot;
+		sZugferdPath = sZugferdBaseName &amp; &quot;.pdf&quot;
+			
+		If iDocumentArchiviert = 0 then
+			if FileExists(ConvertToURL(sZugferdPath)) Then
+				vStatus=MsgBox(&quot;Es ist schon folgende ZUGFeRD-Datei im Archiv abgelegt:&quot;&amp; Chr(13) &amp; Chr(13) &amp;_
+					sZugferdPath &amp; Chr(13) &amp; Chr(13) &amp;_
+					&quot;Soll die vorhandene ZUGFeRD-Datei überschrieben werden?&quot;,36,sTitle)
+				If vStatus &lt;&gt; 6 then
+					MsgBox(&quot;Die vorhandene ZUGFeRD-Datei wurde nicht überschrieben!&quot;,64,sTitle_lokal)
+					SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
+					exit Sub
+				End if
+			End If
+			
+			sMustangReportPdf=ConvertToURL(sZugferdBaseName &amp; &quot;_result.pdf&quot;)
+			sValidatorReturnCodeFile=ConvertToURL(sDocumentBaseName &amp; &quot;-returncode.txt&quot;)
+	
+			If FileExists(ConvertToURL(sDocumentPath)) Then Kill sDocumentPath		
+			If FileExists(sMustangReportPdf) Then Kill sMustangReportPdf		
+			If FileExists(sValidatorReturnCodeFile) Then Kill sValidatorReturnCodeFile
+			
+			oDoc.storeToURL(ConvertToURL(sDocumentPath),Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+	
+			Shell(sScriptsPath &amp; &quot;mustang.sh&quot;,1,sDocumentPath,True)
+					
+			oSimpleFileAccess = CreateUnoService(&quot;com.sun.star.ucb.SimpleFileAccess&quot;)
+			oTextInputStream = CreateUnoService(&quot;com.sun.star.io.TextInputStream&quot;)
 
-	sURL=ConvertToURL(oPfad.temp)&amp;&quot;/&quot;&amp; sPraefix &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;
-	oDoc.storeToURL(sURL,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
-
+			If oSimpleFileAccess.Exists(sValidatorReturnCodeFile) Then
+				oTextInputStream.setInputStream(oSimpleFileAccess.openFileRead(sValidatorReturnCodeFile))
+				Do While Not oTextInputStream.isEOF
+					sValidatorReturnCode=oTextInputStream.readLine
+				Loop
+				oTextInputStream.closeInput()
+				If sValidatorReturnCode &lt;&gt; &quot;0&quot; Then
+					If FileExists(sMustangReportPdf) Then
+						vStatus=MsgBox(&quot;Achtung! Es ist ein Fehler bei der Validierung der ZUGFeRD-Datei aufgetreten!&quot; &amp; Chr$(13) &amp; Chr$(13) &amp;_
+						&quot;Wollen Sie sich das Ergebnis der Validierung ansehen?&quot;,52,sTitle_lokal)
+						if vStatus=6 Then
+							oShell = createUnoService(&quot;com.sun.star.system.SystemShellExecute&quot;)
+							oShell.execute(sMustangReportPdf,&quot;&quot;,0)
+						End If
+					Else
+						MsgBox(&quot;Es ist ein Fehler bei der Validierung der ZUGFeRD-Datei aufgetreten!&quot; &amp; Chr$(13) &amp; Chr$(13) &amp;_
+						&quot;Fehlercode: &quot;&amp; sValidatorReturnCode,64,sTitle_lokal)
+					End If
+					Exit Sub
+				Else
+	
+					If FileExists(sValidatorReturnCodeFile) Then Kill sValidatorReturnCodeFile
+					SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
+				End if
+			Else
+				MsgBox(&quot;Es wurde kein Return-Code vom Validator gefunden!&quot;,64,sTitle_lokal)
+				Exit Sub
+			End If
+		End If
+		sUrl=sZugferdPath
+		sBody=&quot;Sehr geehrte Damen und Herren, &quot; &amp; Chr(10) &amp; Chr(10) &amp; &quot;anbei erhalten Sie die Rechnung zu Ihrem Auftrag im ZUGFeRD-Format.&quot;
+	Else
+		oPfad = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
+		sUrl=ConvertToURL(oPfad.temp)&amp;&quot;/&quot;&amp; sPraefix &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;
+		oDoc.storeToURL(sDocumentPath,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+		sBody=&quot;Sehr geehrte Damen und Herren, &quot; &amp; Chr(10) &amp; Chr(10) &amp; &quot;im Anhang finden Sie unser Dokument.&quot;
+	End if
+	
 	sSubject=sDocument_Typ &amp;&quot; &quot;&amp;_
 		fsInTrim(fsReplace(fsReplace(fsReplace(fsReplace(sDocument_Name,Chr(34),&quot; &quot;),Chr(10),&quot; - &quot;),Chr(13),&quot; - &quot;),&quot;,&quot;,&quot; &quot;))
-
-	sBody=&quot;Sehr geehrte Damen und Herren, &quot; &amp; Chr(10) &amp; Chr(10) &amp; &quot;im Anhang finden Sie unser Dokument.&quot;
 	
- 	SendMail(sEMail_Empfaenger,sEMail,sSubject,sBody,sURL)
+ 	SendMail(sEMail_Empfaenger,sEMail,sSubject,sBody,sUrl)
 
-	if (iDocument_TypID = 5 or iDocument_TypID = 6) and iDocumentArchiviert = 0 then
-		if FileExists(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;) _
-		then
-			vStatus=MsgBox(&quot;Es ist schon ein Dokument im Archiv abgelegt.&quot;&amp; Chr(13) &amp; Chr(13) &amp; Chr(13) &amp;_
-				&quot;Soll das vorhandene Dokument überschrieben werden?&quot;,36,sTitle)
-			If vStatus &lt;&gt; 6 then
-				SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
-				exit Sub		
-			End if
-		End if
-		oDoc.storeToURL(&quot;file:///&quot;&amp; sPathAusgangsRechnungen &amp; sPraefixArchiv &amp; CStr(lDocumentID) &amp; &quot;.pdf&quot;,Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
-		SetDocUserProperty(&quot;oDocumentArchiviert&quot;,1)	
-	End if
 End Sub
 
 Sub ConvertToPDF()
