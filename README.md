@@ -10,7 +10,7 @@ auch ohne die implizierte Garantie der MARKTREIFE oder der VERWENDBARKEIT FÜR E
 ## Neu! Erstellung von E-Rechnung als ZUGFeRD und XRechnung mit Validierung
 
 Es sind Funktionen zur Erstellung von E-Rechnungen hinzu gekommen.  
-Diese basieren auf der Arbeit von Robert Großkopf und seinem Programm XRechnung.  
+Diese basieren auf der Arbeit von Robert Großkopf in seinem Programm XRechnung.  
 Zu finden hier: https://www.familiegrosskopf.de/robert/
 
 Für die Validierung und das Erzeugen der ZUGFeRD-Rechnung sind exerne Java-Bibliotheken notwendig:  
