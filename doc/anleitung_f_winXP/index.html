@@ -1,0 +1,416 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<HTML>
+<HEAD>
+	<META HTTP-EQUIV="CONTENT-TYPE" CONTENT="text/html; charset=windows-1252">
+	<TITLE>ALADIN-eine Anleitung</TITLE>
+	<META NAME="GENERATOR" CONTENT="NVU">
+	<META NAME="AUTHOR" CONTENT="roland k">
+	<META NAME="CHANGEDBY" CONTENT="roland k">
+	
+    <style type="text/css">
+<!--
+.grau_1 {color: #333333}
+.achtung_1 {color: #996600}
+.achtung_2 {color: #660000}
+-->
+    </style>
+</HEAD>
+<BODY LANG="de-DE">
+
+<table width="700" align="center"><tr><td>
+
+<h2>ALADIN - eine Fakturierungs Umgebung f&uuml;r den B&uuml;roalltag </h2>
+<P>&nbsp;</P>
+<P>Zu allererst m&ouml;chte ich demjenigen recht herzlich Danken, der ALADIN auf die Computerwelt losgelassen hat. Nicht nur da&szlig;, er stellt das Programm ALADIN auch noch kostenfrei zur Verf&uuml;gung. Als ob das nun nicht schon genug w&auml;re. Erst durch seinen sehr guten und uneigenn&uuml;tzigen Service, vielen Zeilen Mail's die hin und her wanderten, ist es mir nun doch gelungen ALADIN auf dem eigenen Rechner zum Leben zu erwecken.<BR>
+Ich muss dazu sagen, das ich im Vorfeld nichts mit B&uuml;roabrechnung, Formularbearbeitung usw. usf. am Hut hatte</P>
+<P>&nbsp;</P>
+<P><a href="#einltg">Einleitung: Weshalb ALADIN</a></P>
+<P><a href="#mysql">MySQL-Server downloaden und installieren</a></P>
+<P><a href="#treiber">ODBC-Treiber besorgen und installieren</a></P>
+<P><a href="#aladin1">Installation und Inbetriebnahme von ALADIN</a></P>
+<P><a href="#basic1">Basic-Bibliothek ALADIN in OOo hinzuf&uuml;gen</a></P>
+<P><a href="#dbschnitt">Datenbankschnittstelle in OOo konfigurieren</a></P>
+<P><a href="#tabellen_erstellen">Die Tabellen f&uuml;r ALADIN erstellen</a></P>
+<P><a href="#tabellen_erstellen">Datenquelle ALADIN anlegen</a></P>
+<P><a href="#erster_start">Erster Start von ALADIN</a></P>
+<P><a href="#anhang">Anhang und weiterf&uuml;hrende Links</a></P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P><a name="einltg"></a></P>
+<P>&nbsp;</P>
+<H2>Einleitung: Weshalb ALADIN</H2>
+<P><a name="voraussetzung"></a></P>
+<P>  Es
+ging darum, f&uuml;r eine kleine B&uuml;roumgebung ein Rechnungs-,
+Auftrags- und nicht zuletzt eine Korrespontenzumgebung welche f&uuml;r
+Normaluser bedienbar und pflegeleicht ist, zu finden. <BR>
+Sicherlich
+gibt es zu diesem Zwecke viele, auch kostenlose Vorlagen f&uuml;r
+diverse Officeanwendungen. Voraussetzung aber war, die zuk&uuml;nftige
+L&ouml;sung soll zun&auml;chst vorrangig auf Linux lauff&auml;hig
+sein. Parallel dazu aber auch auf WindowsXP-Systemen. Von beiden
+Systemen aus sollte es m&ouml;glich sein, auf einen einzigen
+Datenstamm zugreifen zu k&ouml;nnen.</P>
+<P>Nach langem Suchen bin ich auf ALADIN gesto&szlig;en. Gegen&uuml;ber andern kostenlosen Programmen bietet es die M&ouml;glichkeit, auf Windows wie auch auf Linux und wohl auch auf einem MAC und anderen Betriebsystemen lauff&auml;hig zu sein. Voraussetzung ist ein auf den Betriebssystemen installiertes OpenOfficeorg und eine Verbindung zu einer MySQL-Datenbank.<br>
+  Der Vorteil wiederum, die Datenbank muss nicht auf dem gleichen Rechner installiert sein, von dem aus gerade gearbeitet wird. So bietet sich die M&ouml;glichkeit, von verschiedenen Rechnern aus auf die gleiche Datenquelle zuzugreifen.
+</P>
+<P>&nbsp;</P>
+<P>Im Folgendem die Wiedergabe, wie ich es mit schaffte ALADIN zum Arbeiten zu &uuml;berreden ;)</P>
+<P>Mit viel Ausdauer des Programmierers von ALADIN mir gegen&uuml;ber und nur mit Hilfe des Programmierers ist es mir gelungen, eine funktionst&uuml;chtige Arbeitsumgebung zun&auml;chst auf einem Windows XP Rechner zustande zu bringen. An dieser Stelle nochmals recht herzlichen Dank!</P>
+<P><BR>
+  Hier kurz eine kleine Anleitung mit ein paar bebilderten Schritten.</P>
+<P>Diese Anleitung bezieht sich auf einen Rechner mit installierten
+Windows XP SP2 und einer OpenOfficeorg Version 1.1.3 und beinhaltet die Schritte bis zur Inbetriebnahme. Eine Anleitung zur Arbeit mit dem Programm ist in diesem Dokument nicht zu finden. Sollte ich Zeit finden, schreibe ich noch eine FAQ die Probleme behandelt, die ich mit diesem Programm hatte. <br>  
+Die Vorgehensweise/Anleitung habe ich nach besten Wissen und
+Gewissen erstellt. Eine Haftung jedweder Art schlie&szlig;e ich aus.<br>
+Bei der Anpassung und Einbindung von ODBC gab es einige Probleme. Nach vielen &quot;kleinen&quot; ;) Problemen l&auml;uft nun ALADIN auf meinem Rechner, wie im folgendem Beschrieben. Bei der Inbetriebnahme sind nat&uuml;rlich die spezifischen Pfade wie sie im folgenden aufgef&uuml;hrt sind, an Ihr jeweiliges System anzupassen. <BR>
+<BR>
+</P>
+<H2><A NAME="mysql"></A>MySQL-Server downloaden und installieren 
+</H2>
+<P>Zun&auml;chst einmal muss eine funktionsf&auml;hige MySQL-Umgebung
+installiert werden.<BR>Ist bei mir komplett mit Apache schon lange
+und stabil am laufen. 
+</P>
+<P>F&uuml;r diejenige, die noch keine eigene Datenbankumgebung
+installiert haben, eine kurze Anmerkung. <br>
+Im Netz finden sich eine Vielzahl von LAMP (Linux-Apache-MySQL-PHP) und WAMP (Windows-Apache-MySQL-PHP) Umgebungen f&uuml;r den gemeinen PC.
+</P>
+<P> Wer eine schnelle und
+  unkomplizierte Webserver- und Datenbankumgebung auf seinem Rechner
+  installieren m&ouml;chte, nicht erst tausende Seiten Apache- und
+  MySQL- und PHP Manuale durchlesen m&ouml;chte ist mit XAMPP von <A HREF="http://www.apachefriends.org/de">http://www.apachefriends.org/de</A> sehr gut beraten. Quasi auf Knopfdruck ist es m&ouml;glich, mittels
+  XAMPP eine komplette Webserverumgebung mitsamt Datenbankanbindung auf
+  den heimischen PC zu zaubern.</P>
+<P>Zitat aus der dortigem Website: <BR>
+  <BR>
+  <em>So mancher wird schon die
+Erfahrung gemacht haben: Ein Apache-Webserver installiert sich nicht
+so leicht. Noch schwieriger wird es, wenn weitere Pakete wie MySQL,
+PHP oder Perl dazukommen. XAMPP ist eine Distribution von Apache,
+MySQL, PHP und Perl, die es erm&ouml;glicht diese Programme auf sehr
+einfache Weise zu installieren. </em></P>
+<P><em>Zur Zeit gibt es vier XAMPP-Versionen:</em></P>
+<P><em>eine Version f&uuml;r Linux Systeme (getestet f&uuml;r Ubuntu,
+SuSE, RedHat, Mandrake und Debian), <BR>
+eine Version f&uuml;r Windows
+98, NT, 2000, 2003 und XP, <BR>
+eine Beta-Version f&uuml;r Solaris
+SPARC (entwickelt und getestet mit Solaris 8), <BR>
+eine Beta-Version
+f&uuml;r Mac OS X. </em></P>
+<P>Auf die Installation von XAMPP selbst m&ouml;chte ich hier nicht
+eingehen. Eine gute und umfangreiche Anleitung liegt XAMPP bei.
+Danach sollte es keine Probleme geben, schnell und problemlos eine
+Serverumgebung auf dem eigenen PC zu installieren. 
+</P>
+<P>Testen kann man den gerade installieren und im Hintergrund werkenden Webserver, wenn man einen
+Browser (Firefox oder Opera) startet und in die Adresszeile &quot;localhost&quot; oder die IP-Adresse 127.0.0.1 eingibt. Es
+sollte wie im folgendem Bild die Startseite des Webservers aufgerufen
+und dargestellt werden. (Die Abbildung stimmt nicht mit derjenigen
+&uuml;berein, die nach der XAMPP-Installation zu sehen ist.)<br> 
+Wichtig
+ist, das &uuml;ber <strong>localhost </strong>oder <strong>127.0.0.1</strong> die &quot;Startseite&quot; des auf dem System laufenden Server's pr&auml;sentiert wird. </P>
+<P><img src="images/01-basic.jpg" name="Grafik1" align=LEFT width=638 height=355 border=0><BR>
+</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>&nbsp;</P>
+<P>Nun sollte noch &uuml;berpr&uuml;ft werden, ob MySQL seine Daten
+  pr&auml;sentieren m&ouml;chte. Am einfachsten funktioniert das wieder
+  mittels eines Webbrowsers und dem Paket phpMyAdmin. Dieses Paket
+  liegt bei XAMPP bereits dabei und kann &uuml;ber die Startseite und
+  den Navigationspunkt &quot;Datenbank verwalten&quot; o.&auml;.
+  aufgerufen werden. Der Aufruf der MySQL Datenbank w&uuml;rde wie im
+  folgenden aussehen.</P>
+<P><IMG SRC="images/02-basic.jpg" NAME="Grafik2" ALIGN=LEFT WIDTH=652 HEIGHT=469 BORDER=0><BR CLEAR=LEFT>
+  <BR>
+  <BR>
+</P>
+<P>So, nun kann man/frau sich erst einmal auf die Schultern klopfen.
+F&uuml;r diejenigen die noch nie einen eigenen Webserver auf dem
+System zu laufen hatten, ein gro&szlig;er Schritt.</P>
+<P>&nbsp;</P>
+<P><BR>
+  <BR>
+  <a name="treiber"></a></P>
+<H2>ODBC-Treiber besorgen und installieren </H2>
+<P>Zu all dem muss noch ein ODBC-Treiber her. Der kann unter folgender Adresse herunter geladen werden und anschlie&szlig;end problemlos installiert werden.<BR>
+  ODBC-Treiber downloaden:<BR>
+  <A HREF="http://dev.mysql.com/downloads/connector/odbc/3.51.html">http://dev.mysql.com/downloads/connector/odbc/3.51.html</A></P>
+<P><a name="aladin1"></a><BR>
+</P>
+<H2>Installation und Inbetriebnahme von ALADIN</H2>
+<P>Nun zum Eigentlichen, der Installation und Inbetriebnahme von
+ALADIN. </P>
+<P>OpenOfficeorg sollte nat&uuml;rlich bereits auf dem Rechner installiert sein. Auf meinen Rechner l&auml;uft die Version 1.1.3.<BR>
+Weiterf&uuml;hrende Links zu OpenOfficeorg, Apache, MySQL und ODBC findet Ihr im <A HREF="#anhang">Anhang</A>.  </P>
+<P CLASS="achtung_1">Zun&auml;chst sollten Sie ALADIN einmal auf Ihren Rechner herunter laden. Die dazu notwendigen Dateien erhalten Sie &gt;<a href="http://www.aladin-gmbh.de">hier</a>&lt;</P>
+<P>Ein paar grunds&auml;tzliche Zeilen zur Installation und zum
+Funktionsumfang findet man in der dem Paket beiliegenden Datei
+&quot;liesmich&quot;. Menschen die st&auml;ndig mit OOo zu tun haben
+und auch in dieser Umgebung programmieren, wird diese knappe
+Einf&uuml;hrung sicherlich ausreichen. Ich, der mit OOo und Macros in
+OOo noch so gut wie nichts zu tun hatte, habe und hatte damit erhebliche
+Probleme. Deshalb auch noch einmal dieses Document um die Vorg&auml;nge
+sp&auml;terhin noch einmal nachvollziehen zu k&ouml;nnen und f&uuml;r
+diejenigen, die das alles noch vor sich haben, als kleine Hilfe.</P>
+<P>Das Paket ALADIN zun&auml;chst einmal in ein tempor&auml;res
+Verzeichnis auf der Festplatte entpacken.<BR>
+Im Paket enthalten ist
+ein Ordner &quot;user&quot;. Darin die Verzeichnisse mit Namen
+&quot;basic&quot; und &quot;database&quot;. Diese Verzeichnisse
+enthalten jeweils einen Ordner &quot;ALADIN&quot; 
+</P>
+<P>Diese beiden Ordner &quot;ALADIN&quot; aus dem Verzeichnis
+&quot;database&quot; geh&ouml;rt in das OpenOfficeorg
+Programmverzeichnis \user\database\ kopiert.<BR>In diesem Falle
+nach:<BR>
+C:\Programme\OpenOffice.org1.1.x\user\database 
+</P>
+<P>Das gleiche passiert mit dem Ordner &quot;ALADIN&quot; aus dem
+Verzeichnis &quot;basic&quot;. Den kopiert man in das
+Verzeichnis:<BR>
+C:\Programme\OpenOffice.org1.1.x\user\basic\<BR>
+(siehe
+folgendes Bild):</P>
+<P><img src="images/03-verzeichnisse.jpg" name="Grafik3" align=LEFT width=683 height=459 border=0><BR CLEAR=LEFT>
+<BR><BR>
+<a name="basic1"></a></P>
+<H3>Basic-Bibliothek &quot;ALADIN&quot; in OOo
+hinzuf&uuml;gen</H3>
+<P>Unter dem Men&uuml;punkt &quot;Extras&quot; -&gt; &quot;Macros&quot;
+-&gt; &quot;verwalten&quot; muss nun unter dem Karteikartenreiter
+&quot;Bibiolotheken&quot; unter &quot;hinzuf&uuml;gen...&quot;
+&quot;ALADIN&quot; als Basic-Bibliothek hinzugef&uuml;gt werden. Dazu
+sucht man im Installationsverzeichnis von OOo die entsprechende
+Quelle. Die
+lautet:<BR>C:\Programme\OpenOffice.org1.1.3\user\basic\ALADIN\script.xlb<BR>Nun
+ruft man wieder den Men&uuml;punkt &quot;Extras&quot; -&gt; &quot;Macros&quot;
+auf. dort findet sich nun folgendes Bild:</P>
+<P><img src="images/04-global.jpg" alt="global" name="Grafik4" width=541 height=334 border=0 align=LEFT><BR CLEAR=LEFT>
+
+</P>
+<P>In der Bibliothek &quot;ALADIN&quot; unter &quot;Global&quot; m&uuml;ssen
+nun folgende Variablen angepasst werden:</P>
+<table cellpadding="8" bgcolor="#99FFFF">
+  <tr><td>
+<P class="grau_1">Global const sOOo=&quot;OpenOffice.org1.1.3&quot; Verzeichnisname
+der Installation<BR>und<BR>Global const sPfadWin=&quot;C:\Programme\&quot;
+Pfad zur Installation in Windows<BR>Es muss also dem og.
+InstallationsVerzeichnis von OOo entsprechen.</P>
+<P class="grau_1">Im Modul selbst sieht das Ganze dann folgenderma&szlig;en aus:</P>
+<P class="grau_1"><EM>'-------------------------------------------------------------------------------------------------------------------<BR>'
+Aus den folgenden Variablen wird der Pfad zu den einzelnen Dateien
+zusammengesetzt.<BR>'-------------------------------------------------------------------------------------------------------------------<BR>Function
+sHome as String <BR>sHome=Environ (&quot;HOME&quot;)<BR>End Function</SPAN></EM></P>
+<P class="grau_1"><EM>Function
+sPfadUnix as String 'Pfad f&uuml;r
+UNIX-Installation<BR>sPfadUnix=&quot;file://&quot;&amp; sHome
+&amp;&quot;/&quot;<BR>End Function<BR>' - - - - - - - - - - - - - - -
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+- - - - - - - - <BR>Global const sPfadWin=&quot;C:\Programme\&quot;
+'Pfad f&uuml;r Windows-Installation anpassen!!<BR>' - - - - - - - - -
+- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+- - - - - - - - - - - - - -<BR>Global const
+sPfadMac=&quot;~/Library/Application Support/&quot; 'Pfad f&uuml;r
+Mac-Installation
+anpassen!!<BR>'--------------------------------------------------------------------------------------------------------------------<BR>Global
+const sOOo=&quot;OpenOffice.org1.1.3&quot; 'OOo Version entsprechend
+dem Pfad der
+User-Installation<BR>'--------------------------------------------------------------------------------------------------------------------</SPAN></EM></P>
+<P class="grau_1">
+</td></tr>
+</table>
+	
+	<BR>
+	<a name="dbschnitt"></a><BR>
+</P>
+<table border="3" align="center" cellpadding="8" bordercolor="#990000">
+  <tr>
+    <td align="left" valign="middle">      <P class="achtung_2"><br>
+      Jetzt wird es erst einmal Zeit f&uuml;r eine gute Tasse Tee oder Kaffee. Im Anschluss sollte man/frau schon etwas Aufmerksamkeit und vor allem Geduld mitbringen ;)</P>
+    <P class="achtung_2"> </td>
+  </tr>
+</table>
+<P><BR><BR>
+</P>
+<H2>Datenbankschnittstelle in OOo konfigurieren 
+</H2>
+<P>Das Programm OpenOfficeorg (im Folgendem als OOo bezeichnet) ist
+ge&ouml;ffnet.<BR>
+Unter dem Men&uuml;punkt  &bdquo;Extras&ldquo; -
+&bdquo;Datenquellen&ldquo; rufen wir den Dialog &bdquo;Datenquellen
+verwalten&ldquo; auf. Open links im Dialog haben wie die M &ouml;glichkeit
+&uuml;ber den Buttom &bdquo;neue Datenquelle&ldquo; eine neue
+Datenquelle zu erstellen. Unter &bdquo;Name&ldquo; muss der Name
+&bdquo;MySQL&ldquo; vergeben werden (ohne &bdquo;&ldquo;).<BR>
+In der
+Datei &bdquo;liesmich&ldquo; steht geschrieben, da&szlig; &quot;MySQL&quot;
+mit &quot;create&quot;- Rechten angelegt werden soll. Dazu konnte ich
+unter dem Dialog &bdquo;Datenquelle neu&ldquo; unter Windows XP keinen
+Punkt entdecken, unter dem &bdquo;create&ldquo; aktiviert werden
+kann. Vielleicht schreibt ja der Programmier noch etwas genauer zu diesem Punkt. <BR>
+Unter &bdquo;Datenbanktyp&ldquo; habe ich an dieser Stelle
+<B>ODBC</B> ausgew&auml;hlt. (siehe dazu bereits die o.g. Zeilen zum Problem der Einbindung der DB) <BR>
+Unter &bdquo;Datenquellen-URL&ldquo;
+sollte nun die MySQL Datenbank auszuw&auml;hlen sein.</P>
+<P>Nun wird der Karteikartenreiter ODBC ausgew&auml;hlt, um die
+Verbindungsdaten zur Datenbank einzutragen. Als Standard (z.B. unter
+installierter Serverumgebung mit XAMPP) ist hier als als Benutzer der
+Benutzer root ohne Passwort einzutragen. Als Zeichensatz habe ich
+hier noch &bdquo;System&ldquo; angegeben.</P>
+<P>Ab und an, nach get&auml;tigter Eingabe sollte der Buttom
+&bdquo;Anwenden&ldquo; gedr&uuml;ckt werden.<BR>Wenn sie jetzt den
+Karteikartenreiter &bdquo;Tabellen&ldquo; ausw&auml;hlen, sollten die
+Tabellen der Datenbank &bdquo;mysql&ldquo; aufgelistet werden.
+Ansonsten (bei evtl. Fehlermeldung) sollten Sie Ihre Eingaben
+&uuml;berpr&uuml;fen. Evtl. kann es auch an einem Fehler im
+installierten myODBC Treiber liegen, das die Verbindung zur Datenbank
+nicht aufgebaut werden kann.<BR>
+In diesem Falle nicht gleich
+aufgeben. Ich habe viele Anl&auml;ufe gebraucht, bis die erste
+Verbindung zu Stande kam. Etwas Geduld bei dieser Aktion ist
+angebracht. 
+</P>
+<P>Im folgendem noch einmal die 2 Schritte:</P>
+<P>-&gt; Men&uuml;punkt &bdquo;Extras&ldquo; -&gt; &bdquo;Datenquellen&ldquo;:</P>
+<P>1.)</P>
+<P><img src="images/05-dq-mysql-anlegen1.jpg" name="Grafik5" align=LEFT width=660 height=205 border=0><BR CLEAR=LEFT>
+  <BR><BR>
+2.)</P>
+<P><IMG SRC="images/05-dq-mysql-anlegen2.jpg" NAME="Grafik6" ALIGN=LEFT WIDTH=662 HEIGHT=185 BORDER=0><BR CLEAR=LEFT>
+</P>
+<P>3.)</P>
+<P><IMG SRC="images/05-dq-mysql-anlegen3.jpg" NAME="Grafik7" ALIGN=LEFT WIDTH=665 HEIGHT=440 BORDER=0><BR CLEAR=LEFT>
+  <BR><BR>
+</P>
+<P> Ist OOo gestartet sollte nun &uuml;ber die Taste [F4] die
+  Datenquellenansicht aufgerufen werden. Unter der Datenquelle &bdquo;MySQL&ldquo; die wir gerade erfolgreich angelegt haben, sollten jetzt die in der
+  Datenbank enthaltenen Tabellen zu sehen sein:</P>
+<P><IMG SRC="images/06-dq-mysql.jpg" NAME="Grafik8" ALIGN=LEFT WIDTH=500 HEIGHT=507 BORDER=0><BR CLEAR=LEFT>
+  <BR><BR>
+</P>
+<P><a name="tabellen_erstellen"></a></P>
+<H2>Die Tabellen f&uuml;r ALADIN erstellen (lassen)</H2>
+<P>Nun wird die Datei &bdquo;createTables.sxw&ldquo; in dem 
+Programmordner von OOo (z.B.:
+C:\Programme\OpenOffice.org1.1.3\user\database\ALADIN\ ) mit
+<B>Schreibschutz</B> ge&ouml;ffnet.</P>
+<P><BR>
+  <IMG SRC="images/07-tabellen1.jpg" NAME="Grafik9" ALIGN=LEFT WIDTH=566 HEIGHT=483 BORDER=0><BR CLEAR=LEFT>
+  <BR>
+  <BR>
+</P>
+<P>  Es kann nun (und sollte auch) mit &quot;Benutzer anlegen und
+Zugriffsrechte setzen&quot; ein Benutzer mit einem Kennwort f&uuml;r
+die Datenbank &bdquo;aladin&ldquo; angelegt werden. Nun mu&szlig; nach dieser Aktion der MySQL-Server neu gestartet werden. <BR>
+Kleiner
+Tip f&uuml;r diejenigen die Apache und MySQL &uuml;ber XAMPP
+installiert haben. Server beenden und starten kann man ganz leicht
+&uuml;ber das Administrationstool von XAMPP erledigen lassen. Dieses
+Tool befindet sich im Programmordner von XAMPP.</P>
+<P>Ist das erledigt, wird mit dem Buttom &quot;Tabellen in Datenbank
+erzeugen&quot;, die Tabellen f&uuml;r ALADIN in der Datenbank
+&bdquo;aladin&ldquo; erzeugt. Diese Aktion dauert einen kleinen
+Moment und man sollte den Rechner dazu Zeit geben, diesen Job
+erledigen zu k&ouml;nnen ;)</P>
+<P><a name="dq_anlegen"></a><BR>
+</P>
+<H2>Datenquelle ALADIN anlegen</H2>
+<P>Genau so, wie im Punkt &bdquo;Datenquelle MySQL erstellen&ldquo;
+erstellen wir nun eine neue Datenquelle &bdquo;ALADIN&ldquo; f&uuml;r
+OOo.</P>
+<P>Noch einmal zur Vorgehensweise:</P>
+<P>Men&uuml;punkt &bdquo;Extras&ldquo; -&gt; &bdquo;Datenquellen&ldquo;
+-&gt; &bdquo;neue Datenquelle&ldquo; vergeben wir den Namen &bdquo;ALADIN&ldquo;
+(ohne die &bdquo; &ldquo;) . Als Datentype wird &bdquo;MySQL&ldquo;
+ausgew&auml;hlt. Unter dem Tab MySQL wird der Punkt &bdquo;Existierende
+MyODBC _Datenquelle verwenden&ldquo; ausgew&auml;hlt. Im Punkt
+&bdquo;Datenquellen-URL&ldquo; wird die Datenbank &bdquo;aladin&ldquo;
+ausgew&auml;hlt.<BR>
+Als &bdquo;Benutzername&ldquo; geben Sie den im
+letzen Abschnitt angelegten User an. Haben sie f&uuml;r diesen User
+ein Passwort vergeben, so setzen sie den Hacken bei &bdquo;Kennwort
+erforderlich&ldquo;. Zun&auml;chst sollte als Zeichensatz der bereit dargebotene Zeichensatz &uuml;bernommen werden. Sp&auml;terhin habe ich als Zeichensatz Westeuropa
+(ISO-8859-15) ausgew&auml;hlt. Diese Auswahl habe ich nach vielen
+Fehlversuchen mit der Verbindung zur Datenbank gew&auml;hlt. Es kann
+also durchaus sein, da&szlig; Sie bei Verbindungsproblemen oder
+anderen Problemen mit der Datenbank eine andere Auswahl treffen
+m&uuml;ssen.</P>
+<P>Nun sollten Sie unter &bdquo;Datenquellen&ldquo; (zu erreichen
+unter anderem mit der Taste  [F4]) unter der Datenquelle &bdquo;ALADIN&ldquo;,
+die zuvor mit dem Buttom &quot;Tabellen in Datenbank erzeugen&quot;
+erzeugt haben, zu sehen sein.<BR>
+</P>
+<P><IMG SRC="images/07-tabellen2.jpg" NAME="Grafik10" ALIGN=LEFT WIDTH=369 HEIGHT=475 BORDER=0><BR CLEAR=LEFT>
+  <BR>
+</P>
+<P> In der Version &bdquo;aladin.2005-10-01&ldquo; waren das 76
+  Tabellen. Im Windows XP werden die Tabellen komplett mit
+  Kleinbuchstaben in der MySQL-Datenbank erzeugt. In meiner SUSE-Linux
+  9.2 Version werden die Tabellen mit Gro&szlig;buchstaben in der
+  Datenbank erzeugt. Unter Windows XP hatte ich Deshalb ein &bdquo;paar&ldquo; Probleme mit der Datenbankanbindung mittels OOo Version 1.1.3. Stand
+  10/2005. Laut o.g. Vorgehensweise sollte es aber relativ problemlos
+  funktionieren.</P>
+<P><BR>
+<a name="erster_start"></a></P>
+<H2>Erster Start von ALADIN</H2>
+<P>Legen Sie nun zun&auml;chst einmal eine Verkn&uuml;pfung zum
+Starten von ALADIN auf dem Desktop an.<BR>
+Bei mir sieht die
+Verkn&uuml;pfung so aus:</P>
+<P>C:\Programme\OpenOffice.org1.1.3\program\soffice.exe
+macro:///ALADIN.Startmenue.neuerTask<br>
+F&uuml;r eine Linuxoberfl&auml;che liegt dem ALADIN-Paket bereits ein Link inkl. Icon bei. </P>
+<P>Beim Ausf&uuml;hren dieser Verkn&uuml;pfung erhalten Sie den
+Startdialog von ALADIN:</P>
+<P><IMG SRC="images/08-start1.jpg" NAME="Grafik11" ALIGN=LEFT WIDTH=344 HEIGHT=479 BORDER=0><BR CLEAR=LEFT><BR><BR>
+</P>
+<P> Nach dem Ausf&uuml;hren einer Funktion z.B. &bdquo;Anlegen eines neuen
+  Kunden&ldquo; finden sie in der Men&uuml;leiste von OOo einen neuen
+  Men&uuml;punkt &bdquo;ALADIN&ldquo;. Von dort aus l&auml;sst sich
+  sehr schnell auf die vielf&auml;ltigen Funktionen von ALADIN
+zugreifen.</P>
+<P><IMG SRC="images/08-start2.jpg" NAME="Grafik12" ALIGN=LEFT WIDTH=512 HEIGHT=120 BORDER=0><BR CLEAR=LEFT>
+  <BR>
+  <BR>
+<P><BR>
+Viel Spass,<br>
+Roland Kühne
+</P>
+  <BR>
+</P>
+<P><BR>
+  <a name="anhang"></a>Anh&auml;nge:<BR>
+</P>
+<P>Weiter Links: </P>
+<P>&Uuml;ber ALADIN selbst:<br>
+  <a href="http://www.aladin-gmbh.de">aladin-gmbh.de</a><BR>
+  <BR>
+&Uuml;ber myODBC erf&auml;hrt User noch
+etwas
+auf:<BR>
+<A HREF="http://www.little-idiot.de/mysql/mysql.html#toc30">http://www.little-idiot.de/mysql/mysql.html#toc30</A><BR>
+Weiterhin
+gibt es dort ein Handbuch f&uuml;r mySQL in
+dt.-Sprache:<BR>
+<A HREF="http://www.little-idiot.de/mysql/mysql.html">http://www.little-idiot.de/mysql/mysql.html</A><BR>
+<BR>
+OOo
+sollte nat&uuml;rlich auf dem Rechner installiert sein.
+<BR>
+<A HREF="http://openofficeorg.de/">http://openofficeorg.de</A></P>
+<P>Die Seiten des Apachefriends Projektes:<br>
+<A HREF="http://www.apachefriends.org/de">http://www.apachefriends.org/de</A> </P>
+
+</td></tr></table>
+
+</BODY>
+</HTML>
