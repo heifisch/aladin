@@ -29,7 +29,6 @@ CONTENT='
 ./database/PrintZahlungsziele.ott 
 ./database/Projekte.odt 
 ./database/Projekt.odt 
-./database/Umsatz.odt 
 ./database/Alternative/PrintKorrespondenz.odt 
 ./database/Alternative/PrintProjekt.odt 
 ./database/Alternative/PrintMahnung.odt 
@@ -57,11 +56,14 @@ CONTENT='
 ./basic/ALADIN_Global/Global.xba 
 ./basic/ALADIN_Global/dialog.xlb 
 ./basic/ALADIN_Global/script.xlb 
+./scripts/aladin/validator.sh 
+./scripts/aladin/mustang.sh 
 ./ALADIN.lnk 
 ./ALADIN.ico 
 ./ALADIN.xpm 
 ./ALADIN_INSTALL.odt 
-./openldap'
+./openldap/slapd.conf 
+./openldap/mozillaAbPersonAlpha.schema '
 
 echo $CONTENT
 
