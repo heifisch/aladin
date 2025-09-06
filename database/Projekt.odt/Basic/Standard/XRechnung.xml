@@ -753,9 +753,6 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 		stString = stString &amp; &quot;&lt;ubl:Invoice xmlns:ubl=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2&quot;&quot;&quot; &amp; CHR(13)
 	End if
 	stString = stString &amp; Space(2 * inTab) &amp; &quot;xmlns:cac=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2&quot;&quot;&quot; &amp; CHR(13)
-	If stInvoiceTypeCode = &quot;381&quot; Then
-		stString = stString &amp; Space(2 * inTab) &amp; &quot;xmlns:cec=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2&quot;&quot;&quot; &amp; CHR(13)
-	End If
 	stString = stString &amp; Space(2 * inTab) &amp; &quot;xmlns:cbc=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2&quot;&quot;&quot; &amp; CHR(13)
 	stString = stString &amp; Space(2 * inTab) &amp; &quot;xmlns:xsi=&quot;&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&quot;&quot; &amp; CHR(13)
 	If stInvoiceTypeCode = &quot;381&quot; Then

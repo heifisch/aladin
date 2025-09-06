@@ -910,7 +910,7 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 	stString = stString &amp; Space(4 * inTab) &amp; &quot;&lt;ram:Description&gt;&quot; &amp; CHR(13) &apos;erforderlich 1…1, wenn SpecifiedTradePaymentTerms vorhanden ist	
 	stString = stString &amp; Trim(stZahlungNotiz) &amp; CHR(13)
 	stString = stString &amp; Space(4 * inTab) &amp; &quot;&lt;/ram:Description&gt;&quot; &amp; CHR(13)	
-	IF stRZahlungBisDatum &lt;&gt; &quot;&quot; THEN 
+	IF stRZahlungBisDatum &lt;&gt; &quot;&quot; AND stInvoiceTypeCode &lt;&gt; &quot;381&quot; THEN 
 		stString = stString &amp; Space(4 * inTab) &amp; &quot;&lt;ram:DueDateDateTime&gt;&quot; &amp; CHR(13)
 		stString = stString &amp; Space(5 * inTab) &amp; &quot;&lt;udt:DateTimeString format=&quot;&quot;102&quot;&quot;&gt;&quot; &amp; stRZahlungBisDatum &amp; &quot;&lt;/udt:DateTimeString&gt;&quot; &amp; CHR(13) &apos;erforderlich 1…1, wenn SpecifiedTradePaymentTerms vorhanden ist	
 		stString = stString &amp; Space(4 * inTab) &amp; &quot;&lt;/ram:DueDateDateTime&gt;&quot; &amp; CHR(13)
