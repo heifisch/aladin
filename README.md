@@ -18,7 +18,6 @@ Für die Validierung und das Erzeugen der ZUGFeRD-Rechnung sind exerne Java-Bibl
 Validator:  
 https://github.com/itplr-kosit/validator  
 https://github.com/itplr-kosit/validator-configuration-xrechnung  
-https://github.com/itplr-kosit/xrechnung-schematron  
 
 ZUGFeRD:  
 https://github.com/ZUGFeRD/mustangproject  

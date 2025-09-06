@@ -748,20 +748,25 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 
 	stString = &quot;&lt;?xml version=&quot;&quot;1.0&quot;&quot; encoding=&quot;&quot;UTF-8&quot;&quot;?&gt;&quot; &amp; CHR(13)
 	If stInvoiceTypeCode = &quot;381&quot; Then
-		stString = stString &amp; &quot;&lt;ubl:CreditNote xmlns:ubl=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2&quot;&quot;&quot; &amp; CHR(13)
+		stString = stString &amp; &quot;&lt;CreditNote xmlns=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2&quot;&quot;&quot; &amp; CHR(13)
 	Else
 		stString = stString &amp; &quot;&lt;ubl:Invoice xmlns:ubl=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2&quot;&quot;&quot; &amp; CHR(13)
 	End if
 	stString = stString &amp; Space(2 * inTab) &amp; &quot;xmlns:cac=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2&quot;&quot;&quot; &amp; CHR(13)
+	If stInvoiceTypeCode = &quot;381&quot; Then
+		stString = stString &amp; Space(2 * inTab) &amp; &quot;xmlns:cec=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonExtensionComponents-2&quot;&quot;&quot; &amp; CHR(13)
+	End If
 	stString = stString &amp; Space(2 * inTab) &amp; &quot;xmlns:cbc=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2&quot;&quot;&quot; &amp; CHR(13)
 	stString = stString &amp; Space(2 * inTab) &amp; &quot;xmlns:xsi=&quot;&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&quot;&quot; &amp; CHR(13)
 	If stInvoiceTypeCode = &quot;381&quot; Then
 		stString = stString &amp; Space(2 * inTab) &amp; &quot;xsi:schemaLocation=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 http://docs.oasis-open.org/ubl/os-UBL-2.3/xsd/maindoc/UBL-CreditNote-2.3.xsd&quot;&quot;&gt;&quot; &amp; CHR(13)
+		REM Rechnung ist zu XRechnung 3.0 kompatible, Identifier Gruppe PROCESS CONTROL, erforderlich [BT-24]
+		stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:CustomizationID&gt;urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0&lt;/cbc:CustomizationID&gt;&quot; &amp; CHR(13)
 	Else
 		stString = stString &amp; Space(2 * inTab) &amp; &quot;xsi:schemaLocation=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.3/xsd/maindoc/UBL-Invoice-2.3.xsd&quot;&quot;&gt;&quot; &amp; CHR(13)
+		REM Rechnung ist zu XRechnung 3.0 kompatible, Identifier Gruppe PROCESS CONTROL, erforderlich [BT-24]
+		stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:CustomizationID&gt;urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0&lt;/cbc:CustomizationID&gt;&quot; &amp; CHR(13)
 	End if
-	REM Rechnung ist zu XRechnung 3.0 kompatible, Identifier Gruppe PROCESS CONTROL, erforderlich [BT-24]
-	stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:CustomizationID&gt;urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0&lt;/cbc:CustomizationID&gt;&quot; &amp; CHR(13)
 	REM Default Value Gruppe PROCESS CONTROL, erforderlich [BT-23]
 	stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;cbc:ProfileID&gt;urn:fdc:peppol.eu:2017:poacc:billing:01:1.0&lt;/cbc:ProfileID&gt;&quot; &amp; CHR(13)
 	REM Einzelwerte aus der Datenbank
@@ -1126,7 +1131,7 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 		End If
     Next
 	If stInvoiceTypeCode = &quot;381&quot; Then
-		stString = stString &amp; &quot;&lt;/ubl:CreditNote&gt;&quot;
+		stString = stString &amp; &quot;&lt;/CreditNote&gt;&quot;
 	Else	
 		stString = stString &amp; &quot;&lt;/ubl:Invoice&gt;&quot;
 	End If	
