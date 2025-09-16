@@ -12,4 +12,5 @@
  <library:element library:name="Routinen"/>
  <library:element library:name="Test"/>
  <library:element library:name="Fax"/>
+ <library:element library:name="ReadInvoice"/>
 </library:library>
