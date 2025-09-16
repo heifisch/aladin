@@ -40,6 +40,7 @@ CONTENT='
 ./basic/ALADIN/Fax.xba 
 ./basic/ALADIN/Leistungsstamm.xdl 
 ./basic/ALADIN/Projekt.xdl 
+./basic/ALADIN/ReadInvoice.xba 
 ./basic/ALADIN/Routinen.xba 
 ./basic/ALADIN/Mandant.xba 
 ./basic/ALADIN/Mandant.xdl 
