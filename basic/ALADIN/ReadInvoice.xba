@@ -57,7 +57,7 @@ Dim Invoice As New structInvoice
 Dim arrInvoiceNote As Variant, arrBillingReference As Variant, arrAllowanceCharge As Variant, arrTaxSubtotal As Variant, arrInvoiceLines As Variant
 
 Sub readInvoice
-	Dim oDocBuilder, oDOM, sURL As String 
+	Dim oDocBuilder, oDOM, sURL As String, a%, bInvoiceFound As Boolean
 	Dim oFilePicker As Object, oSettings As Object, oFileAccess As Object
  
 	oSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
@@ -80,10 +80,19 @@ Sub readInvoice
 	oDOM = oDocBuilder.parseURI(ConvertFromURL(sURL))
 	oDOM.normalize()
 
-	If oDom.FirstChild.NodeName=&quot;Invoice&quot; Then
-		readXRechnung(oDOM) 
-	ElseIf oDom.FirstChild.NodeName=&quot;CrossIndustryInvoice&quot; Then
-		readZUGFeRD(oDOM)
+	For a = 0 To oDOM.ChildNodes.getLength - 1
+		Select Case oDOM.ChildNodes.item(a).NodeName
+			Case &quot;Invoice&quot;
+				bInvoiceFound=True
+				readXRechnung(oDOM) 
+			Case &quot;CrossIndustryInvoice&quot;
+				bInvoiceFound=True
+				readZUGFeRD(oDOM)
+		End Select
+	Next 
+	
+	If Not bInvoiceFound Then
+		Print &quot;Keine Rechnungsstruktur erkannt&quot;
 	End if
 End Sub
 
@@ -382,6 +391,7 @@ Function getValue(oEntry As Object, arrNodePath(), Optional sAttributName As Str
 	Dim a%, oElement As Object
 	If IsMissing(bGetAttribut) Then bGetAttribut=False
 	oElement=oEntry
+	getValue=&quot;&quot;
 	For a = 0 To UBound(arrNodePath())
 		If oElement.getElementsByTagName(arrNodePath(a)).getLength &gt; 0 And a &lt; UBound(arrNodePath()) Then
 			If oElement.getElementsByTagName(arrNodePath(a)).item(0).NodeName = arrNodePath(a) Then
@@ -396,25 +406,20 @@ Function getValue(oEntry As Object, arrNodePath(), Optional sAttributName As Str
 								getValue=oElement.getElementsByTagName(arrNodePath(a)).item(0).Attributes.item(0).NodeValue
 							Else
 								If oElement.getElementsByTagName(arrNodePath(a)).item(0).Attributes.item(0).NodeValue = sAttribut Then
-									getValue=oElement.getElementsByTagName(arrNodePath(a)).item(0).FirstChild.NodeValue
-								Else
-									getValue=&quot;&quot;
+									If oElement.getElementsByTagName(arrNodePath(a)).item(0).hasChildNodes Then _
+										getValue=oElement.getElementsByTagName(arrNodePath(a)).item(0).FirstChild.NodeValue
 								End If
 							End If
-						Else
-							getValue=&quot;&quot;
 						End If
-					Else
-						getValue=&quot;&quot;
 					End If
 					Exit Function
 				Else
-					getValue=oElement.getElementsByTagName(arrNodePath(a)).item(0).FirstChild.NodeValue
+					If oElement.getElementsByTagName(arrNodePath(a)).item(0).hasChildNodes Then _
+						getValue=oElement.getElementsByTagName(arrNodePath(a)).item(0).FirstChild.NodeValue
 					Exit Function
 				End If
 			End If
 		Else
-			getValue=&quot;&quot;
 			Exit Function
 		End If
 	Next
