@@ -321,9 +321,11 @@ Sub Betriebsart_aendern(iBetriebsart as integer)
 		if iExport = 1 then
 &apos;			Kontaktdaten_setzen()
 			Datum_setzen_manuel()
+			Schreibschutz_setzen(0)
+		Else
+			Schreibschutz_setzen(1)
 		End if
 		oForm_Document.reload()
-		Schreibschutz_setzen(1)
 		if lDocumentID &gt; 0 then
 			Korrektur_Vorzeichen_commit()
 		End if

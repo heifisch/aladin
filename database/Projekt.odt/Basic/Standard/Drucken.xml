@@ -62,7 +62,9 @@ Sub Druck_vorbereiten()
 			
 				Pos_neu()
 				Document_berechnen()
-				ZUGFeRD_erzeugen()
+				If iDocTypID = 5 OR iDocTypID = 6 then
+					ZUGFeRD_erzeugen()
+				End If
 			
 				oDialogPrintModel = oDialogPrint.Model
 				oOption_Print = oDialogPrintModel.getByName(&quot;Button_Druck&quot;)
