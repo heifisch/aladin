@@ -131,7 +131,7 @@ SUB SaveZUGFeRD(stXRechnungPath AS STRING)
 	DIM arDataStartDate(), arDataEndDate(), arDataRow(), arDataKonto(), arDataRabattIndicator(), arAllowanceChargeBaseAmount(), arAllowanceChargeTaxID()
 	DIM arAllowanceChargeReason(), arAllowanceChargeAmount(), arAllowanceChargeTax(), arAllowanceChargeIndicator(), arAllowanceChargePercent()
 	Dim arTaxPercent(0), arTaxNetto(0), arTaxTax(0), arTaxID(0)
-	DIM arAttachFilename(), arAttachDescription(), arAttachMimeCode(), arAttachFile(), arVor(), arDocRefID(), arDocRefDate()
+	DIM arAttachFilename(), arAttachDescription(), arAttachMimeCode(), arAttachFile(), arVor(), arDocRefID(), arDocRefDate(), arrRAnmerkung()
 
 	REM Zuerst werden durch Ansichten und Abfragen veränderbare Daten aufgeführt.
 	REM Anschließend kommen einige zentrale Variablen hinzu, die zur Zeit nicht aus der Datenbank bestückt werden.
@@ -171,18 +171,7 @@ SUB SaveZUGFeRD(stXRechnungPath AS STRING)
 		&quot;NULL AS stLLandCode_44,NULL AS stRStartDate_45,NULL AS stREndDate_46,NULL AS stProjectID_47,NULL AS stContractID_48,&quot;&amp;_
 		&quot;NULL AS stPurchaseID_49,NULL AS stSalesID_50,&quot;&amp;_
 		&quot;(CASE WHEN &quot;&amp; sInvoiceTypeCode &amp;&quot;=384 AND &quot; &amp; sDocumentID_Korrekturrechnung &amp; &quot;&gt;0 THEN &quot; &amp; sDocumentID_Korrekturrechnung &amp; &quot; END) AS stVorRechnungID_51,&quot;&amp;_
-		&quot;NULL AS stKaufCompID_52,&quot;&amp;_
-		&quot;TRIM(CONCAT(&quot;&amp;_
-			&quot;(CASE WHEN LENGTH(t3.Document_Typ)&gt;0 THEN CONCAT(t3.Document_Typ,&apos;\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
-			&quot;(CASE WHEN t3.ProjektID&gt;0 THEN CONCAT(t5.Projekt_Name,&apos;\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
-			&quot;(CASE WHEN LENGTH(t3.Document_Name)&gt;0 THEN CONCAT(t3.Document_Name,&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
-			&quot;(CASE WHEN &quot;&amp; sInvoiceTypeCode &amp;&quot;=384 AND &quot; &amp; sDocumentID_Korrekturrechnung &amp; &quot;&gt;0 THEN &quot;&amp;_
-				&quot;CONCAT(&apos;Korrektur zu Rechnung &apos;,&quot;&amp;_
-				&quot;(SELECT CONCAT(CASE WHEN AZ=1 THEN &apos;AZ&apos; ELSE &apos;RE&apos; END,&apos; &apos;,DocumentID) FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51),&quot;&amp;_
-				&quot;&apos; vom &apos;,DATE_FORMAT((SELECT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51),&apos;%d.%m.%Y&apos;),&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
-			&quot;(CASE WHEN LENGTH(t3.Leistungsempfaenger)&gt;0 THEN CONCAT(&apos;Leistungsempfänger:\n&apos;,t3.Leistungsempfaenger,&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
-			&quot;(CASE WHEN LENGTH(t3.Lieferbemerkung)&gt;0 THEN CONCAT(t3.Lieferbemerkung,&apos;\n\n&apos;) ELSE &apos;&apos; END),&quot;&amp;_
-			&quot;(CASE WHEN LENGTH(t3.Bemerkung)&gt;0 THEN CONCAT(t3.Bemerkung,&apos;\n\n&apos;) ELSE &apos;&apos; END))) AS stRAnmerkung_53,&quot;&amp;_
+		&quot;NULL AS stKaufCompID_52,NULL AS stRAnmerkung_53,&quot;&amp;_
 		&quot;NULL AS stGlaeubID_54,NULL AS stIBANEmpfaenger_55,NULL AS stMandateID_56,&quot;&amp;_
 		&quot;(CASE WHEN t3.13b=1 THEN t3.13bText WHEN t3.USt_befreit=1 THEN t3.USt_befreit_Text ELSE NULL END) AS stSteuerfreiheit_57,&quot;&amp;_
 		&quot;t4.Umsatzsteuernummer AS stRStellSteuerNr_58,NULL AS stTenderID_59,NULL AS stObjectID_60,NULL AS stAccounting_61,NULL AS stSellerID_62,&quot;&amp;_
@@ -197,7 +186,17 @@ SUB SaveZUGFeRD(stXRechnungPath AS STRING)
 		&quot;t3.Zahlbetrag_mit_MwSt AS stPayableAmount_83,t3.Skonto_Satz AS stSkontoSatz_84,t3.Skonto_Tage As stSkontoTage_85,&quot;&amp;_
 		&quot;DATE_FORMAT(t3.Skonto_bis,&apos;%d.%m.%Y&apos;) AS stSkontoBis_86,t3.Skonto AS stSkonto_87,&quot;&amp;_
 		&quot;(SELECT CONCAT(CASE WHEN AZ=1 THEN &apos;AZ&apos; ELSE &apos;RE&apos; END,&apos; &apos;,DocumentID) FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51) AS stVorRechnungID_88,&quot;&amp;_
-		&quot;(SELECT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51) AS stVorRechnungDatum_89,t3.Faellig_Tage AS stFaelligTage_90&quot;
+		&quot;(SELECT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51) AS stVorRechnungDatum_89,t3.Faellig_Tage AS stFaelligTage_90,&quot;&amp;_
+		&quot;(CASE WHEN LENGTH(t3.Document_Typ)&gt;0 THEN t3.Document_Typ ELSE &apos;&apos; END) AS stDocumentTyp_91,&quot;&amp;_
+		&quot;(CASE WHEN t3.ProjektID&gt;0 THEN t5.Projekt_Name ELSE &apos;&apos; END) AS stProjektName_92,&quot;&amp;_
+		&quot;(CASE WHEN LENGTH(t3.Document_Name)&gt;0 THEN t3.Document_Name ELSE &apos;&apos; END) AS stDocumentName_93,&quot;&amp;_
+		&quot;(CASE WHEN &quot;&amp; sInvoiceTypeCode &amp;&quot;=384 AND &quot; &amp; sDocumentID_Korrekturrechnung &amp; &quot;&gt;0 THEN &quot;&amp;_
+				&quot;CONCAT(&apos;Korrektur zu Rechnung &apos;,&quot;&amp;_
+				&quot;(SELECT CONCAT(CASE WHEN AZ=1 THEN &apos;AZ&apos; ELSE &apos;RE&apos; END,&apos; &apos;,DocumentID) FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51),&quot;&amp;_
+				&quot;&apos; vom &apos;,DATE_FORMAT((SELECT Erstellungsdatum FROM &quot;&amp; sTabelle1 &amp;&quot; WHERE DocumentID=stVorRechnungID_51),&apos;%d.%m.%Y&apos;)) ELSE &apos;&apos; END) AS stRechnungsKorrektur_94,&quot;&amp;_
+		&quot;(CASE WHEN LENGTH(t3.Leistungsempfaenger)&gt;0 THEN CONCAT(&apos;Leistungsempfänger:\n&apos;,t3.Leistungsempfaenger) ELSE &apos;&apos; END) AS stLeistungsEmpfaenger_95,&quot;&amp;_
+		&quot;(CASE WHEN LENGTH(t3.Lieferbemerkung)&gt;0 THEN t3.Lieferbemerkung ELSE &apos;&apos; END) AS stLieferBemerkung_96,&quot;&amp;_
+		&quot;(CASE WHEN LENGTH(t3.Bemerkung)&gt;0 THEN t3.Bemerkung ELSE &apos;&apos; END) AS stBemerkung_97&quot;
 
 	sSQL2=sSQL2 &amp;&quot; FROM &quot;&amp; sTabelle1 &amp;&quot; as t3 &quot;&amp;_
 		&quot;LEFT OUTER JOIN &quot;&amp; sAnsprechpartner &amp;&quot; as t2 &quot;&amp;_
@@ -317,6 +316,19 @@ SUB SaveZUGFeRD(stXRechnungPath AS STRING)
 
 		REM Gruppe INVOICE NOTE [0..*] [BG-1]
 		stRAnmerkung = CharToXMLChar(oRecord2.getString(53))			&apos;Invoice note : Text [1] [BT-22]
+		
+		If oRecord2.getString(91) &lt;&gt; &quot;&quot; Then ReDim Preserve arrRAnmerkung(UBound(arrRAnmerkung)+1)
+		If oRecord2.getString(91) &lt;&gt; &quot;&quot; Then arrRAnmerkung(UBound(arrRAnmerkung))=CharToXMLChar(Trim(oRecord2.getString(91)))
+		If oRecord2.getString(92) &lt;&gt; &quot;&quot; Then arrRAnmerkung(UBound(arrRAnmerkung))=arrRAnmerkung(UBound(arrRAnmerkung)) &amp; Chr$(10) &amp; CharToXMLChar(Trim(oRecord2.getString(92)))
+		If oRecord2.getString(93) &lt;&gt; &quot;&quot; Then arrRAnmerkung(UBound(arrRAnmerkung))=arrRAnmerkung(UBound(arrRAnmerkung)) &amp; Chr$(10) &amp; CharToXMLChar(Trim(oRecord2.getString(93)))
+		If oRecord2.getString(94) &lt;&gt; &quot;&quot; Then ReDim Preserve arrRAnmerkung(UBound(arrRAnmerkung)+1)
+		If oRecord2.getString(94) &lt;&gt; &quot;&quot; Then arrRAnmerkung(UBound(arrRAnmerkung))=CharToXMLChar(Trim(oRecord2.getString(94)))
+		If oRecord2.getString(95) &lt;&gt; &quot;&quot; Then ReDim Preserve arrRAnmerkung(UBound(arrRAnmerkung)+1)
+		If oRecord2.getString(95) &lt;&gt; &quot;&quot; Then arrRAnmerkung(UBound(arrRAnmerkung))=CharToXMLChar(Trim(oRecord2.getString(95)))
+		If oRecord2.getString(96) &lt;&gt; &quot;&quot; Then ReDim Preserve arrRAnmerkung(UBound(arrRAnmerkung)+1)
+		If oRecord2.getString(96) &lt;&gt; &quot;&quot; Then arrRAnmerkung(UBound(arrRAnmerkung))=CharToXMLChar(Trim(oRecord2.getString(96)))
+		If oRecord2.getString(97) &lt;&gt; &quot;&quot; Then ReDim Preserve arrRAnmerkung(UBound(arrRAnmerkung)+1)
+		If oRecord2.getString(97) &lt;&gt; &quot;&quot; Then arrRAnmerkung(UBound(arrRAnmerkung))=CharToXMLChar(Trim(oRecord2.getString(97)))
 
 		REM Gruppe PRECEDING INVOICE REFERENCE [0..*] [BG-3]
 		stVorRechnungID = oRecord2.getString(51)
@@ -598,13 +610,17 @@ REM +++ Ab hier wird das Dokument zusammengestellt +++
 	stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;ram:IssueDateTime&gt;&quot; &amp; CHR(13)
 	stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;udt:DateTimeString format=&quot;&quot;102&quot;&quot;&gt;&quot; &amp; stRDatum &amp; &quot;&lt;/udt:DateTimeString&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1
 	stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;/ram:IssueDateTime&gt;&quot; &amp; CHR(13)
-	IF stRAnmerkung &lt;&gt; &quot;&quot; THEN					&apos;nicht erforderlich 0…1    
-		stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;ram:IncludedNote&gt;&quot; &amp; CHR(13)
-		stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;ram:Content&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1, wenn Included Note vorhanden [BT-22]
-		stString = stString &amp; Trim(stRAnmerkung)
-		stString = stString &amp; Space(3 * inTab) &amp;&quot;&lt;/ram:Content&gt;&quot; &amp; CHR(13)
-		stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;/ram:IncludedNote&gt;&quot; &amp; CHR(13)
-	END IF
+
+	IF UBOUND(arrRAnmerkung()) &gt; -1 THEN
+		FOR i = 0 TO UBOUND(arrRAnmerkung())
+			stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;ram:IncludedNote&gt;&quot; &amp; CHR(13)
+			stString = stString &amp; Space(3 * inTab) &amp; &quot;&lt;ram:Content&gt;&quot; &amp; CHR(13)	&apos;erforderlich 1…1, wenn Included Note vorhanden [BT-22]
+			stString = stString &amp; Trim(arrRAnmerkung(i)) &amp; CHR(13)
+			stString = stString &amp; Space(3 * inTab) &amp;&quot;&lt;/ram:Content&gt;&quot; &amp; CHR(13)
+			stString = stString &amp; Space(2 * inTab) &amp; &quot;&lt;/ram:IncludedNote&gt;&quot; &amp; CHR(13)
+    	NEXT
+    END IF	
+
 	stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;/rsm:ExchangedDocument&gt;&quot; &amp; CHR(13)
 	stString = stString &amp; Space(1 * inTab) &amp; &quot;&lt;rsm:SupplyChainTradeTransaction&gt;&quot; &amp; CHR(13)
 	REM Hier folgen die Rechnungszeilen. Bei Cross Industry Invoice sind keine Untergliederung in SubInvoiceLine möglich 
