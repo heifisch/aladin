@@ -8,55 +8,141 @@ REM  *****  BASIC  *****
 
 Option Explicit
 
-Global Const BILLING_REFERENCE_ID=0, BILLING_REFERENCE_ISSUE_DATE=1
-Global Const CHARGE_INDICATOR=0, ALLOWANCE_CHARGE_REASON_CODE=1, ALLOWANCE_CHARGE_REASON=2
-Global Const MULTIPLIER_FACTOR_NUMERIC=5, AMOUNT=6, BASE_AMOUNT=7
-Global Const TAXABLE_AMOUNT=0, TAX_AMOUNT=1, TAX_EXEMPTION_REASON=2, TAX_CATEGORY_ID=3, TAX_PERCENT=4
-Global Const INVOICE_LINE_LEVEL=0, INVOICE_LINE_ID=1, PARENT_INVOICE_LINE_ID=2
-Global Const INVOICE_LINE_NOTE=5, INVOICED_QUANTITY=6, QUANTITY_UNIT_CODE=7
-Global Const INVOICE_LINE_ITEM_NAME=8, INVOICE_LINE_ITEM_DESCRIPTION=9
-Global Const INVOICE_LINE_ITEM_BUYERS_IDENTIFICATION_ID=10, INVOICE_LINE_ITEM_SELLER_IDENTIFICATION_ID=11
-Global Const INVOICE_LINE_EXTENSION_AMOUNT=12, INVOICE_LINE_PRICE_AMOUNT=13
+REM Konstanten für die Adressierung des Arrays, welches die Funktion readInvoice zurück gibt
+REM Array(Invoice,InvoiceNotes,BillingReferences,AllowanceCharges,TaxSubtotale,InvoiceLines)
+Global Const INVOICE=0	&apos; Struct
+Global Const INVOICE_NOTES=1 &apos; Struct Array
+Global Const BILLING_REFERENCES=2 &apos; Struct Array
+Global Const ALLOWANCE_CHARGES=3 &apos; Struct Array
+Global Const TAX_SUBTOTALE=4 &apos; Struct Array
+Global Const INVOICE_LINES=5 &apos; Struct Array
 
 Type structInvoice
-	sInvoiceID As String
-	sIssueDate As String
-	sDueDate As String
-	sInvoiceTypCode As String
-	sDocumentCurrencyCode As String
-	sBuyerReference As String
-	sSellerEMail As String
-	sSellerName As String
-	sSellerDescription As String
-	sSellerStreetName As String
-	sSellerCityName As String
-	sSellerPLZ As String
-	sSellerCountryCode As String
-	sSellerTaxCompanyID As String
-	sSellerContactName As String
-	sSellerContactTelephone As String
-	sSellerContactElectronicMail As String
-	sActualDeliveryDate As String
-	sPaymentMeansCode As String
-	sPayeeFinancialAccountID As String
-	sPayeeFinancialAccountName As String
-	sPayeeFinancialInstitutionBranchID As String
-	sPaymentTerms As String
-	sTaxTotalAmount As String
-	sLineExtensionAmount As String
-	sTaxExclusiveAmount As String
-	sTaxInclusiveAmount As String
-	sAllowanceTotalAmount As String
-	sChargeTotalAmount As String 
-	sPrepaidAmount As String
-	sPayableRoundingAmount As String
-	sPayableAmount As String
+	sInvoiceID As String &apos;[BT-1]
+	sIssueDate As String &apos;[BT-2]
+	sInvoiceTypCode As String &apos;[BT-3]
+	sDocumentCurrencyCode As String &apos;[BT-5]
+	sDueDate As String &apos;[BT-9]
+	sBuyerReference As String &apos;[BT-10]
+	sPaymentTerms As String &apos;[BT-20]
+	sSellerName As String &apos;[BT-28]
+	sSellerTaxCompanyID As String &apos;[BT-31] [BT-32]
+	sSellerDescription As String &apos;[BT-33]
+	sSellerEMail As String &apos;[BT-34]
+	sSellerStreetName As String &apos;[BT-35]
+	sSellerCityName As String &apos;[BT-37]
+	sSellerPLZ As String &apos;[BT-38]
+	sSellerCountryCode As String &apos;[BT-40]
+	sSellerContactName As String &apos;[BT-41]
+	sSellerContactTelephone As String &apos;[BT-42]
+	sSellerContactElectronicMail As String &apos;[BT-43]
+	sBuyerName As String &apos;[BT-44]
+	sBuyerIdentifier As String &apos;[BT-46]
+	sBuyerTaxCompanyID As String &apos;[BT-48]
+	sBuyerEMail As String &apos;[BT-49]
+	sBuyerStreetName As String &apos;[BT-50]
+	sBuyerCityName As String &apos;[BT-52]
+	sBuyerPLZ As String &apos;[BT-53]
+	sBuyerCountryCode As String &apos;[BT-55]
+	sBuyerContactName As String &apos;[BT-56]
+	sBuyerContactTelephone As String &apos;[BT-57]
+	sBuyerContactElectronicMail As String &apos;[BT-58]
+	sActualDeliveryDate As String &apos;[BT-72]
+	sPaymentMeansCode As String &apos;[BT-81]
+	sPayeeFinancialAccountID As String &apos;[BT-84]
+	sPayeeFinancialAccountName As String &apos;[BT-85]
+	sPayeeFinancialInstitutionBranchID As String &apos;[BT-86]
+	sLineExtensionAmount As String &apos;[BT-106]
+	sAllowanceTotalAmount As String &apos;[BT-107]
+	sChargeTotalAmount As String &apos;[BT-108]
+	sTaxExclusiveAmount As String &apos;[BT-109]
+	sTaxTotalAmount As String &apos;[BT-110] [BT-111]
+	sTaxInclusiveAmount As String &apos;[BT-112]
+	sPrepaidAmount As String &apos;[BT-113]
+	sPayableRoundingAmount As String &apos;[BT-114]
+	sPayableAmount As String &apos;[BT-115]
 End Type
 
-Dim Invoice As New structInvoice
-Dim arrInvoiceNote As Variant, arrBillingReference As Variant, arrAllowanceCharge As Variant, arrTaxSubtotal As Variant, arrInvoiceLines As Variant
+Type structBillingReference
+	sID As String &apos;[BT-25]
+	sIssueDate As String &apos;[BT-26]
+End Type
 
-Sub readInvoice
+Type structAllowanceCharge
+	sIndicator As String  &apos;[Use “true” when informing about Charges and “false” when informing about Allowances.]
+	sAmount As String &apos;[BT-92] [BT-99]
+	sBaseAmount As String &apos;[BT-93] [BT-100]
+	sPercent As String &apos;[BT-94] [BT-101]
+	sTaxCategoryID As String &apos;[BT-95] [BT-102]
+	sTaxPercent As String &apos;[BT-96] [BT-103]
+	sReason As String &apos;[BT-97] [BT-104]
+	sReasonCode As String &apos;[BT-98] [BT-105]
+End Type
+
+Type structTaxSubtotal
+	sTaxableAmount As String &apos;[BT-116]
+	sTaxAmount As String &apos;[BT-117]
+	sTaxCategoryID As String &apos;[BT-118]
+	sTaxPercent As String &apos;[BT-119]
+	sTaxExemptionReason As String &apos;[BT-120]
+End Type
+
+Type structInvoiceLine
+	sLevel As String &apos;Level SubInvoiceLines
+	sParentID As String &apos;[BT-X-304] &apos;SubInvoiceLines
+	sID As String &apos;[BT-126]
+	sNote As String &apos;[BT-127]
+	sQuantity As String &apos;[BT-129]
+	sUnitCode As String &apos;[BT-130]
+	sNetAmount As String &apos;[BT-131]
+	sPeriodStartDate As String &apos;[BT-134]
+	sPeriodEndDate As String &apos;[BT-135]
+	sAllowanceChargeIndicator As String  &apos;[Use “true” when informing about Charges and “false” when informing about Allowances.]
+	sAllowanceChargeAmount As String &apos;[BT-136] [BT-141]
+	sAllowanceChargeBaseAmount As String &apos;[BT-137] [BT-142]
+	sAllowanceChargePercent As String &apos;[BT-138] [BT-143]
+	sAllowanceChargeReason As String &apos;[BT-139] [BT-144]
+	sAllowanceChargeReasonCode As String &apos;[BT-140] [BT-145]
+	sItemNetPrice As String  &apos;[BT-146]
+	sTaxCategoryID As String &apos;[BT-151]
+	sTaxPercent As String &apos;[BT-152]
+	sItemName As String &apos;[BT-153]
+	sItemDescription As String &apos;[BT-154]
+	sSellerAssignedID As String &apos;[BT-155]
+	sBuyerAssignedID As String &apos;[BT-156]
+End Type
+
+Type structInvoiceNote
+	sSubjectCode As String &apos;[BT-21]
+	sNote As String &apos;[BT-22]
+End Type
+
+REM Funktion readInvoice #########################################################################################
+REM Mit der Funktion readInvoice kann eine E-Rechnung im XRechnung- oder ZUGFeRD-Format eingelesen werden.
+REM Nach der Dateiauswahl werden die Daten als Funktions-Rückgabe in einem Array aus Type-Struktur und Type-Struktur-Arrays
+REM zurückgegeben. Das Array kann mit obigen Konstanten Adressiert werden.
+REM Aufgerufen in einer Subroutine kann die Funktion folgendermaßen werden:
+REM
+REM Sub Test()
+REM		Dim InvoiceData As Variant, b%
+REM		InvoiceData=readInvoice
+REM		With InvoiceData(INVOICE)
+REM			Print .sInvoiceID
+REM		End With
+REM	
+REM		For b = 0 To UBound(InvoiceData(BILLING_REFERENCES))
+REM			With InvoiceData(BILLING_REFERENCES)(b)
+REM				Print .sID				
+REM				Print .sIssueDate		
+REM			End With		
+REM		Next
+REM ...
+REM End Sub
+REM
+REM Ein vollständiges Beispiel, wie auf die Daten zugegriffen werden kann, ist in der Routine CreateSheet() zu sehen.
+REM Mit dieser, werden die Daten aus der Rechnung in eine Calc-Tabelle eingefügt.
+
+Function readInvoice As Variant
 	Dim oDocBuilder, oDOM, sURL As String, a%, bInvoiceFound As Boolean
 	Dim oFilePicker As Object, oSettings As Object, oFileAccess As Object
  
@@ -84,20 +170,24 @@ Sub readInvoice
 		Select Case oDOM.ChildNodes.item(a).NodeName
 			Case &quot;Invoice&quot;
 				bInvoiceFound=True
-				readXRechnung(oDOM) 
+					readInvoice=readXRechnung(oDOM) 
 			Case &quot;CrossIndustryInvoice&quot;
 				bInvoiceFound=True
-				readZUGFeRD(oDOM)
+					readInvoice=readZUGFeRD(oDOM)
 		End Select
 	Next 
 	
 	If Not bInvoiceFound Then
 		Print &quot;Keine Rechnungsstruktur erkannt&quot;
-	End if
-End Sub
+	End If
+End Function
 
-Sub readXRechnung(oDOM As Object)
+Function readXRechnung(oDOM As Object) As Variant
 	Dim oElem As Object, oElemList As Object, oSubElemList As Object
+	Dim Invoice As New structInvoice, InvoiceNotes() As New structInvoiceNote, BillingReferences() As New structBillingReference
+	Dim AllowanceCharges() As New structAllowanceCharge, TaxSubtotale() As New structTaxSubtotal, InvoiceLinesFirst() As New structInvoiceLine
+	Dim InvoiceLines As Variant
+	
 	Dim a% , b% , c% , d% , e% , f% , g% , h% , i% , j% , k% , l%, x%
 		
 	oElemList=oDOM.getElementsByTagName(&quot;Invoice&quot;).item(0).getChildNodes()
@@ -113,17 +203,26 @@ Sub readXRechnung(oDOM As Object)
 					Case &quot;InvoiceTypeCode&quot;
 						.sInvoiceTypCode=oElemList.item(a).FirstChild.NodeValue &apos;[BT-3]
 					Case &quot;Note&quot;
-						ReDim Preserve arrInvoiceNote(b)
-						arrInvoiceNote(b)=oElemList.item(a).FirstChild.NodeValue &apos;[BT-22]
+						ReDim Preserve InvoiceNotes(b)
+						With InvoiceNotes(b)
+							If InStr(oElemList.item(a).FirstChild.NodeValue,&quot;#&quot;) &gt; 0 Then
+								.sSubjectCode=oElemList.item(a).FirstChild.NodeValue &apos;[BT-21]
+								.sNote=oElemList.item(a).FirstChild.NodeValue &apos;[BT-22]
+							Else
+								.sNote=oElemList.item(a).FirstChild.NodeValue &apos;[BT-22]
+							End If
+						End With 
 						b=b+1
 					Case &quot;DocumentCurrencyCode&quot;
 						.sDocumentCurrencyCode=oElemList.item(a).FirstChild.NodeValue &apos;[BT-5]
 					Case &quot;BuyerReference&quot;
 						.sBuyerReference=oElemList.item(a).FirstChild.NodeValue &apos;[BT-10]
 					Case &quot;BillingReference&quot; &apos;[BG-3]
-						ReDim Preserve arrBillingReference(c,2)
-						arrBillingReference(c,BILLING_REFERENCE_ID)=getValue(oElemList.item(a),Array(&quot;ID&quot;)) &apos;[BT-25]
-						arrBillingReference(c,BILLING_REFERENCE_ISSUE_DATE)=getValue(oElemList.item(a),Array(&quot;IssueDate&quot;)) &apos;[BT-26]
+						ReDim Preserve BillingReferences(c)
+						With BillingReferences(c)
+							.sID=getValue(oElemList.item(a),Array(&quot;ID&quot;)) &apos;[BT-25]
+							.sIssueDate=getValue(oElemList.item(a),Array(&quot;IssueDate&quot;)) &apos;[BT-26]
+						End With
 						c=c+1
 					Case &quot;AccountingSupplierParty&quot;
 						.sSellerEMail=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;EndpointID&quot;),&quot;schemeID&quot;,&quot;EM&quot;) &apos;[BT-34]
@@ -136,6 +235,17 @@ Sub readXRechnung(oDOM As Object)
 						.sSellerContactName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;Name&quot;)) &apos;[BT-41]
 						.sSellerContactTelephone=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;Telephone&quot;)) &apos;[BT-42]
 						.sSellerContactElectronicMail=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;ElectronicMail&quot;)) &apos;[BT-43]
+					Case &quot;AccountingCustomerParty&quot;
+						.sBuyerEMail=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;EndpointID&quot;),&quot;schemeID&quot;,&quot;EM&quot;) &apos;[BT-49]
+						.sBuyerName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PartyName&quot;,&quot;Name&quot;)) &apos;[BT-44]
+						.sBuyerStreetName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;StreetName&quot;)) &apos;[BT-50]
+						.sBuyerCityName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;CityName&quot;)) &apos;[BT-52]
+						.sBuyerPLZ=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;PostalZone&quot;)) &apos;[BT-53]
+						.sBuyerCountryCode=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;Country&quot;,&quot;IdentificationCode&quot;)) &apos;[BT-55]
+						.sBuyerTaxCompanyID=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PartyTaxScheme&quot;,&quot;CompanyID&quot;)) &apos;[BT-48]
+						.sBuyerContactName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;Name&quot;)) &apos;[BT-56]
+						.sBuyerContactTelephone=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;Telephone&quot;)) &apos;[BT-57]
+						.sBuyerContactElectronicMail=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;ElectronicMail&quot;)) &apos;[BT-58]
 					Case &quot;Delivery&quot;
 						.sActualDeliveryDate=getValue(oElemList.item(a),Array(&quot;ActualDeliveryDate&quot;)) &apos;[BT-72]
 					Case &quot;PaymentMeans&quot;
@@ -146,26 +256,30 @@ Sub readXRechnung(oDOM As Object)
 					Case &quot;PaymentTerms&quot;
 						.sPaymentTerms=getValue(oElemList.item(a),Array(&quot;Note&quot;)) &apos;[BT-20]
 					Case &quot;AllowanceCharge&quot;
-						ReDim Preserve arrAllowanceCharge(d,8)
-						arrAllowanceCharge(d,CHARGE_INDICATOR)=getValue(oElemList.item(a),Array(&quot;ChargeIndicator&quot;)) &apos;[Use “true” when informing about Charges and “false” when informing about Allowances.]
-						arrAllowanceCharge(d,ALLOWANCE_CHARGE_REASON_CODE)=getValue(oElemList.item(a),Array(&quot;AllowanceChargeReasonCode&quot;)) &apos;[BT-98] [BT-105]
-						arrAllowanceCharge(d,ALLOWANCE_CHARGE_REASON)=getValue(oElemList.item(a),Array(&quot;AllowanceChargeReason&quot;)) &apos;[BT-97] [BT-104]
-						arrAllowanceCharge(d,MULTIPLIER_FACTOR_NUMERIC)=getValue(oElemList.item(a),Array(&quot;MultiplierFactorNumeric&quot;)) &apos;[BT-94] [BT-101]
-						arrAllowanceCharge(d,AMOUNT)=getValue(oElemList.item(a),Array(&quot;Amount&quot;)) &apos;[BT-92] [BT-99]
-						arrAllowanceCharge(d,BASE_AMOUNT)=getValue(oElemList.item(a),Array(&quot;BaseAmount&quot;)) &apos;[BT-93] [BT-100]
-						arrAllowanceCharge(d,TAX_CATEGORY_ID)=getValue(oElemList.item(a),Array(&quot;TaxCategory&quot;,&quot;ID&quot;)) &apos;[BT-95] [BT-102]
-						arrAllowanceCharge(d,TAX_PERCENT)=getValue(oElemList.item(a),Array(&quot;TaxCategory&quot;,&quot;Percent&quot;)) &apos;[BT-96] [BT-103]
+						ReDim Preserve AllowanceCharges(d)
+						With AllowanceCharges(d)
+							.sIndicator=getValue(oElemList.item(a),Array(&quot;ChargeIndicator&quot;)) &apos;[Use “true” when informing about Charges and “false” when informing about Allowances.]
+							.sAmount=getValue(oElemList.item(a),Array(&quot;Amount&quot;)) &apos;[BT-92] [BT-99]
+							.sBaseAmount=getValue(oElemList.item(a),Array(&quot;BaseAmount&quot;)) &apos;[BT-93] [BT-100]
+							.sPercent=getValue(oElemList.item(a),Array(&quot;MultiplierFactorNumeric&quot;)) &apos;[BT-94] [BT-101]
+							.sTaxCategoryID=getValue(oElemList.item(a),Array(&quot;TaxCategory&quot;,&quot;ID&quot;)) &apos;[BT-95] [BT-102]
+							.sTaxPercent=getValue(oElemList.item(a),Array(&quot;TaxCategory&quot;,&quot;Percent&quot;)) &apos;[BT-96] [BT-103]
+							.sReason=getValue(oElemList.item(a),Array(&quot;AllowanceChargeReason&quot;)) &apos;[BT-97] [BT-104]
+							.sReasonCode=getValue(oElemList.item(a),Array(&quot;AllowanceChargeReasonCode&quot;)) &apos;[BT-98] [BT-105]
+						End With
 						d=d+1
 					Case &quot;TaxTotal&quot;
 						.sTaxTotalAmount=getValue(oElemList.item(a),Array(&quot;TaxAmount&quot;)) &apos;[BT-110] [BT-111]
 						oSubElemList=oElemList.item(a).getElementsByTagName(&quot;TaxSubtotal&quot;)
 						For e = 0 To oSubElemList.getLength() - 1
-							ReDim Preserve arrTaxSubtotal(e,5)
-							arrTaxSubtotal(e,TAXABLE_AMOUNT)=getValue(oSubElemList.item(e),Array(&quot;TaxableAmount&quot;)) &apos;[BT-116]
-							arrTaxSubtotal(e,TAX_AMOUNT)=getValue(oSubElemList.item(e),Array(&quot;TaxAmount&quot;)) &apos;[BT-117]
-							arrTaxSubtotal(e,TAX_CATEGORY_ID)=getValue(oSubElemList.item(e),Array(&quot;TaxCategory&quot;,&quot;ID&quot;)) &apos;[BT-118]
-							arrTaxSubtotal(e,TAX_PERCENT)=getValue(oSubElemList.item(e),Array(&quot;TaxCategory&quot;,&quot;Percent&quot;)) &apos;[BT-119]
-							arrTaxSubtotal(e,TAX_EXEMPTION_REASON)=getValue(oSubElemList.item(e),Array(&quot;TaxCategory&quot;,&quot;TaxExemptionReason&quot;)) &apos;[BT-120]
+							ReDim Preserve TaxSubtotale(e)
+							With TaxSubtotale(e)
+								.sTaxableAmount=getValue(oSubElemList.item(e),Array(&quot;TaxableAmount&quot;)) &apos;[BT-116]
+								.sTaxAmount=getValue(oSubElemList.item(e),Array(&quot;TaxAmount&quot;)) &apos;[BT-117]
+								.sTaxCategoryID=getValue(oSubElemList.item(e),Array(&quot;TaxCategory&quot;,&quot;ID&quot;)) &apos;[BT-118]
+								.sTaxPercent=getValue(oSubElemList.item(e),Array(&quot;TaxCategory&quot;,&quot;Percent&quot;)) &apos;[BT-119]
+								.sTaxExemptionReason=getValue(oSubElemList.item(e),Array(&quot;TaxCategory&quot;,&quot;TaxExemptionReason&quot;)) &apos;[BT-120]
+							End With
 						Next
 					Case &quot;LegalMonetaryTotal&quot;
 						.sLineExtensionAmount=getValue(oElemList.item(a),Array(&quot;LineExtensionAmount&quot;)) &apos;[BT-106]
@@ -177,153 +291,59 @@ Sub readXRechnung(oDOM As Object)
 						.sPayableRoundingAmount=getValue(oElemList.item(a),Array(&quot;PayableRoundingAmount&quot;)) &apos;[BT-114]
 						.sPayableAmount=getValue(oElemList.item(a),Array(&quot;PayableAmount&quot;)) &apos;[BT-115]
 					Case &quot;InvoiceLine&quot;
-						arrInvoiceLines=getInvoiceLines(oElemList.item(a),arrInvoiceLines)
+						If IsArray(InvoiceLines) Then 
+							InvoiceLines=getInvoiceLines(oElemList.item(a),InvoiceLines)
+						Else 
+							InvoiceLines=getInvoiceLines(oElemList.item(a),InvoiceLinesFirst)
+						End If
 				End Select
 		Next
 	End With
-	CreateSheet
-&apos;	PrintValues
-End Sub
+	readXRechnung=Array(Invoice,InvoiceNotes,BillingReferences,AllowanceCharges,TaxSubtotale,InvoiceLines)
+End Function
 
-Sub readZUGFeRD(oDOM As Object)
-	Dim oElem As Object, oElemList As Object, oSubElemList As Object, oSubSubElemList As Object
-	Dim a% , b% , c% , d% , e% , f% , g% , h% , i% , j% , k% , l%, x%
-		
-	oElemList=oDOM.getElementsByTagName(&quot;CrossIndustryInvoice&quot;).item(0).getChildNodes()
-	With Invoice
-		For a = 0 To oElemList.getLength() - 1
-			Select Case oElemList.item(a).NodeName
-				Case &quot;ExchangedDocument&quot;
-					.sInvoiceID=getValue(oElemList.item(a),Array(&quot;ID&quot;)) &apos;[BT-1]
-					.sIssueDate=getValue(oElemList.item(a),Array(&quot;IssueDateTime&quot;,&quot;DateTimeString&quot;)) &apos;[BT-2]
-					.sInvoiceTypCode=getValue(oElemList.item(a),Array(&quot;TypeCode&quot;)) &apos;[BT-3]
-					oSubElemList=oElemList.item(a).getElementsByTagName(&quot;IncludedNote&quot;)
-					For i = 0 To oSubElemList.getLength() - 1
-						ReDim Preserve arrInvoiceNote(i)
-						arrInvoiceNote(i)=getValue(oSubElemList.item(i),Array(&quot;Content&quot;)) &apos;[BT-22]
-					Next
-				Case &quot;SupplyChainTradeTransaction&quot;
-					oSubElemList=oElemList.item(a).getChildNodes()
-					For b = 0 To oSubElemList.getLength() - 1
-						Select Case oSubElemList.item(b).NodeName
-							Case &quot;IncludedSupplyChainTradeLineItem&quot;
-								ReDim Preserve arrInvoiceLines(b,13)
-								arrInvoiceLines(b,INVOICE_LINE_ID)=getValue(oSubElemList.item(b),Array(&quot;AssociatedDocumentLineDocument&quot;,&quot;LineID&quot;)) &apos;[BT-126]
-								arrInvoiceLines(b,PARENT_INVOICE_LINE_ID)=getValue(oSubElemList.item(b),Array(&quot;AssociatedDocumentLineDocument&quot;,&quot;ParentLineID&quot;)) &apos;[BT-X-304]
-								arrInvoiceLines(b,INVOICE_LINE_NOTE)=getValue(oSubElemList.item(b),Array(&quot;AssociatedDocumentLineDocument&quot;,&quot;IncludedNote&quot;)) &apos;[BT-127]
-								arrInvoiceLines(b,INVOICE_LINE_ITEM_BUYERS_IDENTIFICATION_ID)=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeProduct&quot;,&quot;BuyerAssignedID&quot;)) &apos;[BT-156]
-								arrInvoiceLines(b,INVOICE_LINE_ITEM_SELLER_IDENTIFICATION_ID)=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeProduct&quot;,&quot;SellerAssignedID&quot;)) &apos;[BT-155]
-								arrInvoiceLines(b,INVOICE_LINE_ITEM_NAME)=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeProduct&quot;,&quot;Name&quot;)) &apos;[BT-153]
-								arrInvoiceLines(b,INVOICE_LINE_ITEM_DESCRIPTION)=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeProduct&quot;,&quot;Description&quot;)) &apos;[BT-154]
-								arrInvoiceLines(b,INVOICE_LINE_PRICE_AMOUNT)=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeAgreement&quot;,&quot;NetPriceProductTradePrice&quot;,&quot;ChargeAmount&quot;)) &apos;[BT-146]
-								arrInvoiceLines(b,INVOICED_QUANTITY)=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeDelivery&quot;,&quot;BilledQuantity&quot;)) &apos;[BT-129]
-								arrInvoiceLines(b,QUANTITY_UNIT_CODE)=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeDelivery&quot;,&quot;BilledQuantity&quot;),&quot;unitCode&quot;,&quot;&quot;,True) &apos;[BT-130]
-								arrInvoiceLines(b,TAX_CATEGORY_ID)=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;ApplicableTradeTax&quot;,&quot;CategoryCode&quot;)) &apos;[BT-151]
-								arrInvoiceLines(b,TAX_PERCENT)=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;ApplicableTradeTax&quot;,&quot;RateApplicablePercent&quot;)) &apos;[BT-152]
-								arrInvoiceLines(b,INVOICE_LINE_EXTENSION_AMOUNT)=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;SpecifiedTradeSettlementLineMonetarySummation&quot;,&quot;LineTotalAmount&quot;)) &apos;[BT-131]
-							Case &quot;ApplicableHeaderTradeAgreement&quot;
-								.sBuyerReference=getValue(oSubElemList.item(b),Array(&quot;BuyerReference&quot;)) &apos;[BT-10]
-								.sSellerName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;Name&quot;)) &apos;[BT-27]
-								.sSellerDescription=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;Description&quot;)) &apos;[BT-33]
-								.sSellerPLZ=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;PostcodeCode&quot;)) &apos;[BT-38]
-								.sSellerStreetName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;LineOne&quot;)) &apos;[BT-35]
-								.sSellerCityName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;CityName&quot;)) &apos;[BT-37]
-								.sSellerCountryCode=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;CountryID&quot;)) &apos;[BT-40]
-								.sSellerEMail=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;URIUniversalCommunication&quot;,&quot;URIID&quot;),&quot;schemeID&quot;,&quot;EM&quot;) &apos;[BT-34]
-								.sSellerTaxCompanyID=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;SpecifiedTaxRegistration&quot;,&quot;ID&quot;)) &apos;[BT-31] [BT-32]
-								.sSellerContactName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;PersonName&quot;)) &apos;[BT-41]
-								.sSellerContactTelephone=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;TelephoneUniversalCommunication&quot;,&quot;CompleteNumber&quot;)) &apos;[BT-42]
-								.sSellerContactElectronicMail=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;EmailURIUniversalCommunication&quot;,&quot;URIID&quot;)) &apos;[BT-43]
-							Case &quot;ApplicableHeaderTradeDelivery&quot;
-								.sActualDeliveryDate=getValue(oSubElemList.item(b),Array(&quot;ActualDeliverySupplyChainEvent&quot;,&quot;OccurrenceDateTime&quot;,&quot;DateTimeString&quot;)) &apos;[BT-72]
-							Case &quot;ApplicableHeaderTradeSettlement&quot;
-								.sDocumentCurrencyCode=getValue(oSubElemList.item(b),Array(&quot;InvoiceCurrencyCode&quot;)) &apos;[BT-5]
-								.sPaymentMeansCode=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementPaymentMeans&quot;,&quot;TypeCode&quot;)) &apos;[BT-81]
-								.sPayeeFinancialAccountID=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementPaymentMeans&quot;,&quot;PayeePartyCreditorFinancialAccount&quot;,&quot;IBANID&quot;)) &apos;[BT-84]
-								.sPayeeFinancialAccountName=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementPaymentMeans&quot;,&quot;PayeePartyCreditorFinancialAccount&quot;,&quot;AccountName&quot;)) &apos;[BT-85]
-								.sPayeeFinancialInstitutionBranchID=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementPaymentMeans&quot;,&quot;PayeeSpecifiedCreditorFinancialInstitution&quot;,&quot;BICID&quot;)) &apos;[BT-86]
-								oSubSubElemList=oSubElemList.item(b).getElementsByTagName(&quot;ApplicableTradeTax&quot;)
-								For c = 0 To oSubSubElemList.getLength() - 1
-									ReDim Preserve arrTaxSubtotal(c,5)
-									arrTaxSubtotal(c,TAX_AMOUNT)=getValue(oSubSubElemList.item(c),Array(&quot;CalculatedAmount&quot;)) &apos;[BT-117]
-									arrTaxSubtotal(c,TAX_EXEMPTION_REASON)=getValue(oSubSubElemList.item(c),Array(&quot;ExemptionReason&quot;)) &apos;[BT-120]
-									arrTaxSubtotal(c,TAXABLE_AMOUNT)=getValue(oSubSubElemList.item(c),Array(&quot;BasisAmount&quot;)) &apos;[BT-116]
-									arrTaxSubtotal(c,TAX_CATEGORY_ID)=getValue(oSubSubElemList.item(c),Array(&quot;CategoryCode&quot;)) &apos;[BT-118]
-									arrTaxSubtotal(c,TAX_PERCENT)=getValue(oSubSubElemList.item(c),Array(&quot;RateApplicablePercent&quot;)) &apos;[BT-119]
-								Next
-								oSubSubElemList=oSubElemList.item(b).getElementsByTagName(&quot;SpecifiedTradeAllowanceCharge&quot;)
-								For d = 0 To oSubSubElemList.getLength() - 1
-									ReDim Preserve arrAllowanceCharge(d,8)
-									arrAllowanceCharge(d,CHARGE_INDICATOR)=getValue(oSubSubElemList.item(d),Array(&quot;ChargeIndicator&quot;,&quot;Indicator&quot;)) &apos;[Use “true” when informing about Charges and “false” when informing about Allowances.]
-									arrAllowanceCharge(d,ALLOWANCE_CHARGE_REASON_CODE)=getValue(oSubSubElemList.item(d),Array(&quot;ReasonCode&quot;)) &apos;[BT-98] [BT-105]
-									arrAllowanceCharge(d,ALLOWANCE_CHARGE_REASON)=getValue(oSubSubElemList.item(d),Array(&quot;Reason&quot;)) &apos;[BT-97] [BT-104]
-									arrAllowanceCharge(d,MULTIPLIER_FACTOR_NUMERIC)=getValue(oSubSubElemList.item(d),Array(&quot;CalculationPercent&quot;)) &apos;[BT-94] [BT-101]
-									arrAllowanceCharge(d,AMOUNT)=getValue(oSubSubElemList.item(d),Array(&quot;ActualAmount&quot;)) &apos;[BT-92] [BT-99]
-									arrAllowanceCharge(d,BASE_AMOUNT)=getValue(oSubSubElemList.item(d),Array(&quot;BasisAmount&quot;)) &apos;[BT-93] [BT-100]
-									arrAllowanceCharge(d,TAX_CATEGORY_ID)=getValue(oSubSubElemList.item(d),Array(&quot;CategoryTradeTax&quot;,&quot;CategoryCode&quot;)) &apos;[BT-95] [BT-102]
-									arrAllowanceCharge(d,TAX_PERCENT)=getValue(oSubSubElemList.item(d),Array(&quot;CategoryTradeTax&quot;,&quot;RateApplicablePercent&quot;)) &apos;[BT-96] [BT-103]
-								Next
-								.sPaymentTerms=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradePaymentTerms&quot;,&quot;Description&quot;)) &apos;[BT-20]
-								.sDueDate=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradePaymentTerms&quot;,&quot;DueDateDateTime&quot;,&quot;DateTimeString&quot;)) &apos;[BT-9]
-								.sLineExtensionAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;LineTotalAmount&quot;)) &apos;[BT-106]
-								.sChargeTotalAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;ChargeTotalAmount&quot;)) &apos;[BT-108]
-								.sAllowanceTotalAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;AllowanceTotalAmount&quot;)) &apos;[BT-107]
-								.sTaxExclusiveAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;TaxBasisTotalAmount&quot;)) &apos;[BT-109]
-								.sTaxTotalAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;TaxTotalAmount&quot;)) &apos;[BT-110] [BT-111]
-								.sTaxInclusiveAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;GrandTotalAmount&quot;)) &apos;[BT-112]
-								.sPrepaidAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;TotalPrepaidAmount&quot;)) &apos;[BT-113]
-								.sPayableAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;DuePayableAmount&quot;)) &apos;[BT-115]
-								.sPayableRoundingAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;RoundingAmount&quot;)) &apos;[BT-114]
-								oSubSubElemList=oSubElemList.item(b).getElementsByTagName(&quot;InvoiceReferencedDocument&quot;)
-								For e = 0 To oSubSubElemList.getLength() - 1
-									ReDim Preserve arrBillingReference(e,2)
-									arrBillingReference(e,BILLING_REFERENCE_ID)=getValue(oSubSubElemList.item(e),Array(&quot;IssuerAssignedID&quot;)) &apos;[BT-25]
-									arrBillingReference(e,BILLING_REFERENCE_ISSUE_DATE)=getValue(oSubSubElemList.item(e),Array(&quot;FormattedIssueDateTime&quot;,&quot;DateTimeString&quot;)) &apos;[BT-26]
-								Next
-						End Select
-					Next
-			End Select
-		Next
-	End With
-	CreateSheet
-End Sub
-
-Function getInvoiceLines(oEntry As Object, arrInvoiceLines) As Variant
-	Dim a%, b%, c%, i%, oElement As Object
+Function getInvoiceLines(oEntry As Object, InvoiceLines As structInvoiceLine) As Variant
+	Dim a%, b%, c%, i%, oElement As Object, x%
 	Dim iNumberSubInvoiceLines As Integer, iLevel As Integer, sParentID As String
 	Dim arrInvoiceLineIDs() As String
-	
-On Error Goto Catch	
-	
-	If Not IsArray(arrInvoiceLines) Then 
-		ReDim arrInvoiceLines(0,13)
-	Else
-		ReDim Preserve arrInvoiceLines(UBound(arrInvoiceLines)+1,13)
-	End If
-	
-	a=UBound(arrInvoiceLines)
-	arrInvoiceLines(a,INVOICE_LINE_LEVEL)=0
-	arrInvoiceLines(a,INVOICE_LINE_ID)=getValue(oEntry,Array(&quot;ID&quot;)) &apos;[BT-126]
-	arrInvoiceLines(a,INVOICE_LINE_NOTE)=getValue(oEntry,Array(&quot;Note&quot;)) &apos;[BT-127]
-	arrInvoiceLines(a,INVOICED_QUANTITY)=getValue(oEntry,Array(&quot;InvoicedQuantity&quot;)) &apos;[BT-129]
-	arrInvoiceLines(a,QUANTITY_UNIT_CODE)=getValue(oEntry,Array(&quot;InvoicedQuantity&quot;),&quot;unitCode&quot;,&quot;&quot;,True) &apos;[BT-130]
-	arrInvoiceLines(a,INVOICE_LINE_EXTENSION_AMOUNT)=getValue(oEntry,Array(&quot;LineExtensionAmount&quot;)) &apos;[BT-131]
-	arrInvoiceLines(a,INVOICE_LINE_ITEM_DESCRIPTION)=getValue(oEntry,Array(&quot;Item&quot;,&quot;Description&quot;)) &apos;[BT-154]
-	arrInvoiceLines(a,INVOICE_LINE_ITEM_NAME)=getValue(oEntry,Array(&quot;Item&quot;,&quot;Name&quot;)) &apos;[BT-153]
-	arrInvoiceLines(a,INVOICE_LINE_ITEM_BUYERS_IDENTIFICATION_ID)=getValue(oEntry,Array(&quot;Item&quot;,&quot;BuyersItemIdentification&quot;,&quot;ID&quot;)) &apos;[BT-156]
-	arrInvoiceLines(a,INVOICE_LINE_ITEM_SELLER_IDENTIFICATION_ID)=getValue(oEntry,Array(&quot;Item&quot;,&quot;SellersItemIdentification&quot;,&quot;ID&quot;)) &apos;[BT-155]
-	arrInvoiceLines(a,TAX_CATEGORY_ID)=getValue(oEntry,Array(&quot;Item&quot;,&quot;ClassifiedTaxCategory&quot;,&quot;ID&quot;)) &apos;[BT-151]
-	arrInvoiceLines(a,TAX_PERCENT)=getValue(oEntry,Array(&quot;Item&quot;,&quot;ClassifiedTaxCategory&quot;,&quot;Percent&quot;)) &apos;[BT-152]
-	arrInvoiceLines(a,INVOICE_LINE_PRICE_AMOUNT)=getValue(oEntry,Array(&quot;Price&quot;,&quot;PriceAmount&quot;)) &apos;[BT-146]
 
-	sParentID=arrInvoiceLines(a,INVOICE_LINE_ID)
+On Error Goto Catch	
+
+	a=UBound(InvoiceLines)+1
+	ReDim Preserve InvoiceLines(a)
+
+	With InvoiceLines(a)
+		.sLevel=0 &apos;Level SubInvoiceLines
+		.sParentID=&quot;&quot; &apos;[BT-X-304] &apos;SubInvoiceLines
+		.sID=getValue(oEntry,Array(&quot;ID&quot;)) &apos;[BT-126]
+		.sNote=getValue(oEntry,Array(&quot;Note&quot;)) &apos;[BT-127]
+		.sQuantity=getValue(oEntry,Array(&quot;InvoicedQuantity&quot;)) &apos;[BT-129]
+		.sUnitCode=getValue(oEntry,Array(&quot;InvoicedQuantity&quot;),&quot;unitCode&quot;,&quot;&quot;,True) &apos;[BT-130]
+		.sNetAmount=getValue(oEntry,Array(&quot;LineExtensionAmount&quot;)) &apos;[BT-131]
+		.sPeriodStartDate=getValue(oEntry,Array(&quot;InvoicePeriod&quot;,&quot;StartDate&quot;)) &apos;[BT-134]
+		.sPeriodEndDate=getValue(oEntry,Array(&quot;InvoicePeriod&quot;,&quot;EndDate&quot;)) &apos;[BT-135]
+		.sAllowanceChargeIndicator=getValue(oEntry,Array(&quot;AllowanceCharge&quot;,&quot;ChargeIndicator&quot;)) &apos;[Use “true” when informing about Charges and “false” when informing about Allowances.]
+		.sAllowanceChargeAmount=getValue(oEntry,Array(&quot;AllowanceCharge&quot;,&quot;Amount&quot;)) &apos;[BT-136] [BT-141]
+		.sAllowanceChargeBaseAmount=getValue(oEntry,Array(&quot;AllowanceCharge&quot;,&quot;BaseAmount&quot;)) &apos;[BT-137] [BT-142]
+		.sAllowanceChargePercent=getValue(oEntry,Array(&quot;AllowanceCharge&quot;,&quot;MultiplierFactorNumeric&quot;)) &apos;[BT-138] [BT-143]
+		.sAllowanceChargeReason=getValue(oEntry,Array(&quot;AllowanceCharge&quot;,&quot;AllowanceChargeReason&quot;)) &apos;[BT-139] [BT-144]
+		.sAllowanceChargeReasonCode=getValue(oEntry,Array(&quot;AllowanceCharge&quot;,&quot;AllowanceChargeReasonCode&quot;)) &apos;[BT-140] [BT-145]
+		.sItemNetPrice=getValue(oEntry,Array(&quot;Price&quot;,&quot;PriceAmount&quot;)) &apos;[BT-146] 
+		.sTaxCategoryID=getValue(oEntry,Array(&quot;Item&quot;,&quot;ClassifiedTaxCategory&quot;,&quot;ID&quot;)) &apos;[BT-151]
+		.sTaxPercent=getValue(oEntry,Array(&quot;Item&quot;,&quot;ClassifiedTaxCategory&quot;,&quot;Percent&quot;)) &apos;[BT-152]
+		.sItemName=getValue(oEntry,Array(&quot;Item&quot;,&quot;Name&quot;)) &apos;[BT-153]
+		.sItemDescription=getValue(oEntry,Array(&quot;Item&quot;,&quot;Description&quot;)) &apos;[BT-154]
+		.sSellerAssignedID=getValue(oEntry,Array(&quot;Item&quot;,&quot;SellersItemIdentification&quot;,&quot;ID&quot;)) &apos;[BT-155]
+		.sBuyerAssignedID=getValue(oEntry,Array(&quot;Item&quot;,&quot;BuyersItemIdentification&quot;,&quot;ID&quot;)) &apos;[BT-156]
+		sParentID=.sID
+	End With 
 	
 	iNumberSubInvoiceLines=oEntry.getElementsByTagName(&quot;SubInvoiceLine&quot;).getLength
 	
 	If iNumberSubInvoiceLines &gt; 0 Then
 		ReDim arrInvoiceLineIDs(iNumberSubInvoiceLines)
-		ReDim Preserve arrInvoiceLines(UBound(arrInvoiceLines)+iNumberSubInvoiceLines,13)
-
+		ReDim Preserve InvoiceLines(UBound(InvoiceLines)+iNumberSubInvoiceLines)
+		
 		oElement=oEntry
 
 		For i = (a+1) To iNumberSubInvoiceLines + a - 1
@@ -345,28 +365,175 @@ On Error Goto Catch
 				iLevel=iLevel-1
 				oElement=oElement.getParentNode
 				sParentID=getValue(oElement,Array(&quot;ID&quot;))
-			Loop 
-			arrInvoiceLines(i,INVOICE_LINE_LEVEL)=iLevel
-			arrInvoiceLines(i,PARENT_INVOICE_LINE_ID)=sParentID
-			arrInvoiceLines(i,INVOICE_LINE_ID)=getValue(oElement,Array(&quot;ID&quot;)) &apos;[BT-126]
-			arrInvoiceLines(i,INVOICED_QUANTITY)=getValue(oElement,Array(&quot;InvoicedQuantity&quot;)) &apos;[BT-129]
-			arrInvoiceLines(i,QUANTITY_UNIT_CODE)=getValue(oElement,Array(&quot;InvoicedQuantity&quot;),&quot;unitCode&quot;,&quot;&quot;,True) &apos;[BT-130]
-			arrInvoiceLines(i,INVOICE_LINE_EXTENSION_AMOUNT)=getValue(oElement,Array(&quot;LineExtensionAmount&quot;)) &apos;[BT-131]
-			arrInvoiceLines(i,INVOICE_LINE_ITEM_DESCRIPTION)=getValue(oElement,Array(&quot;Item&quot;,&quot;Description&quot;)) &apos;[BT-154]
-			arrInvoiceLines(i,INVOICE_LINE_ITEM_NAME)=getValue(oElement,Array(&quot;Item&quot;,&quot;Name&quot;)) &apos;[BT-153]
-			arrInvoiceLines(i,INVOICE_LINE_ITEM_BUYERS_IDENTIFICATION_ID)=getValue(oElement,Array(&quot;Item&quot;,&quot;BuyersItemIdentification&quot;,&quot;ID&quot;)) &apos;[BT-156]
-			arrInvoiceLines(i,INVOICE_LINE_ITEM_SELLER_IDENTIFICATION_ID)=getValue(oElement,Array(&quot;Item&quot;,&quot;SellersItemIdentification&quot;,&quot;ID&quot;)) &apos;[BT-155]
-			arrInvoiceLines(i,TAX_CATEGORY_ID)=getValue(oElement,Array(&quot;Item&quot;,&quot;ClassifiedTaxCategory&quot;,&quot;ID&quot;)) &apos;[BT-151]
-			arrInvoiceLines(i,TAX_PERCENT)=getValue(oElement,Array(&quot;Item&quot;,&quot;ClassifiedTaxCategory&quot;,&quot;Percent&quot;)) &apos;[BT-152]
-			arrInvoiceLines(i,INVOICE_LINE_PRICE_AMOUNT)=getValue(oElement,Array(&quot;Price&quot;,&quot;PriceAmount&quot;)) &apos;[BT-146]	
-			arrInvoiceLineIDs(i-a-1)=arrInvoiceLines(i,INVOICE_LINE_ID)
+			Loop
+			With InvoiceLines(i)
+				.sLevel=iLevel &apos;Level SubInvoiceLines
+				.sParentID=sParentID &apos;[BT-X-304] &apos;SubInvoiceLines
+				.sID=getValue(oElement,Array(&quot;ID&quot;)) &apos;[BT-126]
+				.sNote=getValue(oElement,Array(&quot;Note&quot;)) &apos;[BT-127]
+				.sQuantity=getValue(oElement,Array(&quot;InvoicedQuantity&quot;)) &apos;[BT-129]
+				.sUnitCode=getValue(oElement,Array(&quot;InvoicedQuantity&quot;),&quot;unitCode&quot;,&quot;&quot;,True) &apos;[BT-130]
+				.sNetAmount=getValue(oElement,Array(&quot;LineExtensionAmount&quot;)) &apos;[BT-131]
+				.sPeriodStartDate=getValue(oElement,Array(&quot;InvoicePeriod&quot;,&quot;StartDate&quot;)) &apos;[BT-134]
+				.sPeriodEndDate=getValue(oElement,Array(&quot;InvoicePeriod&quot;,&quot;EndDate&quot;)) &apos;[BT-135]
+				.sAllowanceChargeIndicator=getValue(oElement,Array(&quot;AllowanceCharge&quot;,&quot;ChargeIndicator&quot;)) &apos;[Use “true” when informing about Charges and “false” when informing about Allowances.]
+				.sAllowanceChargeAmount=getValue(oElement,Array(&quot;AllowanceCharge&quot;,&quot;Amount&quot;)) &apos;[BT-136] [BT-141]
+				.sAllowanceChargeBaseAmount=getValue(oElement,Array(&quot;AllowanceCharge&quot;,&quot;BaseAmount&quot;)) &apos;[BT-137] [BT-142]
+				.sAllowanceChargePercent=getValue(oElement,Array(&quot;AllowanceCharge&quot;,&quot;MultiplierFactorNumeric&quot;)) &apos;[BT-138] [BT-143]
+				.sAllowanceChargeReason=getValue(oElement,Array(&quot;AllowanceCharge&quot;,&quot;AllowanceChargeReason&quot;)) &apos;[BT-139] [BT-144]
+				.sAllowanceChargeReasonCode=getValue(oElement,Array(&quot;AllowanceCharge&quot;,&quot;AllowanceChargeReasonCode&quot;)) &apos;[BT-140] [BT-145]
+				.sItemNetPrice=getValue(oElement,Array(&quot;Price&quot;,&quot;PriceAmount&quot;)) &apos;[BT-146] 
+				.sTaxCategoryID=getValue(oElement,Array(&quot;Item&quot;,&quot;ClassifiedTaxCategory&quot;,&quot;ID&quot;)) &apos;[BT-151]
+				.sTaxPercent=getValue(oElement,Array(&quot;Item&quot;,&quot;ClassifiedTaxCategory&quot;,&quot;Percent&quot;)) &apos;[BT-152]
+				.sItemName=getValue(oElement,Array(&quot;Item&quot;,&quot;Name&quot;)) &apos;[BT-153]
+				.sItemDescription=getValue(oElement,Array(&quot;Item&quot;,&quot;Description&quot;)) &apos;[BT-154]
+				.sSellerAssignedID=getValue(oElement,Array(&quot;Item&quot;,&quot;SellersItemIdentification&quot;,&quot;ID&quot;)) &apos;[BT-155]
+				.sBuyerAssignedID=getValue(oElement,Array(&quot;Item&quot;,&quot;BuyersItemIdentification&quot;,&quot;ID&quot;)) &apos;[BT-156]
+				arrInvoiceLineIDs(i-a-1)=.sID
+			End With 		
 		Next
 	End If 
-	getInvoiceLines=arrInvoiceLines
+	getInvoiceLines=InvoiceLines
 	Exit Function
 	
 Catch:
 	MsgBox &quot;Fehler beim Import der XML-Daten &quot; &amp; Chr$(10) &amp; Chr$(10) &amp; Error$ &amp; &quot; &quot; &amp; Chr$(10) &amp; &quot; &quot;, 16, &quot;XML-Import&quot;	
+End Function
+
+Function readZUGFeRD(oDOM As Object) As Variant
+	Dim oElem As Object, oElemList As Object, oSubElemList As Object, oSubSubElemList As Object
+	Dim a% , b% , c% , d% , e% , f% , g% , h% , i% , j% , k% , l%, x%
+	Dim Invoice As New structInvoice, InvoiceNotes() As New structInvoiceNote, BillingReferences() As New structBillingReference
+	Dim AllowanceCharges() As New structAllowanceCharge, TaxSubtotale() As New structTaxSubtotal, InvoiceLines() As New structInvoiceLine
+		
+	oElemList=oDOM.getElementsByTagName(&quot;CrossIndustryInvoice&quot;).item(0).getChildNodes()
+	With Invoice
+		For a = 0 To oElemList.getLength() - 1
+			Select Case oElemList.item(a).NodeName
+				Case &quot;ExchangedDocument&quot;
+					.sInvoiceID=getValue(oElemList.item(a),Array(&quot;ID&quot;)) &apos;[BT-1]
+					.sIssueDate=getValue(oElemList.item(a),Array(&quot;IssueDateTime&quot;,&quot;DateTimeString&quot;)) &apos;[BT-2]
+					.sInvoiceTypCode=getValue(oElemList.item(a),Array(&quot;TypeCode&quot;)) &apos;[BT-3]
+					oSubElemList=oElemList.item(a).getElementsByTagName(&quot;IncludedNote&quot;)
+					For i = 0 To oSubElemList.getLength() - 1
+						ReDim Preserve InvoiceNotes(i)
+						With InvoiceNotes(i)
+							.sSubjectCode=getValue(oSubElemList.item(i),Array(&quot;SubjectCode&quot;)) &apos;[BT-21]
+							.sNote=getValue(oSubElemList.item(i),Array(&quot;Content&quot;)) &apos;[BT-22]
+						End With 
+					Next
+				Case &quot;SupplyChainTradeTransaction&quot;
+					oSubElemList=oElemList.item(a).getChildNodes()
+					For b = 0 To oSubElemList.getLength() - 1
+						Select Case oSubElemList.item(b).NodeName
+							Case &quot;IncludedSupplyChainTradeLineItem&quot;
+								ReDim Preserve InvoiceLines(j)
+								With InvoiceLines(j)
+									.sParentID=getValue(oSubElemList.item(b),Array(&quot;AssociatedDocumentLineDocument&quot;,&quot;ParentLineID&quot;)) &apos;[BT-X-304]
+									.sID=getValue(oSubElemList.item(b),Array(&quot;AssociatedDocumentLineDocument&quot;,&quot;LineID&quot;)) &apos;[BT-126]
+									.sNote=getValue(oSubElemList.item(b),Array(&quot;AssociatedDocumentLineDocument&quot;,&quot;IncludedNote&quot;)) &apos;[BT-127]
+									.sQuantity=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeDelivery&quot;,&quot;BilledQuantity&quot;)) &apos;[BT-129]
+									.sUnitCode=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeDelivery&quot;,&quot;BilledQuantity&quot;),&quot;unitCode&quot;,&quot;&quot;,True) &apos;[BT-130]
+									.sNetAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;SpecifiedTradeSettlementLineMonetarySummation&quot;,&quot;LineTotalAmount&quot;)) &apos;[BT-131]
+									.sPeriodStartDate=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;BillingSpecifiedPeriod&quot;,&quot;StartDateTime&quot;,&quot;DateTimeString&quot;)) &apos;[BT-134]
+									.sPeriodEndDate=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;BillingSpecifiedPeriod&quot;,&quot;EndDateTime&quot;,&quot;DateTimeString&quot;)) &apos;[BT-135]
+									.sAllowanceChargeIndicator=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;SpecifiedTradeAllowanceCharge&quot;,&quot;ChargeIndicator&quot;,&quot;Indicator&quot;)) &apos;[Use “true” when informing about Charges and “false” when informing about Allowances.]
+									.sAllowanceChargeAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;SpecifiedTradeAllowanceCharge&quot;,&quot;ActualAmount&quot;)) &apos;[BT-136] [BT-141]
+									.sAllowanceChargeBaseAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;SpecifiedTradeAllowanceCharge&quot;,&quot;BasisAmount&quot;)) &apos;[BT-137] [BT-142]
+									.sAllowanceChargePercent=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;SpecifiedTradeAllowanceCharge&quot;,&quot;CalculationPercent&quot;)) &apos;[BT-138] [BT-143]
+									.sAllowanceChargeReason=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;SpecifiedTradeAllowanceCharge&quot;,&quot;Reason&quot;)) &apos;[BT-139] [BT-144]
+									.sAllowanceChargeReasonCode=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;SpecifiedTradeAllowanceCharge&quot;,&quot;ReasonCode&quot;)) &apos;[BT-140] [BT-145]
+									.sItemNetPrice=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeAgreement&quot;,&quot;NetPriceProductTradePrice&quot;,&quot;ChargeAmount&quot;)) &apos;[BT-146]
+									.sTaxCategoryID=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;ApplicableTradeTax&quot;,&quot;CategoryCode&quot;)) &apos;[BT-151]
+									.sTaxPercent=getValue(oSubElemList.item(b),Array(&quot;SpecifiedLineTradeSettlement&quot;,&quot;ApplicableTradeTax&quot;,&quot;RateApplicablePercent&quot;)) &apos;[BT-152]
+									.sItemName=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeProduct&quot;,&quot;Name&quot;)) &apos;[BT-153]
+									.sItemDescription=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeProduct&quot;,&quot;Description&quot;)) &apos;[BT-154]
+									.sSellerAssignedID=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeProduct&quot;,&quot;SellerAssignedID&quot;)) &apos;[BT-155]
+									.sBuyerAssignedID=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeProduct&quot;,&quot;BuyerAssignedID&quot;)) &apos;[BT-156]
+									j=j+1
+								End With								
+							Case &quot;ApplicableHeaderTradeAgreement&quot;
+								.sBuyerReference=getValue(oSubElemList.item(b),Array(&quot;BuyerReference&quot;)) &apos;[BT-10]
+								.sSellerName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;Name&quot;)) &apos;[BT-27]
+								.sSellerDescription=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;Description&quot;)) &apos;[BT-33]
+								.sSellerPLZ=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;PostcodeCode&quot;)) &apos;[BT-38]
+								.sSellerStreetName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;LineOne&quot;)) &apos;[BT-35]
+								.sSellerCityName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;CityName&quot;)) &apos;[BT-37]
+								.sSellerCountryCode=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;CountryID&quot;)) &apos;[BT-40]
+								.sSellerEMail=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;URIUniversalCommunication&quot;,&quot;URIID&quot;),&quot;schemeID&quot;,&quot;EM&quot;) &apos;[BT-34]
+								.sSellerTaxCompanyID=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;SpecifiedTaxRegistration&quot;,&quot;ID&quot;)) &apos;[BT-31] [BT-32]
+								.sSellerContactName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;PersonName&quot;)) &apos;[BT-41]
+								.sSellerContactTelephone=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;TelephoneUniversalCommunication&quot;,&quot;CompleteNumber&quot;)) &apos;[BT-42]
+								.sSellerContactElectronicMail=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;EmailURIUniversalCommunication&quot;,&quot;URIID&quot;)) &apos;[BT-43]
+								.sBuyerName=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;Name&quot;)) &apos;[BT-44]
+								.sBuyerIdentifier=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;ID&quot;)) &apos;[BT-46]
+								.sBuyerPLZ=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;PostcodeCode&quot;)) &apos;[BT-53]
+								.sBuyerStreetName=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;LineOne&quot;)) &apos;[BT-50]
+								.sBuyerCityName=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;CityName&quot;)) &apos;[BT-52]
+								.sBuyerCountryCode=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;CountryID&quot;)) &apos;[BT-55]
+								.sBuyerEMail=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;URIUniversalCommunication&quot;,&quot;URIID&quot;),&quot;schemeID&quot;,&quot;EM&quot;) &apos;[BT-49]
+								.sBuyerTaxCompanyID=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;SpecifiedTaxRegistration&quot;,&quot;ID&quot;)) &apos;[BT-48]
+								.sBuyerContactName=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;PersonName&quot;)) &apos;[BT-56]
+								.sBuyerContactTelephone=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;TelephoneUniversalCommunication&quot;,&quot;CompleteNumber&quot;)) &apos;[BT-57]
+								.sBuyerContactElectronicMail=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;EmailURIUniversalCommunication&quot;,&quot;URIID&quot;)) &apos;[BT-58]
+							Case &quot;ApplicableHeaderTradeDelivery&quot;
+								.sActualDeliveryDate=getValue(oSubElemList.item(b),Array(&quot;ActualDeliverySupplyChainEvent&quot;,&quot;OccurrenceDateTime&quot;,&quot;DateTimeString&quot;)) &apos;[BT-72]
+							Case &quot;ApplicableHeaderTradeSettlement&quot;
+								.sDocumentCurrencyCode=getValue(oSubElemList.item(b),Array(&quot;InvoiceCurrencyCode&quot;)) &apos;[BT-5]
+								.sPaymentMeansCode=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementPaymentMeans&quot;,&quot;TypeCode&quot;)) &apos;[BT-81]
+								.sPayeeFinancialAccountID=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementPaymentMeans&quot;,&quot;PayeePartyCreditorFinancialAccount&quot;,&quot;IBANID&quot;)) &apos;[BT-84]
+								.sPayeeFinancialAccountName=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementPaymentMeans&quot;,&quot;PayeePartyCreditorFinancialAccount&quot;,&quot;AccountName&quot;)) &apos;[BT-85]
+								.sPayeeFinancialInstitutionBranchID=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementPaymentMeans&quot;,&quot;PayeeSpecifiedCreditorFinancialInstitution&quot;,&quot;BICID&quot;)) &apos;[BT-86]
+								oSubSubElemList=oSubElemList.item(b).getElementsByTagName(&quot;ApplicableTradeTax&quot;)
+								For c = 0 To oSubSubElemList.getLength() - 1
+									ReDim Preserve TaxSubtotale(c)
+									With TaxSubtotale(c)
+										.sTaxableAmount=getValue(oSubSubElemList.item(c),Array(&quot;BasisAmount&quot;)) &apos;[BT-116]
+										.sTaxAmount=getValue(oSubSubElemList.item(c),Array(&quot;CalculatedAmount&quot;)) &apos;[BT-117]
+										.sTaxCategoryID=getValue(oSubSubElemList.item(c),Array(&quot;CategoryCode&quot;)) &apos;[BT-118]
+										.sTaxPercent=getValue(oSubSubElemList.item(c),Array(&quot;RateApplicablePercent&quot;)) &apos;[BT-119]
+										.sTaxExemptionReason=getValue(oSubSubElemList.item(c),Array(&quot;ExemptionReason&quot;)) &apos;[BT-120]
+									End With								
+								Next
+								oSubSubElemList=oSubElemList.item(b).getElementsByTagName(&quot;SpecifiedTradeAllowanceCharge&quot;)
+								For d = 0 To oSubSubElemList.getLength() - 1
+			 						ReDim Preserve AllowanceCharges(d)
+									With AllowanceCharges(d)
+										.sIndicator=getValue(oSubSubElemList.item(d),Array(&quot;ChargeIndicator&quot;,&quot;Indicator&quot;)) &apos;[Use “true” when informing about Charges and “false” when informing about Allowances.]
+										.sAmount=getValue(oSubSubElemList.item(d),Array(&quot;ActualAmount&quot;)) &apos;[BT-92] [BT-99]
+										.sBaseAmount=getValue(oSubSubElemList.item(d),Array(&quot;BasisAmount&quot;)) &apos;[BT-93] [BT-100]
+										.sPercent=getValue(oSubSubElemList.item(d),Array(&quot;CalculationPercent&quot;)) &apos;[BT-94] [BT-101]
+										.sTaxCategoryID=getValue(oSubSubElemList.item(d),Array(&quot;CategoryTradeTax&quot;,&quot;CategoryCode&quot;)) &apos;[BT-95] [BT-102]
+										.sTaxPercent=getValue(oSubSubElemList.item(d),Array(&quot;CategoryTradeTax&quot;,&quot;RateApplicablePercent&quot;)) &apos;[BT-96] [BT-103]
+										.sReason=getValue(oSubSubElemList.item(d),Array(&quot;Reason&quot;)) &apos;[BT-97] [BT-104]
+										.sReasonCode=getValue(oSubSubElemList.item(d),Array(&quot;ReasonCode&quot;)) &apos;[BT-98] [BT-105]
+									End With
+								Next
+								.sPaymentTerms=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradePaymentTerms&quot;,&quot;Description&quot;)) &apos;[BT-20]
+								.sDueDate=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradePaymentTerms&quot;,&quot;DueDateDateTime&quot;,&quot;DateTimeString&quot;)) &apos;[BT-9]
+								.sLineExtensionAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;LineTotalAmount&quot;)) &apos;[BT-106]
+								.sChargeTotalAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;ChargeTotalAmount&quot;)) &apos;[BT-108]
+								.sAllowanceTotalAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;AllowanceTotalAmount&quot;)) &apos;[BT-107]
+								.sTaxExclusiveAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;TaxBasisTotalAmount&quot;)) &apos;[BT-109]
+								.sTaxTotalAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;TaxTotalAmount&quot;)) &apos;[BT-110] [BT-111]
+								.sTaxInclusiveAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;GrandTotalAmount&quot;)) &apos;[BT-112]
+								.sPrepaidAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;TotalPrepaidAmount&quot;)) &apos;[BT-113]
+								.sPayableAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;DuePayableAmount&quot;)) &apos;[BT-115]
+								.sPayableRoundingAmount=getValue(oSubElemList.item(b),Array(&quot;SpecifiedTradeSettlementHeaderMonetarySummation&quot;,&quot;RoundingAmount&quot;)) &apos;[BT-114]
+								oSubSubElemList=oSubElemList.item(b).getElementsByTagName(&quot;InvoiceReferencedDocument&quot;)
+								For e = 0 To oSubSubElemList.getLength() - 1
+									ReDim Preserve BillingReferences(e)
+									With BillingReferences(e)
+										.sID=getValue(oSubSubElemList.item(e),Array(&quot;IssuerAssignedID&quot;)) &apos;[BT-25]
+										.sIssueDate=getValue(oSubSubElemList.item(e),Array(&quot;FormattedIssueDateTime&quot;,&quot;DateTimeString&quot;)) &apos;[BT-26]
+									End With
+								Next
+						End Select
+					Next
+			End Select
+		Next
+	End With
+	readZUGFeRD=Array(Invoice,InvoiceNotes,BillingReferences,AllowanceCharges,TaxSubtotale,InvoiceLines)
 End Function
 
 Function bFieldInArray(arrArray(), sEntry as String) As Boolean
@@ -425,120 +592,27 @@ Function getValue(oEntry As Object, arrNodePath(), Optional sAttributName As Str
 	Next
 End Function
 
-Sub PrintValues
-	Dim bDebug As Boolean
-	Dim a% , b% , c% , d% , e% , f% , g% , h% , i% , j% , k% , l%, x%
-	
-	bDebug = True
-&apos;	bDebug = False
-
-	With Invoice
-		If bDebug Then MsgBox &quot;ID: &quot; &amp; .sInvoiceID &amp; Chr$(10) &amp;_
-			&quot;IssueDate: &quot; &amp; .sIssueDate &amp; Chr$(10) &amp;_
-			&quot;DueDate: &quot; &amp; .sDueDate &amp; Chr$(10) &amp;_
-			&quot;InvoiceTypeCode: &quot; &amp; .sInvoiceTypCode
-
-		If IsArray(arrInvoiceNote) Then
-			For f = 0 To UBound(arrInvoiceNote())
-				If bDebug Then MsgBox  f+1 &amp; &quot;. Note --&gt;&quot; &amp; Chr$(10) &amp; arrInvoiceNote(f)
-			Next
-		End If
-		
-		If bDebug Then MsgBox &quot;DocumentCurrencyCode: &quot; &amp; .sDocumentCurrencyCode
-		If bDebug Then MsgBox &quot;BuyerReference: &quot; &amp; .sBuyerReference
-
-		If IsArray(arrBillingReference) Then
-			For g = 0 To UBound(arrBillingReference())
-				If bDebug Then MsgBox g+1 &amp; &quot;. ID: &quot; &amp; arrBillingReference(g,BILLING_REFERENCE_ID) &amp; &quot; IssueDate: &quot; &amp; arrBillingReference(g,BILLING_REFERENCE_ISSUE_DATE)
-			Next
-		End If
-		
-		If bDebug Then MsgBox &quot;Supplier Party --&gt;&quot; &amp;Chr$(10) &amp; .sSellerName &amp; Chr$(10) &amp; .sSellerStreetName &amp; Chr$(10) &amp;_
-				 .sSellerCountryCode &amp; &quot; &quot; &amp; .sSellerPLZ &amp; &quot; &quot; &amp; .sSellerCityName &amp; Chr$(10) &amp; .sSellerEMail
-		If bDebug Then MsgBox  &quot;SupplierTaxCompanyID: &quot; &amp; .sSellerTaxCompanyID
-		If bDebug Then MsgBox &quot;Supplier Contact --&gt;&quot; &amp; Chr$(10) &amp; .sSellerContactName &amp; Chr$(10) &amp;_
-											&quot;Telephone: &quot; &amp; .sSellerContactTelephone &amp; Chr$(10) &amp;_
-											&quot;ElectronicMail: &quot; &amp; .sSellerContactElectronicMail
-		If bDebug Then MsgBox  &quot;ActualDeliveryDate: &quot; &amp; .sActualDeliveryDate
-		If bDebug Then MsgBox  &quot;PaymentMeans --&gt;&quot; &amp; Chr$(10) &amp;_
-											&quot;PaymentMeansCode: &quot; &amp; .sPaymentMeansCode &amp; Chr$(10) &amp;_
-											&quot;IBAN: &quot; &amp; .sPayeeFinancialAccountID &amp; Chr$(10) &amp;_
-											&quot;AccountName: &quot; &amp; .sPayeeFinancialAccountName &amp; Chr$(10) &amp;_
-											&quot;BIC: &quot; &amp; .sPayeeFinancialInstitutionBranchID
-		If bDebug Then MsgBox  &quot;PaymentTerms:&quot; &amp; Chr$(10) &amp; .sPaymentTerms
-		
-		If IsArray(arrAllowanceCharge) Then 
-			For h = 0 To UBound(arrAllowanceCharge())
-				If bDebug Then MsgBox h+1 &amp; &quot;. AllowanceCharge --&gt;&quot; &amp; Chr$(10) &amp;_
-					&quot;ChargeIndicator: &quot; &amp; arrAllowanceCharge(h,CHARGE_INDICATOR) &amp; Chr$(10) &amp;_
-					&quot;AllowanceChargeReasonCode: &quot; &amp; arrAllowanceCharge(h,ALLOWANCE_CHARGE_REASON_CODE) &amp; Chr$(10) &amp;_
-					&quot;AllowanceChargeReason: &quot; &amp; arrAllowanceCharge(h,ALLOWANCE_CHARGE_REASON) &amp; Chr$(10) &amp;_
-					&quot;MultiplierFactorNumeric: &quot; &amp; arrAllowanceCharge(h,MULTIPLIER_FACTOR_NUMERIC) &amp; Chr$(10) &amp;_
-					&quot;Amount: &quot; &amp; arrAllowanceCharge(h,AMOUNT) &amp; Chr$(10) &amp;_
-					&quot;BaseAmount: &quot; &amp; arrAllowanceCharge(h,BASE_AMOUNT) &amp; Chr$(10) &amp;_
-					&quot;TaxCategoryID: &quot; &amp; arrAllowanceCharge(h,TAX_CATEGORY_ID) &amp; Chr$(10) &amp;_
-					&quot;TaxCategoryPercent: &quot; &amp; arrAllowanceCharge(h,TAX_PERCENT) 
-			Next
-		End If
-		
-		If bDebug Then MsgBox &quot;TaxTotalAmount: &quot; &amp; .sTaxTotalAmount
-		
-		For i = 0 To UBound(arrTaxSubtotal())
-			If bDebug Then MsgBox i+1 &amp; &quot;. TaxSubtotal --&gt;&quot; &amp; Chr$(10) &amp;_
-				&quot;TaxableAmount: &quot; &amp; arrTaxSubtotal(i,TAXABLE_AMOUNT) &amp; Chr$(10) &amp;_
-				&quot;TaxAmount: &quot; &amp; arrTaxSubtotal(i,TAX_AMOUNT) &amp; Chr$(10) &amp;_
-				&quot;TaxCategoryID: &quot; &amp; arrTaxSubtotal(i,TAX_CATEGORY_ID) &amp; Chr$(10) &amp;_
-				&quot;TaxPercent: &quot; &amp; arrTaxSubtotal(i,TAX_PERCENT) &amp; Chr$(10) &amp;_
-				&quot;TaxExemptionReason: &quot; &amp; arrTaxSubtotal(i,TAX_EXEMPTION_REASON)
-		Next
-		
-		If bDebug Then MsgBox &quot;LegalMonetaryTotal --&gt;&quot; &amp; Chr$(10) &amp;_
-			&quot;LineExtensionAmount: &quot; &amp; .sLineExtensionAmount &amp; Chr$(10) &amp;_
-			&quot;TaxExclusiveAmount: &quot; &amp; .sTaxExclusiveAmount &amp; Chr$(10) &amp;_
-			&quot;TaxInclusiveAmount: &quot; &amp; .sTaxInclusiveAmount &amp; Chr$(10) &amp;_
-			&quot;AllowanceTotalAmount: &quot; &amp; .sAllowanceTotalAmount &amp; Chr$(10) &amp;_
-			&quot;PrepaidAmount: &quot; &amp; .sPrepaidAmount &amp; Chr$(10) &amp;_
-			&quot;PayableRoundingAmount: &quot; &amp; .sPayableRoundingAmount &amp; Chr$(10) &amp;_
-			&quot;PayableAmount: &quot; &amp; .sPayableAmount
-
-		For j = 0 To UBound(arrInvoiceLines())
-			If bDebug Then MsgBox(j+1 &amp; &quot;. InvoiceLine --&gt;&quot; &amp; Chr$(10) &amp;_
-				&quot;Level: &quot; &amp; arrInvoiceLines(j,INVOICE_LINE_LEVEL) &amp; Chr$(10) &amp;_
-				&quot;Parent ID: &quot; &amp; arrInvoiceLines(j,PARENT_INVOICE_LINE_ID) &amp; Chr$(10) &amp;_
-				&quot;ID: &quot; &amp; arrInvoiceLines(j,INVOICE_LINE_ID) &amp; Chr$(10) &amp;_
-				&quot;Note: &quot; &amp; arrInvoiceLines(j,INVOICE_LINE_NOTE) &amp; Chr$(10) &amp;_
-				&quot;Quantity: &quot; &amp; arrInvoiceLines(j,INVOICED_QUANTITY) &amp; Chr$(10) &amp;_
-				&quot;UnitCode: &quot; &amp; arrInvoiceLines(j,QUANTITY_UNIT_CODE) &amp; Chr$(10) &amp;_
-				&quot;ExtensionAmount: &quot; &amp; arrInvoiceLines(j,INVOICE_LINE_EXTENSION_AMOUNT) &amp; Chr$(10) &amp;_
-				&quot;Description: &quot; &amp; arrInvoiceLines(j,INVOICE_LINE_ITEM_DESCRIPTION) &amp; Chr$(10) &amp;_
-				&quot;Name: &quot; &amp; arrInvoiceLines(j,INVOICE_LINE_ITEM_NAME) &amp; Chr$(10) &amp;_
-				&quot;Buyer IdentID: &quot; &amp; arrInvoiceLines(j,INVOICE_LINE_ITEM_BUYERS_IDENTIFICATION_ID) &amp; Chr$(10) &amp;_
-				&quot;Sellers IdentID: &quot; &amp; arrInvoiceLines(j,INVOICE_LINE_ITEM_SELLER_IDENTIFICATION_ID) &amp; Chr$(10) &amp;_
-				&quot;TaxCategory: &quot; &amp; arrInvoiceLines(j,TAX_CATEGORY_ID) &amp; Chr$(10) &amp;_
-				&quot;TaxPercent: &quot; &amp; arrInvoiceLines(j,TAX_PERCENT) &amp; Chr$(10) &amp;_
-				&quot;PriceAmount: &quot; &amp; arrInvoiceLines(j,INVOICE_LINE_PRICE_AMOUNT))
-		Next
-	End With 
-End Sub
-
-Sub CreateSheet
+Sub CreateSheet()
 	Dim oCalcDoc As Object, oSheet As Object, oPathSettings As Object
 	Dim iRow As Integer
+	Dim InvoiceData As Variant
+	
+	InvoiceData=readInvoice
+
 	oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
 	oCalcDoc = StarDesktop.loadComponentFromURL(&quot;private:factory/scalc&quot;, &quot;_blank&quot;, 0, Array())
 	oSheet = oCalcDoc.Sheets(0)  
-	
 	Dim a% , b% , c% , d% , e% , f% , g% , h% , i% , j% , k% , l%, x%
- 	With Invoice
-		
+
+ 	With InvoiceData(INVOICE)
 		iRow=1
-		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Invoice ID&quot;,True)
-		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;IssueDate&quot;,True)
-		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;DueDate&quot;,True)
-		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;ActualDeliveryDate&quot;,True)
-		fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;InvoiceTypeCode&quot;,True)
-		fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;DocumentCurrencyCode&quot;,True)
-		fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;BuyerReference&quot;,True)
+		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Invoice ID [BT-1]&quot;,True)
+		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;Issue Date [BT-2]&quot;,True)
+		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;Due Date [BT-9]&quot;,True)
+		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;Actual Delivery Date [BT-72]&quot;,True)
+		fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;Invoice Type Code [BT-3]&quot;,True)
+		fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;DocumentCurrencyCode [BT-5]&quot;,True)
+		fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;BuyerReference [BT-10]&quot;,True)
 		iRow=iRow+1
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,.sInvoiceID,False)
 		fillSheet(oSheet,&quot;B&quot; &amp; iRow,.sIssueDate,False)
@@ -549,35 +623,42 @@ Sub CreateSheet
 		fillSheet(oSheet,&quot;G&quot; &amp; iRow,.sBuyerReference,False)
 		iRow=iRow+1
 		
-		If IsArray(arrInvoiceNote) Then
-			fillSheet(oSheet,&quot;A&quot; &amp; iRow &amp; &quot;:D&quot; &amp; iRow,&quot;Invoice Notes&quot;,True)
+		If IsArray(InvoiceData(INVOICE_NOTES)) Then
+			fillSheet(oSheet,&quot;A&quot; &amp; iRow &amp; &quot;:D&quot; &amp; iRow,&quot;Invoice Notes [BT-22]&quot;,True)
+			fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;Subject Codes [BT-21]&quot;,True)
 			iRow=iRow+1
-			For a = 0 To UBound(arrInvoiceNote())
-				fillSheet(oSheet,&quot;A&quot; &amp; iRow+a &amp; &quot;:D&quot; &amp; iRow+a,arrInvoiceNote(a),False)				
+			For a = 0 To UBound(InvoiceData(INVOICE_NOTES))
+				With InvoiceData(INVOICE_NOTES)(a)
+					fillSheet(oSheet,&quot;A&quot; &amp; iRow+a &amp; &quot;:D&quot; &amp; iRow+a,.sNote,False)				
+					fillSheet(oSheet,&quot;E&quot; &amp; iRow+a,.sSubjectCode,False)				
+				End With
 			Next
 			iRow=iRow+a+1
 		End If
 	
-		If IsArray(arrBillingReference) Then
-			fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;BillingReference ID&quot;,True)
-			fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;IssueDate&quot;,True)
+		If IsArray(InvoiceData(BILLING_REFERENCES)) Then
+			fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Billing Reference ID [BT-25]&quot;,True)
+			fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;IssueDate [BT-26]&quot;,True)
 			iRow=iRow+1
-			For b = 0 To UBound(arrBillingReference())
-				fillSheet(oSheet,&quot;A&quot; &amp; iRow+b,arrBillingReference(b,BILLING_REFERENCE_ID),False)				
-				fillSheet(oSheet,&quot;B&quot; &amp; iRow+b,arrBillingReference(b,BILLING_REFERENCE_ISSUE_DATE),False)				
+			For b = 0 To UBound(InvoiceData(BILLING_REFERENCES))
+				With InvoiceData(BILLING_REFERENCES)(b)
+					fillSheet(oSheet,&quot;A&quot; &amp; iRow+b,.sID,False)				
+					fillSheet(oSheet,&quot;B&quot; &amp; iRow+b,.sIssueDate,False)		
+				End With		
 			Next
 			iRow=iRow+b+1
 		End If
 
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Seller Party --&gt;&quot;,False)
 		iRow=iRow+1
-		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;SellerName&quot;,True)
-		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;SellerStreetName&quot;,True)
-		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;SellerCountryCode&quot;,True)
-		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;SellerPLZ&quot;,True)
-		fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;SellerCityName&quot;,True)
-		fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;SellerEMail&quot;,True)
-		fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;Seller TaxCompanyID&quot;,True)
+		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Seller Name [BT-28]&quot;,True)
+		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;Seller StreetName [BT-35]&quot;,True)
+		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;Seller Country Code [BT-40]&quot;,True)
+		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;Seller PLZ [BT-38]&quot;,True)
+		fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;Seller City Name [BT-37]&quot;,True)
+		fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;Seller EMail [BT-34]&quot;,True)
+		fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;Seller TaxCompanyID [BT-31] [BT-32]&quot;,True)
+		fillSheet(oSheet,&quot;H&quot; &amp; iRow,&quot;Seller Description [BT-33]&quot;,True)
 		iRow=iRow+1
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,.sSellerName,False)
 		fillSheet(oSheet,&quot;B&quot; &amp; iRow,.sSellerStreetName,False)
@@ -586,25 +667,54 @@ Sub CreateSheet
 		fillSheet(oSheet,&quot;E&quot; &amp; iRow,.sSellerCityName,False)
 		fillSheet(oSheet,&quot;F&quot; &amp; iRow,.sSellerEMail,False)
 		fillSheet(oSheet,&quot;G&quot; &amp; iRow,.sSellerTaxCompanyID,False)
+		fillSheet(oSheet,&quot;H&quot; &amp; iRow,.sSellerDescription,False)
+		iRow=iRow+2
+		
+		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Buyer Party --&gt;&quot;,False)
+		iRow=iRow+1
+		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Buyer Name [BT-44]&quot;,True)
+		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;Buyer StreetName [BT-50]&quot;,True)
+		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;Buyer Country Code [BT-55]&quot;,True)
+		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;Buyer PLZ [BT-53]&quot;,True)
+		fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;Buyer City Name [BT-52]&quot;,True)
+		fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;Buyer EMail [BT-49]&quot;,True)
+		fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;Buyer TaxCompanyID [BT-48]&quot;,True)
+		fillSheet(oSheet,&quot;H&quot; &amp; iRow,&quot;Buyer Identifier [BT-46]&quot;,True)
+		iRow=iRow+1
+		fillSheet(oSheet,&quot;A&quot; &amp; iRow,.sBuyerName,False)
+		fillSheet(oSheet,&quot;B&quot; &amp; iRow,.sBuyerStreetName,False)
+		fillSheet(oSheet,&quot;C&quot; &amp; iRow,.sBuyerCountryCode,False)
+		fillSheet(oSheet,&quot;D&quot; &amp; iRow,.sBuyerPLZ,False)
+		fillSheet(oSheet,&quot;E&quot; &amp; iRow,.sBuyerCityName,False)
+		fillSheet(oSheet,&quot;F&quot; &amp; iRow,.sBuyerEMail,False)
+		fillSheet(oSheet,&quot;G&quot; &amp; iRow,.sBuyerTaxCompanyID,False)
+		fillSheet(oSheet,&quot;H&quot; &amp; iRow,.sBuyerIdentifier,False)
 		iRow=iRow+2
 
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Seller Contact --&gt;&quot;,False)
+		fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;Buyer Contact --&gt;&quot;,False)
 		iRow=iRow+1
-		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;ContactName&quot;,True)
-		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;Telephone&quot;,True)
-		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;ElectronicMail&quot;,True)
+		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Seller Contact Name [BT-41]&quot;,True)
+		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;Seller Telephone [BT-42]&quot;,True)
+		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;Seller ElectronicMail [BT-43]&quot;,True)
+		fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;Buyer Contact Name [BT-56]&quot;,True)
+		fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;Buyer Telephone [BT-57]&quot;,True)
+		fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;Buyer ElectronicMail [BT-58]&quot;,True)
 		iRow=iRow+1
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,.sSellerContactName,False)
 		fillSheet(oSheet,&quot;B&quot; &amp; iRow,.sSellerContactTelephone,False)
 		fillSheet(oSheet,&quot;C&quot; &amp; iRow,.sSellerContactElectronicMail,False)
+		fillSheet(oSheet,&quot;E&quot; &amp; iRow,.sBuyerContactName,False)
+		fillSheet(oSheet,&quot;F&quot; &amp; iRow,.sBuyerContactTelephone,False)
+		fillSheet(oSheet,&quot;G&quot; &amp; iRow,.sBuyerContactElectronicMail,False)
 		iRow=iRow+2
 	
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;PaymentMeans --&gt;&quot;,False)
 		iRow=iRow+1
-		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;AccountName&quot;,True)
-		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;IBAN&quot;,True)
-		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;BIC&quot;,True)
-		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;PaymentMeansCode&quot;,True)
+		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;AccountName [BT-85]&quot;,True)
+		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;IBAN [BT-84]&quot;,True)
+		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;BIC [BT-86]&quot;,True)
+		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;PaymentMeansCode [BT-81]&quot;,True)
 		iRow=iRow+1
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,.sPayeeFinancialAccountName,False)
 		fillSheet(oSheet,&quot;B&quot; &amp; iRow,.sPayeeFinancialAccountID,False)
@@ -612,32 +722,34 @@ Sub CreateSheet
 		fillSheet(oSheet,&quot;D&quot; &amp; iRow,.sPaymentMeansCode,False)
 		iRow=iRow+2
 	
-		fillSheet(oSheet,&quot;A&quot; &amp; iRow &amp; &quot;:D&quot; &amp; iRow,&quot;PaymentTerms&quot;,True)
+		fillSheet(oSheet,&quot;A&quot; &amp; iRow &amp; &quot;:D&quot; &amp; iRow,&quot;PaymentTerms [BT-20]&quot;,True)
 		iRow=iRow+1
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow &amp; &quot;:D&quot; &amp; iRow,.sPaymentTerms,False)
 		iRow=iRow+2
 
-		If IsArray(arrAllowanceCharge) Then
+		If IsArray(InvoiceData(ALLOWANCE_CHARGES)) Then
 			fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;AllowanceCharge --&gt;&quot;,False)
 			iRow=iRow+1
-			fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;ChargeIndicator&quot;,True)
-			fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;MultiplierFactorNumeric&quot;,True)
-			fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;Amount&quot;,True)
-			fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;BaseAmount&quot;,True)
-			fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;TaxCategoryID&quot;,True)
-			fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;TaxCategoryPercent&quot;,True)
-			fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;AllowanceChargeReasonCode&quot;,True)
-			fillSheet(oSheet,&quot;H&quot; &amp; iRow,&quot;AllowanceChargeReason&quot;,True)
+			fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Allowance Charge Indicator&quot;,True)
+			fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;sPercent [BT-94] [BT-101]&quot;,True)
+			fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;Amount [BT-92] [BT-99]&quot;,True)
+			fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;BaseAmount [BT-93] [BT-100]&quot;,True)
+			fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;TaxCategoryID [BT-95] [BT-102]&quot;,True)
+			fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;TaxPercent [BT-96] [BT-103]&quot;,True)
+			fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;ReasonCode [BT-98] [BT-105]&quot;,True)
+			fillSheet(oSheet,&quot;H&quot; &amp; iRow,&quot;Reason [BT-97] [BT-104]&quot;,True)
 			iRow=iRow+1
-			For c = 0 To UBound(arrAllowanceCharge())
-				fillSheet(oSheet,&quot;A&quot; &amp; iRow+c,arrAllowanceCharge(c,CHARGE_INDICATOR),False)				
-				fillSheet(oSheet,&quot;B&quot; &amp; iRow+c,arrAllowanceCharge(c,MULTIPLIER_FACTOR_NUMERIC),False)				
-				fillSheet(oSheet,&quot;C&quot; &amp; iRow+c,arrAllowanceCharge(c,AMOUNT),False)				
-				fillSheet(oSheet,&quot;D&quot; &amp; iRow+c,arrAllowanceCharge(c,BASE_AMOUNT),False)				
-				fillSheet(oSheet,&quot;E&quot; &amp; iRow+c,arrAllowanceCharge(c,TAX_CATEGORY_ID),False)				
-				fillSheet(oSheet,&quot;F&quot; &amp; iRow+c,arrAllowanceCharge(c,TAX_PERCENT),False)				
-				fillSheet(oSheet,&quot;G&quot; &amp; iRow+c,arrAllowanceCharge(c,ALLOWANCE_CHARGE_REASON_CODE),False)				
-				fillSheet(oSheet,&quot;H&quot; &amp; iRow+c,arrAllowanceCharge(c,ALLOWANCE_CHARGE_REASON),False)				
+			For c = 0 To UBound(InvoiceData(ALLOWANCE_CHARGES))
+				With InvoiceData(ALLOWANCE_CHARGES)(c)
+					fillSheet(oSheet,&quot;A&quot; &amp; iRow+c,.sIndicator,False)				
+					fillSheet(oSheet,&quot;B&quot; &amp; iRow+c,.sPercent,False)				
+					fillSheet(oSheet,&quot;C&quot; &amp; iRow+c,.sAmount,False)				
+					fillSheet(oSheet,&quot;D&quot; &amp; iRow+c,.sBaseAmount,False)				
+					fillSheet(oSheet,&quot;E&quot; &amp; iRow+c,.sTaxCategoryID,False)				
+					fillSheet(oSheet,&quot;F&quot; &amp; iRow+c,.sTaxPercent,False)				
+					fillSheet(oSheet,&quot;G&quot; &amp; iRow+c,.sReasonCode,False)				
+					fillSheet(oSheet,&quot;H&quot; &amp; iRow+c,.sReason,False)			
+				End With	
 			Next
 			iRow=iRow+c+1
 		End If
@@ -646,88 +758,107 @@ Sub CreateSheet
 		fillSheet(oSheet,&quot;B&quot; &amp; iRow,.sTaxTotalAmount,False)
 		iRow=iRow+2
 
-		If IsArray(arrTaxSubtotal) Then
+		If IsArray(InvoiceData(TAX_SUBTOTALE)) Then
 			fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;TaxSubtotal --&gt;&quot;,False)
 			iRow=iRow+1
-			fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;TaxableAmount&quot;,True)
-			fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;TaxAmount&quot;,True)
-			fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;TaxCategoryID&quot;,True)
-			fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;TaxPercent&quot;,True)
+			fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Taxable Amount [BT-116]&quot;,True)
+			fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;Tax Amount [BT-117]&quot;,True)
+			fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;Tax CategoryID [BT-118]&quot;,True)
+			fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;Tax Percent [BT-119]&quot;,True)
 			fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;&quot;,True)
 			fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;&quot;,True)
 			fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;&quot;,True)
-			fillSheet(oSheet,&quot;H&quot; &amp; iRow,&quot;TaxExemptionReason&quot;,True)
+			fillSheet(oSheet,&quot;H&quot; &amp; iRow,&quot;Tax Exemption Reason [BT-120]&quot;,True)
 			iRow=iRow+1
-			For d = 0 To UBound(arrTaxSubtotal())
-				fillSheet(oSheet,&quot;A&quot; &amp; iRow+d,arrTaxSubtotal(d,TAXABLE_AMOUNT),False)				
-				fillSheet(oSheet,&quot;B&quot; &amp; iRow+d,arrTaxSubtotal(d,TAX_AMOUNT),False)				
-				fillSheet(oSheet,&quot;C&quot; &amp; iRow+d,arrTaxSubtotal(d,TAX_CATEGORY_ID),False)				
-				fillSheet(oSheet,&quot;D&quot; &amp; iRow+d,arrTaxSubtotal(d,TAX_PERCENT),False)				
-				fillSheet(oSheet,&quot;H&quot; &amp; iRow+d,arrTaxSubtotal(d,TAX_EXEMPTION_REASON),False)				
+			For d = 0 To UBound(InvoiceData(TAX_SUBTOTALE))
+				With InvoiceData(TAX_SUBTOTALE)(d)
+					fillSheet(oSheet,&quot;A&quot; &amp; iRow+d,.sTaxableAmount,False)
+					fillSheet(oSheet,&quot;B&quot; &amp; iRow+d,.sTaxAmount,False)	
+					fillSheet(oSheet,&quot;C&quot; &amp; iRow+d,.sTaxCategoryID,False)
+					fillSheet(oSheet,&quot;D&quot; &amp; iRow+d,.sTaxPercent,False)
+					fillSheet(oSheet,&quot;H&quot; &amp; iRow+d,.sTaxExemptionReason,False)
+				End With
 			Next
 			iRow=iRow+d+1
 		End If
 
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;LegalMonetaryTotal --&gt;&quot;,False)
 		iRow=iRow+1
-		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;LineExtensionAmount&quot;,True)
-		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;TaxExclusiveAmount&quot;,True)
-		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;TaxInclusiveAmount&quot;,True)
-		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;AllowanceTotalAmount&quot;,True)
-		fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;PrepaidAmount&quot;,True)
-		fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;PayableRoundingAmount&quot;,True)
-		fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;PayableAmount&quot;,True)
+		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Line Extension Amount [BT-106]&quot;,True)
+		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;Tax Exclusive Amount [BT-109]&quot;,True)
+		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;Tax Inclusive Amount [BT-112]&quot;,True)
+		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;Allowance Total Amount [BT-107]&quot;,True)
+		fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;Charge Total Amount [BT-108]&quot;,True)
+		fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;Prepaid Amount [BT-113]&quot;,True)
+		fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;Payable Rounding Amount [BT-114]&quot;,True)
+		fillSheet(oSheet,&quot;H&quot; &amp; iRow,&quot;Payable Amount [BT-115]&quot;,True)
 		iRow=iRow+1
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,.sLineExtensionAmount,False)
 		fillSheet(oSheet,&quot;B&quot; &amp; iRow,.sTaxExclusiveAmount,False)
 		fillSheet(oSheet,&quot;C&quot; &amp; iRow,.sTaxInclusiveAmount,False)
 		fillSheet(oSheet,&quot;D&quot; &amp; iRow,.sAllowanceTotalAmount,False)
-		fillSheet(oSheet,&quot;E&quot; &amp; iRow,.sPrepaidAmount,False)
-		fillSheet(oSheet,&quot;F&quot; &amp; iRow,.sPayableRoundingAmount,False)
-		fillSheet(oSheet,&quot;G&quot; &amp; iRow,.sPayableAmount,False)
+		fillSheet(oSheet,&quot;E&quot; &amp; iRow,.sChargeTotalAmount,False)
+		fillSheet(oSheet,&quot;F&quot; &amp; iRow,.sPrepaidAmount,False)
+		fillSheet(oSheet,&quot;G&quot; &amp; iRow,.sPayableRoundingAmount,False)
+		fillSheet(oSheet,&quot;H&quot; &amp; iRow,.sPayableAmount,False)
 		iRow=iRow+2
 
-		If IsArray(arrInvoiceLines) Then
+		If IsArray(InvoiceData(INVOICE_LINES)) Then
 			fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;InvoiceLine --&gt;&quot;,False)
 			iRow=iRow+1
 			fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Level&quot;,True)
-			fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;Parent ID&quot;,True)
-			fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;InvoiceLine ID&quot;,True)
-			fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;Quantity&quot;,True)
-			fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;UnitCode&quot;,True)
-			fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;Buyer IdentID&quot;,True)
-			fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;Sellers IdentID&quot;,True)
-			fillSheet(oSheet,&quot;H&quot; &amp; iRow,&quot;Name&quot;,True)
-			fillSheet(oSheet,&quot;I&quot; &amp; iRow,&quot;TaxCategory&quot;,True)
-			fillSheet(oSheet,&quot;J&quot; &amp; iRow,&quot;TaxPercent&quot;,True)
-			fillSheet(oSheet,&quot;K&quot; &amp; iRow,&quot;ExtensionAmount&quot; &amp; Chr$(10) &amp; &quot;LineTotalAmount&quot;,True)
-			fillSheet(oSheet,&quot;L&quot; &amp; iRow,&quot;PriceAmount&quot; &amp; Chr$(10) &amp; &quot;ChargeAmount&quot;,True)
-			fillSheet(oSheet,&quot;M&quot; &amp; iRow,&quot;Description&quot;,True)
+			fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;Parent ID [BT-X-304]&quot;,True)
+			fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;Invoice Line ID [BT-126]&quot;,True)
+			fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;Invoice Line Note [BT-127]&quot;,True)
+			fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;Quantity [BT-129]&quot;,True)
+			fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;Unit Code [BT-130]&quot;,True)
+			fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;Sellers Assigned [BT-155]&quot;,True)
+			fillSheet(oSheet,&quot;H&quot; &amp; iRow,&quot;Buyer Assigned [BT-156]&quot;,True)
+			fillSheet(oSheet,&quot;I&quot; &amp; iRow,&quot;Item Name [BT-153]&quot;,True)
+			fillSheet(oSheet,&quot;J&quot; &amp; iRow,&quot;Allowance Charge &quot; &amp; Chr$(10) &amp; &quot;Indicator&quot;,True)
+			fillSheet(oSheet,&quot;K&quot; &amp; iRow,&quot;Allowance Charge &quot; &amp; Chr$(10) &amp; &quot;Amount [BT-136] [BT-141]&quot;,True)
+			fillSheet(oSheet,&quot;L&quot; &amp; iRow,&quot;Allowance Charge &quot; &amp; Chr$(10) &amp; &quot;Base Amount [BT-137] [BT-142]&quot;,True)
+			fillSheet(oSheet,&quot;M&quot; &amp; iRow,&quot;Allowance Charge &quot; &amp; Chr$(10) &amp; &quot;Percent [BT-138] [BT-143]&quot;,True)
+			fillSheet(oSheet,&quot;N&quot; &amp; iRow,&quot;Allowance Charge &quot; &amp; Chr$(10) &amp; &quot;Reason [BT-139] [BT-144]&quot;,True)
+			fillSheet(oSheet,&quot;O&quot; &amp; iRow,&quot;Allowance Charge &quot; &amp; Chr$(10) &amp; &quot;Reason Code [BT-140] [BT-145]&quot;,True)
+			fillSheet(oSheet,&quot;P&quot; &amp; iRow,&quot;Tax Category ID [BT-151]&quot;,True)
+			fillSheet(oSheet,&quot;Q&quot; &amp; iRow,&quot;Tax Percent [BT-152]&quot;,True)
+			fillSheet(oSheet,&quot;R&quot; &amp; iRow,&quot;Netto Amount [BT-131]&quot;,True)
+			fillSheet(oSheet,&quot;S&quot; &amp; iRow,&quot;Item Netto Price [BT-146]&quot;,True)
+			fillSheet(oSheet,&quot;T&quot; &amp; iRow,&quot;Description [BT-154]&quot;,True)
 			iRow=iRow+1
-			For e = 0 To UBound(arrInvoiceLines())
-				fillSheet(oSheet,&quot;A&quot; &amp; iRow+e,arrInvoiceLines(e,INVOICE_LINE_LEVEL),False)				
-				fillSheet(oSheet,&quot;B&quot; &amp; iRow+e,arrInvoiceLines(e,PARENT_INVOICE_LINE_ID),False)				
-				fillSheet(oSheet,&quot;C&quot; &amp; iRow+e,arrInvoiceLines(e,INVOICE_LINE_ID),False)				
-				fillSheet(oSheet,&quot;D&quot; &amp; iRow+e,arrInvoiceLines(e,INVOICED_QUANTITY),False)				
-				fillSheet(oSheet,&quot;E&quot; &amp; iRow+e,arrInvoiceLines(e,QUANTITY_UNIT_CODE),False)				
-				fillSheet(oSheet,&quot;F&quot; &amp; iRow+e,arrInvoiceLines(e,INVOICE_LINE_ITEM_BUYERS_IDENTIFICATION_ID),False)				
-				fillSheet(oSheet,&quot;G&quot; &amp; iRow+e,arrInvoiceLines(e,INVOICE_LINE_ITEM_SELLER_IDENTIFICATION_ID),False)				
-				fillSheet(oSheet,&quot;H&quot; &amp; iRow+e,arrInvoiceLines(e,INVOICE_LINE_ITEM_NAME),False)				
-				fillSheet(oSheet,&quot;I&quot; &amp; iRow+e,arrInvoiceLines(e,TAX_CATEGORY_ID),False)				
-				fillSheet(oSheet,&quot;J&quot; &amp; iRow+e,arrInvoiceLines(e,TAX_PERCENT),False)				
-				fillSheet(oSheet,&quot;K&quot; &amp; iRow+e,arrInvoiceLines(e,INVOICE_LINE_EXTENSION_AMOUNT),False)				
-				fillSheet(oSheet,&quot;L&quot; &amp; iRow+e,arrInvoiceLines(e,INVOICE_LINE_PRICE_AMOUNT),False)				
-				fillSheet(oSheet,&quot;M&quot; &amp; iRow+e,arrInvoiceLines(e,INVOICE_LINE_ITEM_DESCRIPTION),False)				
+			For e = 0 To UBound(InvoiceData(INVOICE_LINES))
+				With InvoiceData(INVOICE_LINES)(e)
+					fillSheet(oSheet,&quot;A&quot; &amp; iRow+e,.sLevel,False)
+					fillSheet(oSheet,&quot;B&quot; &amp; iRow+e,.sParentID,False)	
+					fillSheet(oSheet,&quot;C&quot; &amp; iRow+e,.sID,False)
+					fillSheet(oSheet,&quot;D&quot; &amp; iRow+e,.sNote,False)
+					fillSheet(oSheet,&quot;E&quot; &amp; iRow+e,.sQuantity,False)
+					fillSheet(oSheet,&quot;F&quot; &amp; iRow+e,.sUnitCode,False)
+					fillSheet(oSheet,&quot;G&quot; &amp; iRow+e,.sSellerAssignedID,False)
+					fillSheet(oSheet,&quot;H&quot; &amp; iRow+e,.sBuyerAssignedID,False)
+					fillSheet(oSheet,&quot;I&quot; &amp; iRow+e,.sItemName,False)
+					fillSheet(oSheet,&quot;J&quot; &amp; iRow+e,.sAllowanceChargeIndicator,False)
+					fillSheet(oSheet,&quot;K&quot; &amp; iRow+e,.sAllowanceChargeAmount,False)
+					fillSheet(oSheet,&quot;L&quot; &amp; iRow+e,.sAllowanceChargeBaseAmount,False)
+					fillSheet(oSheet,&quot;M&quot; &amp; iRow+e,.sAllowanceChargePercent,False)
+					fillSheet(oSheet,&quot;N&quot; &amp; iRow+e,.sAllowanceChargeReason,False)
+					fillSheet(oSheet,&quot;O&quot; &amp; iRow+e,.sAllowanceChargeReasonCode,False)
+					fillSheet(oSheet,&quot;P&quot; &amp; iRow+e,.sTaxCategoryID,False)
+					fillSheet(oSheet,&quot;Q&quot; &amp; iRow+e,.sTaxPercent,False)
+					fillSheet(oSheet,&quot;R&quot; &amp; iRow+e,.sNetAmount,False)
+					fillSheet(oSheet,&quot;S&quot; &amp; iRow+e,.sItemNetPrice,False)
+					fillSheet(oSheet,&quot;T&quot; &amp; iRow+e,.sItemDescription,False)
+				End With
 			Next
 			iRow=iRow+e+1
 		End If
-		
  	End With
  	oSheet.getColumns().OptimalWidth = True
  	oSheet.getRows().OptimalHeight = True
 End Sub
 
-Sub fillSheet(oSheet, sRange As String, sValue As String, bHeadLine As Boolean)
+Sub fillSheet(oSheet, sRange As String, sValue As String, bBottomLine As Boolean)
 	Dim oBorder As Object, oCell As Object, oRange As Object
 	Dim bLO As Boolean
 	
@@ -747,7 +878,7 @@ Sub fillSheet(oSheet, sRange As String, sValue As String, bHeadLine As Boolean)
 	Else
 		oCell=oSheet.getCellRangeByName(sRange)
 	End If
-	If bHeadLine Then
+	If bBottomLine Then
 		If bLO Then
 			oBorder.LineStyle = com.sun.star.table.BorderLineStyle.SOLID
 			oBorder.LineWidth = 40
@@ -759,6 +890,5 @@ Sub fillSheet(oSheet, sRange As String, sValue As String, bHeadLine As Boolean)
 	oCell.VertJustify = com.sun.star.table.CellVertJustify.TOP
 	oCell.String = sValue
 End Sub
-
 
 </script:module>
