@@ -733,8 +733,8 @@
             </office:event-listeners>
           </form:button>
           <form:fixed-text form:name="Label_Summe_aller_offenen_Verbindlichkeiten" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control89" form:id="control89" form:label="Summe aller offenen Verbindlichkeiten"/>
-          <form:fixed-text form:name="Field_Summe_aller_offenen_Verbindlichkeiten" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control90" form:id="control90" form:label="2.209,10 €"/>
-          <form:fixed-text form:name="Field_Ausgaben_nicht_Buchhaltung_aktuelles_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control91" form:id="control91" form:label="71.861,00 €">
+          <form:fixed-text form:name="Field_Summe_aller_offenen_Verbindlichkeiten" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control90" form:id="control90"/>
+          <form:fixed-text form:name="Field_Ausgaben_nicht_Buchhaltung_aktuelles_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control91" form:id="control91">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe Ausgaben die nicht für Buchhaltung markiert wurden."/>
             </form:properties>
@@ -755,27 +755,27 @@
             </office:event-listeners>
           </form:listbox>
           <form:fixed-text form:name="Label_Umsatz_im_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control95" form:id="control95" form:label="Ausgaben im Monat"/>
-          <form:fixed-text form:name="Field_Netto_Ausgaben_Buchhaltung_aktuelles_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control96" form:id="control96" form:label="27.257,58 €">
+          <form:fixed-text form:name="Field_Netto_Ausgaben_Buchhaltung_aktuelles_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control96" form:id="control96">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe Netto-Ausgaben die für Buchhaltung markiert wurden."/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_alle_Ausgaben_aktuelles_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control97" form:id="control97" form:label="103.107,39 €">
+          <form:fixed-text form:name="Field_alle_Ausgaben_aktuelles_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control97" form:id="control97">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe aller Ausgaben"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Ausgaben_nicht_Buchhaltung_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control98" form:id="control98" form:label="73.375,36 €">
+          <form:fixed-text form:name="Field_Ausgaben_nicht_Buchhaltung_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control98" form:id="control98">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe Ausgaben die nicht für Buchhaltung markiert wurden."/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Netto_Ausgaben_Buchhaltung_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control99" form:id="control99" form:label="69.881,42 €">
+          <form:fixed-text form:name="Field_Netto_Ausgaben_Buchhaltung_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control99" form:id="control99">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe Netto-Ausgaben die für Buchhaltung markiert wurden."/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_alle_Ausgaben_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control100" form:id="control100" form:label="154.659,64 €">
+          <form:fixed-text form:name="Field_alle_Ausgaben_Jahr" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control100" form:id="control100">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe aller Ausgaben"/>
             </form:properties>
@@ -795,32 +795,32 @@
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe aller Ausgaben"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Ausgaben_nicht_Buchhaltung_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control104" form:id="control104" form:label="6.079,26 €">
+          <form:fixed-text form:name="Field_Ausgaben_nicht_Buchhaltung_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control104" form:id="control104">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe Ausgaben die nicht für Buchhaltung markiert wurden."/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Netto_Ausgaben_Buchhaltung_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control105" form:id="control105" form:label="5.102,56 €">
+          <form:fixed-text form:name="Field_Netto_Ausgaben_Buchhaltung_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control105" form:id="control105">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe Netto-Ausgaben die für Buchhaltung markiert wurden."/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_alle_Ausgaben_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control106" form:id="control106" form:label="12.136,29 €">
+          <form:fixed-text form:name="Field_alle_Ausgaben_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control106" form:id="control106">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe aller Ausgaben"/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Ausgaben_nicht_Buchhaltung_bis_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control107" form:id="control107" form:label="18.113,40 €">
+          <form:fixed-text form:name="Field_Ausgaben_nicht_Buchhaltung_bis_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control107" form:id="control107">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe Ausgaben die nicht für Buchhaltung markiert wurden."/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_Netto_Ausgaben_Buchhaltung_bis_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control108" form:id="control108" form:label="12.327,60 €">
+          <form:fixed-text form:name="Field_Netto_Ausgaben_Buchhaltung_bis_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control108" form:id="control108">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe Netto-Ausgaben die für Buchhaltung markiert wurden."/>
             </form:properties>
           </form:fixed-text>
-          <form:fixed-text form:name="Field_alle_Ausgaben_bis_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control109" form:id="control109" form:label="32.010,90 €">
+          <form:fixed-text form:name="Field_alle_Ausgaben_bis_Monat" form:control-implementation="ooo:com.sun.star.form.component.FixedText" xml:id="control109" form:id="control109">
             <form:properties>
               <form:property form:property-name="HelpText" office:value-type="string" office:string-value="Summe aller Ausgaben"/>
             </form:properties>
