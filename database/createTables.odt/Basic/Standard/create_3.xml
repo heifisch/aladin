@@ -10,7 +10,7 @@ option explicit
 Sub SQL_create_Leerzeilen()
 	sSQL=&quot;create table Leerzeilen(AnzahlID int(2)not null default 0,Inhalt varchar(255),primary key(AnzahlID))&quot;
 	SQL_execute_mysql(sSQL)
-	if iDatenAnlegen=1 then
+	if bDatenAnlegen then
 		sSQL=&quot;insert into Leerzeilen(AnzahlID,Inhalt) values(0,&apos;&apos;)&quot;
 		SQL_execute_mysql(sSQL)
 		sSQL=&quot;insert into Leerzeilen(AnzahlID,Inhalt) values(1,&apos;\n&apos;)&quot;
@@ -49,7 +49,7 @@ End Sub
 Sub SQL_create_Monate()
 	sSQL=&quot;create table Monate(MonatID char(2)not null default &apos;&apos;,Monat varchar(20),primary key(MonatID))&quot;
 	SQL_execute_mysql(sSQL)
-	if iDatenAnlegen=1 then
+	if bDatenAnlegen then
 		sSQL=&quot;insert into Monate(MonatID,Monat) values(&apos;1&apos;,&apos;Januar&apos;)&quot;
 		SQL_execute_mysql(sSQL)
 		sSQL=&quot;insert into Monate(MonatID,Monat) values(&apos;2&apos;,&apos;Februar&apos;)&quot;
@@ -80,7 +80,7 @@ End Sub
 Sub SQL_create_Pos_Typ()
 	sSQL=&quot;create table Pos_Typ (Pos_TypID int(1)not null auto_increment,Pos_Typ varchar(255) not null default &apos;&apos;,primary key(Pos_TypID)) ENGINE = InnoDB&quot;
 	SQL_execute_mysql(sSQL)
-	if iDatenAnlegen=1 then
+	if bDatenAnlegen then
 		sSQL= &quot;insert into Pos_Typ(Pos_TypID)values(1)&quot;
 		SQL_execute_mysql(sSQL)
 		sSQL= &quot;insert into Pos_Typ(Pos_TypID,Pos_Typ)values(2,&apos;*** Alternativposition ***&apos;)&quot;
@@ -100,7 +100,7 @@ End Sub
 Sub SQL_create_Einheit()
 	sSQL=&quot;create table Einheit (EinheitID int(3)not null auto_increment,Einheit varchar(20),Code varchar(20),primary key(EinheitID))&quot;
 	SQL_execute_mysql(sSQL)
-&apos;	if iDatenAnlegen=1 then
+&apos;	if bDatenAnlegen then
 		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;pauschal&apos;,&apos;LS&apos;)&quot;
 		SQL_execute_mysql(sSQL)
 		sSQL= &quot;insert into Einheit(Einheit,Code)values(&apos;Stück&apos;,&apos;XPP&apos;)&quot;
@@ -147,7 +147,7 @@ End Sub
 Sub SQL_create_Status()
 	sSQL=&quot;create table Status (StatusID int(2)not null auto_increment,Status varchar(20),primary key(StatusID))&quot;
 	SQL_execute_mysql(sSQL)
-	if iDatenAnlegen=1 then
+	if bDatenAnlegen then
 		sSQL= &quot;insert into Status(Status)values(&apos;skontofähig&apos;)&quot;
 		SQL_execute_mysql(sSQL)
 		sSQL= &quot;insert into Status(Status)values(&apos;berechnet&apos;)&quot;
@@ -303,7 +303,7 @@ End Sub
 Sub SQL_create_Pos_Format()
 	sSQL=&quot;create table Pos_Format (Pos_FormatID int(2)not null auto_increment,Pos_Format varchar(20),primary key(Pos_FormatID))&quot;
 	SQL_execute_mysql(sSQL)
-	if iDatenAnlegen=1 then
+	if bDatenAnlegen then
 		sSQL= &quot;insert into Pos_Format(Pos_Format)values(&apos;1&apos;)&quot;
 		SQL_execute_mysql(sSQL)
 		sSQL= &quot;insert into Pos_Format(Pos_Format)values(&apos;0.1&apos;)&quot;

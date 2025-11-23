@@ -157,7 +157,7 @@ Sub SQL_create_Einstellungen()
 		&quot;ExportVerzeichnissBuchhaltung varchar(255),&quot;&amp;_
 		&quot;primary key(EinstellungsID))&quot;
 	SQL_execute_mysql(sSQL)
-	if iDatenAnlegen=1 then
+	if bDatenAnlegen then
 		sSQL= &quot;insert into Einstellungen(EinstellungsID)values(1)&quot;
 		SQL_execute_mysql(sSQL)
 	End If
@@ -193,7 +193,7 @@ Sub SQL_create_User()
 
 	if iUserAnzahl &gt; iMaxID then
 		For iCount = 1 + iMaxID to iUserAnzahl
-			if iDatenAnlegen=1 then
+			if bDatenAnlegen then
 				sSQL= &quot;insert into Users(UserID)values(&quot;&amp; iCount &amp;&quot;)&quot;
 				SQL_execute_mysql(sSQL)
 			End If

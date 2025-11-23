@@ -14,7 +14,7 @@ Sub SQL_create_Projekt
 		&quot;Bemerkung varchar(2000),Status varchar(20)not null default &apos;neu&apos;,&quot;&amp;_
 		&quot;Abrechnung_nach int(1)not null default 0,Gesperrt int(4)not null default 0,primary key(ProjektID)) ENGINE = InnoDB&quot;
 	SQL_execute_mysql(sSQL)
-	if iDatenAnlegen=1 then
+	if bDatenAnlegen then
 		sSQL=&quot;insert into Projekte(Projekt_Name) values (&apos;- keine Zuordnung -&apos;)&quot;
 		SQL_execute_mysql(sSQL)
 		sSQL=&quot;update Projekte set ProjektID=0&quot;
@@ -32,7 +32,7 @@ Sub SQL_create_Controlling()
 		&quot;LeistungsTyp int(1) not null default &apos;1&apos;,Abgerechnet int(1) not null default &apos;1&apos;,&quot;&amp;_
 		&quot;primary key(PositionsID)) ENGINE = InnoDB&quot;
 	SQL_execute_mysql(sSQL)
-	if iDatenAnlegen=1 then
+	if bDatenAnlegen then
 		sSQL=&quot;insert into Controlling(Leistungsbezeichnung) values (&apos;Platzhalter&apos;)&quot;
 		SQL_execute_mysql(sSQL)
 	End if

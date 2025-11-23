@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<office:document-meta xmlns:grddl="http://www.w3.org/2003/g/data-view#" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ooo="http://openoffice.org/2004/office" xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" office:version="1.4">
+<office:document-meta xmlns:office="urn:oasis:names:tc:opendocument:xmlns:office:1.0" xmlns:ooo="http://openoffice.org/2004/office" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:meta="urn:oasis:names:tc:opendocument:xmlns:meta:1.0" xmlns:grddl="http://www.w3.org/2003/g/data-view#" office:version="1.4">
   <office:meta>
-    <meta:generator>LibreOffice/25.2.5.2$Linux_X86_64 LibreOffice_project/520$Build-2</meta:generator>
+    <meta:generator>LibreOffice/25.2.7.2$Windows_X86_64 LibreOffice_project/5cbfd1ab6520636bb5f7b99185aa69bd7456825d</meta:generator>
     <meta:initial-creator> </meta:initial-creator>
     <meta:creation-date>2001-12-25T14:42:16</meta:creation-date>
-    <dc:date>2025-08-16T21:11:01.174693173</dc:date>
-    <meta:editing-cycles>1029</meta:editing-cycles>
-    <meta:editing-duration>P6DT23H12M11S</meta:editing-duration>
+    <dc:date>2025-11-23T16:32:37.080894100</dc:date>
+    <meta:editing-cycles>1038</meta:editing-cycles>
+    <meta:editing-duration>P7DT53M11S</meta:editing-duration>
     <meta:document-statistic meta:table-count="0" meta:image-count="0" meta:object-count="0" meta:page-count="1" meta:paragraph-count="0" meta:word-count="0" meta:character-count="0" meta:non-whitespace-character-count="0"/>
     <meta:user-defined meta:name="Info 0"/>
     <meta:user-defined meta:name="Info 1"/>

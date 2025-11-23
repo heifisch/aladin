@@ -7,8 +7,8 @@
 REM  *****  BASIC  *****
 option explicit
 
-global const sDatabase_Name= &quot;aladin&quot;
-Global const iDatenAnlegen=&quot;1&quot;
+global const sDatabase_Name=&quot;aladin&quot;
+Global const bDatenAnlegen=TRUE
 
 Dim oStatement as Object
 Dim sSQL as String,sSQL1 as String,sSQL2 as String
@@ -110,6 +110,7 @@ Sub SQL_Zugriffsrechte()
 	Dim vStatus as Variant
 	Dim sHost as String
 	Dim sUserName as String
+	Dim sUserHost as String
 	Dim sPassword as String
 	Dim iCountDb as Integer
 	Dim iCountUser as Integer
@@ -143,6 +144,8 @@ nochmalusers:
 		End if
 	End if
 
+	sUserHost=sUserName &amp; &quot;&apos;@&apos;&quot; &amp; sHost
+
 nochmalpass:
 	sPassword=InputBox(&quot;Geben Sie bitte das Passwort ein für den Users &quot;&amp; sUserName &amp;&quot;!&quot;,sTitle)
 	if sPassword = &quot;&quot; then
@@ -170,27 +173,32 @@ nochmalpass:
 	While oRecord2.next()
 		iCountUser=oRecord2.getInt(1)
 	Wend
-
 	
-if iCountDb=0 then
-	sSQL=&quot;insert into db &quot;&amp;_
-		&quot;(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,&quot;&amp;_
-		&quot;Create_priv,Drop_priv,Grant_priv,References_priv,Index_priv,Alter_priv) values &quot;&amp;_
-		&quot;(&apos;&quot;&amp; sHost &amp;&quot;&apos;,&apos;&quot;&amp; sDatabase_Name &amp;&quot;&apos;,&apos;&quot;&amp; sUserName &amp;&quot;&apos;,&apos;Y&apos;,&apos;Y&apos;,&apos;Y&apos;,&apos;Y&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;Y&apos;)&quot;
+	If iCountUser=0 then
+	&apos;	sSQL=&quot;insert into user &quot;&amp;_
+	&apos;		&quot;(Host,User,Password,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv,Reload_priv,&quot;&amp;_
+	&apos;		&quot;Shutdown_priv,Process_priv,File_priv,Grant_priv,References_priv,Index_priv,Alter_priv,ssl_type,ssl_cipher,x509_issuer,x509_subject) values &quot;&amp;_
+	&apos;		&quot;(&apos;&quot;&amp; sHost &amp;&quot;&apos;,&apos;&quot;&amp; sUserName &amp;&quot;&apos;,password(&apos;&quot;&amp; sPassword &amp;&quot;&apos;),&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;&apos;,&apos;&apos;,&apos;&apos;,&apos;&apos;)&quot;
+		sSQL=&quot;CREATE USER &apos;&quot;&amp; sUserHost &amp;&quot;&apos; IDENTIFIED BY &apos;&quot;&amp; sPassword &amp;&quot;&apos;&quot;
+		SQL_execute_mysql(sSQL)
+	else
+	&apos;	sSQL=&quot;update user set Password=password(&apos;&quot;&amp; sPassword &amp;&quot;&apos;)&quot;&amp;_
+	&apos;		&quot; where Host=&apos;&quot;&amp; sHost &amp;&quot;&apos;&quot;&amp;_
+	&apos;		  &quot;and User=&apos;&quot;&amp; sUserName &amp;&quot;&apos;&quot;
+		sSQL=&quot;ALTER USER &apos;&quot;&amp; sUserHost &amp;&quot;&apos; IDENTIFIED BY &apos;&quot;&amp; sPassword &amp;&quot;&apos;&quot;
+		SQL_execute_mysql(sSQL)
+	End if
+	if iCountDb=0 then
+	&apos;	sSQL=&quot;insert into db &quot;&amp;_
+	&apos;		&quot;(Host,Db,User,Select_priv,Insert_priv,Update_priv,Delete_priv,&quot;&amp;_
+	&apos;		&quot;Create_priv,Drop_priv,Grant_priv,References_priv,Index_priv,Alter_priv) values &quot;&amp;_
+	&apos;		&quot;(&apos;&quot;&amp; sHost &amp;&quot;&apos;,&apos;&quot;&amp; sDatabase_Name &amp;&quot;&apos;,&apos;&quot;&amp; sUserName &amp;&quot;&apos;,&apos;Y&apos;,&apos;Y&apos;,&apos;Y&apos;,&apos;Y&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;Y&apos;)&quot;
+		sSQL=&quot;GRANT ALL PRIVILEGES ON &quot;&amp; sDatabase_Name &amp;&quot;.* TO &apos;&quot;&amp; sUserHost &amp;&quot;&apos; IDENTIFIED BY &apos;&quot;&amp; sPassword &amp;&quot;&apos;&quot;
+		SQL_execute_mysql(sSQL)
+	End if
+	
+	sSQL=&quot;FLUSH PRIVILEGES&quot;
 	SQL_execute_mysql(sSQL)
-End if
-If iCountUser=0 then
-	sSQL=&quot;insert into user &quot;&amp;_
-		&quot;(Host,User,Password,Select_priv,Insert_priv,Update_priv,Delete_priv,Create_priv,Drop_priv,Reload_priv,&quot;&amp;_
-		&quot;Shutdown_priv,Process_priv,File_priv,Grant_priv,References_priv,Index_priv,Alter_priv,ssl_type,ssl_cipher,x509_issuer,x509_subject) values &quot;&amp;_
-		&quot;(&apos;&quot;&amp; sHost &amp;&quot;&apos;,&apos;&quot;&amp; sUserName &amp;&quot;&apos;,password(&apos;&quot;&amp; sPassword &amp;&quot;&apos;),&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;N&apos;,&apos;&apos;,&apos;&apos;,&apos;&apos;,&apos;&apos;)&quot;
-	SQL_execute_mysql(sSQL)
-else
-	sSQL=&quot;update user set Password=password(&apos;&quot;&amp; sPassword &amp;&quot;&apos;)&quot;&amp;_
-		&quot; where Host=&apos;&quot;&amp; sHost &amp;&quot;&apos;&quot;&amp;_
-		  &quot;and User=&apos;&quot;&amp; sUserName &amp;&quot;&apos;&quot;
-	SQL_execute_mysql(sSQL)
-End if
 
 End Sub
 
@@ -216,7 +224,7 @@ Sub SQL_create_Start()
 	if iUserAnzahl &lt; 1 then
 		SetUserAnzahl()
 	End if
-	if iDatenAnlegen=1 then
+	if bDatenAnlegen then
 		For iCount = 1 to iUserAnzahl
 			sSQL=&quot;insert into Start(Startoption,Startlock) values (0,0)&quot;
 			SQL_execute_mysql(sSQL)
@@ -336,8 +344,8 @@ End if
 				Case 40
 					sFormular=&quot;Frei&quot;
 			End Select
-			if iDatenAnlegen=1 then
-				sSQL= &quot;insert into Steuerung(ClientID,Formular,GruppenID,HauptgruppenID) &quot;&amp;_
+			if bDatenAnlegen then
+				sSQL= &quot;insert into steuerung(ClientID,Formular,GruppenID,HauptgruppenID) &quot;&amp;_
 					&quot;values(&quot;&amp; (iCount*iClientAnzahl)-iClientAnzahl+iCountTable &amp;&quot;,&apos;&quot;&amp; sFormular &amp;&quot;&apos;,0,0)&quot;
 				SQL_execute_mysql(sSQL)
 			End if
@@ -384,7 +392,7 @@ Sub SQL_create_Document_Typ()
 		case 11
 			sValue = &quot;(&apos;Nummer:&apos;,&apos;Kontaktnummer:&apos;,&apos;Firmennummer:&apos;,null,null,null,null,null,0)&quot;
 		End select	
-		if iDatenAnlegen=1 then
+		if bDatenAnlegen then
 			sSQL2=&quot;insert into Document_Typ&quot;&amp;_
 				&quot;(DocumentID,KontaktID,ReferenzID,Summe_ohne_MwSt,Summe_mit_MwSt,Schluss_Text1,Schluss_Text2,Bemerkung,gueltig) &quot;&amp;_
 				&quot;values &quot;&amp; sValue
@@ -566,7 +574,7 @@ Sub SQL_create_Rechnungstypen()
 		&quot;(RechnungsTypID int(2) not null auto_increment,RechnungsTyp varchar(50)not null default &apos;&apos;,RechnungsTypKuerzel varchar(10) not null default &apos;&apos;,&quot;&amp;_
 		&quot;primary key(RechnungsTypID))&quot;
 	SQL_execute_mysql(sSQL)
-	if iDatenAnlegen=1 then
+	if bDatenAnlegen then
 		sSQL=&quot;insert into RechnungsTypen(RechnungsTypID,RechnungsTyp,RechnungsTypKuerzel) values(1,&apos;Wareneingang&apos;,&apos;WE&apos;)&quot;
 		SQL_execute_mysql(sSQL)
 		sSQL=&quot;insert into RechnungsTypen(RechnungsTypID,RechnungsTyp,RechnungsTypKuerzel) values(2,&apos;Kosten&apos;,&apos;K&apos;)&quot;
