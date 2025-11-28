@@ -24,34 +24,58 @@ Type structInvoice
 	sDocumentCurrencyCode As String &apos;[BT-5]
 	sDueDate As String &apos;[BT-9]
 	sBuyerReference As String &apos;[BT-10]
+	sProjectReference As String &apos;[BT-11]
+   	sContractReference As String &apos;[BT-12]
+   	sPurchaseOrderReference As String &apos;[BT-13]
+   	sSalesOrderReference As String &apos;[BT-14]
+   	sReceivingAdviceReference As String &apos;[BT-15]
+   	sTenderOrLotReference As String &apos;[BT-17]
+   	sInvoicedObjectIdentifier As String &apos;[BT-18]
+   	sBuyerAccountingReference As String &apos;[BT-19]	
 	sPaymentTerms As String &apos;[BT-20]
-	sSellerName As String &apos;[BT-28]
-	sSellerTaxCompanyID As String &apos;[BT-31] [BT-32]
+	sSellerName As String &apos;[BT-27]
+	sSellerTradingName As String &apos;[BT-28]
+	sSellerIdentifier As String &apos;[BT-29]
+	sSellerIdentifierSchemeIdentifier As String &apos;[BT-29]
+	sSellerLegalRegistrationIdentifier As String &apos;[BT-30]
+	sSellerVatIdentifier As String &apos;[BT-31]
+	sSellerTaxRegistrationIdentifier As String &apos;[BT-32]
 	sSellerDescription As String &apos;[BT-33]
 	sSellerEMail As String &apos;[BT-34]
 	sSellerStreetName As String &apos;[BT-35]
 	sSellerCityName As String &apos;[BT-37]
-	sSellerPLZ As String &apos;[BT-38]
+	sSellerPostCode As String &apos;[BT-38]
 	sSellerCountryCode As String &apos;[BT-40]
 	sSellerContactName As String &apos;[BT-41]
 	sSellerContactTelephone As String &apos;[BT-42]
 	sSellerContactElectronicMail As String &apos;[BT-43]
 	sBuyerName As String &apos;[BT-44]
 	sBuyerIdentifier As String &apos;[BT-46]
-	sBuyerTaxCompanyID As String &apos;[BT-48]
+	sBuyerVatIdentifier As String &apos;[BT-48]
 	sBuyerEMail As String &apos;[BT-49]
 	sBuyerStreetName As String &apos;[BT-50]
 	sBuyerCityName As String &apos;[BT-52]
-	sBuyerPLZ As String &apos;[BT-53]
+	sBuyerPostCode As String &apos;[BT-53]
 	sBuyerCountryCode As String &apos;[BT-55]
 	sBuyerContactName As String &apos;[BT-56]
 	sBuyerContactTelephone As String &apos;[BT-57]
 	sBuyerContactElectronicMail As String &apos;[BT-58]
+	sDeliverToPartyName As String &apos;[BT-70]
 	sActualDeliveryDate As String &apos;[BT-72]
+	sInvoicingPeriodStartDate As String &apos;[BT-73]
+	sInvoicingPeriodEndDate As String &apos;[BT-74]
+	sDeliverToAddressLine1 As String &apos;[BT-75]
+	sDeliverToAddressLine2 As String &apos;[BT-76]
+	sDeliverToCity As String &apos;[BT-77]
+	sDeliverToPostCode As String &apos;[BT-78]
+	sDeliverToCountryCode As String &apos;[BT-80]
 	sPaymentMeansCode As String &apos;[BT-81]
 	sPayeeFinancialAccountID As String &apos;[BT-84]
 	sPayeeFinancialAccountName As String &apos;[BT-85]
 	sPayeeFinancialInstitutionBranchID As String &apos;[BT-86]
+	sMandateReferenceIdentifier As String &apos;[BT-89]
+	sBankAssignedCreditorIdentifier As String &apos;[BT-90]
+	sDebitedAccountIdentifier As String &apos;[BT-91]
 	sLineExtensionAmount As String &apos;[BT-106]
 	sAllowanceTotalAmount As String &apos;[BT-107]
 	sChargeTotalAmount As String &apos;[BT-108]
@@ -61,6 +85,11 @@ Type structInvoice
 	sPrepaidAmount As String &apos;[BT-113]
 	sPayableRoundingAmount As String &apos;[BT-114]
 	sPayableAmount As String &apos;[BT-115]
+    sDiscountRate As String
+    sDiscountDays As String
+    sDiscountDate As String
+    sDiscount As String
+    sDueDays As String
 End Type
 
 Type structBillingReference
@@ -95,6 +124,7 @@ Type structInvoiceLine
 	sQuantity As String &apos;[BT-129]
 	sUnitCode As String &apos;[BT-130]
 	sNetAmount As String &apos;[BT-131]
+	sInvoiceLineBuyerAccountingReference As String &apos;[BT-133]
 	sPeriodStartDate As String &apos;[BT-134]
 	sPeriodEndDate As String &apos;[BT-135]
 	sAllowanceChargeIndicator As String  &apos;[Use “true” when informing about Charges and “false” when informing about Allowances.]
@@ -170,10 +200,10 @@ Function readInvoice As Variant
 		Select Case oDOM.ChildNodes.item(a).NodeName
 			Case &quot;Invoice&quot;
 				bInvoiceFound=True
-					readInvoice=readXRechnung(oDOM) 
+				readInvoice=readXRechnung(oDOM) 
 			Case &quot;CrossIndustryInvoice&quot;
 				bInvoiceFound=True
-					readInvoice=readZUGFeRD(oDOM)
+				readInvoice=readZUGFeRD(oDOM)
 		End Select
 	Next 
 	
@@ -229,9 +259,9 @@ Function readXRechnung(oDOM As Object) As Variant
 						.sSellerName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PartyName&quot;,&quot;Name&quot;)) &apos;[BT-28]
 						.sSellerStreetName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;StreetName&quot;)) &apos;[BT-35]
 						.sSellerCityName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;CityName&quot;)) &apos;[BT-37]
-						.sSellerPLZ=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;PostalZone&quot;)) &apos;[BT-38]
+						.sSellerPostCode=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;PostalZone&quot;)) &apos;[BT-38]
 						.sSellerCountryCode=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;Country&quot;,&quot;IdentificationCode&quot;)) &apos;[BT-40]
-						.sSellerTaxCompanyID=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PartyTaxScheme&quot;,&quot;CompanyID&quot;)) &apos;[BT-31] [BT-32]
+						.sSellerVatIdentifier=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PartyTaxScheme&quot;,&quot;CompanyID&quot;)) &apos;[BT-31] [BT-32]
 						.sSellerContactName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;Name&quot;)) &apos;[BT-41]
 						.sSellerContactTelephone=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;Telephone&quot;)) &apos;[BT-42]
 						.sSellerContactElectronicMail=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;ElectronicMail&quot;)) &apos;[BT-43]
@@ -240,9 +270,9 @@ Function readXRechnung(oDOM As Object) As Variant
 						.sBuyerName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PartyName&quot;,&quot;Name&quot;)) &apos;[BT-44]
 						.sBuyerStreetName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;StreetName&quot;)) &apos;[BT-50]
 						.sBuyerCityName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;CityName&quot;)) &apos;[BT-52]
-						.sBuyerPLZ=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;PostalZone&quot;)) &apos;[BT-53]
+						.sBuyerPostCode=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;PostalZone&quot;)) &apos;[BT-53]
 						.sBuyerCountryCode=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PostalAddress&quot;,&quot;Country&quot;,&quot;IdentificationCode&quot;)) &apos;[BT-55]
-						.sBuyerTaxCompanyID=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PartyTaxScheme&quot;,&quot;CompanyID&quot;)) &apos;[BT-48]
+						.sBuyerVatIdentifier=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;PartyTaxScheme&quot;,&quot;CompanyID&quot;)) &apos;[BT-48]
 						.sBuyerContactName=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;Name&quot;)) &apos;[BT-56]
 						.sBuyerContactTelephone=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;Telephone&quot;)) &apos;[BT-57]
 						.sBuyerContactElectronicMail=getValue(oElemList.item(a),Array(&quot;Party&quot;,&quot;Contact&quot;,&quot;ElectronicMail&quot;)) &apos;[BT-58]
@@ -456,23 +486,23 @@ Function readZUGFeRD(oDOM As Object) As Variant
 								.sBuyerReference=getValue(oSubElemList.item(b),Array(&quot;BuyerReference&quot;)) &apos;[BT-10]
 								.sSellerName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;Name&quot;)) &apos;[BT-27]
 								.sSellerDescription=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;Description&quot;)) &apos;[BT-33]
-								.sSellerPLZ=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;PostcodeCode&quot;)) &apos;[BT-38]
+								.sSellerPostCode=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;PostcodeCode&quot;)) &apos;[BT-38]
 								.sSellerStreetName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;LineOne&quot;)) &apos;[BT-35]
 								.sSellerCityName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;CityName&quot;)) &apos;[BT-37]
 								.sSellerCountryCode=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;CountryID&quot;)) &apos;[BT-40]
 								.sSellerEMail=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;URIUniversalCommunication&quot;,&quot;URIID&quot;),&quot;schemeID&quot;,&quot;EM&quot;) &apos;[BT-34]
-								.sSellerTaxCompanyID=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;SpecifiedTaxRegistration&quot;,&quot;ID&quot;)) &apos;[BT-31] [BT-32]
+								.sSellerVatIdentifier=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;SpecifiedTaxRegistration&quot;,&quot;ID&quot;)) &apos;[BT-31] [BT-32]
 								.sSellerContactName=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;PersonName&quot;)) &apos;[BT-41]
 								.sSellerContactTelephone=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;TelephoneUniversalCommunication&quot;,&quot;CompleteNumber&quot;)) &apos;[BT-42]
 								.sSellerContactElectronicMail=getValue(oSubElemList.item(b),Array(&quot;SellerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;EmailURIUniversalCommunication&quot;,&quot;URIID&quot;)) &apos;[BT-43]
 								.sBuyerName=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;Name&quot;)) &apos;[BT-44]
 								.sBuyerIdentifier=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;ID&quot;)) &apos;[BT-46]
-								.sBuyerPLZ=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;PostcodeCode&quot;)) &apos;[BT-53]
+								.sBuyerPostCode=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;PostcodeCode&quot;)) &apos;[BT-53]
 								.sBuyerStreetName=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;LineOne&quot;)) &apos;[BT-50]
 								.sBuyerCityName=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;CityName&quot;)) &apos;[BT-52]
 								.sBuyerCountryCode=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;PostalTradeAddress&quot;,&quot;CountryID&quot;)) &apos;[BT-55]
 								.sBuyerEMail=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;URIUniversalCommunication&quot;,&quot;URIID&quot;),&quot;schemeID&quot;,&quot;EM&quot;) &apos;[BT-49]
-								.sBuyerTaxCompanyID=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;SpecifiedTaxRegistration&quot;,&quot;ID&quot;)) &apos;[BT-48]
+								.sBuyerVatIdentifier=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;SpecifiedTaxRegistration&quot;,&quot;ID&quot;)) &apos;[BT-48]
 								.sBuyerContactName=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;PersonName&quot;)) &apos;[BT-56]
 								.sBuyerContactTelephone=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;TelephoneUniversalCommunication&quot;,&quot;CompleteNumber&quot;)) &apos;[BT-57]
 								.sBuyerContactElectronicMail=getValue(oSubElemList.item(b),Array(&quot;BuyerTradeParty&quot;,&quot;DefinedTradeContact&quot;,&quot;EmailURIUniversalCommunication&quot;,&quot;URIID&quot;)) &apos;[BT-58]
@@ -592,12 +622,16 @@ Function getValue(oEntry As Object, arrNodePath(), Optional sAttributName As Str
 	Next
 End Function
 
-Sub CreateSheet()
+Sub CreateSheet(Optional OptInvoiceData As Variant)
 	Dim oCalcDoc As Object, oSheet As Object, oPathSettings As Object
 	Dim iRow As Integer
 	Dim InvoiceData As Variant
-	
-	InvoiceData=readInvoice
+
+	If Not IsMissing(OptInvoiceData) Then
+		InvoiceData=OptInvoiceData
+	Else
+		InvoiceData=readInvoice
+	End If
 
 	oPathSettings = CreateUnoService(&quot;com.sun.star.util.PathSettings&quot;)
 	oCalcDoc = StarDesktop.loadComponentFromURL(&quot;private:factory/scalc&quot;, &quot;_blank&quot;, 0, Array())
@@ -654,19 +688,19 @@ Sub CreateSheet()
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Seller Name [BT-28]&quot;,True)
 		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;Seller StreetName [BT-35]&quot;,True)
 		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;Seller Country Code [BT-40]&quot;,True)
-		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;Seller PLZ [BT-38]&quot;,True)
+		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;Seller Post Code [BT-38]&quot;,True)
 		fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;Seller City Name [BT-37]&quot;,True)
 		fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;Seller EMail [BT-34]&quot;,True)
-		fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;Seller TaxCompanyID [BT-31] [BT-32]&quot;,True)
+		fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;Seller VAT ID [BT-31]&quot;,True)
 		fillSheet(oSheet,&quot;H&quot; &amp; iRow,&quot;Seller Description [BT-33]&quot;,True)
 		iRow=iRow+1
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,.sSellerName,False)
 		fillSheet(oSheet,&quot;B&quot; &amp; iRow,.sSellerStreetName,False)
 		fillSheet(oSheet,&quot;C&quot; &amp; iRow,.sSellerCountryCode,False)
-		fillSheet(oSheet,&quot;D&quot; &amp; iRow,.sSellerPLZ,False)
+		fillSheet(oSheet,&quot;D&quot; &amp; iRow,.sSellerPostCode,False)
 		fillSheet(oSheet,&quot;E&quot; &amp; iRow,.sSellerCityName,False)
 		fillSheet(oSheet,&quot;F&quot; &amp; iRow,.sSellerEMail,False)
-		fillSheet(oSheet,&quot;G&quot; &amp; iRow,.sSellerTaxCompanyID,False)
+		fillSheet(oSheet,&quot;G&quot; &amp; iRow,.sSellerVatIdentifier,False)
 		fillSheet(oSheet,&quot;H&quot; &amp; iRow,.sSellerDescription,False)
 		iRow=iRow+2
 		
@@ -675,7 +709,7 @@ Sub CreateSheet()
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;Buyer Name [BT-44]&quot;,True)
 		fillSheet(oSheet,&quot;B&quot; &amp; iRow,&quot;Buyer StreetName [BT-50]&quot;,True)
 		fillSheet(oSheet,&quot;C&quot; &amp; iRow,&quot;Buyer Country Code [BT-55]&quot;,True)
-		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;Buyer PLZ [BT-53]&quot;,True)
+		fillSheet(oSheet,&quot;D&quot; &amp; iRow,&quot;Buyer Post Code [BT-53]&quot;,True)
 		fillSheet(oSheet,&quot;E&quot; &amp; iRow,&quot;Buyer City Name [BT-52]&quot;,True)
 		fillSheet(oSheet,&quot;F&quot; &amp; iRow,&quot;Buyer EMail [BT-49]&quot;,True)
 		fillSheet(oSheet,&quot;G&quot; &amp; iRow,&quot;Buyer TaxCompanyID [BT-48]&quot;,True)
@@ -684,10 +718,10 @@ Sub CreateSheet()
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow,.sBuyerName,False)
 		fillSheet(oSheet,&quot;B&quot; &amp; iRow,.sBuyerStreetName,False)
 		fillSheet(oSheet,&quot;C&quot; &amp; iRow,.sBuyerCountryCode,False)
-		fillSheet(oSheet,&quot;D&quot; &amp; iRow,.sBuyerPLZ,False)
+		fillSheet(oSheet,&quot;D&quot; &amp; iRow,.sBuyerPostCode,False)
 		fillSheet(oSheet,&quot;E&quot; &amp; iRow,.sBuyerCityName,False)
 		fillSheet(oSheet,&quot;F&quot; &amp; iRow,.sBuyerEMail,False)
-		fillSheet(oSheet,&quot;G&quot; &amp; iRow,.sBuyerTaxCompanyID,False)
+		fillSheet(oSheet,&quot;G&quot; &amp; iRow,.sBuyerVatIdentifier,False)
 		fillSheet(oSheet,&quot;H&quot; &amp; iRow,.sBuyerIdentifier,False)
 		iRow=iRow+2
 
@@ -722,7 +756,7 @@ Sub CreateSheet()
 		fillSheet(oSheet,&quot;D&quot; &amp; iRow,.sPaymentMeansCode,False)
 		iRow=iRow+2
 	
-		fillSheet(oSheet,&quot;A&quot; &amp; iRow &amp; &quot;:D&quot; &amp; iRow,&quot;PaymentTerms [BT-20]&quot;,True)
+		fillSheet(oSheet,&quot;A&quot; &amp; iRow &amp; &quot;:D&quot; &amp; iRow,&quot;Payment Terms [BT-20]&quot;,True)
 		iRow=iRow+1
 		fillSheet(oSheet,&quot;A&quot; &amp; iRow &amp; &quot;:D&quot; &amp; iRow,.sPaymentTerms,False)
 		iRow=iRow+2
@@ -754,7 +788,7 @@ Sub CreateSheet()
 			iRow=iRow+c+1
 		End If
 
-		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;TaxTotalAmount:&quot;,True)
+		fillSheet(oSheet,&quot;A&quot; &amp; iRow,&quot;TaxTotalAmount [BT-110] [BT-111]:&quot;,True)
 		fillSheet(oSheet,&quot;B&quot; &amp; iRow,.sTaxTotalAmount,False)
 		iRow=iRow+2
 
