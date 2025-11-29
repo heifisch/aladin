@@ -500,8 +500,7 @@ Function GetInvoiceData As Variant
 	Dim vStatus as Variant
 	Dim sSQL1 as String,sSQL2 as String,sSQL3 as String,sSQL4 as String,sSQL5 as String
 	Dim oRecord1 as Object,oRecord2 as Object,oRecord3 as Object
-	Dim iOptionInhaber as Integer,sGeschaeftsfuehrer as String,sHRB as String,sAmtsgericht as String,sSitz as String
-	Dim sHREintragForm As String,sPraefix As String,sInvoiceTypeCode As String
+	Dim sPraefix As String,sInvoiceTypeCode As String
 	Dim sAZ_Text As String,sDocumentID_Korrekturrechnung As String
 
 	Dim Invoice As New structInvoice, InvoiceNotes() As New structInvoiceNote, BillingReferences() As New structBillingReference
@@ -731,37 +730,37 @@ Function GetInvoiceData As Variant
 			sXRechnungEmpfaenger=.sBuyerEMail
 		End With
 
-		REM Invoice notes : Text [1] [BT-22]
-		If oRecord2.getString(77) &lt;&gt; &quot;&quot; Or oRecord2.getString(78) &lt;&gt; &quot;&quot; Or oRecord2.getString(79) &lt;&gt; &quot;&quot;_
-			Or oRecord2.getString(80) &lt;&gt; &quot;&quot; Or oRecord2.getString(81) &lt;&gt; &quot;&quot; Or oRecord2.getString(82) &lt;&gt; &quot;&quot; Or oRecord2.getString(83) &lt;&gt; &quot;&quot;_
-			Then ReDim Preserve InvoiceNotes(UBound(InvoiceNotes)+1)
-		With InvoiceNotes(UBound(InvoiceNotes))
-			If oRecord2.getString(77) &lt;&gt; &quot;&quot; Then .sNote=CharToXMLChar(Trim(oRecord2.getString(77)))
-			If oRecord2.getString(78) &lt;&gt; &quot;&quot; And oRecord2.getString(78) &lt;&gt; oRecord2.getString(79) Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(78)))
-			If oRecord2.getString(79) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(79)))
-			If oRecord2.getString(80) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(80)))
-			If oRecord2.getString(81) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(81)))
-			If oRecord2.getString(82) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(82)))
-			If oRecord2.getString(83) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(83)))
-		End With
-		
-		REM Invoice notes : Text [1] [BT-22] 
-		REM Hier Variante für mehrere InvoiceNotes in einer Rechnung, allerdings nur innerhalb in Deutschland zulässig
-&apos;		If oRecord2.getString(77) &lt;&gt; &quot;&quot; Or oRecord2.getString(78) &lt;&gt; &quot;&quot; Or oRecord2.getString(79) &lt;&gt; &quot;&quot; _
+&apos;		REM Invoice notes : Text [1] [BT-22]
+&apos;		If oRecord2.getString(77) &lt;&gt; &quot;&quot; Or oRecord2.getString(78) &lt;&gt; &quot;&quot; Or oRecord2.getString(79) &lt;&gt; &quot;&quot;_
+&apos;			Or oRecord2.getString(80) &lt;&gt; &quot;&quot; Or oRecord2.getString(81) &lt;&gt; &quot;&quot; Or oRecord2.getString(82) &lt;&gt; &quot;&quot; Or oRecord2.getString(83) &lt;&gt; &quot;&quot;_
 &apos;			Then ReDim Preserve InvoiceNotes(UBound(InvoiceNotes)+1)
 &apos;		With InvoiceNotes(UBound(InvoiceNotes))
 &apos;			If oRecord2.getString(77) &lt;&gt; &quot;&quot; Then .sNote=CharToXMLChar(Trim(oRecord2.getString(77)))
-&apos;			If oRecord2.getString(78) &lt;&gt; &quot;&quot; And oRecord2.getString(78) &lt;&gt; oRecord2.getString(79) Then .sNote=.sNote &amp; Chr$(10) &amp; CharToXMLChar(Trim(oRecord2.getString(78)))
-&apos;			If oRecord2.getString(79) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; Chr$(10) &amp; CharToXMLChar(Trim(oRecord2.getString(79)))
+&apos;			If oRecord2.getString(78) &lt;&gt; &quot;&quot; And oRecord2.getString(78) &lt;&gt; oRecord2.getString(79) Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(78)))
+&apos;			If oRecord2.getString(79) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(79)))
+&apos;			If oRecord2.getString(80) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(80)))
+&apos;			If oRecord2.getString(81) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(81)))
+&apos;			If oRecord2.getString(82) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(82)))
+&apos;			If oRecord2.getString(83) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; IIf(.sNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; CharToXMLChar(Trim(oRecord2.getString(83)))
 &apos;		End With
-&apos;		If oRecord2.getString(80) &lt;&gt; &quot;&quot; Then ReDim Preserve InvoiceNotes(UBound(InvoiceNotes)+1)
-&apos;		If oRecord2.getString(80) &lt;&gt; &quot;&quot; Then InvoiceNotes(UBound(InvoiceNotes)).sNote=CharToXMLChar(Trim(oRecord2.getString(80)))
-&apos;		If oRecord2.getString(81) &lt;&gt; &quot;&quot; Then ReDim Preserve InvoiceNotes(UBound(InvoiceNotes)+1)
-&apos;		If oRecord2.getString(81) &lt;&gt; &quot;&quot; Then InvoiceNotes(UBound(InvoiceNotes)).sNote=CharToXMLChar(Trim(oRecord2.getString(81)))
-&apos;		If oRecord2.getString(82) &lt;&gt; &quot;&quot; Then ReDim Preserve InvoiceNotes(UBound(InvoiceNotes)+1)
-&apos;		If oRecord2.getString(82) &lt;&gt; &quot;&quot; Then InvoiceNotes(UBound(InvoiceNotes)).sNote=CharToXMLChar(Trim(oRecord2.getString(82)))
-&apos;		If oRecord2.getString(83) &lt;&gt; &quot;&quot; Then ReDim Preserve InvoiceNotes(UBound(InvoiceNotes)+1)
-&apos;		If oRecord2.getString(83) &lt;&gt; &quot;&quot; Then InvoiceNotes(UBound(InvoiceNotes)).sNote=CharToXMLChar(Trim(oRecord2.getString(83)))
+		
+		REM Invoice notes : Text [1] [BT-22] 
+		REM Hier Variante für mehrere InvoiceNotes in einer Rechnung, allerdings nur innerhalb in Deutschland zulässig
+		If oRecord2.getString(77) &lt;&gt; &quot;&quot; Or oRecord2.getString(78) &lt;&gt; &quot;&quot; Or oRecord2.getString(79) &lt;&gt; &quot;&quot; _
+			Then ReDim Preserve InvoiceNotes(UBound(InvoiceNotes)+1)
+		With InvoiceNotes(UBound(InvoiceNotes))
+			If oRecord2.getString(77) &lt;&gt; &quot;&quot; Then .sNote=CharToXMLChar(Trim(oRecord2.getString(77)))
+			If oRecord2.getString(78) &lt;&gt; &quot;&quot; And oRecord2.getString(78) &lt;&gt; oRecord2.getString(79) Then .sNote=.sNote &amp; Chr$(10) &amp; CharToXMLChar(Trim(oRecord2.getString(78)))
+			If oRecord2.getString(79) &lt;&gt; &quot;&quot; Then .sNote=.sNote &amp; Chr$(10) &amp; CharToXMLChar(Trim(oRecord2.getString(79)))
+		End With
+		If oRecord2.getString(80) &lt;&gt; &quot;&quot; Then ReDim Preserve InvoiceNotes(UBound(InvoiceNotes)+1)
+		If oRecord2.getString(80) &lt;&gt; &quot;&quot; Then InvoiceNotes(UBound(InvoiceNotes)).sNote=CharToXMLChar(Trim(oRecord2.getString(80)))
+		If oRecord2.getString(81) &lt;&gt; &quot;&quot; Then ReDim Preserve InvoiceNotes(UBound(InvoiceNotes)+1)
+		If oRecord2.getString(81) &lt;&gt; &quot;&quot; Then InvoiceNotes(UBound(InvoiceNotes)).sNote=CharToXMLChar(Trim(oRecord2.getString(81)))
+		If oRecord2.getString(82) &lt;&gt; &quot;&quot; Then ReDim Preserve InvoiceNotes(UBound(InvoiceNotes)+1)
+		If oRecord2.getString(82) &lt;&gt; &quot;&quot; Then InvoiceNotes(UBound(InvoiceNotes)).sNote=CharToXMLChar(Trim(oRecord2.getString(82)))
+		If oRecord2.getString(83) &lt;&gt; &quot;&quot; Then ReDim Preserve InvoiceNotes(UBound(InvoiceNotes)+1)
+		If oRecord2.getString(83) &lt;&gt; &quot;&quot; Then InvoiceNotes(UBound(InvoiceNotes)).sNote=CharToXMLChar(Trim(oRecord2.getString(83)))
 
 		REM Gruppe VAT BREAKDOWN [1..*] [BG-23]
 		REM ID:
@@ -888,8 +887,8 @@ REM Die Rechnung wird in der folgenden Prozedur nach dem UBL-System erstellt (be
 REM +++ Wird aus &quot;Druck → ExportPDF&quot; aufgerufen
 Sub SaveXRechnung(sXRechnungPath As String)
 	Dim oUcb As Object,  oOutputStream As Object, oFile As Object, sFileUrl As String, sXmlString As String
-	Dim iTab As Integer,  InvoiceData As Variant
-	Dim a% , b% , c% , d% , e% , f% , g% , h% , i% , j% , k% , l%, x%, t%
+	Dim iTab As Integer,  InvoiceData As Variant, sInvoiceNote As String
+	Dim a% , b% , c% , d% , e%
 	
 	InvoiceData=GetInvoiceData
 
@@ -922,15 +921,15 @@ Sub SaveXRechnung(sXRechnungPath As String)
 		Else
 			sXmlString = sXmlString &amp; &quot;&lt;ubl:Invoice xmlns:ubl=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2&quot;&quot;&quot; &amp; Chr$(13)
 		End If
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;xmlns:cac=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2&quot;&quot;&quot; &amp; Chr$(13)
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;xmlns:cbc=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2&quot;&quot;&quot; &amp; Chr$(13)
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;xmlns:xsi=&quot;&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&quot;&quot; &amp; Chr$(13)
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;xmlns:cac=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2&quot;&quot;&quot; &amp; Chr$(13)
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;xmlns:cbc=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2&quot;&quot;&quot; &amp; Chr$(13)
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;xmlns:xsi=&quot;&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&quot;&quot; &amp; Chr$(13)
 		If .sInvoiceTypCode = &quot;381&quot; Then
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;xsi:schemaLocation=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 http://docs.oasis-open.org/ubl/os-UBL-2.3/xsd/maindoc/UBL-CreditNote-2.3.xsd&quot;&quot;&gt;&quot; &amp; Chr$(13)
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;xsi:schemaLocation=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2 http://docs.oasis-open.org/ubl/os-UBL-2.3/xsd/maindoc/UBL-CreditNote-2.3.xsd&quot;&quot;&gt;&quot; &amp; Chr$(13)
 			REM Rechnung ist zu XRechnung 3.0 kompatible, Identifier Gruppe PROCESS CONTROL, erforderlich [BT-24]
 			sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cbc:CustomizationID&gt;urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0&lt;/cbc:CustomizationID&gt;&quot; &amp; Chr$(13)
 		Else
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;xsi:schemaLocation=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.3/xsd/maindoc/UBL-Invoice-2.3.xsd&quot;&quot;&gt;&quot; &amp; Chr$(13)
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;xsi:schemaLocation=&quot;&quot;urn:oasis:names:specification:ubl:schema:xsd:Invoice-2 http://docs.oasis-open.org/ubl/os-UBL-2.3/xsd/maindoc/UBL-Invoice-2.3.xsd&quot;&quot;&gt;&quot; &amp; Chr$(13)
 			REM Rechnung ist zu XRechnung 3.0 kompatible, Identifier Gruppe PROCESS CONTROL, erforderlich [BT-24]
 			sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cbc:CustomizationID&gt;urn:cen.eu:en16931:2017#compliant#urn:xeinkauf.de:kosit:xrechnung_3.0#conformant#urn:xeinkauf.de:kosit:extension:xrechnung_3.0&lt;/cbc:CustomizationID&gt;&quot; &amp; Chr$(13)
 		End If
@@ -947,15 +946,30 @@ Sub SaveXRechnung(sXRechnungPath As String)
 		Else
 			sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cbc:InvoiceTypeCode&gt;&quot; &amp; .sInvoiceTypCode &amp; &quot;&lt;/cbc:InvoiceTypeCode&gt;&quot; &amp; Chr$(13)		&apos;erforderlich 1…1	[BT-3]	
 		End If
-		
-		If IsArray(InvoiceData(INVOICE_NOTES)) Then
-			For a = 0 To UBound(InvoiceData(INVOICE_NOTES))
-				With InvoiceData(INVOICE_NOTES)(a)
-					sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cbc:Note&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-22]
-					sXmlString = sXmlString &amp; Trim(.sNote) &amp; Chr$(13)
-					sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cbc:Note&gt;&quot; &amp; Chr$(13)
-				End With
-			Next
+			
+		If .sSellerCountryCode = &quot;DE&quot; And .sBuyerCountryCode = &quot;DE&quot; Then
+		REM Bei Rechnungsversand innerhalb Deutschlands sind mehrere Invoice Notes zulässig
+			If IsArray(InvoiceData(INVOICE_NOTES)) Then
+				For a = 0 To UBound(InvoiceData(INVOICE_NOTES))
+					With InvoiceData(INVOICE_NOTES)(a)
+						sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cbc:Note&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-22]
+							sXmlString = sXmlString &amp; Trim(.sNote) &amp; Chr$(13)
+						sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cbc:Note&gt;&quot; &amp; Chr$(13)
+					End With
+				Next
+			End If
+		Else
+		REM Bei Rechnungsversand außerhalb Deutschlands sind mehrere Invoice Notes nicht zulässig
+			If IsArray(InvoiceData(INVOICE_NOTES)) Then
+				For a = 0 To UBound(InvoiceData(INVOICE_NOTES))
+					With InvoiceData(INVOICE_NOTES)(a)
+						sInvoiceNote=sInvoiceNote &amp; IIf(sInvoiceNote &lt;&gt; &quot;&quot;, Chr$(10), &quot;&quot;) &amp; Trim(.sNote) 
+					End With
+				Next
+				sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cbc:Note&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-22]
+				sXmlString = sXmlString &amp; sInvoiceNote &amp; Chr$(13)
+				sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cbc:Note&gt;&quot; &amp; Chr$(13)
+			End If
 		End If
 				
 	    sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cbc:DocumentCurrencyCode&gt;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&lt;/cbc:DocumentCurrencyCode&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-5]
@@ -978,8 +992,8 @@ Sub SaveXRechnung(sXRechnungPath As String)
 		REM Referenzen
 	    If .sPurchaseOrderReference &lt;&gt; &quot;&quot; Then
 	    	sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:OrderReference&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sPurchaseOrderReference &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1	[BT-13]
-			If .sSalesOrderReference &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:SalesOrderID&gt;&quot; &amp; .sSalesOrderReference &amp; &quot;&lt;/cbc:SalesOrderID&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1	[BT-14]	
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sPurchaseOrderReference &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1	[BT-13]
+				If .sSalesOrderReference &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:SalesOrderID&gt;&quot; &amp; .sSalesOrderReference &amp; &quot;&lt;/cbc:SalesOrderID&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1	[BT-14]	
 			sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:OrderReference&gt;&quot; &amp; Chr$(13)
 		End If 
 		
@@ -988,199 +1002,199 @@ Sub SaveXRechnung(sXRechnungPath As String)
 			For b = 0 To UBound(InvoiceData(BILLING_REFERENCES))
 				With InvoiceData(BILLING_REFERENCES)(b)
 					sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:BillingReference&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…n [BG-3]
-					sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:InvoiceDocumentReference&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn BillingReference vorhanden ist
-					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn BillingReference vorhanden ist	[BT-25]
-					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:IssueDate&gt;&quot; &amp; .sIssueDate &amp; &quot;&lt;/cbc:IssueDate&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-26]
-					sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:InvoiceDocumentReference&gt;&quot; &amp; Chr$(13)
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:InvoiceDocumentReference&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn BillingReference vorhanden ist
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn BillingReference vorhanden ist	[BT-25]
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:IssueDate&gt;&quot; &amp; .sIssueDate &amp; &quot;&lt;/cbc:IssueDate&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-26]
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:InvoiceDocumentReference&gt;&quot; &amp; Chr$(13)
 					sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:BillingReference&gt;&quot; &amp; Chr$(13)
 				End With		
 			Next
 		End If
 	    If .sTenderOrLotReference &lt;&gt; &quot;&quot; Then
 	    	sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:OriginatorDocumentReference&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sTenderOrLotReference &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn OriginatorDocumentReference gegeben	[BT-17]	
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sTenderOrLotReference &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn OriginatorDocumentReference gegeben	[BT-17]	
 			sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:OriginatorDocumentReference&gt;&quot; &amp; Chr$(13)
 		End If	  	
 	    If .sContractReference &lt;&gt; &quot;&quot; Then
 	    	sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:ContractDocumentReference&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sContractReference &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn ContractDocumentReference gegeben	[BT-12]	
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sContractReference &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn ContractDocumentReference gegeben	[BT-12]	
 			sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:ContractDocumentReference&gt;&quot; &amp; Chr$(13)
 		End If	
 	    If .sInvoicedObjectIdentifier &lt;&gt; &quot;&quot; Then
 	    	sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:AdditionalDocumentReference&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sInvoicedObjectIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn ContractDocumentReference gegeben	[BT-18]	
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:DocumentTypeCode&gt;130&lt;/cbc:DocumentTypeCode&gt;&quot; &amp; Chr$(13)
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sInvoicedObjectIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn ContractDocumentReference gegeben	[BT-18]	
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:DocumentTypeCode&gt;130&lt;/cbc:DocumentTypeCode&gt;&quot; &amp; Chr$(13)
 			sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:AdditionalDocumentReference&gt;&quot; &amp; Chr$(13)
 		End If    
 	    If .sProjectReference &lt;&gt; &quot;&quot; Then
 	    	sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:ProjectReference&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	Achtung! ProjectReference muss als letzte vor AccountingSupplierParty stehen
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sProjectReference &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn ProjectReference gegeben		[BT-11]	
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sProjectReference &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn ProjectReference gegeben		[BT-11]	
 			sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:ProjectReference&gt;&quot; &amp; Chr$(13)
 		End If
 		
 	    REM AccountingSupplierParty - Verkäufer, hier der Rechnungssteller
 	    sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:AccountingSupplierParty&gt;&quot; &amp; Chr$(13)		&apos;erforderlich 1…1	[BG-4]
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:Party&gt;&quot; &amp; Chr$(13)		&apos;erforderlich 1…1
-	    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:EndpointID schemeID=&quot;&quot;EM&quot;&quot;&gt;&quot; &amp; .sSellerEMail &amp; &quot;&lt;/cbc:EndpointID&gt;&quot; &amp; Chr$(13)		&apos;erforderlich 1…1, mit entsprechender schemeID	[BT-34]
-	    If .sSellerIdentifier &lt;&gt; &quot;&quot; Then
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyIdentification&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-			sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&quot;
-			If .sSellerIdentifierSchemeIdentifier &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; &quot; schemeID=&quot;&quot;&quot; &amp; .sSellerIdentifierSchemeIdentifier &amp; &quot;&quot;&quot;&quot; 
-			sXmlString = sXmlString &amp; &quot;&gt;&quot; &amp; .sSellerIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PartyIdentification vorhanden ist	[BT-29]
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyIdentification&gt;&quot; &amp; Chr$(13)
-		End If    
-		If .sDebitedAccountIdentifier &lt;&gt; &quot;&quot; And .sMandateReferenceIdentifier &lt;&gt; &quot;&quot; And .sBankAssignedCreditorIdentifier &lt;&gt; &quot;&quot; Then
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyIdentification&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-			sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID schemeID=&quot;&quot;SEPA&quot;&quot;&gt;&quot; &amp; .sBankAssignedCreditorIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PartyIdentification vorhanden ist	[BT-90]
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyIdentification&gt;&quot; &amp; Chr$(13)
-		End If
-	    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 (für &quot;Seller trading name&quot;)
-	    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sSellerTradingName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PartyName vorhanden ist; abweichender Name der Firma, so etwas wie Rufname, Name, unter dem die Firma dem Kunden bekannt ist	[BT-28]
-	    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyName&gt;&quot; &amp; Chr$(13)
-	    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PostalAddress&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BG-5]
-	    If .sSellerStreetName &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:StreetName&gt;&quot; &amp; .sSellerStreetName &amp; &quot;&lt;/cbc:StreetName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-35]
-	    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CityName&gt;&quot; &amp; .sSellerCityName &amp; &quot;&lt;/cbc:CityName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 docs.peppol.eu, erforderlich 1…1 Standard XRechnung	[BT-37]
-	    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:PostalZone&gt;&quot; &amp; .sSellerPostCode &amp; &quot;&lt;/cbc:PostalZone&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 docs.peppol.eu, erforderlich 1…1 Standard XRechnung	[BT-38]
-	    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:Country&gt;&quot; &amp; Chr$(13)
-	    sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:IdentificationCode&gt;&quot; &amp; .sSellerCountryCode &amp; &quot;&lt;/cbc:IdentificationCode&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-40]
-	    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:Country&gt;&quot; &amp; Chr$(13)
-	    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PostalAddress&gt;&quot; &amp; Chr$(13)
-	    
-	    REM Einträge für die Steuer
-	    If .sSellerVatIdentifier &lt;&gt; &quot;&quot; Then
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…2, hier nur VAT abgefragt
-			sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyID&gt;&quot; &amp; .sSellerVatIdentifier &amp; &quot;&lt;/cbc:CompanyID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist [BT-31]
-			sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist
-			sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist Mandatory element. For Seller VAT identifier (BT-31), use value “VAT”, For the seller tax registration identifier (BT-32), use != &quot;VAT&quot;
-			sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)
-		End If	
-	    If .sSellerTaxRegistrationIdentifier &lt;&gt; &quot;&quot; Then
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…2, hier nur FC abgefragt
-			sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyID&gt;&quot; &amp; .sSellerTaxRegistrationIdentifier &amp; &quot;&lt;/cbc:CompanyID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist [BT-32]
-			sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist
-			sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:ID&gt;FC&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist Mandatory element. For Seller VAT identifier (BT-31), use value “VAT”, For the seller tax registration identifier (BT-32), use != &quot;VAT&quot;
-			sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)
-		End If
-		
-		Rem Handelsregistereinträge	
-		sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyLegalEntity&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
-		sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:RegistrationName&gt;&quot; &amp; .sSellerName &amp; &quot;&lt;/cbc:RegistrationName&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-27]
-		If .sSellerLegalRegistrationIdentifier &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyID&gt;&quot; &amp; .sSellerLegalRegistrationIdentifier &amp; &quot;&lt;/cbc:CompanyID&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-30]
-		If .sSellerDescription &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyLegalForm&gt;&quot; &amp; .sSellerDescription &amp; &quot;&lt;/cbc:CompanyLegalForm&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-33]
-		sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyLegalEntity&gt;&quot; &amp; Chr$(13)
-	    
-	    REM Kontakt über Telefon usw.
-		sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:Contact&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 docs.peppol.eu, erforderlich 1…1 Standard XRechnung [BG-6]
-		sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sSellerContactName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 Standard XRechnung	[BT-41]
-		sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Telephone&gt;&quot; &amp; .sSellerContactTelephone &amp; &quot;&lt;/cbc:Telephone&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 Standard XRechnung	[BT-42]
-		sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ElectronicMail&gt;&quot; &amp; .sSellerContactElectronicMail &amp; &quot;&lt;/cbc:ElectronicMail&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 Standard XRechnung	[BT-43]
-		sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:Contact&gt;&quot; &amp; Chr$(13)
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:Party&gt;&quot; &amp; Chr$(13)
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:Party&gt;&quot; &amp; Chr$(13)		&apos;erforderlich 1…1
+			    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:EndpointID schemeID=&quot;&quot;EM&quot;&quot;&gt;&quot; &amp; .sSellerEMail &amp; &quot;&lt;/cbc:EndpointID&gt;&quot; &amp; Chr$(13)		&apos;erforderlich 1…1, mit entsprechender schemeID	[BT-34]
+			    If .sSellerIdentifier &lt;&gt; &quot;&quot; Then
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyIdentification&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&quot;
+						If .sSellerIdentifierSchemeIdentifier &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; &quot; schemeID=&quot;&quot;&quot; &amp; .sSellerIdentifierSchemeIdentifier &amp; &quot;&quot;&quot;&quot; 
+						sXmlString = sXmlString &amp; &quot;&gt;&quot; &amp; .sSellerIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PartyIdentification vorhanden ist	[BT-29]
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyIdentification&gt;&quot; &amp; Chr$(13)
+				End If    
+				If .sDebitedAccountIdentifier &lt;&gt; &quot;&quot; And .sMandateReferenceIdentifier &lt;&gt; &quot;&quot; And .sBankAssignedCreditorIdentifier &lt;&gt; &quot;&quot; Then
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyIdentification&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID schemeID=&quot;&quot;SEPA&quot;&quot;&gt;&quot; &amp; .sBankAssignedCreditorIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PartyIdentification vorhanden ist	[BT-90]
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyIdentification&gt;&quot; &amp; Chr$(13)
+				End If
+			    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 (für &quot;Seller trading name&quot;)
+				    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sSellerTradingName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PartyName vorhanden ist; abweichender Name der Firma, so etwas wie Rufname, Name, unter dem die Firma dem Kunden bekannt ist	[BT-28]
+			    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyName&gt;&quot; &amp; Chr$(13)
+			    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PostalAddress&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BG-5]
+			    If .sSellerStreetName &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:StreetName&gt;&quot; &amp; .sSellerStreetName &amp; &quot;&lt;/cbc:StreetName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-35]
+				    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CityName&gt;&quot; &amp; .sSellerCityName &amp; &quot;&lt;/cbc:CityName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 docs.peppol.eu, erforderlich 1…1 Standard XRechnung	[BT-37]
+				    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:PostalZone&gt;&quot; &amp; .sSellerPostCode &amp; &quot;&lt;/cbc:PostalZone&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 docs.peppol.eu, erforderlich 1…1 Standard XRechnung	[BT-38]
+				    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:Country&gt;&quot; &amp; Chr$(13)
+					    sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:IdentificationCode&gt;&quot; &amp; .sSellerCountryCode &amp; &quot;&lt;/cbc:IdentificationCode&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-40]
+				    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:Country&gt;&quot; &amp; Chr$(13)
+			    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PostalAddress&gt;&quot; &amp; Chr$(13)
+			    
+			    REM Einträge für die Steuer
+			    If .sSellerVatIdentifier &lt;&gt; &quot;&quot; Then
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…2, hier nur VAT abgefragt
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyID&gt;&quot; &amp; .sSellerVatIdentifier &amp; &quot;&lt;/cbc:CompanyID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist [BT-31]
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist
+							sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist Mandatory element. For Seller VAT identifier (BT-31), use value “VAT”, For the seller tax registration identifier (BT-32), use != &quot;VAT&quot;
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)
+				End If	
+			    If .sSellerTaxRegistrationIdentifier &lt;&gt; &quot;&quot; Then
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…2, hier nur FC abgefragt
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyID&gt;&quot; &amp; .sSellerTaxRegistrationIdentifier &amp; &quot;&lt;/cbc:CompanyID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist [BT-32]
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist
+							sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:ID&gt;FC&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist Mandatory element. For Seller VAT identifier (BT-31), use value “VAT”, For the seller tax registration identifier (BT-32), use != &quot;VAT&quot;
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)
+				End If
+				
+				Rem Handelsregistereinträge	
+				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyLegalEntity&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
+					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:RegistrationName&gt;&quot; &amp; .sSellerName &amp; &quot;&lt;/cbc:RegistrationName&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-27]
+					If .sSellerLegalRegistrationIdentifier &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyID&gt;&quot; &amp; .sSellerLegalRegistrationIdentifier &amp; &quot;&lt;/cbc:CompanyID&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-30]
+					If .sSellerDescription &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyLegalForm&gt;&quot; &amp; .sSellerDescription &amp; &quot;&lt;/cbc:CompanyLegalForm&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-33]
+				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyLegalEntity&gt;&quot; &amp; Chr$(13)
+			    
+			    REM Kontakt über Telefon usw.
+				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:Contact&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 docs.peppol.eu, erforderlich 1…1 Standard XRechnung [BG-6]
+					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sSellerContactName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 Standard XRechnung	[BT-41]
+					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Telephone&gt;&quot; &amp; .sSellerContactTelephone &amp; &quot;&lt;/cbc:Telephone&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 Standard XRechnung	[BT-42]
+					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ElectronicMail&gt;&quot; &amp; .sSellerContactElectronicMail &amp; &quot;&lt;/cbc:ElectronicMail&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 Standard XRechnung	[BT-43]
+				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:Contact&gt;&quot; &amp; Chr$(13)
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:Party&gt;&quot; &amp; Chr$(13)
 		sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:AccountingSupplierParty&gt;&quot; &amp; Chr$(13)
 	    
 	    REM AccountingCustomerParty - Käufer    
 		sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:AccountingCustomerParty&gt;&quot; &amp; Chr$(13)		&apos;erforderlich 1…1	[BG-7]
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:Party&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
-		sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:EndpointID schemeID=&quot;&quot;EM&quot;&quot;&gt;&quot; &amp; .sBuyerEMail &amp; &quot;&lt;/cbc:EndpointID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-49]
-		sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyIdentification&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-		sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sBuyerIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PartyIdentification vorhanden ist	[BT-46]
-		sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyIdentification&gt;&quot; &amp; Chr$(13)
-	    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 (für &quot;Seller trading name&quot;)
-	    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sBuyerName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PartyName vorhanden ist; [BT-44]
-	    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyName&gt;&quot; &amp; Chr$(13)
-		sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PostalAddress&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BG-8]
-		If .sBuyerStreetName &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:StreetName&gt;&quot; &amp; .sBuyerStreetName &amp; &quot;&lt;/cbc:StreetName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-50]
-		sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CityName&gt;&quot; &amp; .sBuyerCityName &amp; &quot;&lt;/cbc:CityName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 docs.peppol.eu, erforderlich 1…1 Standard XRechnung	[BT-52]
-		sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:PostalZone&gt;&quot; &amp; .sBuyerPostCode &amp; &quot;&lt;/cbc:PostalZone&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 docs.peppol.eu, erforderlich 1…1 Standard XRechnung	[BT-53]
-		sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:Country&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
-		sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:IdentificationCode&gt;&quot; &amp; .sBuyerCountryCode &amp; &quot;&lt;/cbc:IdentificationCode&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-55]
-		sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:Country&gt;&quot; &amp; Chr$(13)
-		sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PostalAddress&gt;&quot; &amp; Chr$(13)
-		
-		REM Einträge für die Steuer - Käufer
-	    If .sBuyerVatIdentifier &lt;&gt; &quot;&quot; Then
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-				sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyID&gt;&quot; &amp; .sBuyerVatIdentifier &amp; &quot;&lt;/cbc:CompanyID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist	[BT-48]
-				sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist
-				sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist grundsätzlich VAT!
-				sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)
-		End If
-		sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyLegalEntity&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
-		sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:RegistrationName&gt;&quot; &amp; .sBuyerName &amp; &quot;&lt;/cbc:RegistrationName&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-44]
-		If .sBuyerIdentifier &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyID&gt;&quot; &amp; .sBuyerIdentifier &amp; &quot;&lt;/cbc:CompanyID&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-46]
-		sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyLegalEntity&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
-		
-		REM Ansprechpartner Kontakt über Telefon usw., nicht erforderlich	
-		If .sBuyerContactName &lt;&gt; &quot;&quot; Or .sBuyerContactTelephone &lt;&gt; &quot;&quot; Or .sBuyerContactElectronicMail &lt;&gt; &quot;&quot; Then
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:Contact&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich [BG-9]
-			If .sBuyerContactName &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sBuyerContactName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-56]
-			If .sBuyerContactTelephone &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Telephone&gt;&quot; &amp; .sBuyerContactTelephone &amp; &quot;&lt;/cbc:Telephone&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-57]
-			If .sBuyerContactElectronicMail &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ElectronicMail&gt;&quot; &amp; .sBuyerContactElectronicMail &amp; &quot;&lt;/cbc:ElectronicMail&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-58]
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:Contact&gt;&quot; &amp; Chr$(13)
-		End If
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:Party&gt;&quot; &amp; Chr$(13)
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:Party&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
+				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:EndpointID schemeID=&quot;&quot;EM&quot;&quot;&gt;&quot; &amp; .sBuyerEMail &amp; &quot;&lt;/cbc:EndpointID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-49]
+				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyIdentification&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sBuyerIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PartyIdentification vorhanden ist	[BT-46]
+				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyIdentification&gt;&quot; &amp; Chr$(13)
+			    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 (für &quot;Seller trading name&quot;)
+				    sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sBuyerName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PartyName vorhanden ist; [BT-44]
+			    sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyName&gt;&quot; &amp; Chr$(13)
+				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PostalAddress&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BG-8]
+					If .sBuyerStreetName &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:StreetName&gt;&quot; &amp; .sBuyerStreetName &amp; &quot;&lt;/cbc:StreetName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-50]
+					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CityName&gt;&quot; &amp; .sBuyerCityName &amp; &quot;&lt;/cbc:CityName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 docs.peppol.eu, erforderlich 1…1 Standard XRechnung	[BT-52]
+					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:PostalZone&gt;&quot; &amp; .sBuyerPostCode &amp; &quot;&lt;/cbc:PostalZone&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 docs.peppol.eu, erforderlich 1…1 Standard XRechnung	[BT-53]
+					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:Country&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
+						sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:IdentificationCode&gt;&quot; &amp; .sBuyerCountryCode &amp; &quot;&lt;/cbc:IdentificationCode&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-55]
+					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:Country&gt;&quot; &amp; Chr$(13)
+				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PostalAddress&gt;&quot; &amp; Chr$(13)
+				
+				REM Einträge für die Steuer - Käufer
+			    If .sBuyerVatIdentifier &lt;&gt; &quot;&quot; Then
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyID&gt;&quot; &amp; .sBuyerVatIdentifier &amp; &quot;&lt;/cbc:CompanyID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist	[BT-48]
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist
+							sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1, wenn PartyTaxScheme vorhanden ist grundsätzlich VAT!
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyTaxScheme&gt;&quot; &amp; Chr$(13)
+				End If
+				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyLegalEntity&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
+					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:RegistrationName&gt;&quot; &amp; .sBuyerName &amp; &quot;&lt;/cbc:RegistrationName&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-44]
+					If .sBuyerIdentifier &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CompanyID&gt;&quot; &amp; .sBuyerIdentifier &amp; &quot;&lt;/cbc:CompanyID&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-46]
+				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyLegalEntity&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
+				
+				REM Ansprechpartner Kontakt über Telefon usw., nicht erforderlich	
+				If .sBuyerContactName &lt;&gt; &quot;&quot; Or .sBuyerContactTelephone &lt;&gt; &quot;&quot; Or .sBuyerContactElectronicMail &lt;&gt; &quot;&quot; Then
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:Contact&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich [BG-9]
+						If .sBuyerContactName &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sBuyerContactName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-56]
+						If .sBuyerContactTelephone &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Telephone&gt;&quot; &amp; .sBuyerContactTelephone &amp; &quot;&lt;/cbc:Telephone&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-57]
+						If .sBuyerContactElectronicMail &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ElectronicMail&gt;&quot; &amp; .sBuyerContactElectronicMail &amp; &quot;&lt;/cbc:ElectronicMail&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-58]
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:Contact&gt;&quot; &amp; Chr$(13)
+				End If
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:Party&gt;&quot; &amp; Chr$(13)
 		sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:AccountingCustomerParty&gt;&quot; &amp; Chr$(13)
 		
 		REM Einträge für die Zustellung
 		If .sActualDeliveryDate &lt;&gt; &quot;&quot; Or .sDeliverToAddressLine1 &lt;&gt; &quot;&quot; Or .sDeliverToCity &lt;&gt; &quot;&quot; Or .sDeliverToPostCode &lt;&gt; &quot;&quot; Or .sDeliverToCountryCode &lt;&gt; &quot;&quot; Or .sDeliverToPartyName &lt;&gt; &quot;&quot; Then
 			sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:Delivery&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BG-13]	
-	        If .sActualDeliveryDate &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ActualDeliveryDate&gt;&quot; &amp; .sActualDeliveryDate &amp; &quot;&lt;/cbc:ActualDeliveryDate&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-72]
-	        If .sDeliverToAddressLine1 &lt;&gt; &quot;&quot; Or .sDeliverToCity &lt;&gt; &quot;&quot; Or .sDeliverToPostCode &lt;&gt; &quot;&quot; Or .sDeliverToCountryCode &lt;&gt; &quot;&quot; Then
-	        	sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:DeliveryLocation&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-	        	sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:Address&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BG-15]
-				If .sDeliverToAddressLine1 &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:StreetName&gt;&quot; &amp; .sDeliverToAddressLine1 &amp; &quot;&lt;/cbc:StreetName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-75]
-				sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CityName&gt;&quot; &amp; .sDeliverToCity &amp; &quot;&lt;/cbc:CityName&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 wenn Adresse angegeben	[BT-77]
-				sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:PostalZone&gt;&quot; &amp; .sDeliverToPostCode &amp; &quot;&lt;/cbc:PostalZone&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 wenn Adresse angegeben	[BT-78]
-				sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:Country&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-				sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:IdentificationCode&gt;&quot; &amp; .sDeliverToCountryCode &amp; &quot;&lt;/cbc:IdentificationCode&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 wenn Adresse angegeben	[BT-80]
-				sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:Country&gt;&quot; &amp; Chr$(13)
-	        	sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:Address&gt;&quot; &amp; Chr$(13)
-	        	sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:DeliveryLocation&gt;&quot; &amp; Chr$(13)
-			End If		
-	        If .sDeliverToPartyName &lt;&gt; &quot;&quot; Then
-	        	sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:DeliveryParty&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-	        	sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyName&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 wenn DeliverParty gegeben
-	        	sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sDeliverToPartyName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 wenn DeliverParty gegeben	[BT-70]
-	        	sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyName&gt;&quot; &amp; Chr$(13)
-	        	sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:DeliveryParty&gt;&quot; &amp; Chr$(13)
-	        End If   
+		        If .sActualDeliveryDate &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ActualDeliveryDate&gt;&quot; &amp; .sActualDeliveryDate &amp; &quot;&lt;/cbc:ActualDeliveryDate&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-72]
+		        If .sDeliverToAddressLine1 &lt;&gt; &quot;&quot; Or .sDeliverToCity &lt;&gt; &quot;&quot; Or .sDeliverToPostCode &lt;&gt; &quot;&quot; Or .sDeliverToCountryCode &lt;&gt; &quot;&quot; Then
+		        	sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:DeliveryLocation&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+			        	sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:Address&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BG-15]
+							If .sDeliverToAddressLine1 &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:StreetName&gt;&quot; &amp; .sDeliverToAddressLine1 &amp; &quot;&lt;/cbc:StreetName&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-75]
+							sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:CityName&gt;&quot; &amp; .sDeliverToCity &amp; &quot;&lt;/cbc:CityName&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 wenn Adresse angegeben	[BT-77]
+							sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:PostalZone&gt;&quot; &amp; .sDeliverToPostCode &amp; &quot;&lt;/cbc:PostalZone&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 wenn Adresse angegeben	[BT-78]
+							sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:Country&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+								sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:IdentificationCode&gt;&quot; &amp; .sDeliverToCountryCode &amp; &quot;&lt;/cbc:IdentificationCode&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 wenn Adresse angegeben	[BT-80]
+							sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:Country&gt;&quot; &amp; Chr$(13)
+			        	sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:Address&gt;&quot; &amp; Chr$(13)
+		        	sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:DeliveryLocation&gt;&quot; &amp; Chr$(13)
+				End If		
+		        If .sDeliverToPartyName &lt;&gt; &quot;&quot; Then
+		        	sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:DeliveryParty&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+			        	sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PartyName&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 wenn DeliverParty gegeben
+				        	sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sDeliverToPartyName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 wenn DeliverParty gegeben	[BT-70]
+			        	sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PartyName&gt;&quot; &amp; Chr$(13)
+		        	sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:DeliveryParty&gt;&quot; &amp; Chr$(13)
+		        End If   
 			sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:Delivery&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
 	    End If
 		
 		REM PaymentMeans - Zahlungsmmöglichkeiten	
 		REM Grundsätzlich sind hier mehrere Kontoangaben nacheinander möglich. Zusätzlich (hier nicht aufgeführt, gibt es so etwas wie Bankabbuchungen und PayPal.
 		sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:PaymentMeans&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…n docs.peppol.eu, erforderlich 1…n Standard XRechnung	[BG-16]
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:PaymentMeansCode&gt;&quot; &amp; .sPaymentMeansCode &amp; &quot;&lt;/cbc:PaymentMeansCode&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PaymentMeans vorhanden ist	[BT-81]
-		If .sPayeeFinancialAccountID &lt;&gt; &quot;&quot; And .sDebitedAccountIdentifier = &quot;&quot; Then
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:PayeeFinancialAccount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BG-17]
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sPayeeFinancialAccountID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PayeeFinancialAccount vorhanden ist	[BT-84]
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sPayeeFinancialAccountName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-85]
-			If .sPaymentMeansCode = &quot;30&quot; Or .sPayeeFinancialInstitutionBranchID &lt;&gt; &quot;&quot;  Then
-				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:FinancialInstitutionBranch&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-				sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sPayeeFinancialInstitutionBranchID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn FinancialInstitutionBranch vorhanden ist	[BT-86]
-				sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:FinancialInstitutionBranch&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:PaymentMeansCode&gt;&quot; &amp; .sPaymentMeansCode &amp; &quot;&lt;/cbc:PaymentMeansCode&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PaymentMeans vorhanden ist	[BT-81]
+			If .sPayeeFinancialAccountID &lt;&gt; &quot;&quot; And .sDebitedAccountIdentifier = &quot;&quot; Then
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:PayeeFinancialAccount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BG-17]
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sPayeeFinancialAccountID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PayeeFinancialAccount vorhanden ist	[BT-84]
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sPayeeFinancialAccountName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-85]
+					If .sPaymentMeansCode = &quot;30&quot; Or .sPayeeFinancialInstitutionBranchID &lt;&gt; &quot;&quot;  Then
+						sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:FinancialInstitutionBranch&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+							sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sPayeeFinancialInstitutionBranchID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn FinancialInstitutionBranch vorhanden ist	[BT-86]
+						sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:FinancialInstitutionBranch&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+					End If
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:PayeeFinancialAccount&gt;&quot; &amp; Chr$(13)
 			End If
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:PayeeFinancialAccount&gt;&quot; &amp; Chr$(13)
-		End If
-		If .sDebitedAccountIdentifier &lt;&gt; &quot;&quot; And .sMandateReferenceIdentifier &lt;&gt; &quot;&quot; And .sBankAssignedCreditorIdentifier &lt;&gt; &quot;&quot; Then
-			REM PaymentMeansCode hier 59
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:PaymentMandate&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BG-19]
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sMandateReferenceIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-89]	
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PayerFinancialAccount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-			sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sDebitedAccountIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PayerFinancialAccount vorhanden ist	[BT-91]
-			sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PayerFinancialAccount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:PaymentMandate&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-		End If
+			If .sDebitedAccountIdentifier &lt;&gt; &quot;&quot; And .sMandateReferenceIdentifier &lt;&gt; &quot;&quot; And .sBankAssignedCreditorIdentifier &lt;&gt; &quot;&quot; Then
+				REM PaymentMeansCode hier 59
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:PaymentMandate&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BG-19]
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sMandateReferenceIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-89]	
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:PayerFinancialAccount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sDebitedAccountIdentifier &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PayerFinancialAccount vorhanden ist	[BT-91]
+					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:PayerFinancialAccount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:PaymentMandate&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
+			End If
 		sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:PaymentMeans&gt;&quot; &amp; Chr$(13)
 		
 	    REM PaymentTerms - Zahlungsvereinbarungen
 		sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:PaymentTerms&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:Note&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PaymentTerms vorhanden ist [BT-20]
-		sXmlString = sXmlString &amp; Trim(.sPaymentTerms) &amp; Chr$(13)
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cbc:Note&gt;&quot; &amp; Chr$(13)
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:Note&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn PaymentTerms vorhanden ist [BT-20]
+			sXmlString = sXmlString &amp; Trim(.sPaymentTerms) &amp; Chr$(13)
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cbc:Note&gt;&quot; &amp; Chr$(13)
 		sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:PaymentTerms&gt;&quot; &amp; Chr$(13)
 		
 		REM Allowance / Charges - Aufschläge und Abzüge
@@ -1188,19 +1202,19 @@ Sub SaveXRechnung(sXRechnungPath As String)
 			For c = 0 To UBound(InvoiceData(ALLOWANCE_CHARGES))
 				With InvoiceData(ALLOWANCE_CHARGES)(c)
 					sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:AllowanceCharge&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…n	[BG-20, BG-21]
-					sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ChargeIndicator&gt;&quot; &amp; .sIndicator &amp; &quot;&lt;/cbc:ChargeIndicator&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist; &quot;true&quot; für einen Aufschlag
-					If .sReasonCode &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:AllowanceChargeReasonCode&gt;&quot; &amp; .sReasonCode &amp; &quot;&lt;/cbc:AllowanceChargeReasonCode&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Code unklar
-					sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:AllowanceChargeReason&gt;&quot; &amp; .sReason &amp; &quot;&lt;/cbc:AllowanceChargeReason&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 [BT-97, BT-104]
-					sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:MultiplierFactorNumeric&gt;&quot; &amp; .sPercent &amp; &quot;&lt;/cbc:MultiplierFactorNumeric&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-94,BT-101]
-					sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:Amount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sAmount &amp; &quot;&lt;/cbc:Amount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist	[BT-92,BT-99]
-					sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:BaseAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sBaseAmount &amp; &quot;&lt;/cbc:BaseAmount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 1…1 [BT-93,BT-100]
-					sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:TaxCategory&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist
-					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sTaxCategoryID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist; Bedeutung des Codes siehe weiter unten	[BT-95,BT-102]
-					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:Percent&gt;&quot; &amp; .sTaxPercent &amp; &quot;&lt;/cbc:Percent&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Angabe in Prozent*100	[BT-96,BT-103]
-					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist
-					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist; VAT: Value Added Tax → Mehrwertsteuer
-					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
-					sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:TaxCategory&gt;&quot; &amp; Chr$(13)
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ChargeIndicator&gt;&quot; &amp; .sIndicator &amp; &quot;&lt;/cbc:ChargeIndicator&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist; &quot;true&quot; für einen Aufschlag
+						If .sReasonCode &lt;&gt; &quot;&quot; Then sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:AllowanceChargeReasonCode&gt;&quot; &amp; .sReasonCode &amp; &quot;&lt;/cbc:AllowanceChargeReasonCode&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Code unklar
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:AllowanceChargeReason&gt;&quot; &amp; .sReason &amp; &quot;&lt;/cbc:AllowanceChargeReason&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1 [BT-97, BT-104]
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:MultiplierFactorNumeric&gt;&quot; &amp; .sPercent &amp; &quot;&lt;/cbc:MultiplierFactorNumeric&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-94,BT-101]
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:Amount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sAmount &amp; &quot;&lt;/cbc:Amount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist	[BT-92,BT-99]
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:BaseAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sBaseAmount &amp; &quot;&lt;/cbc:BaseAmount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 1…1 [BT-93,BT-100]
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:TaxCategory&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sTaxCategoryID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist; Bedeutung des Codes siehe weiter unten	[BT-95,BT-102]
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:Percent&gt;&quot; &amp; .sTaxPercent &amp; &quot;&lt;/cbc:Percent&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Angabe in Prozent*100	[BT-96,BT-103]
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist
+								sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist; VAT: Value Added Tax → Mehrwertsteuer
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:TaxCategory&gt;&quot; &amp; Chr$(13)
 					sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:AllowanceCharge&gt;&quot; &amp; Chr$(13)
 				End With	
 			Next
@@ -1208,44 +1222,44 @@ Sub SaveXRechnung(sXRechnungPath As String)
 	
 		REM Steuer	
 		sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:TaxTotal&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…2 (When tax currency code is provided, two instances of the tax total must be present, but only one with tax subtotal.) [BG-23]
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:TaxAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sTaxTotalAmount &amp; &quot;&lt;/cbc:TaxAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1; Gesamtsteuer	[BT-110, BT-111]
-		If IsArray(InvoiceData(TAX_SUBTOTALE)) Then
-			For d = 0 To UBound(InvoiceData(TAX_SUBTOTALE))
-				With InvoiceData(TAX_SUBTOTALE)(d)
-					sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:TaxSubtotal&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…n (When tax currency code is provided, two instances of the tax total must be present, but only one with tax subtotal.) [BG-23]
-					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:TaxableAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sTaxableAmount &amp; &quot;&lt;/cbc:TaxableAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist; Einzelsteuern mit Steuersatz	[BT-116]
-					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:TaxAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sTaxAmount &amp; &quot;&lt;/cbc:TaxAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist	[BT-117]
-					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:TaxCategory&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist
-					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sTaxCategoryID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist	[BT-118]
-					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Percent&gt;&quot; &amp; .sTaxPercent &amp; &quot;&lt;/cbc:Percent&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-119]
-					If .sTaxExemptionReason &lt;&gt; &quot;&quot; Then
-						sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:TaxExemptionReason&gt;&quot; &amp; .sTaxExemptionReason &amp; &quot;&lt;/cbc:TaxExemptionReason&gt;&quot;  &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-120]
-					End If
-					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist
-					sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist; VAT: Value Added Tax → Mehrwertsteuer
-					sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
-					sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:TaxCategory&gt;&quot; &amp; Chr$(13)
-					sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:TaxSubtotal&gt;&quot; &amp; Chr$(13)
-				End With
-			Next
-		End If
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:TaxAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sTaxTotalAmount &amp; &quot;&lt;/cbc:TaxAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1; Gesamtsteuer	[BT-110, BT-111]
+			If IsArray(InvoiceData(TAX_SUBTOTALE)) Then
+				For d = 0 To UBound(InvoiceData(TAX_SUBTOTALE))
+					With InvoiceData(TAX_SUBTOTALE)(d)
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:TaxSubtotal&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…n (When tax currency code is provided, two instances of the tax total must be present, but only one with tax subtotal.) [BG-23]
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:TaxableAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sTaxableAmount &amp; &quot;&lt;/cbc:TaxableAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist; Einzelsteuern mit Steuersatz	[BT-116]
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:TaxAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sTaxAmount &amp; &quot;&lt;/cbc:TaxAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist	[BT-117]
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:TaxCategory&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist
+								sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sTaxCategoryID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist	[BT-118]
+								sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Percent&gt;&quot; &amp; .sTaxPercent &amp; &quot;&lt;/cbc:Percent&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-119]
+								If .sTaxExemptionReason &lt;&gt; &quot;&quot; Then
+									sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:TaxExemptionReason&gt;&quot; &amp; .sTaxExemptionReason &amp; &quot;&lt;/cbc:TaxExemptionReason&gt;&quot;  &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BT-120]
+								End If
+								sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist
+									sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn TaxSubtotal vorhanden ist; VAT: Value Added Tax → Mehrwertsteuer
+								sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:TaxCategory&gt;&quot; &amp; Chr$(13)
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:TaxSubtotal&gt;&quot; &amp; Chr$(13)
+					End With
+				Next
+			End If
 		sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:TaxTotal&gt;&quot; &amp; Chr$(13)
 		
 	    REM Gesamtbetrag, Aufsummierung der Teilbeträge; Alle hier aufgeführten Beträge müssen auf die 2. Stelle nach dem Komma gerundet werden
 		sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:LegalMonetaryTotal&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BG-22]
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:LineExtensionAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sLineExtensionAmount &amp; &quot;&lt;/cbc:LineExtensionAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1; genau 2 Nachkommastellen	[BT-106]
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:TaxExclusiveAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sTaxExclusiveAmount &amp; &quot;&lt;/cbc:TaxExclusiveAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-109]
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:TaxInclusiveAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sTaxInclusiveAmount &amp; &quot;&lt;/cbc:TaxInclusiveAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-112]
-		If .sAllowanceTotalAmount &lt;&gt; 0 Then
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:AllowanceTotalAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sAllowanceTotalAmount &amp; &quot;&lt;/cbc:AllowanceTotalAmount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Nachlassbetrag ohne Steuer	[BT-107]
-		End If	
-		If .sChargeTotalAmount &lt;&gt; 0 Then
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ChargeTotalAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sChargeTotalAmount &amp; &quot;&lt;/cbc:ChargeTotalAmount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Zuschlag ohne Steuer	[BT-108]
-		End If	
-		If .sPrepaidAmount &lt;&gt; &quot;&quot; Then
-			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:PrepaidAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sPrepaidAmount &amp; &quot;&lt;/cbc:PrepaidAmount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Zuschlag ohne Steuer	[BT-113]
-		End If
-		sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:PayableAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sPayableAmount &amp; &quot;&lt;/cbc:PayableAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 [BT-115]
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:LineExtensionAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sLineExtensionAmount &amp; &quot;&lt;/cbc:LineExtensionAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1; genau 2 Nachkommastellen	[BT-106]
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:TaxExclusiveAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sTaxExclusiveAmount &amp; &quot;&lt;/cbc:TaxExclusiveAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-109]
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:TaxInclusiveAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sTaxInclusiveAmount &amp; &quot;&lt;/cbc:TaxInclusiveAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-112]
+			If .sAllowanceTotalAmount &lt;&gt; 0 Then
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:AllowanceTotalAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sAllowanceTotalAmount &amp; &quot;&lt;/cbc:AllowanceTotalAmount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Nachlassbetrag ohne Steuer	[BT-107]
+			End If	
+			If .sChargeTotalAmount &lt;&gt; 0 Then
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ChargeTotalAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sChargeTotalAmount &amp; &quot;&lt;/cbc:ChargeTotalAmount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Zuschlag ohne Steuer	[BT-108]
+			End If	
+			If .sPrepaidAmount &lt;&gt; &quot;&quot; Then
+				sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:PrepaidAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sPrepaidAmount &amp; &quot;&lt;/cbc:PrepaidAmount&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Zuschlag ohne Steuer	[BT-113]
+			End If
+			sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:PayableAmount currencyID=&quot;&quot;&quot; &amp; .sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sPayableAmount &amp; &quot;&lt;/cbc:PayableAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1 [BT-115]
 		sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:LegalMonetaryTotal&gt;&quot; &amp; Chr$(13)
 		
 		REM Schleife für die einzelnen Einträge in der Rechnung (Rechnungszeile), Lieferkosten können hier ebenfalls erscheinen.
@@ -1258,56 +1272,55 @@ Sub SaveXRechnung(sXRechnungPath As String)
 					Else
 						sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;cac:InvoiceLine&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…n	[BG-25]
 					End If
-					t = 0
-					sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-126]
-					If InvoiceData(INVOICE).sInvoiceTypCode = &quot;381&quot; Then
-						sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;cbc:CreditedQuantity unitCode=&quot;&quot;&quot; &amp; .sUnitCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sQuantity &amp; &quot;&lt;/cbc:CreditedQuantity&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-129]
-					Else
-						sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;cbc:InvoicedQuantity unitCode=&quot;&quot;&quot; &amp; .sUnitCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sQuantity &amp; &quot;&lt;/cbc:InvoicedQuantity&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-129]
-					End If
-					sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;cbc:LineExtensionAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sNetAmount &amp; &quot;&lt;/cbc:LineExtensionAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1; Gesamtpreis aus Price * Quantity * Allowance; genau 2 Nachkommastellen	 [BT-131]
-					If .sInvoiceLineBuyerAccountingReference &lt;&gt; &quot;&quot; Then
-						sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;cbc:AccountingCost&gt;&quot; &amp; .sInvoiceLineBuyerAccountingReference &amp; &quot;&lt;/cbc:AccountingCost&gt;&quot; &amp; Chr$(13)	&apos; nicht erforderlich 0…1; [BT-133]
-					End If
-					
-					REM Nachlass auf für den Artikel, Anzahl der Artikel berücksichtigt. Muss also nicht mit der Artikelanzahl multipliziert werden.
-					If CDbl(.sAllowanceChargeAmount) &lt;&gt; 0 Then
-						sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;cac:AllowanceCharge&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…n	[BG-27, BG-28]
-						sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;cbc:ChargeIndicator&gt;&quot; &amp; .sAllowanceChargeIndicator &amp; &quot;&lt;/cbc:ChargeIndicator&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist; &quot;true&quot; für einen Aufschlag
-						sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;cbc:AllowanceChargeReason&gt;&quot;&amp; .sAllowanceChargeReason &amp;&quot;&lt;/cbc:AllowanceChargeReason&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Grund für den Nachlass	[BT-139, BT-144]
-					&apos;	sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:MultiplierFactorNumeric&gt;10.00&lt;/cbc:MultiplierFactorNumeric&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1; Angabe in Prozent*100
-						sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;cbc:Amount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sAllowanceChargeAmount &amp; &quot;&lt;/cbc:Amount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist	[BT-136,BT-141]
-						sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:BaseAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sAllowanceChargeBaseAmount &amp; &quot;&lt;/cbc:BaseAmount&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1; Basisbetrag für die Prozentuale Ermäßigung
-						sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;/cac:AllowanceCharge&gt;&quot; &amp; Chr$(13) 
-					End If
-					
-					If .sPeriodStartDate &lt;&gt; &quot;&quot; Then
-						sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;cac:InvoicePeriod&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BG-26]
-						sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;cbc:StartDate&gt;&quot; &amp; .sPeriodStartDate &amp; &quot;&lt;/cbc:StartDate&gt;&quot; &amp; Chr$(13) &apos;entweder Start oder End erforderlich 1…1, wenn InvoicePeriod vorhanden	[BT-134]
-						sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;cbc:EndDate&gt;&quot; &amp; .sPeriodEndDate &amp; &quot;&lt;/cbc:EndDate&gt;&quot; &amp; Chr$(13) &apos;entweder Start oder End erforderlich 1…1, wenn InvoicePeriod vorhanden	[BT-135]			
-						sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;/cac:InvoicePeriod&gt;&quot; &amp; Chr$(13)
-			    	End If
-					sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;cac:Item&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BG-31]
-					If Len(Trim(Replace(.sItemDescription, Chr$(10), &quot;&quot;))) &gt; 0 Then
-						sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;cbc:Description&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1; kann ausführlicher sein	[BT-154]
-						sXmlString = sXmlString &amp; .sItemDescription &amp; Chr$(13)
-						sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;/cbc:Description&gt;&quot; &amp; Chr$(13)
-					End If
-					sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sItemName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-153]
-					sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;cac:SellersItemIdentification&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1
-					sXmlString = sXmlString &amp; Space((4+t) * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sSellerAssignedID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn SellersItemIdentification vorhanden ist	[BT-155]
-					sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;/cac:SellersItemIdentification&gt;&quot; &amp; Chr$(13)
-					sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;cac:ClassifiedTaxCategory&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BG-30]
-					sXmlString = sXmlString &amp; Space((4+t) * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sTaxCategoryID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-151]
-					sXmlString = sXmlString &amp; Space((4+t) * iTab) &amp; &quot;&lt;cbc:Percent&gt;&quot; &amp; .sTaxPercent &amp; &quot;&lt;/cbc:Percent&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1; Angabe in Prozent*100, lässt sich aus dem Code von TaxCategory schließen	[BT-152]
-					sXmlString = sXmlString &amp; Space((4+t) * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
-					sXmlString = sXmlString &amp; Space((5+t) * iTab) &amp; &quot;&lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1; VAT: Value Added Tax → Mehrwertsteuer (Defaultwert)
-					sXmlString = sXmlString &amp; Space((4+t) * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
-					sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;/cac:ClassifiedTaxCategory&gt;&quot; &amp; Chr$(13)
-					sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;/cac:Item&gt;&quot; &amp; Chr$(13)
-					sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;cac:Price&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BG-29]
-					sXmlString = sXmlString &amp; Space((3+t) * iTab) &amp; &quot;&lt;cbc:PriceAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sItemNetPrice &amp; &quot;&lt;/cbc:PriceAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-146]
-					sXmlString = sXmlString &amp; Space((2+t) * iTab) &amp; &quot;&lt;/cac:Price&gt;&quot; &amp; Chr$(13)		
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-126]
+						If InvoiceData(INVOICE).sInvoiceTypCode = &quot;381&quot; Then
+							sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:CreditedQuantity unitCode=&quot;&quot;&quot; &amp; .sUnitCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sQuantity &amp; &quot;&lt;/cbc:CreditedQuantity&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-129]
+						Else
+							sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:InvoicedQuantity unitCode=&quot;&quot;&quot; &amp; .sUnitCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sQuantity &amp; &quot;&lt;/cbc:InvoicedQuantity&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-129]
+						End If
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:LineExtensionAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sNetAmount &amp; &quot;&lt;/cbc:LineExtensionAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1; Gesamtpreis aus Price * Quantity * Allowance; genau 2 Nachkommastellen	 [BT-131]
+						If .sInvoiceLineBuyerAccountingReference &lt;&gt; &quot;&quot; Then
+							sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cbc:AccountingCost&gt;&quot; &amp; .sInvoiceLineBuyerAccountingReference &amp; &quot;&lt;/cbc:AccountingCost&gt;&quot; &amp; Chr$(13)	&apos; nicht erforderlich 0…1; [BT-133]
+						End If
+						
+						REM Nachlass auf für den Artikel, Anzahl der Artikel berücksichtigt. Muss also nicht mit der Artikelanzahl multipliziert werden.
+						If CDbl(.sAllowanceChargeAmount) &lt;&gt; 0 Then
+							sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:AllowanceCharge&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…n	[BG-27, BG-28]
+								sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:ChargeIndicator&gt;&quot; &amp; .sAllowanceChargeIndicator &amp; &quot;&lt;/cbc:ChargeIndicator&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist; &quot;true&quot; für einen Aufschlag
+								sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:AllowanceChargeReason&gt;&quot;&amp; .sAllowanceChargeReason &amp;&quot;&lt;/cbc:AllowanceChargeReason&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1; Grund für den Nachlass	[BT-139, BT-144]
+							&apos;	sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:MultiplierFactorNumeric&gt;10.00&lt;/cbc:MultiplierFactorNumeric&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1; Angabe in Prozent*100
+								sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:Amount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sAllowanceChargeAmount &amp; &quot;&lt;/cbc:Amount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn AllowanceCharge vorhanden ist	[BT-136,BT-141]
+								sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:BaseAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sAllowanceChargeBaseAmount &amp; &quot;&lt;/cbc:BaseAmount&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1; Basisbetrag für die Prozentuale Ermäßigung
+							sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:AllowanceCharge&gt;&quot; &amp; Chr$(13) 
+						End If
+						
+						If .sPeriodStartDate &lt;&gt; &quot;&quot; Then
+							sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:InvoicePeriod&gt;&quot; &amp; Chr$(13)	&apos;nicht erforderlich 0…1	[BG-26]
+								sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:StartDate&gt;&quot; &amp; .sPeriodStartDate &amp; &quot;&lt;/cbc:StartDate&gt;&quot; &amp; Chr$(13) &apos;entweder Start oder End erforderlich 1…1, wenn InvoicePeriod vorhanden	[BT-134]
+								sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:EndDate&gt;&quot; &amp; .sPeriodEndDate &amp; &quot;&lt;/cbc:EndDate&gt;&quot; &amp; Chr$(13) &apos;entweder Start oder End erforderlich 1…1, wenn InvoicePeriod vorhanden	[BT-135]			
+							sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:InvoicePeriod&gt;&quot; &amp; Chr$(13)
+				    	End If
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:Item&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BG-31]
+							If Len(Trim(Replace(.sItemDescription, Chr$(10), &quot;&quot;))) &gt; 0 Then
+								sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:Description&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1; kann ausführlicher sein	[BT-154]
+								sXmlString = sXmlString &amp; .sItemDescription &amp; Chr$(13)
+								sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cbc:Description&gt;&quot; &amp; Chr$(13)
+							End If
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:Name&gt;&quot; &amp; .sItemName &amp; &quot;&lt;/cbc:Name&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-153]
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:SellersItemIdentification&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1
+								sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sSellerAssignedID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1, wenn SellersItemIdentification vorhanden ist	[BT-155]
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:SellersItemIdentification&gt;&quot; &amp; Chr$(13)
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cac:ClassifiedTaxCategory&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BG-30]
+								sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:ID&gt;&quot; &amp; .sTaxCategoryID &amp; &quot;&lt;/cbc:ID&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-151]
+								sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cbc:Percent&gt;&quot; &amp; .sTaxPercent &amp; &quot;&lt;/cbc:Percent&gt;&quot; &amp; Chr$(13) &apos;nicht erforderlich 0…1; Angabe in Prozent*100, lässt sich aus dem Code von TaxCategory schließen	[BT-152]
+								sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;cac:TaxScheme&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1
+									sXmlString = sXmlString &amp; Space(5 * iTab) &amp; &quot;&lt;cbc:ID&gt;VAT&lt;/cbc:ID&gt;&quot; &amp; Chr$(13) &apos;erforderlich 1…1; VAT: Value Added Tax → Mehrwertsteuer (Defaultwert)
+								sXmlString = sXmlString &amp; Space(4 * iTab) &amp; &quot;&lt;/cac:TaxScheme&gt;&quot; &amp; Chr$(13)
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;/cac:ClassifiedTaxCategory&gt;&quot; &amp; Chr$(13)
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:Item&gt;&quot; &amp; Chr$(13)
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;cac:Price&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BG-29]
+							sXmlString = sXmlString &amp; Space(3 * iTab) &amp; &quot;&lt;cbc:PriceAmount currencyID=&quot;&quot;&quot; &amp; InvoiceData(INVOICE).sDocumentCurrencyCode &amp; &quot;&quot;&quot;&gt;&quot; &amp; .sItemNetPrice &amp; &quot;&lt;/cbc:PriceAmount&gt;&quot; &amp; Chr$(13)	&apos;erforderlich 1…1	[BT-146]
+						sXmlString = sXmlString &amp; Space(2 * iTab) &amp; &quot;&lt;/cac:Price&gt;&quot; &amp; Chr$(13)		
 					If InvoiceData(INVOICE).sInvoiceTypCode = &quot;381&quot; Then
 						sXmlString = sXmlString &amp; Space(1 * iTab) &amp; &quot;&lt;/cac:CreditNoteLine&gt;&quot; &amp; Chr$(13)
 					Else
@@ -1336,7 +1349,7 @@ REM +++ Wird aus &quot;Druck → ExportPDF&quot; aufgerufen
 Sub SaveZUGFeRD(sXRechnungPath As String)
 	Dim oUcb As Object,  oOutputStream As Object, oFile As Object, sFileUrl As String, sXmlString As String
 	Dim iTab As Integer, InvoiceData As Variant
-	Dim a% , b% , c% , d% , e% , f% , g% , h% , i% , j% , k% , l%, x%, t%
+	Dim a% , b% , c% , d% , e%
 	
 	InvoiceData=GetInvoiceData
 
