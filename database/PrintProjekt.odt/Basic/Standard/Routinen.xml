@@ -76,7 +76,8 @@ Sub DokumentDrucken()
 		If FileExists(sMustangReportPdf) Then Kill sMustangReportPdf		
 		If FileExists(sValidatorReturnCodeFile) Then Kill sValidatorReturnCodeFile
 		
-		oDoc.storeToURL(ConvertToURL(sDocumentPath),Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+&apos;		oDoc.storeToURL(ConvertToURL(sDocumentPath),Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+		SaveAsPdfA3(oDoc, sDocumentPath)
 		
 		Shell(sScriptsPath &amp; &quot;mustang.sh&quot;,1,sDocumentPath,True)
 				
@@ -155,7 +156,8 @@ Sub ConvertToPdfAndSendMail()
 			If FileExists(sMustangReportPdf) Then Kill sMustangReportPdf		
 			If FileExists(sValidatorReturnCodeFile) Then Kill sValidatorReturnCodeFile
 			
-			oDoc.storeToURL(ConvertToURL(sDocumentPath),Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+&apos;			oDoc.storeToURL(ConvertToURL(sDocumentPath),Array(MakePropertyValue(&quot;FilterName&quot;,&quot;writer_pdf_Export&quot;)))
+			SaveAsPdfA3(oDoc, sDocumentPath)
 	
 			Shell(sScriptsPath &amp; &quot;mustang.sh&quot;,1,sDocumentPath,True)
 					
@@ -236,6 +238,30 @@ Sub ConvertToPDF()
 
 	sURL = oFilePicker.Files(0)
 	oDoc.storeToURL( sURL, Array( MakePropertyValue( &quot;FilterName&quot;, &quot;writer_pdf_Export&quot; ) ) )
+End Sub
+
+Sub SaveAsPdfA3(oDocument As Object, sFilePath As String)
+	Dim sURL As String
+	Dim args(1) As New com.sun.star.beans.PropertyValue
+	Dim filterProps(1) As New com.sun.star.beans.PropertyValue
+	
+	&apos; Pfad automatisch in das LibreOffice-interne URL-Format umwandeln
+	sURL = ConvertToURL(sFilePath)
+	
+	&apos; PDF/A-3 Optionen setzen
+	filterProps(0).Name = &quot;SelectPdfVersion&quot;
+	filterProps(0).Value = 3
+	filterProps(1).Name = &quot;UseLosslessCompression&quot;
+	filterProps(1).Value = True
+	
+	&apos; Export-Argumente füllen
+	args(0).Name = &quot;FilterName&quot;
+	args(0).Value = &quot;writer_pdf_Export&quot;
+	args(1).Name = &quot;FilterData&quot;
+	args(1).Value = filterProps()
+	
+	&apos; Export ausführen
+	oDocument.storeToURL(sURL, args())
 End Sub
 
 Sub Document_ruecksetzen()
